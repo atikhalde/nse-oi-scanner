@@ -1,1 +1,67 @@
+name: Combined NSE OI Scanner (Alerts + Paper Trading)
 
+on:
+  schedule:
+    # Run every 5 minutes 
+    # - Pure alerts: only inside 09:26–12:00 IST
+    # - Paper trade ENTRIES: ONLY inside 09:26–12:00 IST (strict)
+    # - Paper position management (SL/TP/trailing) + final Excel report: continues until 15:30 IST
+    # UTC window 03:00–10:00 covers full Indian market safely (09:15–15:30 IST)
+    - cron: '*/5 3-10 * * 1-5'
+  workflow_dispatch:
+
+jobs:
+  # ==================== JOB 1: Pure Alerts (no paper trading) ====================
+  alerts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Alert-Only Scanner
+        env:
+          RUN_ONCE: "true"
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python full_telegram_alerts.py
+
+  # ==================== JOB 2: Paper Trading + Excel Report ====================
+  paper-trader:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Paper Trader (with Excel + Telegram report)
+        env:
+          RUN_ONCE: "true"
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python paper_trader.py
+
+      - name: Upload Excel Report (if generated)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Paper_Trades_Report
+          path: Paper_Trades_Report.xlsx
+          retention-days: 7
+          if-no-files-found: ignore
