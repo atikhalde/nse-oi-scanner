@@ -1,36 +1,21 @@
-name: NSE OI Scanner (Free Scheduled)
+name: NSE OI Scanner
 
 on:
   schedule:
-    # Run every 5 minutes during Indian market hours (09:15 to 15:30 IST)
-    # GitHub Actions uses UTC, so we adjust:
-    # IST = UTC+5:30
-    # Market: 03:45 UTC to 10:00 UTC
-    - cron: '*/5 3-10 * * 1-5'   # Every 5 min, Mon-Fri, 03:45-10:00 UTC
+    - cron: '*/5 3-10 * * 1-5'
+  workflow_dispatch:
 
 jobs:
-  run-scanner:
+  scan:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-
       - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
-
-      - name: Run Scanner (one scan)
+        run: pip install -r requirements.txt
+      - name: Run scanner
         env:
-          # The script will run one scan and exit
-          # We modified the logic below to support single run
           RUN_ONCE: "true"
         run: python full_telegram_alerts.py
-
-      - name: Send summary
-        if: always()
-        run: echo "Scanner check completed at $(date)"
