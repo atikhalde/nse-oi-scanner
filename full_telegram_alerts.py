@@ -35,7 +35,31 @@ MIN_OI_CHANGE = 8000
 MAX_STOCKS = 25
 SCAN_EVERY_MINUTES = 5
 
+# Alert time window (09:26 – 12:00 IST only)
+ALERT_START_HOUR = 9
+ALERT_START_MIN = 26
+ALERT_END_HOUR = 12
+ALERT_END_MIN = 0
+
+# Max alerts per stock (to prevent repeats)
+MAX_ALERTS_PER_STOCK = 3
+alert_counts = {}   # symbol -> count
+
 IST = pytz.timezone("Asia/Kolkata")
+
+# ==================== ALERT TIME WINDOW HELPER ====================
+def is_within_alert_window(dt):
+    """Returns True only if current time is within 09:26 – 12:00 IST"""
+    h, m = dt.hour, dt.minute
+    if h < ALERT_START_HOUR:
+        return False
+    if h == ALERT_START_HOUR and m < ALERT_START_MIN:
+        return False
+    if h > ALERT_END_HOUR:
+        return False
+    if h == ALERT_END_HOUR and m > ALERT_END_MIN:
+        return False
+    return True
 
 # ==================== SEND TO TELEGRAM ====================
 def send_telegram(text):
@@ -347,8 +371,23 @@ def get_full_signal(symbol):
 
 # ==================== ALERT ====================
 def send_signal_alert(symbol, signal, details, oi_pct, entry_time=None):
+    global alert_counts
+
+    now = datetime.now(IST)
+
+    # 1. Time window check (09:26 – 12:00 IST only)
+    if not is_within_alert_window(now):
+        print(f"   ⏰ Outside alert window (09:26-12:00). Skipping alert for {symbol}")
+        return
+
+    # 2. Repeat limit check (max 3 times per stock)
+    count = alert_counts.get(symbol, 0)
+    if count >= MAX_ALERTS_PER_STOCK:
+        print(f"   🚫 {symbol} already alerted {count} times (max {MAX_ALERTS_PER_STOCK}). Skipping.")
+        return
+
     if entry_time is None:
-        entry_time = datetime.now(IST).strftime('%Y-%m-%d %H:%M IST')
+        entry_time = now.strftime('%Y-%m-%d %H:%M IST')
     
     message = (
         f"🚨 *{signal}*\n\n"
@@ -360,7 +399,8 @@ def send_signal_alert(symbol, signal, details, oi_pct, entry_time=None):
         f"⚠️ Alerts only — No orders placed."
     )
     if send_telegram(message):
-        print(f"   📨 Alert sent for {symbol}")
+        alert_counts[symbol] = count + 1
+        print(f"   📨 Alert sent for {symbol}  (alert #{alert_counts[symbol]}/{MAX_ALERTS_PER_STOCK})")
 
 # ==================== MAIN ====================
 def run_scanner():
