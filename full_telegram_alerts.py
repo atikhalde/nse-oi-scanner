@@ -22,12 +22,13 @@ import requests
 import pandas as pd
 import numpy as np
 import time
+import os
 from datetime import datetime
 import pytz
 
-# ==================== YOUR TELEGRAM CREDENTIALS ====================
-TELEGRAM_BOT_TOKEN = "8626856610:AAE3ehqXLPPbD0q2aFNa3llWy6kYjZX42L0"
-TELEGRAM_CHAT_ID = "6058787660"
+# ==================== TELEGRAM CREDENTIALS (supports GitHub Secrets) ====================
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "8626856610:AAE3ehqXLPPbD0q2aFNa3llWy6kYjZX42L0")
+TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "6058787660")
 
 # ==================== SCANNER SETTINGS ====================
 MIN_AVG_OI_PCT = 5.0
@@ -471,6 +472,9 @@ if __name__ == "__main__":
             print(f"[{current_time} IST] Outside alert window (09:26-12:00 IST). Exiting immediately.")
             sys.exit(0)
 
+        # Send a startup confirmation message in RUN_ONCE (helps debugging)
+        send_telegram(f"✅ *Alerts Scanner (RUN_ONCE)* started\nTime: {now.strftime('%H:%M IST')}\nWindow: 09:26-12:00 IST")
+
         # Perform exactly ONE scan then exit
         print("=" * 70)
         print(f"SCAN at {now.strftime('%H:%M:%S IST')}")
@@ -479,6 +483,7 @@ if __name__ == "__main__":
         strong = get_strong_oi_stocks()
         print(f"Checking {len(strong)} stocks with strong OI...\n")
 
+        signals_found = 0
         for _, row in strong.iterrows():
             sym = row['symbol']
             oi = row.get('avgInOI', 0)
@@ -486,11 +491,15 @@ if __name__ == "__main__":
 
             if signal:
                 print(f"✅ {sym} → {signal} | {info}")
-                send_signal_alert(sym, signal, info, oi, entry_time)
+                if send_signal_alert(sym, signal, info, oi, entry_time):
+                    signals_found += 1
             else:
                 print(f"   {sym} → no signal")
 
-        print("\n✅ One-shot scan complete. Exiting.")
+        summary = f"✅ *Alerts Scanner finished* (RUN_ONCE)\nSignals sent: {signals_found}\nScanned: {len(strong)} stocks\nTime: {now.strftime('%H:%M IST')}"
+        send_telegram(summary)
+
+        print(f"\n✅ One-shot scan complete. Signals sent: {signals_found}")
         sys.exit(0)
 
     else:
