@@ -823,8 +823,21 @@ if __name__ == "__main__":
         #   - Generate & send final Excel report when session ends
         print(f"[{current} IST] RUN_ONCE: Will process (new entries only if inside 09:26-12:00 window)")
 
+        # Always send a startup confirmation (helps debug when no signals/trades)
+        send_telegram(f"📝 *Paper Trader (RUN_ONCE)* started\nTime: {now.strftime('%H:%M IST')}\nEntry window: 09:26-12:00 IST only")
+
         run_paper_trader()
 
+        # Final summary message even if no trades
+        summary = "✅ *Paper Trader finished* (RUN_ONCE)\n"
+        if trade_log:
+            summary += f"Trades closed: {len(trade_log)}\n"
+            if _last_report_stats:
+                summary += f"P&L: ₹{_last_report_stats.get('total_pnl', 0)} | Win rate: {_last_report_stats.get('win_rate', 'N/A')}"
+        else:
+            summary += "No paper trades executed in this run."
+
+        send_telegram(summary)
         print("✅ One-shot paper trading run complete.")
         sys.exit(0)
     else:
