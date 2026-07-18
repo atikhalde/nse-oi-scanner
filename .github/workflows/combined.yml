@@ -5,25 +5,33 @@ on:
     - cron: '*/5 3-10 * * 1-5'
   workflow_dispatch:
 
-# ======================================================
-# NODE 20 → 24 TRANSITION WARNINGS (NORMAL BEHAVIOR)
-# ======================================================
-# 1. This message appears on EVERY run (harmless):
-#    "Node 20 is being deprecated. This workflow is running with Node 24 by default."
-#    → GitHub prints this automatically. Cannot be suppressed.
+# ============================================================
+# FIX: "Node 20 ... being forced to run on Node.js 24"
+# ============================================================
 #
-# 2. The [DEP0040] punycode warning during upload-artifact etc.
-#    → We suppress it below with NODE_OPTIONS.
+# This exact warning appears when:
+# - The runner is on Node 24
+# - The actions (checkout@v4, setup-python@v5, upload-artifact@v4)
+#   were built for Node 20
 #
-# Both are expected during the transition period and do not affect functionality.
-# ======================================================
+# Official recommended fix (from GitHub's own deprecation blog):
+#   Set ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true
+#
+# This tells GitHub to allow the actions to use their preferred (Node 20) version
+# instead of forcing Node 24 on them.
+#
+# This file now uses the official recommended variable.
+# ============================================================
+
+env:
+  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
 
 jobs:
   alerts:
     runs-on: ubuntu-latest
     timeout-minutes: 12
     env:
-      NODE_OPTIONS: --no-deprecation
+      ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -44,7 +52,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
-      NODE_OPTIONS: --no-deprecation
+      ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -62,8 +70,6 @@ jobs:
         run: python paper_trader_oi_fo.py
       - name: Upload Excel Report (OI+F&O)
         if: always()
-        env:
-          NODE_OPTIONS: --no-deprecation
         uses: actions/upload-artifact@v4
         with:
           name: Paper_Trades_Report_OI_FO
@@ -75,7 +81,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
-      NODE_OPTIONS: --no-deprecation
+      ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -93,8 +99,6 @@ jobs:
         run: python paper_trader.py
       - name: Upload Excel Report (Original)
         if: always()
-        env:
-          NODE_OPTIONS: --no-deprecation
         uses: actions/upload-artifact@v4
         with:
           name: Paper_Trades_Report_Original
