@@ -1,12 +1,11 @@
-name: Combined NSE OI Scanner (Alerts + Paper Trading)
+name: Combined NSE OI Scanner (Alerts + OI + F&O Paper Trading)
 
 on:
   schedule:
-    # Run every 5 minutes 
-    # - Pure alerts: only inside 09:26–12:00 IST
-    # - Paper trade ENTRIES: ONLY inside 09:26–12:00 IST (strict)
-    # - Paper position management (SL/TP/trailing) + final Excel report: continues until 15:30 IST
-    # UTC window 03:00–10:00 covers full Indian market safely (09:15–15:30 IST)
+    # Run every 5 minutes during Indian market hours
+    # UTC window 03:45–10:00 safely covers 09:15–15:30 IST
+    # New entries (OI + F&O + Indicator) only allowed 09:26–12:00 IST
+    # Position management + final report continues until ~15:30 IST
     - cron: '*/5 3-10 * * 1-5'
   workflow_dispatch:
 
@@ -14,58 +13,88 @@ jobs:
   # ==================== JOB 1: Pure Alerts (no paper trading) ====================
   alerts:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true   # Suppress Node 20 deprecation warning (GitHub forcing Node 24)
+    timeout-minutes: 12
     steps:
       - name: Checkout
-        uses: actions/checkout@v7   # Updated for Node 24 compatibility
+        uses: actions/checkout@v4
 
       - name: Setup Python
-        uses: actions/setup-python@v6   # Updated for Node 24 compatibility
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Run Alert-Only Scanner
+      - name: Run Alert-Only Scanner (full v6.3 logic)
         env:
           RUN_ONCE: "true"
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python full_telegram_alerts.py
 
-  # ==================== JOB 2: Paper Trading + Excel Report ====================
-  paper-trader:
+  # ==================== JOB 2: NEW Triple-Filter Paper Trader (OI + F&O + Indicator) ====================
+  paper-trader-oi-fo:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true   # Suppress Node 20 deprecation warning (GitHub forcing Node 24)
+    timeout-minutes: 20
     steps:
       - name: Checkout
-        uses: actions/checkout@v7   # Updated for Node 24 compatibility
+        uses: actions/checkout@v4
 
       - name: Setup Python
-        uses: actions/setup-python@v6   # Updated for Node 24 compatibility
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Run Paper Trader (with Excel + Telegram report)
+      - name: Run Paper Trader (OI-spurts → F&O securities → Indicator v6.3)
         env:
           RUN_ONCE: "true"
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        run: python paper_trader.py
+        run: python paper_trader_oi_fo.py
 
-      - name: Upload Excel Report (if generated)
+      - name: Upload Excel Report (OI + F&O)
         if: always()
-        uses: actions/upload-artifact@v6   # Updated for Node 24 compatibility
+        uses: actions/upload-artifact@v4
         with:
-          name: Paper_Trades_Report
-          path: Paper_Trades_Report.xlsx
-          retention-days: 7
+          name: Paper_Trades_Report_OI_FO
+          path: Paper_Trades_Report_OI_FO.xlsx
+          retention-days: 14
           if-no-files-found: ignore
+
+  # ==================== JOB 3: Original Paper Trader (OI + Indicator only) - OPTIONAL ====================
+  # Uncomment the block below if you still want to run the older (non-F&O) version in parallel
+  #
+  # paper-trader-original:
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: 15
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
+  #
+  #     - name: Setup Python
+  #       uses: actions/setup-python@v5
+  #       with:
+  #         python-version: '3.11'
+  #
+  #     - name: Install dependencies
+  #       run: pip install -r requirements.txt
+  #
+  #     - name: Run Original Paper Trader (OI + Indicator)
+  #       env:
+  #         RUN_ONCE: "true"
+  #         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+  #         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+  #       run: python paper_trader.py
+  #
+  #     - name: Upload Excel Report (Original)
+  #       if: always()
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: Paper_Trades_Report_Original
+  #         path: Paper_Trades_Report.xlsx
+  #         retention-days: 7
+  #         if-no-files-found: ignore
