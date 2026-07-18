@@ -6,27 +6,32 @@ on:
   workflow_dispatch:
 
 # ============================================================
-# NODE 20 DEPRECATION - FINAL FIX (July 2026)
+# NODE 20 → 24 TRANSITION (CLEANEST POSSIBLE - July 2026)
 # ============================================================
 #
-# The warning is now:
-#   "Node.js 20 actions are deprecated. ... Actions will be forced to run with Node.js 24 by default starting June 16th, 2026."
+# What you are seeing in logs:
 #
-# Official recommendations:
-# - Set FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true to opt into Node 24 cleanly.
-# - Use the latest versions of actions that support Node 24.
+# 1. "Node 20 is being deprecated. This workflow is running with Node 24 by default."
+#    → This is GitHub's standard informational message. It appears on EVERY run now.
+#    It cannot be fully suppressed.
 #
-# Changes made:
-#   ✅ Added FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true (recommended opt-in)
-#   ✅ Upgraded checkout → v7
-#   ✅ Upgraded setup-python → v6
-#   ✅ upload-artifact remains v4 (latest stable for artifacts)
+# 2. (node:xxxx) [DEP0040] DeprecationWarning: The `punycode` module is deprecated.
+#    → Comes from inside actions/upload-artifact@v4 (even on Node 24).
+#    We suppress it as much as possible with NODE_OPTIONS.
 #
-# This should eliminate the deprecation warnings.
+# 3. "No files were found with the provided path: Paper_Trades_Report_....xlsx"
+#    → Normal on weekends / when no trades were generated.
+#    We use `if: always()` + `if-no-files-found: ignore`
+#
+# Fixes applied in this file:
+#   ✅ FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true (official opt-in)
+#   ✅ NODE_OPTIONS: --no-deprecation (hides punycode)
+#   ✅ checkout@v7 + setup-python@v6 (Node 24 native)
 # ============================================================
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  NODE_OPTIONS: --no-deprecation
 
 jobs:
   alerts:
@@ -34,6 +39,7 @@ jobs:
     timeout-minutes: 12
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+      NODE_OPTIONS: --no-deprecation
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -55,6 +61,7 @@ jobs:
     timeout-minutes: 20
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+      NODE_OPTIONS: --no-deprecation
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -72,6 +79,8 @@ jobs:
         run: python paper_trader_oi_fo.py
       - name: Upload Excel Report (OI+F&O)
         if: always()
+        env:
+          NODE_OPTIONS: --no-deprecation
         uses: actions/upload-artifact@v4
         with:
           name: Paper_Trades_Report_OI_FO
@@ -84,6 +93,7 @@ jobs:
     timeout-minutes: 15
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+      NODE_OPTIONS: --no-deprecation
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -101,6 +111,8 @@ jobs:
         run: python paper_trader.py
       - name: Upload Excel Report (Original)
         if: always()
+        env:
+          NODE_OPTIONS: --no-deprecation
         uses: actions/upload-artifact@v4
         with:
           name: Paper_Trades_Report_Original
