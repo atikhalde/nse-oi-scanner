@@ -6,27 +6,18 @@ on:
   workflow_dispatch:
 
 # ============================================================
-# NODE 20 → 24 TRANSITION (CLEANEST POSSIBLE - July 2026)
+# NODE 20 → 24 + NO "No files were found" MESSAGES
 # ============================================================
 #
-# What you are seeing in logs:
+# Banner (normal, GitHub prints it):
+#   "Node 20 is being deprecated. This workflow is running with Node 24 by default."
 #
-# 1. "Node 20 is being deprecated. This workflow is running with Node 24 by default."
-#    → This is GitHub's standard informational message. It appears on EVERY run now.
-#    It cannot be fully suppressed.
+# We prevent the "No files were found..." message completely
+# by using `if: hashFiles(...) != ''` — the upload-artifact step is skipped entirely if the file doesn't exist.
 #
-# 2. (node:xxxx) [DEP0040] DeprecationWarning: The `punycode` module is deprecated.
-#    → Comes from inside actions/upload-artifact@v4 (even on Node 24).
-#    We suppress it as much as possible with NODE_OPTIONS.
-#
-# 3. "No files were found with the provided path: Paper_Trades_Report_....xlsx"
-#    → Normal on weekends / when no trades were generated.
-#    We use `if: always()` + `if-no-files-found: ignore`
-#
-# Fixes applied in this file:
-#   ✅ FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true (official opt-in)
-#   ✅ NODE_OPTIONS: --no-deprecation (hides punycode)
-#   ✅ checkout@v7 + setup-python@v6 (Node 24 native)
+# Applied:
+# - FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+# - checkout@v7 + setup-python@v6
 # ============================================================
 
 env:
@@ -77,16 +68,16 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python paper_trader_oi_fo.py
+
+      # Only runs the upload action if the file actually exists
+      # → completely avoids "No files were found..." message
       - name: Upload Excel Report (OI+F&O)
-        if: always()
-        env:
-          NODE_OPTIONS: --no-deprecation
+        if: hashFiles('Paper_Trades_Report_OI_FO.xlsx') != ''
         uses: actions/upload-artifact@v4
         with:
           name: Paper_Trades_Report_OI_FO
           path: Paper_Trades_Report_OI_FO.xlsx
           retention-days: 14
-          if-no-files-found: ignore
 
   paper-trader-original:
     runs-on: ubuntu-latest
@@ -109,13 +100,11 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python paper_trader.py
+
       - name: Upload Excel Report (Original)
-        if: always()
-        env:
-          NODE_OPTIONS: --no-deprecation
+        if: hashFiles('Paper_Trades_Report.xlsx') != ''
         uses: actions/upload-artifact@v4
         with:
           name: Paper_Trades_Report_Original
           path: Paper_Trades_Report.xlsx
           retention-days: 7
-          if-no-files-found: ignore
