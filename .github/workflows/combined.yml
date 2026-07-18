@@ -2,61 +2,51 @@ name: Combined NSE OI Scanner (Alerts + OI + F&O Paper Trading)
 
 on:
   schedule:
-    # Run every 5 minutes during Indian market hours
-    # UTC window 03:45–10:00 safely covers 09:15–15:30 IST
-    # New entries (OI + F&O + Indicator) only allowed 09:26–12:00 IST
-    # Position management + final report continues until ~15:30 IST
+    # Every 5 minutes during Indian market hours (UTC)
     - cron: '*/5 3-10 * * 1-5'
   workflow_dispatch:
 
 jobs:
-  # ==================== JOB 1: Pure Alerts (no paper trading) ====================
+  # 1. Pure Alerts (no trading)
   alerts:
     runs-on: ubuntu-latest
     timeout-minutes: 12
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-
       - name: Install dependencies
         run: pip install -r requirements.txt
-
-      - name: Run Alert-Only Scanner (full v6.3 logic)
+      - name: Run Alert-Only Scanner
         env:
           RUN_ONCE: "true"
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python full_telegram_alerts.py
 
-  # ==================== JOB 2: NEW Triple-Filter Paper Trader (OI + F&O + Indicator) ====================
+  # 2. NEW Triple Filter Paper Trader (OI + F&O + Indicator)
   paper-trader-oi-fo:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-
       - name: Install dependencies
         run: pip install -r requirements.txt
-
-      - name: Run Paper Trader (OI-spurts → F&O securities → Indicator v6.3)
+      - name: Run Paper Trader (OI + F&O + Indicator)
         env:
           RUN_ONCE: "true"
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python paper_trader_oi_fo.py
-
-      - name: Upload Excel Report (OI + F&O)
+      - name: Upload Excel Report (OI+F&O)
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -65,36 +55,30 @@ jobs:
           retention-days: 14
           if-no-files-found: ignore
 
-  # ==================== JOB 3: Original Paper Trader (OI + Indicator only) - OPTIONAL ====================
-  # Uncomment the block below if you still want to run the older (non-F&O) version in parallel
-  #
-  # paper-trader-original:
-  #   runs-on: ubuntu-latest
-  #   timeout-minutes: 15
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v4
-  #
-  #     - name: Setup Python
-  #       uses: actions/setup-python@v5
-  #       with:
-  #         python-version: '3.11'
-  #
-  #     - name: Install dependencies
-  #       run: pip install -r requirements.txt
-  #
-  #     - name: Run Original Paper Trader (OI + Indicator)
-  #       env:
-  #         RUN_ONCE: "true"
-  #         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-  #         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-  #       run: python paper_trader.py
-  #
-  #     - name: Upload Excel Report (Original)
-  #       if: always()
-  #       uses: actions/upload-artifact@v4
-  #       with:
-  #         name: Paper_Trades_Report_Original
-  #         path: Paper_Trades_Report.xlsx
-  #         retention-days: 7
-  #         if-no-files-found: ignore
+  # 3. Original Paper Trader (OI + Indicator)
+  paper-trader-original:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Run Original Paper Trader
+        env:
+          RUN_ONCE: "true"
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python paper_trader.py
+      - name: Upload Excel Report (Original)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Paper_Trades_Report_Original
+          path: Paper_Trades_Report.xlsx
+          retention-days: 7
+          if-no-files-found: ignore
