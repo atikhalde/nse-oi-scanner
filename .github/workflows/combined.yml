@@ -6,37 +6,39 @@ on:
   workflow_dispatch:
 
 # ============================================================
-# FIX: "Node 20 ... being forced to run on Node.js 24"
+# NODE 20 DEPRECATION - FINAL FIX (July 2026)
 # ============================================================
 #
-# This exact warning appears when:
-# - The runner is on Node 24
-# - The actions (checkout@v4, setup-python@v5, upload-artifact@v4)
-#   were built for Node 20
+# The warning is now:
+#   "Node.js 20 actions are deprecated. ... Actions will be forced to run with Node.js 24 by default starting June 16th, 2026."
 #
-# Official recommended fix (from GitHub's own deprecation blog):
-#   Set ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true
+# Official recommendations:
+# - Set FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true to opt into Node 24 cleanly.
+# - Use the latest versions of actions that support Node 24.
 #
-# This tells GitHub to allow the actions to use their preferred (Node 20) version
-# instead of forcing Node 24 on them.
+# Changes made:
+#   ✅ Added FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true (recommended opt-in)
+#   ✅ Upgraded checkout → v7
+#   ✅ Upgraded setup-python → v6
+#   ✅ upload-artifact remains v4 (latest stable for artifacts)
 #
-# This file now uses the official recommended variable.
+# This should eliminate the deprecation warnings.
 # ============================================================
 
 env:
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   alerts:
     runs-on: ubuntu-latest
     timeout-minutes: 12
     env:
-      ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.11'
       - name: Install dependencies
@@ -52,12 +54,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
-      ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.11'
       - name: Install dependencies
@@ -81,12 +83,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
-      ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.11'
       - name: Install dependencies
