@@ -15,12 +15,14 @@ jobs:
   alerts:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true   # Suppress Node 20 deprecation warning (GitHub forcing Node 24)
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5   # Updated for Node 24 compatibility
 
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6   # Updated for Node 24 compatibility
         with:
           python-version: '3.11'
 
@@ -38,12 +40,14 @@ jobs:
   paper-trader:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true   # Suppress Node 20 deprecation warning (GitHub forcing Node 24)
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5   # Updated for Node 24 compatibility
 
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6   # Updated for Node 24 compatibility
         with:
           python-version: '3.11'
 
@@ -59,7 +63,7 @@ jobs:
 
       - name: Upload Excel Report (if generated)
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5   # Updated for Node 24 compatibility
         with:
           name: Paper_Trades_Report
           path: Paper_Trades_Report.xlsx
