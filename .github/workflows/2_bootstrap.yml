@@ -1,0 +1,33 @@
+name: "2. Bootstrap — daily history download"
+on:
+  workflow_dispatch:          # run once manually after pushing, then it self-schedules
+  schedule:
+    - cron: "15 3 * * 1-5"    # 08:45 IST weekdays, before market open
+
+permissions:
+  contents: write
+
+concurrency:
+  group: bootstrap
+  cancel-in-progress: false
+
+jobs:
+  bootstrap:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    env:
+      DHAN_TOKEN: ${{ secrets.DHAN_TOKEN }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - run: python -u live_runner.py --bootstrap refresh-60d
+      - name: commit data
+        run: |
+          git config user.name "paper-bot"
+          git config user.email "paper-bot@users.noreply.github.com"
+          git add data/
+          git commit -m "bootstrap $(date -u +%F_%H%M)Z" || echo "nothing to commit"
+          git push
