@@ -3,8 +3,12 @@
  "signals": {},
  "trades": {},
  "alerts": [],
- "gate": {},
+ "gate": {
+  "status": "OFFLINE",
+  "source": "nse-live",
+  "count": 0
+ },
  "gate_rank": {},
  "eod_done": false,
- "cycles": 0
+ "cycles": 1
 }
