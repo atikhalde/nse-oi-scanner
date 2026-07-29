@@ -1,9 +1,2068 @@
 {
  "date": "2026-07-29",
- "signals": {},
- "trades": {},
- "alerts": [],
- "gate": {},
+ "signals": {
+  "360ONE": {
+   "nbars": 5
+  },
+  "ABB": {
+   "nbars": 5
+  },
+  "ABCAPITAL": {
+   "nbars": 5
+  },
+  "ADANIENSOL": {
+   "nbars": 5
+  },
+  "ADANIENT": {
+   "nbars": 5
+  },
+  "ADANIGREEN": {
+   "nbars": 5
+  },
+  "ADANIPORTS": {
+   "nbars": 5
+  },
+  "ADANIPOWER": {
+   "nbars": 5
+  },
+  "ALKEM": {
+   "nbars": 5
+  },
+  "AMBER": {
+   "nbars": 5
+  },
+  "AMBUJACEM": {
+   "nbars": 5
+  },
+  "ANGELONE": {
+   "nbars": 4
+  },
+  "APLAPOLLO": {
+   "nbars": 5
+  },
+  "APOLLOHOSP": {
+   "nbars": 5
+  },
+  "ASHOKLEY": {
+   "nbars": 5
+  },
+  "ASIANPAINT": {
+   "nbars": 5
+  },
+  "ASTRAL": {
+   "nbars": 5
+  },
+  "AUBANK": {
+   "nbars": 5
+  },
+  "AUROPHARMA": {
+   "nbars": 5
+  },
+  "AXISBANK": {
+   "nbars": 5
+  },
+  "BAJAJ-AUTO": {
+   "nbars": 5
+  },
+  "BAJAJFINSV": {
+   "nbars": 5
+  },
+  "BAJAJHLDNG": {
+   "nbars": 5
+  },
+  "BAJFINANCE": {
+   "nbars": 5
+  },
+  "BANDHANBNK": {
+   "nbars": 5
+  },
+  "BANKBARODA": {
+   "nbars": 5
+  },
+  "BANKINDIA": {
+   "nbars": 5
+  },
+  "BDL": {
+   "nbars": 5
+  },
+  "BEL": {
+   "nbars": 5
+  },
+  "BHARATFORG": {
+   "nbars": 5
+  },
+  "BHARTIARTL": {
+   "nbars": 5
+  },
+  "BHEL": {
+   "nbars": 4
+  },
+  "BIOCON": {
+   "nbars": 5
+  },
+  "BLUESTARCO": {
+   "nbars": 5
+  },
+  "BOSCHLTD": {
+   "nbars": 5
+  },
+  "BPCL": {
+   "nbars": 5
+  },
+  "BRITANNIA": {
+   "nbars": 5
+  },
+  "BSE": {
+   "nbars": 5
+  },
+  "CAMS": {
+   "nbars": 5
+  },
+  "CANBK": {
+   "nbars": 4
+  },
+  "CDSL": {
+   "nbars": 5
+  },
+  "CGPOWER": {
+   "nbars": 5
+  },
+  "CHOLAFIN": {
+   "nbars": 5
+  },
+  "CIPLA": {
+   "nbars": 5
+  },
+  "COALINDIA": {
+   "nbars": 5
+  },
+  "COCHINSHIP": {
+   "nbars": 5
+  },
+  "COFORGE": {
+   "nbars": 5
+  },
+  "COLPAL": {
+   "nbars": 5
+  },
+  "CONCOR": {
+   "nbars": 5
+  },
+  "CROMPTON": {
+   "nbars": 5
+  },
+  "CUMMINSIND": {
+   "nbars": 3
+  },
+  "DABUR": {
+   "nbars": 5
+  },
+  "DALBHARAT": {
+   "nbars": 5
+  },
+  "DELHIVERY": {
+   "nbars": 5
+  },
+  "DIVISLAB": {
+   "nbars": 5
+  },
+  "DIXON": {
+   "nbars": 4
+  },
+  "DLF": {
+   "nbars": 5
+  },
+  "DMART": {
+   "nbars": 5
+  },
+  "DRREDDY": {
+   "nbars": 5
+  },
+  "EICHERMOT": {
+   "nbars": 5
+  },
+  "ETERNAL": {
+   "nbars": 5
+  },
+  "EXIDEIND": {
+   "nbars": 5
+  },
+  "FEDERALBNK": {
+   "nbars": 5
+  },
+  "FORCEMOT": {
+   "nbars": 5
+  },
+  "FORTIS": {
+   "nbars": 5
+  },
+  "GAIL": {
+   "nbars": 5
+  },
+  "GLENMARK": {
+   "nbars": 5
+  },
+  "GMRAIRPORT": {
+   "nbars": 5
+  },
+  "GODFRYPHLP": {
+   "nbars": 5
+  },
+  "GODREJCP": {
+   "nbars": 5
+  },
+  "GODREJPROP": {
+   "nbars": 5
+  },
+  "GRASIM": {
+   "nbars": 5
+  },
+  "GVT&D": {
+   "nbars": 5
+  },
+  "HAL": {
+   "nbars": 5
+  },
+  "HAVELLS": {
+   "nbars": 5
+  },
+  "HCLTECH": {
+   "nbars": 5
+  },
+  "HDFCAMC": {
+   "nbars": 5
+  },
+  "HDFCBANK": {
+   "nbars": 5
+  },
+  "HDFCLIFE": {
+   "nbars": 5
+  },
+  "HEROMOTOCO": {
+   "nbars": 5
+  },
+  "HINDALCO": {
+   "nbars": 5
+  },
+  "HINDPETRO": {
+   "nbars": 5
+  },
+  "HINDUNILVR": {
+   "nbars": 5
+  },
+  "HINDZINC": {
+   "nbars": 5
+  },
+  "HYUNDAI": {
+   "nbars": 4
+  },
+  "ICICIBANK": {
+   "nbars": 5
+  },
+  "ICICIGI": {
+   "nbars": 5
+  },
+  "ICICIPRULI": {
+   "nbars": 4
+  },
+  "IDEA": {
+   "nbars": 5
+  },
+  "IDFCFIRSTB": {
+   "nbars": 5
+  },
+  "IEX": {
+   "nbars": 5
+  },
+  "INDHOTEL": {
+   "nbars": 5
+  },
+  "INDIANB": {
+   "nbars": 4
+  },
+  "INDIGO": {
+   "nbars": 5
+  },
+  "INDUSINDBK": {
+   "nbars": 5
+  },
+  "INDUSTOWER": {
+   "nbars": 5
+  },
+  "INFY": {
+   "nbars": 5
+  },
+  "INOXWIND": {
+   "nbars": 5
+  },
+  "IOC": {
+   "nbars": 5
+  },
+  "IREDA": {
+   "nbars": 5
+  },
+  "IRFC": {
+   "nbars": 5
+  },
+  "ITC": {
+   "nbars": 5
+  },
+  "JINDALSTEL": {
+   "nbars": 5
+  },
+  "JIOFIN": {
+   "nbars": 5
+  },
+  "JSWENERGY": {
+   "nbars": 5
+  },
+  "JSWSTEEL": {
+   "nbars": 5
+  },
+  "JUBLFOOD": {
+   "nbars": 5
+  },
+  "KALYANKJIL": {
+   "nbars": 5
+  },
+  "KAYNES": {
+   "nbars": 5
+  },
+  "KEI": {
+   "nbars": 5
+  },
+  "KFINTECH": {
+   "nbars": 5
+  },
+  "KOTAKBANK": {
+   "nbars": 5
+  },
+  "KPITTECH": {
+   "nbars": 5
+  },
+  "LAURUSLABS": {
+   "nbars": 5
+  },
+  "LICHSGFIN": {
+   "nbars": 5
+  },
+  "LICI": {
+   "nbars": 5
+  },
+  "LODHA": {
+   "nbars": 5
+  },
+  "LT": {
+   "nbars": 5
+  },
+  "LTF": {
+   "nbars": 5
+  },
+  "LTM": {
+   "nbars": 5
+  },
+  "LUPIN": {
+   "nbars": 5
+  },
+  "M&M": {
+   "nbars": 5
+  },
+  "MANAPPURAM": {
+   "nbars": 4
+  },
+  "MANKIND": {
+   "nbars": 5
+  },
+  "MARICO": {
+   "nbars": 5
+  },
+  "MARUTI": {
+   "nbars": 5
+  },
+  "MAXHEALTH": {
+   "nbars": 5
+  },
+  "MAZDOCK": {
+   "nbars": 5
+  },
+  "MCX": {
+   "nbars": 5
+  },
+  "MFSL": {
+   "nbars": 5
+  },
+  "MOTHERSON": {
+   "nbars": 3
+  },
+  "MOTILALOFS": {
+   "nbars": 5
+  },
+  "MPHASIS": {
+   "nbars": 5
+  },
+  "MUTHOOTFIN": {
+   "nbars": 5
+  },
+  "NAM-INDIA": {
+   "nbars": 5
+  },
+  "NATIONALUM": {
+   "nbars": 5
+  },
+  "NAUKRI": {
+   "nbars": 4
+  },
+  "NBCC": {
+   "nbars": 5
+  },
+  "NESTLEIND": {
+   "nbars": 5
+  },
+  "NHPC": {
+   "nbars": 5
+  },
+  "NMDC": {
+   "nbars": 5
+  },
+  "NTPC": {
+   "nbars": 5
+  },
+  "NUVAMA": {
+   "nbars": 5
+  },
+  "NYKAA": {
+   "nbars": 5
+  },
+  "OBEROIRLTY": {
+   "nbars": 5
+  },
+  "OFSS": {
+   "nbars": 5
+  },
+  "OIL": {
+   "nbars": 5
+  },
+  "ONGC": {
+   "nbars": 5
+  },
+  "PAGEIND": {
+   "nbars": 5
+  },
+  "PATANJALI": {
+   "nbars": 5
+  },
+  "PAYTM": {
+   "nbars": 5
+  },
+  "PERSISTENT": {
+   "nbars": 5
+  },
+  "PETRONET": {
+   "nbars": 5
+  },
+  "PFC": {
+   "nbars": 5
+  },
+  "PGEL": {
+   "nbars": 5
+  },
+  "PHOENIXLTD": {
+   "nbars": 5
+  },
+  "PIDILITIND": {
+   "nbars": 5
+  },
+  "PIIND": {
+   "nbars": 5
+  },
+  "PNB": {
+   "nbars": 5
+  },
+  "PNBHOUSING": {
+   "nbars": 3
+  },
+  "POLICYBZR": {
+   "nbars": 5
+  },
+  "POLYCAB": {
+   "nbars": 5
+  },
+  "POWERGRID": {
+   "nbars": 5
+  },
+  "POWERINDIA": {
+   "nbars": 5
+  },
+  "PREMIERENE": {
+   "nbars": 5
+  },
+  "PRESTIGE": {
+   "nbars": 5
+  },
+  "RADICO": {
+   "nbars": 5
+  },
+  "RBLBANK": {
+   "nbars": 5
+  },
+  "RECLTD": {
+   "nbars": 5
+  },
+  "RELIANCE": {
+   "nbars": 5
+  },
+  "RVNL": {
+   "nbars": 5
+  },
+  "SAIL": {
+   "nbars": 5
+  },
+  "SBICARD": {
+   "nbars": 5
+  },
+  "SBILIFE": {
+   "nbars": 5
+  },
+  "SBIN": {
+   "nbars": 5
+  },
+  "SHREECEM": {
+   "nbars": 5
+  },
+  "SHRIRAMFIN": {
+   "nbars": 5
+  },
+  "SIEMENS": {
+   "nbars": 5
+  },
+  "SOLARINDS": {
+   "nbars": 5
+  },
+  "SONACOMS": {
+   "nbars": 5
+  },
+  "SRF": {
+   "nbars": 5
+  },
+  "SUNPHARMA": {
+   "nbars": 5
+  },
+  "SUPREMEIND": {
+   "nbars": 5
+  },
+  "SUZLON": {
+   "nbars": 5
+  },
+  "SWIGGY": {
+   "nbars": 5
+  },
+  "TATACONSUM": {
+   "nbars": 5
+  },
+  "TATAELXSI": {
+   "nbars": 5
+  },
+  "TATAPOWER": {
+   "nbars": 5
+  },
+  "TATASTEEL": {
+   "nbars": 5
+  },
+  "TCS": {
+   "nbars": 5
+  },
+  "TECHM": {
+   "nbars": 5
+  },
+  "TIINDIA": {
+   "nbars": 5
+  },
+  "TITAN": {
+   "nbars": 5
+  },
+  "TMPV": {
+   "nbars": 5
+  },
+  "TORNTPHARM": {
+   "nbars": 4
+  },
+  "TRENT": {
+   "nbars": 5
+  },
+  "TVSMOTOR": {
+   "nbars": 5
+  },
+  "ULTRACEMCO": {
+   "nbars": 5
+  },
+  "UNIONBANK": {
+   "nbars": 5
+  },
+  "UNITDSPR": {
+   "nbars": 5
+  },
+  "UNOMINDA": {
+   "nbars": 5
+  },
+  "UPL": {
+   "nbars": 5
+  },
+  "VBL": {
+   "nbars": 5
+  },
+  "VEDL": {
+   "nbars": 5
+  },
+  "VMM": {
+   "nbars": 5
+  },
+  "VOLTAS": {
+   "nbars": 5
+  },
+  "WAAREEENER": {
+   "nbars": 5
+  },
+  "WIPRO": {
+   "nbars": 5
+  },
+  "YESBANK": {
+   "nbars": 5
+  },
+  "ZYDUSLIFE": {
+   "nbars": 5
+  }
+ },
+ "trades": {
+  "ADANIPOWER": {
+   "symbol": "ADANIPOWER",
+   "side": "SELL",
+   "time": "09:30",
+   "signal": "SELL-EX1",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 208.72,
+   "sl": 210.28,
+   "sl_anchor": "session-extreme*",
+   "risk_pts": 1.56,
+   "risk_pct": 0.748,
+   "risk_rs": 373.0,
+   "qty": 239,
+   "qty_full": 239,
+   "qty_capped": false,
+   "capital": 49884.0,
+   "tp1": 54.08,
+   "tp2": 54.08,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "OPEN 09:40",
+     239,
+     208.73,
+     "09:40"
+    ]
+   ],
+   "exit_text": "OPEN",
+   "leg2_time": "09:40",
+   "pnl": -2.0,
+   "r_total": -0.01,
+   "closed": false,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "09:30",
+     "price": 208.72
+    }
+   ],
+   "sector": "ENE"
+  },
+  "BRITANNIA": {
+   "symbol": "BRITANNIA",
+   "side": "BUY",
+   "time": "09:35",
+   "signal": "BUY-EX17",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 5574.0,
+   "sl": 5493.4,
+   "sl_anchor": "session-extreme*",
+   "risk_pts": 80.6,
+   "risk_pct": 1.446,
+   "risk_rs": 645.0,
+   "qty": 8,
+   "qty_full": 8,
+   "qty_capped": false,
+   "capital": 44592.0,
+   "tp1": 13553.29,
+   "tp2": 13553.29,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "OPEN 09:40",
+     8,
+     5570.0,
+     "09:40"
+    ]
+   ],
+   "exit_text": "OPEN",
+   "leg2_time": "09:40",
+   "pnl": -32.0,
+   "r_total": -0.05,
+   "closed": false,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "09:35",
+     "price": 5574.0
+    }
+   ],
+   "sector": "FMCG"
+  },
+  "ITC": {
+   "symbol": "ITC",
+   "side": "BUY",
+   "time": "09:35",
+   "signal": "BUY-EX",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 288.8,
+   "sl": 284.74,
+   "sl_anchor": "session-extreme*",
+   "risk_pts": 4.06,
+   "risk_pct": 1.405,
+   "risk_rs": 702.0,
+   "qty": 173,
+   "qty_full": 173,
+   "qty_capped": false,
+   "capital": 49962.0,
+   "tp1": 690.44,
+   "tp2": 690.44,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "OPEN 09:40",
+     173,
+     288.5,
+     "09:40"
+    ]
+   ],
+   "exit_text": "OPEN",
+   "leg2_time": "09:40",
+   "pnl": -52.0,
+   "r_total": -0.07,
+   "closed": false,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "09:35",
+     "price": 288.8
+    }
+   ],
+   "sector": "FMCG"
+  }
+ },
+ "alerts": [
+  "ADANIPOWER:ENTRY",
+  "BRITANNIA:ENTRY",
+  "ITC:ENTRY"
+ ],
+ "gate": {
+  "status": "OK",
+  "source": "official 17/17 ok \u00b7 synth 13/13"
+ },
  "eod_done": false,
- "cycles": 0
+ "cycles": 2,
+ "sector_board": {
+  "time": "09:40",
+  "net_tilt": 8.7,
+  "tilt": "STRONG BULLISH",
+  "bull_q": [
+   [
+    "FMCG",
+    83.02
+   ],
+   [
+    "CONSUMPTION",
+    69.76
+   ],
+   [
+    "CEMENT",
+    68.73
+   ],
+   [
+    "HOSPITALS",
+    68.0
+   ]
+  ],
+  "bear_q": [
+   [
+    "GREEN",
+    68.61
+   ],
+   [
+    "ENE",
+    63.52
+   ],
+   [
+    "CAPMKTS",
+    60.55
+   ],
+   [
+    "PSE",
+    59.81
+   ]
+  ],
+  "persist_bull": [
+   [
+    "FMCG",
+    89.79
+   ],
+   [
+    "NEWAGE",
+    76.59
+   ],
+   [
+    "HOSPITALS",
+    74.69
+   ]
+  ],
+  "persist_bear": [
+   [
+    "REALTY",
+    80.21
+   ],
+   [
+    "GREEN",
+    75.0
+   ],
+   [
+    "ENE",
+    62.56
+   ]
+  ],
+  "hold": "timed",
+  "held_bull": [
+   "AUTO",
+   "CDUR",
+   "CEMENT",
+   "CONSUMPTION",
+   "FMCG",
+   "HOSPITALS",
+   "MET",
+   "NEWAGE",
+   "PHA",
+   "PSUBK",
+   "RAILWAYS",
+   "TELECOM"
+  ],
+  "held_bear": [
+   "CAPMKTS",
+   "ENE",
+   "GREEN",
+   "OIL",
+   "PSE",
+   "REALTY"
+  ]
+ },
+ "skipped": [
+  {
+   "symbol": "ABB",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 7170.5,
+   "sector": "CAPGOODS",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "ADANIENT",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 3019.3,
+   "sector": "INFRA",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "ASIANPAINT",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 2723.0,
+   "sector": "CHEMICALS",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "AUBANK",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 1048.9,
+   "sector": "BANK",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "AUROPHARMA",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 1571.9,
+   "sector": "PHA",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "BAJAJHLDNG",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 10910.0,
+   "sector": "FIN",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "BEL",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 386.65,
+   "sector": "DEF",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "CIPLA",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 1455.8,
+   "sector": "PHA",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "COLPAL",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 2157.4,
+   "sector": "FMCG",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "DALBHARAT",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 1834.0,
+   "sector": "CEMENT",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "DLF",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 666.75,
+   "sector": "REALTY",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "DRREDDY",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 1136.3,
+   "sector": "PHA",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "FORCEMOT",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 17040.0,
+   "sector": "AUTO",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "FORTIS",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 952.2,
+   "sector": "HOSPITALS",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "GLENMARK",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 2210.0,
+   "sector": "PHA",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "GMRAIRPORT",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 107.9,
+   "sector": "INFRA",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "GODFRYPHLP",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 2014.0,
+   "sector": "FMCG",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "GODREJCP",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 1080.9,
+   "sector": "FMCG",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "GRASIM",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 3143.4,
+   "sector": "CEMENT",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "GVT&D",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 4050.1,
+   "sector": "CAPGOODS",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "HCLTECH",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 1328.0,
+   "sector": "IT",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "HDFCBANK",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 746.45,
+   "sector": "BANK",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "IDEA",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 13.14,
+   "sector": "TELECOM",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "IDFCFIRSTB",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 85.52,
+   "sector": "BANK",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "INDIGO",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 5217.5,
+   "sector": "TRAVEL",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "INDUSTOWER",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 383.45,
+   "sector": "TELECOM",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "IOC",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 139.81,
+   "sector": "OIL",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "IRFC",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 88.68,
+   "sector": "RAILWAYS",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "ITC",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 287.0,
+   "sector": "FMCG",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "JSWENERGY",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 548.65,
+   "sector": "ENE",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "JSWSTEEL",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 1260.9,
+   "sector": "MET",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "KEI",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 4849.0,
+   "sector": "CAPGOODS",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "KOTAKBANK",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 387.45,
+   "sector": "BANK",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "LAURUSLABS",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 1769.5,
+   "sector": "PHA",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "LTF",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 308.45,
+   "sector": "FIN",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "LUPIN",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 2412.6,
+   "sector": "PHA",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "M&M",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 3315.0,
+   "sector": "AUTO",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "MAZDOCK",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 2299.4,
+   "sector": "DEF",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "MOTILALOFS",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 858.3,
+   "sector": "CAPMKTS",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "MPHASIS",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 2413.0,
+   "sector": "IT",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "NATIONALUM",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 333.15,
+   "sector": "MET",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "NAUKRI",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 1260.3,
+   "sector": "NEWAGE",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "NESTLEIND",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 1508.1,
+   "sector": "FMCG",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "NMDC",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 84.73,
+   "sector": "MET",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "NYKAA",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 331.75,
+   "sector": "NEWAGE",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "OFSS",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 11605.0,
+   "sector": "IT",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "PNB",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 111.4,
+   "sector": "PSUBK",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "PREMIERENE",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 1021.0,
+   "sector": "GREEN",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "SAIL",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 170.7,
+   "sector": "MET",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "SBICARD",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 653.0,
+   "sector": "FIN",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "SHRIRAMFIN",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 1041.8,
+   "sector": "FIN",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "SIEMENS",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 3618.5,
+   "sector": "CAPGOODS",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "SONACOMS",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 721.25,
+   "sector": "AUTO",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "TATAELXSI",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 3662.2,
+   "sector": "IT",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "TATAPOWER",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 371.55,
+   "sector": "ENE",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "TMPV",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 328.6,
+   "sector": "AUTO",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "ULTRACEMCO",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 12065.0,
+   "sector": "CEMENT",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "UNIONBANK",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 168.59,
+   "sector": "PSUBK",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "UNOMINDA",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 1179.0,
+   "sector": "AUTO",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "YESBANK",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 22.81,
+   "sector": "BANK",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "ABB",
+   "side": "SELL",
+   "signal": "SELL-EX3",
+   "time": "09:30",
+   "entry": 7147.5,
+   "sector": "CAPGOODS",
+   "why": "sector CAPGOODS not bear-qualified (bull 25/bear 28)"
+  },
+  {
+   "symbol": "ABCAPITAL",
+   "side": "SELL",
+   "signal": "SELL-EX12",
+   "time": "09:30",
+   "entry": 393.15,
+   "sector": "FIN",
+   "why": "sector FIN not bear-qualified (bull 45/bear 14)"
+  },
+  {
+   "symbol": "AMBER",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 7343.0,
+   "sector": "CDUR",
+   "why": "sector CDUR not bull-qualified (bull 38/bear 9)"
+  },
+  {
+   "symbol": "AMBUJACEM",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "09:30",
+   "entry": 431.6,
+   "sector": "CEMENT",
+   "why": "sector CEMENT bull-qualified but outside top-2 (board FMCG 83, CONSUMPTION 70)"
+  },
+  {
+   "symbol": "ANGELONE",
+   "side": "SELL",
+   "signal": "SELL-EX2",
+   "time": "09:35",
+   "entry": 299.25,
+   "sector": "CAPMKTS",
+   "why": "sector CAPMKTS bear-qualified but outside top-2 (board GREEN 69, ENE 64)"
+  },
+  {
+   "symbol": "ASIANPAINT",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 2723.0,
+   "sector": "CHEMICALS",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "AXISBANK",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:30",
+   "entry": 1220.3,
+   "sector": "BANK",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "BAJAJ-AUTO",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 11500.5,
+   "sector": "AUTO",
+   "why": "sector AUTO not bull-qualified (bull 52/bear 7)"
+  },
+  {
+   "symbol": "BAJAJHLDNG",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 10910.0,
+   "sector": "FIN",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "BHEL",
+   "side": "SELL",
+   "signal": "SELL-EX8",
+   "time": "09:35",
+   "entry": 402.9,
+   "sector": "CAPGOODS",
+   "why": "sector CAPGOODS not bear-qualified (bull 25/bear 28)"
+  },
+  {
+   "symbol": "BIOCON",
+   "side": "SELL",
+   "signal": "SELL-EX19",
+   "time": "09:30",
+   "entry": 430.8,
+   "sector": "PHA",
+   "why": "sector PHA not bear-qualified (bull 61/bear 4)"
+  },
+  {
+   "symbol": "CANBK",
+   "side": "SELL",
+   "signal": "SELL-EX12",
+   "time": "09:35",
+   "entry": 124.71,
+   "sector": "PSUBK",
+   "why": "sector PSUBK not bear-qualified (bull 36/bear 12)"
+  },
+  {
+   "symbol": "CIPLA",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 1455.8,
+   "sector": "PHA",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "CIPLA",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 1457.4,
+   "sector": "PHA",
+   "why": "sector PHA bull-qualified but outside top-2 (board FMCG 83, CONSUMPTION 70)"
+  },
+  {
+   "symbol": "COFORGE",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 1750.5,
+   "sector": "IT",
+   "why": "sector IT not bull-qualified (bull 56/bear 11)"
+  },
+  {
+   "symbol": "CUMMINSIND",
+   "side": "SELL",
+   "signal": "SELL-EX19",
+   "time": "09:30",
+   "entry": 5422.0,
+   "sector": "CAPGOODS",
+   "why": "sector CAPGOODS not bear-qualified (bull 25/bear 28)"
+  },
+  {
+   "symbol": "CUMMINSIND",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:35",
+   "entry": 5415.0,
+   "sector": "CAPGOODS",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "DALBHARAT",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 1834.0,
+   "sector": "CEMENT",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "DALBHARAT",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 1834.5,
+   "sector": "CEMENT",
+   "why": "sector CEMENT bull-qualified but outside top-2 (board FMCG 83, CONSUMPTION 70)"
+  },
+  {
+   "symbol": "DIVISLAB",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 7554.5,
+   "sector": "PHA",
+   "why": "sector PHA bull-qualified but outside top-2 (board FMCG 83, CONSUMPTION 70)"
+  },
+  {
+   "symbol": "DIXON",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:35",
+   "entry": 14001.0,
+   "sector": "CDUR",
+   "why": "sector CDUR not bull-qualified (bull 38/bear 9)"
+  },
+  {
+   "symbol": "DRREDDY",
+   "side": "SELL",
+   "signal": "SELL-EX3",
+   "time": "09:30",
+   "entry": 1132.6,
+   "sector": "PHA",
+   "why": "sector PHA not bear-qualified (bull 61/bear 4)"
+  },
+  {
+   "symbol": "FORCEMOT",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 17046.0,
+   "sector": "AUTO",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "FORTIS",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 952.2,
+   "sector": "HOSPITALS",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "FORTIS",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 955.6,
+   "sector": "HOSPITALS",
+   "why": "sector HOSPITALS bull-qualified but outside top-2 (board FMCG 83, CONSUMPTION 70)"
+  },
+  {
+   "symbol": "GLENMARK",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 2217.9,
+   "sector": "PHA",
+   "why": "sector PHA bull-qualified but outside top-2 (board FMCG 83, CONSUMPTION 70)"
+  },
+  {
+   "symbol": "GMRAIRPORT",
+   "side": "SELL",
+   "signal": "SELL-EX8",
+   "time": "09:30",
+   "entry": 107.56,
+   "sector": "INFRA",
+   "why": "sector INFRA not bear-qualified (bull 60/bear 6)"
+  },
+  {
+   "symbol": "GODFRYPHLP",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 2014.6,
+   "sector": "FMCG",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "HDFCBANK",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 746.45,
+   "sector": "BANK",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "HDFCBANK",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 746.75,
+   "sector": "BANK",
+   "why": "sector BANK not bull-qualified (bull 44/bear 14)"
+  },
+  {
+   "symbol": "HINDALCO",
+   "side": "SELL",
+   "signal": "SELL-EX2",
+   "time": "09:30",
+   "entry": 938.7,
+   "sector": "MET",
+   "why": "sector MET not bear-qualified (bull 61/bear 5)"
+  },
+  {
+   "symbol": "HYUNDAI",
+   "side": "SELL",
+   "signal": "SELL-EX2",
+   "time": "09:35",
+   "entry": 1987.1,
+   "sector": "AUTO",
+   "why": "sector AUTO not bear-qualified (bull 52/bear 7)"
+  },
+  {
+   "symbol": "ICICIBANK",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:30",
+   "entry": 1430.5,
+   "sector": "BANK",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "ICICIPRULI",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:35",
+   "entry": 513.05,
+   "sector": "INSURANCE",
+   "why": "sector INSURANCE not bull-qualified (bull 54/bear 10)"
+  },
+  {
+   "symbol": "IEX",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 132.82,
+   "sector": "CAPMKTS",
+   "why": "sector CAPMKTS not bull-qualified (bull 3/bear 61)"
+  },
+  {
+   "symbol": "INDIANB",
+   "side": "SELL",
+   "signal": "SELL-EX6",
+   "time": "09:35",
+   "entry": 833.65,
+   "sector": "PSUBK",
+   "why": "sector PSUBK not bear-qualified (bull 36/bear 12)"
+  },
+  {
+   "symbol": "INDUSINDBK",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "09:30",
+   "entry": 1002.05,
+   "sector": "BANK",
+   "why": "sector BANK not bull-qualified (bull 44/bear 14)"
+  },
+  {
+   "symbol": "IRFC",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 88.68,
+   "sector": "RAILWAYS",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "IRFC",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 88.73,
+   "sector": "RAILWAYS",
+   "why": "sector RAILWAYS bull-qualified but outside top-2 (board FMCG 83, CONSUMPTION 70)"
+  },
+  {
+   "symbol": "JSWENERGY",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 548.65,
+   "sector": "ENE",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "JUBLFOOD",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 436.95,
+   "sector": "CONSUMPTION",
+   "why": "sector CONSUMPTION not on Persistent+ board"
+  },
+  {
+   "symbol": "LAURUSLABS",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 1769.5,
+   "sector": "PHA",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "LAURUSLABS",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 1781.6,
+   "sector": "PHA",
+   "why": "sector PHA bull-qualified but outside top-2 (board FMCG 83, CONSUMPTION 70)"
+  },
+  {
+   "symbol": "LICHSGFIN",
+   "side": "SELL",
+   "signal": "SELL-EX1",
+   "time": "09:30",
+   "entry": 547.95,
+   "sector": "FIN",
+   "why": "sector FIN not bear-qualified (bull 45/bear 14)"
+  },
+  {
+   "symbol": "LICI",
+   "side": "SELL",
+   "signal": "SELL-EX6",
+   "time": "09:30",
+   "entry": 425.0,
+   "sector": "INSURANCE",
+   "why": "sector INSURANCE not bear-qualified (bull 54/bear 10)"
+  },
+  {
+   "symbol": "LODHA",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:30",
+   "entry": 1278.85,
+   "sector": "REALTY",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "LTF",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 308.45,
+   "sector": "FIN",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "LTF",
+   "side": "SELL",
+   "signal": "SELL-EX12",
+   "time": "09:30",
+   "entry": 306.5,
+   "sector": "FIN",
+   "why": "sector FIN not bear-qualified (bull 45/bear 14)"
+  },
+  {
+   "symbol": "LUPIN",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 2418.9,
+   "sector": "PHA",
+   "why": "sector PHA bull-qualified but outside top-2 (board FMCG 83, CONSUMPTION 70)"
+  },
+  {
+   "symbol": "MANAPPURAM",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:35",
+   "entry": 367.3,
+   "sector": "FIN",
+   "why": "sector FIN not bull-qualified (bull 45/bear 14)"
+  },
+  {
+   "symbol": "MAXHEALTH",
+   "side": "BUY",
+   "signal": "BUY-EX7",
+   "time": "09:30",
+   "entry": 1117.1,
+   "sector": "HOSPITALS",
+   "why": "sector HOSPITALS bull-qualified but outside top-2 (board FMCG 83, CONSUMPTION 70)"
+  },
+  {
+   "symbol": "MOTHERSON",
+   "side": "SELL",
+   "signal": "SELL-EX8",
+   "time": "09:30",
+   "entry": 145.8,
+   "sector": "AUTO",
+   "why": "sector AUTO not bear-qualified (bull 52/bear 7)"
+  },
+  {
+   "symbol": "MOTHERSON",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:35",
+   "entry": 145.35,
+   "sector": "AUTO",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "NAM-INDIA",
+   "side": "SELL",
+   "signal": "SELL-EX8",
+   "time": "09:30",
+   "entry": 1150.7,
+   "sector": "CAPMKTS",
+   "why": "sector CAPMKTS bear-qualified but outside top-2 (board GREEN 69, ENE 64)"
+  },
+  {
+   "symbol": "NAUKRI",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 1260.3,
+   "sector": "NEWAGE",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "NAUKRI",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:35",
+   "entry": 1264.35,
+   "sector": "NEWAGE",
+   "why": "sector NEWAGE bull-qualified but outside top-2 (board FMCG 83, CONSUMPTION 70)"
+  },
+  {
+   "symbol": "NYKAA",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 331.75,
+   "sector": "NEWAGE",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "PERSISTENT",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 5545.9,
+   "sector": "IT",
+   "why": "sector IT not bull-qualified (bull 56/bear 11)"
+  },
+  {
+   "symbol": "PIIND",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:30",
+   "entry": 2731.3,
+   "sector": "CHEMICALS",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "PNB",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 111.35,
+   "sector": "PSUBK",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "PNBHOUSING",
+   "side": "SELL",
+   "signal": "SELL-EX8",
+   "time": "09:30",
+   "entry": 1072.8,
+   "sector": "FIN",
+   "why": "sector FIN not bear-qualified (bull 45/bear 14)"
+  },
+  {
+   "symbol": "PNBHOUSING",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:35",
+   "entry": 1067.9,
+   "sector": "FIN",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "POLYCAB",
+   "side": "SELL",
+   "signal": "SELL-EX8",
+   "time": "09:30",
+   "entry": 9068.5,
+   "sector": "CAPGOODS",
+   "why": "sector CAPGOODS not bear-qualified (bull 25/bear 28)"
+  },
+  {
+   "symbol": "PREMIERENE",
+   "side": "SELL",
+   "signal": "SELL-EX5",
+   "time": "09:30",
+   "entry": 1019.3,
+   "sector": "GREEN",
+   "why": "lags own sector (stock -0.30% vs GREEN -2.37%)"
+  },
+  {
+   "symbol": "RELIANCE",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "09:30",
+   "entry": 1276.8,
+   "sector": "ENE",
+   "why": "sector ENE not bull-qualified (bull 3/bear 64)"
+  },
+  {
+   "symbol": "SHRIRAMFIN",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 1041.8,
+   "sector": "FIN",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "SWIGGY",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 280.16,
+   "sector": "NEWAGE",
+   "why": "sector NEWAGE bull-qualified but outside top-2 (board FMCG 83, CONSUMPTION 70)"
+  },
+  {
+   "symbol": "TATAELXSI",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 3662.2,
+   "sector": "IT",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "TATAELXSI",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 3676.0,
+   "sector": "IT",
+   "why": "sector IT not bull-qualified (bull 56/bear 11)"
+  },
+  {
+   "symbol": "TCS",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 2451.2,
+   "sector": "IT",
+   "why": "sector IT not bull-qualified (bull 56/bear 11)"
+  },
+  {
+   "symbol": "TORNTPHARM",
+   "side": "SELL",
+   "signal": "SELL-EX19",
+   "time": "09:35",
+   "entry": 4883.8,
+   "sector": "PHA",
+   "why": "sector PHA not bear-qualified (bull 61/bear 4)"
+  },
+  {
+   "symbol": "UNIONBANK",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 168.59,
+   "sector": "PSUBK",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "WIPRO",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 183.24,
+   "sector": "IT",
+   "why": "sector IT not bull-qualified (bull 56/bear 11)"
+  }
+ ]
 }
