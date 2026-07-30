@@ -4,10 +4,9 @@
  "trades": {},
  "alerts": [],
  "gate": {
-  "status": "M9B DATA-FARM \u00d7 top-20 gainers gate (BUY-only cash >\u20b91,000cr)",
-  "source": "350-sym shard \u00b7 gainers feed OK (20 parsed \u2192 top-20) \u00b7 px>\u20b9200 \u00b7 candle\u22641.25% \u00b7 SL candle-low\u22120.02% \u00b7 EMA5 trail \u00b7 15:20 sqoff \u00b7 350 fed",
-  "gainers_pass": 20
+  "status": "M9B DATA-FARM (BUY-only cash >\u20b91,000cr)",
+  "source": "350-sym shard \u00b7 no gates \u00b7 px>\u20b9200 \u00b7 candle\u22641.25% \u00b7 SL candle-low\u22120.02% \u00b7 EMA5 trail \u00b7 15:20 sqoff \u00b7 350 fed"
  },
  "eod_done": false,
- "cycles": 3
+ "cycles": 4
 }
