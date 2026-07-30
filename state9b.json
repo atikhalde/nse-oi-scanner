@@ -296,7 +296,154 @@
    "nbars": 75
   },
   "FIEMIND": {
-   "nbars": 8
+   "nbars": 75
+  },
+  "FINOPB": {
+   "nbars": 75
+  },
+  "FIVESTAR": {
+   "nbars": 75
+  },
+  "FMGOETZE": {
+   "nbars": 75
+  },
+  "FUSION": {
+   "nbars": 75
+  },
+  "GALLANTT": {
+   "nbars": 75
+  },
+  "GANECOS": {
+   "nbars": 75
+  },
+  "GARUDA": {
+   "nbars": 75
+  },
+  "GENUSPOWER": {
+   "nbars": 75
+  },
+  "GHCL": {
+   "nbars": 75
+  },
+  "GILLETTE": {
+   "nbars": 75
+  },
+  "GKSL": {
+   "nbars": 75
+  },
+  "GLOBUSSPR": {
+   "nbars": 75
+  },
+  "GMMPFAUDLR": {
+   "nbars": 75
+  },
+  "GOCLCORP": {
+   "nbars": 75
+  },
+  "GODIGIT": {
+   "nbars": 75
+  },
+  "GOKULAGRO": {
+   "nbars": 75
+  },
+  "GOODYEAR": {
+   "nbars": 75
+  },
+  "GPPL": {
+   "nbars": 75
+  },
+  "GRANULES": {
+   "nbars": 75
+  },
+  "GRAVITA": {
+   "nbars": 75
+  },
+  "GREENPANEL": {
+   "nbars": 75
+  },
+  "GRINDWELL": {
+   "nbars": 75
+  },
+  "GRSE": {
+   "nbars": 75
+  },
+  "GSPCROP": {
+   "nbars": 75
+  },
+  "GUJALKALI": {
+   "nbars": 75
+  },
+  "GVPIL": {
+   "nbars": 75
+  },
+  "HAPPYFORGE": {
+   "nbars": 75
+  },
+  "HATSUN": {
+   "nbars": 75
+  },
+  "HCC": {
+   "nbars": 75
+  },
+  "HEG": {
+   "nbars": 75
+  },
+  "HERITGFOOD": {
+   "nbars": 75
+  },
+  "HGINFRA": {
+   "nbars": 75
+  },
+  "HIMATSEIDE": {
+   "nbars": 75
+  },
+  "HINDWAREAP": {
+   "nbars": 75
+  },
+  "HLEGLAS": {
+   "nbars": 75
+  },
+  "HOMEFIRST": {
+   "nbars": 75
+  },
+  "HONDAPOWER": {
+   "nbars": 75
+  },
+  "HUBTOWN": {
+   "nbars": 75
+  },
+  "ICIL": {
+   "nbars": 75
+  },
+  "IFBIND": {
+   "nbars": 75
+  },
+  "IGARASHI": {
+   "nbars": 75
+  },
+  "IGPL": {
+   "nbars": 75
+  },
+  "IKIO": {
+   "nbars": 75
+  },
+  "IMFA": {
+   "nbars": 75
+  },
+  "INDGN": {
+   "nbars": 75
+  },
+  "INDIANHUME": {
+   "nbars": 75
+  },
+  "INDIQUBE": {
+   "nbars": 75
+  },
+  "INDORAMA": {
+   "nbars": 75
+  },
+  "INDSWFTLAB": {
+   "nbars": 25
   }
  },
  "trades": {
@@ -1109,6 +1256,276 @@
      "price": 2367.7
     }
    ]
+  },
+  "GRANULES": {
+   "symbol": "GRANULES",
+   "side": "BUY",
+   "time": "09:45",
+   "signal": "BUY-EX17",
+   "setup": "M9-DataFarm",
+   "sl_mode": "entry-candle-low",
+   "entry": 847.85,
+   "sl": 846.13,
+   "sl_anchor": "entry-candle low \u22120.02%",
+   "risk_pts": 1.72,
+   "risk_pct": 0.203,
+   "risk_rs": 100.0,
+   "qty": 58,
+   "qty_full": 58,
+   "qty_capped": false,
+   "capital": 49175.0,
+   "trail_armed": false,
+   "trail_style": "EMA5 close",
+   "legs": [
+    [
+     "SL 09:50",
+     58,
+     845.8,
+     "09:50"
+    ]
+   ],
+   "exit_text": "100% SL 09:50",
+   "leg2_time": "09:50",
+   "pnl": -119.0,
+   "r_total": -1.19,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "09:45",
+     "price": 847.85
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "09:50",
+     "price": 845.8
+    }
+   ]
+  },
+  "GRAVITA": {
+   "symbol": "GRAVITA",
+   "side": "BUY",
+   "time": "09:30",
+   "signal": "BUY-EX17",
+   "setup": "M9-DataFarm",
+   "sl_mode": "entry-candle-low",
+   "entry": 1631.0,
+   "sl": 1627.17,
+   "sl_anchor": "entry-candle low \u22120.02%",
+   "risk_pts": 3.83,
+   "risk_pct": 0.235,
+   "risk_rs": 115.0,
+   "qty": 30,
+   "qty_full": 30,
+   "qty_capped": false,
+   "capital": 48930.0,
+   "trail_armed": false,
+   "trail_style": "EMA5 close",
+   "legs": [
+    [
+     "SL 09:35",
+     30,
+     1627.1745,
+     "09:35"
+    ]
+   ],
+   "exit_text": "100% SL 09:35",
+   "leg2_time": "09:35",
+   "pnl": -115.0,
+   "r_total": -1.0,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "09:30",
+     "price": 1631.0
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "09:35",
+     "price": 1627.1745
+    }
+   ]
+  },
+  "GRINDWELL": {
+   "symbol": "GRINDWELL",
+   "side": "BUY",
+   "time": "10:15",
+   "signal": "BUY-EX",
+   "setup": "M9-DataFarm",
+   "sl_mode": "entry-candle-low",
+   "entry": 2130.8,
+   "sl": 2121.58,
+   "sl_anchor": "entry-candle low \u22120.02%",
+   "risk_pts": 9.22,
+   "risk_pct": 0.433,
+   "risk_rs": 212.0,
+   "qty": 23,
+   "qty_full": 23,
+   "qty_capped": false,
+   "capital": 49008.0,
+   "trail_armed": false,
+   "trail_style": "EMA5 close",
+   "legs": [
+    [
+     "EMA5 11:05",
+     23,
+     2135.5,
+     "11:05"
+    ]
+   ],
+   "exit_text": "100% EMA5 11:05",
+   "leg2_time": "11:05",
+   "pnl": 108.0,
+   "r_total": 0.51,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "10:15",
+     "price": 2130.8
+    },
+    {
+     "key": "EXIT_EMA5",
+     "time": "11:05",
+     "price": 2135.5
+    }
+   ]
+  },
+  "HOMEFIRST": {
+   "symbol": "HOMEFIRST",
+   "side": "BUY",
+   "time": "10:45",
+   "signal": "BUY-EX4",
+   "setup": "M9-DataFarm",
+   "sl_mode": "entry-candle-low",
+   "entry": 1181.0,
+   "sl": 1173.77,
+   "sl_anchor": "entry-candle low \u22120.02%",
+   "risk_pts": 7.23,
+   "risk_pct": 0.613,
+   "risk_rs": 304.0,
+   "qty": 42,
+   "qty_full": 42,
+   "qty_capped": false,
+   "capital": 49602.0,
+   "trail_armed": false,
+   "trail_style": "EMA5 close",
+   "legs": [
+    [
+     "EMA5 11:50",
+     42,
+     1190.2,
+     "11:50"
+    ]
+   ],
+   "exit_text": "100% EMA5 11:50",
+   "leg2_time": "11:50",
+   "pnl": 386.0,
+   "r_total": 1.27,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "10:45",
+     "price": 1181.0
+    },
+    {
+     "key": "EXIT_EMA5",
+     "time": "11:50",
+     "price": 1190.2
+    }
+   ]
+  },
+  "INDGN": {
+   "symbol": "INDGN",
+   "side": "BUY",
+   "time": "09:45",
+   "signal": "BUY-EX",
+   "setup": "M9-DataFarm",
+   "sl_mode": "entry-candle-low",
+   "entry": 527.55,
+   "sl": 525.89,
+   "sl_anchor": "entry-candle low \u22120.02%",
+   "risk_pts": 1.66,
+   "risk_pct": 0.314,
+   "risk_rs": 156.0,
+   "qty": 94,
+   "qty_full": 94,
+   "qty_capped": false,
+   "capital": 49590.0,
+   "trail_armed": false,
+   "trail_style": "EMA5 close",
+   "legs": [
+    [
+     "SL 09:55",
+     94,
+     525.8948,
+     "09:55"
+    ]
+   ],
+   "exit_text": "100% SL 09:55",
+   "leg2_time": "09:55",
+   "pnl": -156.0,
+   "r_total": -1.0,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "09:45",
+     "price": 527.55
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "09:55",
+     "price": 525.8948
+    }
+   ]
+  },
+  "INDSWFTLAB": {
+   "symbol": "INDSWFTLAB",
+   "side": "BUY",
+   "time": "11:15",
+   "signal": "BUY-EX9",
+   "setup": "M9-DataFarm",
+   "sl_mode": "entry-candle-low",
+   "entry": 225.4,
+   "sl": 224.11,
+   "sl_anchor": "entry-candle low \u22120.02%",
+   "risk_pts": 1.29,
+   "risk_pct": 0.574,
+   "risk_rs": 286.0,
+   "qty": 221,
+   "qty_full": 221,
+   "qty_capped": false,
+   "capital": 49813.0,
+   "trail_armed": false,
+   "trail_style": "EMA5 close",
+   "legs": [
+    [
+     "EMA5 11:45",
+     221,
+     225.13,
+     "11:45"
+    ]
+   ],
+   "exit_text": "100% EMA5 11:45",
+   "leg2_time": "11:45",
+   "pnl": -60.0,
+   "r_total": -0.21,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "11:15",
+     "price": 225.4
+    },
+    {
+     "key": "EXIT_EMA5",
+     "time": "11:45",
+     "price": 225.13
+    }
+   ]
   }
  },
  "alerts": [
@@ -1138,7 +1555,22 @@
   "CREDITACC:ENTRY",
   "DREDGECORP:ENTRY",
   "EMCURE:ENTRY",
-  "FIEMIND:ENTRY"
+  "FIEMIND:ENTRY",
+  "ATHERENERG#2:EXIT_EMA5",
+  "AVALON:EXIT_SL",
+  "BETA:EXIT_SL",
+  "BHARTIHEXA#2:EXIT_EMA5",
+  "CENTURYPLY:EXIT_EMA5",
+  "CREDITACC:EXIT_SL",
+  "DREDGECORP:EXIT_EMA5",
+  "EMCURE:EXIT_SL",
+  "FIEMIND:EXIT_EMA5",
+  "GRANULES:ENTRY",
+  "GRAVITA:ENTRY",
+  "GRINDWELL:ENTRY",
+  "HOMEFIRST:ENTRY",
+  "INDGN:ENTRY",
+  "INDSWFTLAB:ENTRY"
  ],
  "gate": {
   "status": "M9B DATA-FARM (BUY-only cash >\u20b91,000cr)",
@@ -1754,6 +2186,286 @@
    "time": "09:35",
    "entry": 158.14,
    "why": "scanner-table preview (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "FINOPB",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 160.49,
+   "why": "scanner-table preview (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "FINOPB",
+   "side": "SELL",
+   "signal": "SELL-EX5",
+   "time": "09:30",
+   "entry": 160.1,
+   "why": "SELL-side master signal \u2014 M9 is BUY-only (logged for evidence)"
+  },
+  {
+   "symbol": "FIVESTAR",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 549.45,
+   "why": "scanner-table preview (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "GANECOS",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:35",
+   "entry": 1210.7,
+   "why": "scanner-table preview (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "GENUSPOWER",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 308.65,
+   "why": "scanner-table preview (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "GILLETTE",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 7815.0,
+   "why": "scanner-table preview (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "GKSL",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 127.15,
+   "why": "scanner-table preview (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "GLOBUSSPR",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:30",
+   "entry": 883.05,
+   "why": "scanner-table preview (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "GMMPFAUDLR",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 799.85,
+   "why": "scanner-table preview (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "GODIGIT",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:30",
+   "entry": 256.2,
+   "why": "scanner-table preview (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "GODIGIT",
+   "side": "SELL",
+   "signal": "SELL-EX1",
+   "time": "10:50",
+   "entry": 252.2,
+   "why": "SELL-side master signal \u2014 M9 is BUY-only (logged for evidence)"
+  },
+  {
+   "symbol": "GOKULAGRO",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 233.1,
+   "why": "scanner-table preview (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "GOODYEAR",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 831.0,
+   "why": "scanner-table preview (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "GPPL",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 149.2,
+   "why": "scanner-table preview (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "GPPL",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "10:05",
+   "entry": 151.01,
+   "why": "signal close \u20b9151.01 \u2264 \u20b9200 \u2014 price floor (rule 4)"
+  },
+  {
+   "symbol": "GRANULES",
+   "side": "SELL",
+   "signal": "SELL-EX1",
+   "time": "10:50",
+   "entry": 840.3,
+   "why": "SELL-side master signal \u2014 M9 is BUY-only (logged for evidence)"
+  },
+  {
+   "symbol": "GRAVITA",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 1614.1,
+   "why": "scanner-table preview (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "GREENPANEL",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 192.1,
+   "why": "scanner-table preview (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "GRINDWELL",
+   "side": "SELL",
+   "signal": "SELL-EX5",
+   "time": "09:30",
+   "entry": 2096.9,
+   "why": "SELL-side master signal \u2014 M9 is BUY-only (logged for evidence)"
+  },
+  {
+   "symbol": "GUJALKALI",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 676.0,
+   "why": "scanner-table preview (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "GVPIL",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 742.9,
+   "why": "scanner-table preview (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "GVPIL",
+   "side": "SELL",
+   "signal": "SELL-EX5",
+   "time": "10:05",
+   "entry": 734.95,
+   "why": "SELL-side master signal \u2014 M9 is BUY-only (logged for evidence)"
+  },
+  {
+   "symbol": "HAPPYFORGE",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 1647.9,
+   "why": "scanner-table preview (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "HCC",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 21.04,
+   "why": "scanner-table preview (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "HCC",
+   "side": "SELL",
+   "signal": "SELL-EX5",
+   "time": "09:40",
+   "entry": 20.95,
+   "why": "SELL-side master signal \u2014 M9 is BUY-only (logged for evidence)"
+  },
+  {
+   "symbol": "HEG",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:35",
+   "entry": 682.0,
+   "why": "entry-candle range 1.77% > 1.25% \u2014 volatility brake (rule 7)"
+  },
+  {
+   "symbol": "HLEGLAS",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 421.1,
+   "why": "scanner-table preview (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "HOMEFIRST",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 1180.8,
+   "why": "scanner-table preview (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "HUBTOWN",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 189.44,
+   "why": "scanner-table preview (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "ICIL",
+   "side": "SELL",
+   "signal": "SELL-EX5",
+   "time": "09:40",
+   "entry": 406.4,
+   "why": "SELL-side master signal \u2014 M9 is BUY-only (logged for evidence)"
+  },
+  {
+   "symbol": "IFBIND",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 1320.2,
+   "why": "scanner-table preview (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "IGARASHI",
+   "side": "SELL",
+   "signal": "SELL-EX5",
+   "time": "09:35",
+   "entry": 451.1,
+   "why": "SELL-side master signal \u2014 M9 is BUY-only (logged for evidence)"
+  },
+  {
+   "symbol": "IGPL",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 454.1,
+   "why": "scanner-table preview (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "IKIO",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 201.73,
+   "why": "scanner-table preview (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "IMFA",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "09:30",
+   "entry": 1380.0,
+   "why": "entry-candle range 1.36% > 1.25% \u2014 volatility brake (rule 7)"
   }
  ]
 }
