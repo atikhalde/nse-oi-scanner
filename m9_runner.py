@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""MODEL 9 — CASH-UNIVERSE RAW DATA FARM (29-Jul-2026).
+"""MODEL 9 — CASH-UNIVERSE DATA FARM × TOP-20 GAINERS GATE (29-Jul-2026).
 
 Shipped as a paper-only evidence lab (user pick A: data-farm even though the
 same-day offline proof of the RAW variant ran net-negative). Its job is
@@ -15,15 +15,14 @@ slow for the 25-min workflow budget; the union of the 3 ledgers is the model.
 
 ENTRY (user spec card, confirmed "go, all looks good" 29-Jul):
   BUY master signals only, ALL EX variants (no B2/EX9 filters), no OI gate, no
-  sector gate, no movers gate. Shared blocks only: 90/290 scanner-table previews
-  + pre-09:26 window.
-  (A live top-20 gainers gate was wired in on 29-Jul evening and removed the
-  same night on user call — M9 is the RAW cash control arm again, mirror of M7
-  for the cash universe; every signal is journaled + labeled for the ML set.)
+  sector gate. Shared blocks: 90/290 scanner-table previews + pre-09:26 window.
   - signal close (LTP) must be > Rs200                       (rule 4)
   - entry-candle range (high-low)/low <= 1.25%               (rule 7)
   - entry = signal-bar close, causal once-per-bar-close scan (rule 6)
   - 1-open-trade-per-symbol rule kept (same as every model)
+  + GATE (user pick A + "replace M9", 29-Jul): stock must be on NSE's live
+    "top gainers — ALL SECURITIES" snapshot (top-20 by %change), direction-
+    aligned like M2's BUY side. Feed offline -> strict: no entries that cycle.
 EXITS:
   - SL = entry-candle LOW - 0.02%                            (rule 8)
   - no target; from the NEXT closed 5m bar, any close < EMA(5) of closes
@@ -53,7 +52,7 @@ import pandas as pd
 
 import live_runner as L                  # engine, engine contract, state helpers
 import learn_log
-import feeds, trader, report
+import feeds, trader, report, gate
 import telegram_bot as tg
 import costs
 
@@ -69,9 +68,9 @@ RISK_CAP = 900.0                  # rule 11
 EMA_SPAN = 5                      # rule 9
 MIN_HIST_BARS = 300               # warmup sanity guard: skip symbols with no/thin history
 
-M9_RULES = ("M9 CASH DATA-FARM (evidence, not a profit model) · universe: NSE cash EQ, "
-            "not F&O, not Nifty-200, mcap>Rs1,000cr · BUY master signals only, ALL EX variants · "
-            "no OI/sector/mover gates · "
+M9_RULES = ("M9 CASH DATA-FARM × TOP-20 GAINERS GATE (evidence, not a profit model) · universe: NSE cash EQ, "
+            "not F&O, not Nifty-200, mcap>Rs1,000cr · BUY master signals only, ALL EX variants · no OI/sector gates · "
+            "GATE: stock must be on NSE live top-20 gainers (all-securities) snapshot; feed offline = strict no-trade · "
             "90/290 + <09:26 blocked · entry @ signal-bar close, LTP>Rs200, candle range<=1.25% · "
             "SL entry-candle low -0.02% · no target: exit on any 5m close < EMA(5) (continuous series) · "
             "sq-off 15:20 · Rs50k notional, risk<=Rs900 · 1-open/stock · " + costs.NOTE)
@@ -233,7 +232,7 @@ def fmt_m9_alert(shard, tr, key):
         return (f"🚨 {tag}ENTRY · {base}\n"
                 f"Time {tr['time']} · ₹{tr['entry']} · Qty {tr['qty']}{cap} (₹{tr['capital']:,.0f})\n"
                 f"SL ₹{tr['sl']} ({tr['sl_anchor']} · max loss ₹{tr['risk_rs']:,.0f})\n"
-                f"🎯 no gates (raw cash control) · target: OPEN — rides until a 5m close < EMA(5) · 15:20 sq-off")
+                f"📈 on NSE top-20 gainers (all-sec) · target: OPEN — rides until a 5m close < EMA(5) · 15:20 sq-off")
     if key == "EXIT_EMA5":
         return (f"📉 {tag}EMA5 EXIT · {base}\n"
                 f"5m close below EMA(5) @ ₹{tr['legs'][-1][2]} {tr['legs'][-1][3]} · "
@@ -277,9 +276,14 @@ def mode_live(shard):
             print(f"  feed {sym}: {type(e).__name__}: {e}")
         time.sleep(0.35)              # gentle: ~350 dhan calls per shard cycle
 
-    st["gate"] = {"status": f"{tag} DATA-FARM (BUY-only cash >₹1,000cr)",
-                  "source": (f"{len(syms)}-sym shard · no gates · px>₹200 · candle≤1.25% · "
-                             f"SL candle-low−0.02% · EMA5 trail · 15:20 sqoff · {len(bars_map)} fed")}
+    # --- live NSE top-gainers (all-securities) snapshot for this cycle's gate
+    gainers, gmeta = gate.nse_movers_gainers(top_n=20)
+    st["gate"] = {"status": f"{tag} DATA-FARM × top-20 gainers gate (BUY-only cash >₹1,000cr)",
+                  "source": (f"{len(syms)}-sym shard · gainers feed {gmeta['status']} "
+                             f"({gmeta.get('count', 0)} parsed → top-20) · px>₹200 · candle≤1.25% · "
+                             f"SL candle-low−0.02% · EMA5 trail · 15:20 sqoff · {len(bars_map)} fed"),
+                  "gainers_pass": len(gainers)}
+    print(f"  gainers snapshot: {gmeta['status']} · {len(gainers)}/{gmeta.get('count', 0)} names")
 
     # --- history cache + warmup guard (engine with no warmup = garbage signals)
     hist_map = {}
@@ -343,7 +347,7 @@ def mode_live(shard):
                 # BEFORE the skip/entry dispatch — a `continue` in any skip branch must
                 # never leave the bar un-registered, else every later cycle re-scans it:
                 # duplicate skip rows, and a skip can silently become an entry when a
-                # time-varying condition flips state between cycles.
+                # time-varying gate (e.g. gainers feed recovering) flips state.
                 st["signals"][sym] = st["signals"].get(sym, {})
                 st["signals"][sym]["nbars"] = j + 1
             except Exception as e:
@@ -373,6 +377,10 @@ def mode_live(shard):
                         why = f"signal close ₹{entry:,.2f} ≤ ₹{MIN_PRICE:.0f} — price floor (rule 4)"
                     elif rng > MAX_RANGE:
                         why = f"entry-candle range {rng * 100:.2f}% > 1.25% — volatility brake (rule 7)"
+                    elif not gainers:
+                        why = "NSE top-gainers feed OFFLINE — strict mode: no M9 entries this cycle"
+                    elif sym not in gainers:
+                        why = "not on NSE top-20 gainers (all-securities) snapshot — entry blocked (user rule A)"
                     if why:
                         print(f"  {tag} {sym} {side} {name} @ {etime} — SKIPPED: {why}")
                         skip_log(st, sym, side, name, etime, entry, why)
@@ -456,7 +464,7 @@ def _eod_text(shard, done, dlbl, st):
              f"Trades {len(done)} · net wins {wins} ({wins * 100 // max(1, len(done))}%)",
              f"Gross ₹{gross:+,.0f} · costs+slip −₹{drag:,.0f} · <b>NET ₹{net:+,.0f}</b>",
              f"Exits: SL {sls} · EMA5 {ema} · EOD {eod} — skipped signals {len(st.get('skipped', []))}",
-             "(cash data-farm — raw control, evidence for the learning log, NOT a profit model)"]
+             "(cash data-farm × top-20 gainers gate — evidence, NOT a profit model)"]
     nets = sorted(((c[id(t)]["net"], t) for t in done), key=lambda x: -x[0])
     for n, t in nets[:3]:
         lines.append(f"🟢 {t['symbol']} {t['signal']} net ₹{n:+,.0f}")
