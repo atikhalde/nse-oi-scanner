@@ -2,6 +2,11 @@ name: "11. LIVE M11 — master × video-4 alignment (paper-only)"
 
 on:
   workflow_dispatch:          # also driven by cron-job.org every 15 min (scheduler-proof)
+    inputs:
+      mode:
+        description: "'live' = normal paper-trading cycle (default) · 'test-alert' = send sample M11 alert to all chats"
+        required: true
+        default: "live"
   schedule:
     # backup ticker only: 09:15–15:30 IST (03:45–10:00 UTC), weekdays
     - cron: "45-59/15 3 * * 1-5"
@@ -34,7 +39,12 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install -r requirements.txt
-      - run: python -u m11_runner.py --loop 2
+      - name: test alert fanout (manual, mode=test-alert)
+        if: github.event.inputs.mode == 'test-alert'
+        run: python -u m11_runner.py --test-alert
+      - name: live cycle (default)
+        if: github.event.inputs.mode != 'test-alert'
+        run: python -u m11_runner.py --loop 2
       - name: commit state + reports
         if: always()
         run: |
