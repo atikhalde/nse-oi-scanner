@@ -193,6 +193,11 @@ def run():
         M._send_m11("hi")
         assert not sent_main and len(sent_extras) == 2
         M.M11_INCLUDE_MAIN = True
+        # 4) --test-alert fires the full fanout path: 2 messages × (main+A+B) = 3 targets
+        sent_main.clear(); sent_extras.clear()
+        n = M.test_alert()
+        assert n == 3 and len(sent_main) == 2 and len(sent_extras) == 4
+        assert any("🅼11 TEST" in m for m in sent_main) and any("TARGET" in m for m in sent_main)
     finally:
         M.tg.send_message, M.tg._post = _old_main, _old_post
         for k in ("M11_BOT_TOKEN_A", "M11_CHAT_ID_A", "M11_BOT_TOKEN_B", "M11_CHAT_ID_B"):

@@ -251,6 +251,28 @@ def video_setups(bars, j, side, pv):
     return got
 
 
+def test_alert():
+    """--test-alert mode: fire a synthetic M11 alert through the REAL fanout path
+    (_send_m11 → main + extra bots A/B). Prints the target count to the workflow
+    log so fanout can be verified even without seeing secret values. No trading
+    state touched."""
+    tr = {"symbol": "KAYNES", "side": "BUY", "signal": "BUY-EX17", "time": "10:05",
+          "entry": 3376.0, "qty": 14, "capital": 47264.0, "sl": 3360.1,
+          "sl_anchor": "pullback-low ∓0.02%", "risk_pts": 15.9, "risk_rs": 900.0,
+          "cls_trader": "PULLBACK", "setup": "S1+S2", "trail_style": "structure swings",
+          "sl_mode": "structure", "setups": ["S1", "S2"], "legs": [], "events": [],
+          "pnl": 0.0, "r_total": 0.0, "exit_text": "", "closed": False, "status": "OPEN"}
+    extra = m11_targets()
+    to_main = M11_INCLUDE_MAIN or not extra
+    n = (1 if to_main else 0) + len(extra)
+    _send_m11("🧪 🅼11 TEST — hello from the M11 lab. If this reaches the correct "
+              f"chat(s), the {n}-target fanout is wired right.")
+    _send_m11(fmt_m11_alert(tr, "ENTRY"))
+    print(f"M11 test alert dispatched to {n} target(s): "
+          f"main={'yes' if to_main else 'no'} extras={len(extra)}")
+    return n
+
+
 # ---------------- plumbing (same discipline as M7/M10) ----------------
 
 def load_state(today):
@@ -478,7 +500,12 @@ def mode_live():
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--loop", type=int, default=1)
+    ap.add_argument("--test-alert", action="store_true",
+                    help="send one synthetic M11 alert to all targets and stop")
     a = ap.parse_args()
+    if a.test_alert:
+        test_alert()
+        raise SystemExit(0)
     for i in range(max(1, a.loop)):
         active = mode_live()
         if not active:
