@@ -305,7 +305,8 @@ def evaluate(sym, side, etime, entry, signal, bars, warmup=None, today_date=None
 
 def fmt_alert(tr, key):
     arrow = "🟢" if tr["side"] == "BUY" else "🔴"
-    setup = SETUP_LABEL.get(tr.get("setup", ""), "")
+    setup = SETUP_LABEL.get(tr.get("cls_trader", tr.get("setup", "")),
+                            SETUP_LABEL.get(tr.get("setup", ""), ""))
     base = f"<b>{tr['symbol']}</b> {arrow} {tr['side']} · {tr['signal']}"
     if key == "ENTRY":
         cap = f" (capped from {tr['qty_full']} for ₹1,000 max-loss rule)" if tr.get("qty_capped") else ""
