@@ -27,8 +27,16 @@ alignment test for MASTER SCANNER signals:
                       the two greens' envelope; signal bar closes above the
                       envelope high. SELL mirrors (red-green-red).
 
-DEFERRED (per user, 02-Aug): green-day/red-day confirm — will be implemented and
-tested later. NOT in v1 of M11: breadth side-gate, whitelists, sector logic.
+USER RULES 02-Aug (asked + confirmed 1a/2b/3b):
+  1a S1 MORNING BASE IS NOT A TRIGGER ALONE — entry needs >=1 core setup (S2/S3/S4)
+     TRUE; S1 counts only as extra confluence. Blocked S1-alone signals are logged
+     in the EOD skip sheet for measurement.
+  2b DAY-COLOR MOMENTUM CONFIRM (strict): BUY only on GREEN day (entry > prev close),
+     SELL only on RED day (entry < prev close). Flat or unknown prev close => BLOCKED
+     for both sides (static rule, never loosens intra-day).
+  3b NO-DUP ALERT HARDENING + QUIET: alert keys are registered + state saved BEFORE
+     the Telegram send (a crashed/resumed run can never send the same alert twice);
+     heartbeat throttled to 1x/hour. ENTRY / TRAIL_ON / EXIT alerts kept.
 
 Each trade/skipped signal is tagged with the EXACT detectors that matched
 (e.g. tr["setups"]=["S1","S2"]) so Friday's Coach votes keep/drop PER SETUP —
@@ -289,21 +297,38 @@ def save_state(st):
 
 
 def _pivot(st, sym, today):
-    """Classic daily pivot from yesterday's history bar, memoized per day."""
+    """Classic daily pivot + previous close from yesterday's history bar
+    (one read, memoized per day: pivot in pvmap, prev close in pcmap — pcmap feeds
+    the 2b day-color momentum confirm)."""
     pm = st.setdefault("pvmap", {})
+    cm = st.setdefault("pcmap", {})
     if sym not in pm:
+        pm[sym] = cm[sym] = None
         try:
             h = pd.read_csv(L.HIST / f"{sym}.csv", parse_dates=["dt"])
             prev = h[h["dt"].dt.strftime("%Y-%m-%d") < today]
             if len(prev):
                 pm[sym] = round((float(prev["high"].iloc[-1]) + float(prev["low"].iloc[-1])
                                  + float(prev["close"].iloc[-1])) / 3.0, 2)
-            else:
-                pm[sym] = None
+                cm[sym] = float(prev["close"].iloc[-1])
         except Exception as e:
             print(f"  pivot {sym}: {type(e).__name__}")
-            pm[sym] = None
     return pm.get(sym)
+
+
+def core_setups(setups):
+    """Rule 1a: S1 alone is never a trigger — returns only the core setups (S2/S3/S4).
+    Empty result => entry blocked even though a video setup matched."""
+    return [t for t in setups if t != "S1"]
+
+
+def daycolor_ok(side, entry, pc):
+    """Rule 2b (user pick B): strict day-color momentum confirm.
+    BUY: green day only (entry > prev close). SELL: red day only (entry < prev close).
+    Flat day or unknown prev close => False (static, never loosens)."""
+    if pc is None:
+        return False
+    return float(entry) > float(pc) if side == "BUY" else float(entry) < float(pc)
 
 
 SETUP_NAMES = {"S1": "Morning Base", "S2": "Pivot Pullback",
@@ -354,7 +379,8 @@ def mode_live():
                   "source": ("any master signal, BOTH sides · ≥1 of S1 morning-base / "
                              "S2 pivot-pullback / S3 flag-breakout / S4 sandwich TRUE at "
                              "signal bar · entries ≥09:45 · 90/290 + <09:26 blocked · "
-                             "green/red-day confirm DEFERRED (user, later test) · "
+                             "rule1a: S1 alone blocked (needs S2/S3/S4) · rule2b: day-color "
+                             "confirm (BUY green day / SELL red day, strict) · "
                              "exits = EXACT M8 spec: structure SL ∓0.02% · no fixed targets "
                              "(+1R trail-arm) · ₹900 max-loss · 15:20 sq-off (paper lab)")}
 
@@ -377,9 +403,9 @@ def mode_live():
                 key = f"{tkey}:{ev['key']}"
                 if ev["key"] != "ENTRY" and key not in st["alerts"]:
                     print(f"  >>> M11 {ev['key']} {sym} @ {ev.get('price')}")
-                    _send_m11(fmt_m11_alert(new_tr, ev["key"]))
                     st["alerts"].append(key)
-                    save_state(st)          # persist alert registry instantly (no-repeat guarantee)
+                    save_state(st)          # registry-first (rule 3b): crash/resume can never re-send
+                    _send_m11(fmt_m11_alert(new_tr, ev["key"]))
         except Exception as e:
             print(f"  manage {tkey}: {type(e).__name__}: {e}")
 
@@ -418,6 +444,7 @@ def mode_live():
                     name = str(row.get("scan_name", code))
                     why = None
                     setups = []
+                    daypct = None
                     if int(code) in (90, 290):
                         why = "scanner-table preview (90/290) — no chart label"
                     elif etime < L.CHART_MIN_TIME:
@@ -428,14 +455,24 @@ def mode_live():
                         why = f"before {ENTRY_MIN_M11} — morning base not verified yet (video pre-condition)"
                     else:
                         pv = _pivot(st, sym, today)
+                        pc = st.get("pcmap", {}).get(sym)
+                        daypct = round((entry / pc - 1) * 100, 3) if pc else None
                         setups = video_setups(tbars.iloc[: j + 1], j, side, pv)
                         if not setups:
                             why = "no video setup aligned at signal bar (S1/S2/S3/S4 all false)"
+                        elif not core_setups(setups):
+                            why = "S1 alone blocked — morning base is a bonus tag, needs S2/S3/S4 (rule 1a)"
+                        elif not daycolor_ok(side, entry, pc):
+                            why = ("day-color confirm blocked: BUY only on GREEN day"
+                                   if side == "BUY" else
+                                   "day-color confirm blocked: SELL only on RED day") + \
+                                  f" (entry {entry:.2f} vs prev close {pc}, rule 2b)"
                     if why:
                         print(f"  M11 {sym} {side} {name} @ {etime} — SKIPPED: {why}")
                         st.setdefault("skipped", []).append(
                             {"symbol": sym, "side": side, "signal": name, "time": etime,
-                             "entry": round(entry, 2), "setups": setups, "why": why})
+                             "entry": round(entry, 2), "setups": setups, "daypct": daypct,
+                             "why": why})
                         skipped_now += 1
                         continue
                     tr = trader.evaluate(sym, side, etime, entry, name, tbars,
@@ -446,13 +483,15 @@ def mode_live():
                     tr["cls_trader"] = tr.get("setup")              # trader classify (alert Setup line)
                     tr["setups"] = setups
                     tr["setup"] = "+".join(setups)                  # learn 'cls' col: e.g. "S1+S2" (Friday votes)
+                    tr["daycolor"] = "GREEN" if daypct and daypct > 0 else "RED"
+                    tr["daypct"] = daypct
                     tkey, k = sym, 2
                     while tkey in st["trades"]:
                         tkey = f"{sym}#{k}"; k += 1
                     st["trades"][tkey] = tr
-                    _send_m11(fmt_m11_alert(tr, "ENTRY"))
                     st["alerts"].append(f"{tkey}:ENTRY")
-                    save_state(st)          # persist alert registry instantly (no-repeat guarantee)
+                    save_state(st)          # registry-first (rule 3b): crash/resume can never re-send
+                    _send_m11(fmt_m11_alert(tr, "ENTRY"))
                     entries_now += 1
                     print(f"  >>> M11 ENTRY {tkey} {side} @ {entry} qty {tr['qty']} · "
                           f"SL {tr['sl']} · setups {setups}")
@@ -479,16 +518,16 @@ def mode_live():
             msg = ("🅼11 EOD · " + report.summary_text(done, dlbl, st["gate"])
                    + f"\n🎬 video setups taken: {sct}"
                    + "\n(master × video-4 lab — per-setup adoption votes Friday)")
+            st["eod_done"] = True
+            save_state(st)          # registry-first (rule 3b): EOD report can never double-send
             _send_m11(msg)
             _doc_m11(out, caption=f"🅼11 📄 M11 video-4 paper report {today}")
-            st["eod_done"] = True
-            save_state(st)          # so a crashed run never re-sends the EOD report
         except Exception as e:
             print(f"  M11 EOD report: {type(e).__name__}: {e}")
 
-    if "09:20" <= hhmm < "15:26":
+    if "09:20" <= hhmm < "15:26" and hhmm.endswith(":15"):   # rule 3b: 1x/hour, not every cycle
         _send_m11(f"💓 🅼11 {hhmm} IST · {len(st['trades'])} trades · master×video-4 "
-                  f"(S1/S2/S3/S4 alignment)", silent=True)
+                  f"(hourly check-in)", silent=True)
 
     st["cycles"] += 1
     save_state(st)

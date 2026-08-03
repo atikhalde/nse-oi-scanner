@@ -145,6 +145,21 @@ def run():
     assert "S1" in got and "S4" not in got            # steady rise: base intact, no sandwich
     ok(f"orchestrator returns detector tags (S1 present): {got}")
 
+    # ---------- user gates 1a (S1-alone blocked) + 2b (day-color confirm) ----------
+    assert M.core_setups(["S1"]) == []                 # S1 alone -> no core -> blocked
+    assert M.core_setups(["S1", "S2"]) == ["S2"]       # S1+S2 -> S2 core -> allowed
+    assert M.core_setups(["S3"]) == ["S3"]             # S3 alone -> allowed (core present)
+    assert M.core_setups(["S4", "S2"]) == ["S4", "S2"]
+    assert M.daycolor_ok("BUY", 101.0, 100.0) is True    # green day
+    assert M.daycolor_ok("BUY", 99.0, 100.0) is False    # red day -> blocked
+    assert M.daycolor_ok("BUY", 100.0, 100.0) is False   # flat = not green, strict
+    assert M.daycolor_ok("SELL", 99.0, 100.0) is True    # red day
+    assert M.daycolor_ok("SELL", 101.0, 100.0) is False  # green day -> blocked
+    assert M.daycolor_ok("SELL", 100.0, 100.0) is False  # flat = not red, strict
+    assert M.daycolor_ok("BUY", 101.0, None) is False    # prev close unknown -> strict block
+    assert M.daycolor_ok("SELL", 99.0, None) is False
+    ok("gates 1a (S1-alone blocked, needs S2/S3/S4) + 2b (day-color momentum, strict both sides)")
+
     # ---------- alert smoke (M8-format rich alert + M11 extras) ----------
     tr = {"symbol": "KAYNES", "side": "BUY", "signal": "BUY-EX17", "time": "10:05",
           "entry": 3376.0, "qty": 14, "capital": 47264.0, "sl": 3360.1,
