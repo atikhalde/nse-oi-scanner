@@ -1,0 +1,38 @@
+name: "0. ONE-SHOT — REMOVE M9 completely (user request 03-Aug)"
+
+on:
+  workflow_dispatch: {}        # manual one-shot only — deletes itself after running
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cleanup-m9
+  cancel-in-progress: false
+
+jobs:
+  cleanup-m9:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - name: purge every M9 file (code, workflows, state, 300MB cash data) + this workflow
+        run: |
+          git config user.name "paper-bot"
+          git config user.email "paper-bot@users.noreply.github.com"
+          git rm -r -q --ignore-unmatch \
+            m9_runner.py \
+            m9_bootstrap.py \
+            test_m9_runner.py \
+            m9_universe.csv \
+            state9a.json state9b.json state9c.json \
+            data/history9 \
+            .github/workflows/9a_live_m9.yml \
+            .github/workflows/9b_live_m9.yml \
+            .github/workflows/9c_live_m9.yml \
+            .github/workflows/0_cleanup_m9.yml
+          git commit -m "remove M9 completely (user request); M1/M2/M5/M6/M7/M8/M10/M11 untouched" \
+            || echo "nothing staged — already clean"
+          git pull --rebase || true
+          git push
+      - run: echo "M9 purge committed. KEPT by design: learn/raw_M9*.csv + labeled rows (small ML data)."
