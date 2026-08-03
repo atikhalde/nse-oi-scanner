@@ -27,16 +27,25 @@ alignment test for MASTER SCANNER signals:
                       the two greens' envelope; signal bar closes above the
                       envelope high. SELL mirrors (red-green-red).
 
-USER RULES 02-Aug (asked + confirmed 1a/2b/3b):
-  1a S1 MORNING BASE IS NOT A TRIGGER ALONE — entry needs >=1 core setup (S2/S3/S4)
-     TRUE; S1 counts only as extra confluence. Blocked S1-alone signals are logged
-     in the EOD skip sheet for measurement.
-  2b DAY-COLOR MOMENTUM CONFIRM (strict): BUY only on GREEN day (entry > prev close),
-     SELL only on RED day (entry < prev close). Flat or unknown prev close => BLOCKED
-     for both sides (static rule, never loosens intra-day).
-  3b NO-DUP ALERT HARDENING + QUIET: alert keys are registered + state saved BEFORE
-     the Telegram send (a crashed/resumed run can never send the same alert twice);
-     heartbeat throttled to 1x/hour. ENTRY / TRAIL_ON / EXIT alerts kept.
+ENTRY GATE — WINNER'S CLUB (user vote a, 03-Aug, from day-1 big-winner anatomy):
+  PURE-WINNER variants (3:0 / 1:0 winner:loser day-1) pass with >=1 setup:
+      108 BUY-EX9 · 111 BUY-EX12 · 201 SELL-EX1 · 280 NORMAL SELL
+  DEAD variants (0 big-winners, 9 loser-only trades) are BLOCKED outright:
+      103 BUY-EX4 · 104 BUY-EX5 · 105 BUY-EX6 · 208 SELL-EX8
+  MIXED / ANY OTHER variant (incl. 101/102/106 + unseen codes like 80/212):
+      needs >=2 of the 4 video setups TRUE at the signal bar (double-confirm;
+      S1 alone counts as ONE setup — mixed variants specifically need confluence).
+  Blocked signals are logged in the EOD skip sheet (measurable, nothing hidden).
+  RECALIBRATE every Friday from the week's learn data (weekly loop discipline).
+
+ALERT HARDENING (user pick 3b, 02-Aug, KEPT): alert keys registered + state saved
+  BEFORE the Telegram send (crash/resume can never double-send); heartbeat 1x/hour.
+
+REVERTED 03-Aug (user pick A): entry gates 1a (S1-alone block) + 2b (day-color
+  momentum confirm) ROLLED BACK. Day-1 live evidence: both gates fired ZERO blocks
+  in ~3.5 hours while M11 still took 58 trades — the logs showed volume was driven
+  by trade count, not weak entries. Entries behave as the original vote-B card:
+  ANY of S1/S2/S3/S4 (incl. S1 alone), both sides, no day-color check.
 
 Each trade/skipped signal is tagged with the EXACT detectors that matched
 (e.g. tr["setups"]=["S1","S2"]) so Friday's Coach votes keep/drop PER SETUP —
@@ -95,6 +104,20 @@ FLAG_RATIO = 0.4                  # S3: flag range <= ratio x pole move (points)
 FLAG_MIN_BARS = 2
 FLAG_MAX_BARS = 8
 TREND_WIN = 10                    # S4 trend proxy lookback (bars)
+
+# Winner's-club constants (recalibrate Fridays from learn data; seeded 03-Aug day-1)
+M11_WINNER_CODES = {108, 111, 201, 280}     # pure winners: BUY-EX9, BUY-EX12, SELL-EX1, NORMAL SELL
+M11_DEAD_CODES = {103, 104, 105, 208}       # dead: BUY-EX4, BUY-EX5, BUY-EX6, SELL-EX8
+
+
+def club_ok(code, setups):
+    """Winner's-club entry gate (list of matched setup tags -> allowed?)."""
+    c = int(code)
+    if c in M11_DEAD_CODES:
+        return False                    # dead variant: blocked outright
+    if c in M11_WINNER_CODES:
+        return True                     # pure winner: any of S1–S4 (incl. S1 alone)
+    return len(setups) >= 2             # mixed/unseen: double-confirm 2+ setups
 
 # M11 telegram routing (02-Aug): 2 separate extra bots in ADDITION to main chat.
 M11_INCLUDE_MAIN = True           # True: main chat + 2 extra bots · False: extras only
@@ -297,38 +320,21 @@ def save_state(st):
 
 
 def _pivot(st, sym, today):
-    """Classic daily pivot + previous close from yesterday's history bar
-    (one read, memoized per day: pivot in pvmap, prev close in pcmap — pcmap feeds
-    the 2b day-color momentum confirm)."""
+    """Classic daily pivot from yesterday's history bar, memoized per day."""
     pm = st.setdefault("pvmap", {})
-    cm = st.setdefault("pcmap", {})
     if sym not in pm:
-        pm[sym] = cm[sym] = None
         try:
             h = pd.read_csv(L.HIST / f"{sym}.csv", parse_dates=["dt"])
             prev = h[h["dt"].dt.strftime("%Y-%m-%d") < today]
             if len(prev):
                 pm[sym] = round((float(prev["high"].iloc[-1]) + float(prev["low"].iloc[-1])
                                  + float(prev["close"].iloc[-1])) / 3.0, 2)
-                cm[sym] = float(prev["close"].iloc[-1])
+            else:
+                pm[sym] = None
         except Exception as e:
             print(f"  pivot {sym}: {type(e).__name__}")
+            pm[sym] = None
     return pm.get(sym)
-
-
-def core_setups(setups):
-    """Rule 1a: S1 alone is never a trigger — returns only the core setups (S2/S3/S4).
-    Empty result => entry blocked even though a video setup matched."""
-    return [t for t in setups if t != "S1"]
-
-
-def daycolor_ok(side, entry, pc):
-    """Rule 2b (user pick B): strict day-color momentum confirm.
-    BUY: green day only (entry > prev close). SELL: red day only (entry < prev close).
-    Flat day or unknown prev close => False (static, never loosens)."""
-    if pc is None:
-        return False
-    return float(entry) > float(pc) if side == "BUY" else float(entry) < float(pc)
 
 
 SETUP_NAMES = {"S1": "Morning Base", "S2": "Pivot Pullback",
@@ -379,8 +385,8 @@ def mode_live():
                   "source": ("any master signal, BOTH sides · ≥1 of S1 morning-base / "
                              "S2 pivot-pullback / S3 flag-breakout / S4 sandwich TRUE at "
                              "signal bar · entries ≥09:45 · 90/290 + <09:26 blocked · "
-                             "rule1a: S1 alone blocked (needs S2/S3/S4) · rule2b: day-color "
-                             "confirm (BUY green day / SELL red day, strict) · "
+                             "winner's-club gate (vote a 03-Aug): dead 103/104/105/208 blocked · "
+                             "mixed variants need ≥2 setups · winners 108/111/201/280 free · "
                              "exits = EXACT M8 spec: structure SL ∓0.02% · no fixed targets "
                              "(+1R trail-arm) · ₹900 max-loss · 15:20 sq-off (paper lab)")}
 
@@ -444,7 +450,6 @@ def mode_live():
                     name = str(row.get("scan_name", code))
                     why = None
                     setups = []
-                    daypct = None
                     if int(code) in (90, 290):
                         why = "scanner-table preview (90/290) — no chart label"
                     elif etime < L.CHART_MIN_TIME:
@@ -455,24 +460,20 @@ def mode_live():
                         why = f"before {ENTRY_MIN_M11} — morning base not verified yet (video pre-condition)"
                     else:
                         pv = _pivot(st, sym, today)
-                        pc = st.get("pcmap", {}).get(sym)
-                        daypct = round((entry / pc - 1) * 100, 3) if pc else None
                         setups = video_setups(tbars.iloc[: j + 1], j, side, pv)
                         if not setups:
                             why = "no video setup aligned at signal bar (S1/S2/S3/S4 all false)"
-                        elif not core_setups(setups):
-                            why = "S1 alone blocked — morning base is a bonus tag, needs S2/S3/S4 (rule 1a)"
-                        elif not daycolor_ok(side, entry, pc):
-                            why = ("day-color confirm blocked: BUY only on GREEN day"
-                                   if side == "BUY" else
-                                   "day-color confirm blocked: SELL only on RED day") + \
-                                  f" (entry {entry:.2f} vs prev close {pc}, rule 2b)"
+                        elif not club_ok(code, setups):
+                            c = int(code)
+                            if c in M11_DEAD_CODES:
+                                why = f"winner's-club gate: {name} dead variant blocked (0 big-winners day-1)"
+                            else:
+                                why = f"winner's-club gate: {name} is mixed — needs ≥2 setups (has {len(setups)}: {'+'.join(setups)})"
                     if why:
                         print(f"  M11 {sym} {side} {name} @ {etime} — SKIPPED: {why}")
                         st.setdefault("skipped", []).append(
                             {"symbol": sym, "side": side, "signal": name, "time": etime,
-                             "entry": round(entry, 2), "setups": setups, "daypct": daypct,
-                             "why": why})
+                             "entry": round(entry, 2), "setups": setups, "why": why})
                         skipped_now += 1
                         continue
                     tr = trader.evaluate(sym, side, etime, entry, name, tbars,
@@ -483,8 +484,6 @@ def mode_live():
                     tr["cls_trader"] = tr.get("setup")              # trader classify (alert Setup line)
                     tr["setups"] = setups
                     tr["setup"] = "+".join(setups)                  # learn 'cls' col: e.g. "S1+S2" (Friday votes)
-                    tr["daycolor"] = "GREEN" if daypct and daypct > 0 else "RED"
-                    tr["daypct"] = daypct
                     tkey, k = sym, 2
                     while tkey in st["trades"]:
                         tkey = f"{sym}#{k}"; k += 1

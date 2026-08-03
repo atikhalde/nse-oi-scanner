@@ -145,20 +145,28 @@ def run():
     assert "S1" in got and "S4" not in got            # steady rise: base intact, no sandwich
     ok(f"orchestrator returns detector tags (S1 present): {got}")
 
-    # ---------- user gates 1a (S1-alone blocked) + 2b (day-color confirm) ----------
-    assert M.core_setups(["S1"]) == []                 # S1 alone -> no core -> blocked
-    assert M.core_setups(["S1", "S2"]) == ["S2"]       # S1+S2 -> S2 core -> allowed
-    assert M.core_setups(["S3"]) == ["S3"]             # S3 alone -> allowed (core present)
-    assert M.core_setups(["S4", "S2"]) == ["S4", "S2"]
-    assert M.daycolor_ok("BUY", 101.0, 100.0) is True    # green day
-    assert M.daycolor_ok("BUY", 99.0, 100.0) is False    # red day -> blocked
-    assert M.daycolor_ok("BUY", 100.0, 100.0) is False   # flat = not green, strict
-    assert M.daycolor_ok("SELL", 99.0, 100.0) is True    # red day
-    assert M.daycolor_ok("SELL", 101.0, 100.0) is False  # green day -> blocked
-    assert M.daycolor_ok("SELL", 100.0, 100.0) is False  # flat = not red, strict
-    assert M.daycolor_ok("BUY", 101.0, None) is False    # prev close unknown -> strict block
-    assert M.daycolor_ok("SELL", 99.0, None) is False
-    ok("gates 1a (S1-alone blocked, needs S2/S3/S4) + 2b (day-color momentum, strict both sides)")
+    # ---------- winner's-club gate (user vote a, 03-Aug) ----------
+    # pure winners pass with ANY single setup (S1 alone fine):
+    assert M.club_ok(108, ["S1"]) is True              # BUY-EX9
+    assert M.club_ok(111, ["S2"]) is True              # BUY-EX12
+    assert M.club_ok(201, ["S1"]) is True              # SELL-EX1
+    assert M.club_ok(280, ["S1"]) is True              # NORMAL SELL
+    # dead variants blocked even with confluence:
+    assert M.club_ok(103, ["S1", "S2", "S4"]) is False  # BUY-EX4
+    assert M.club_ok(104, ["S1", "S3"]) is False        # BUY-EX5
+    assert M.club_ok(105, ["S1", "S4"]) is False        # BUY-EX6
+    assert M.club_ok(208, ["S2", "S3"]) is False        # SELL-EX8
+    # mixed variants need >=2 setups:
+    assert M.club_ok(101, ["S1"]) is False              # plain BUY-EX alone
+    assert M.club_ok(101, ["S1", "S2"]) is True
+    assert M.club_ok(102, ["S1"]) is False              # BUY-EX17 is mixed today
+    assert M.club_ok(102, ["S1", "S4"]) is True
+    # unseen codes default to mixed (double-confirm, never fully free):
+    assert M.club_ok(80, ["S1"]) is False
+    assert M.club_ok(80, ["S1", "S3"]) is True
+    assert M.club_ok(212, ["S3"]) is False
+    assert M.club_ok(212, ["S1", "S3"]) is True
+    ok("winner's-club gate: winners free / dead blocked / mixed 2-setup / unseen=mixed")
 
     # ---------- alert smoke (M8-format rich alert + M11 extras) ----------
     tr = {"symbol": "KAYNES", "side": "BUY", "signal": "BUY-EX17", "time": "10:05",
