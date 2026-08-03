@@ -300,9 +300,9 @@ def mode_live():
                 key = f"{tkey}:{ev['key']}"
                 if ev["key"] != "ENTRY" and key not in st["alerts"]:
                     print(f"  >>> M10 {ev['key']} {sym} @ {ev.get('price')}")
-                    tg.send_message(fmt_m10_alert("🅼10", new_tr, ev["key"]))
                     st["alerts"].append(key)
-                    save_state(st)          # persist alert registry instantly (no-repeat guarantee)
+                    save_state(st)          # registry + state saved BEFORE send (no-dup hardening 03-Aug): crash/resume can never re-send
+                    tg.send_message(fmt_m10_alert("🅼10", new_tr, ev["key"]))
         except Exception as e:
             print(f"  manage {tkey}: {type(e).__name__}: {e}")
 
@@ -383,9 +383,9 @@ def mode_live():
                     while tkey in st["trades"]:
                         tkey = f"{sym}#{k}"; k += 1
                     st["trades"][tkey] = tr
-                    tg.send_message(fmt_m10_alert("🅼10", tr, "ENTRY"))
                     st["alerts"].append(f"{tkey}:ENTRY")
-                    save_state(st)          # persist alert registry instantly (no-repeat guarantee)
+                    save_state(st)          # registry + state saved BEFORE send (no-dup hardening 03-Aug): crash/resume can never re-send
+                    tg.send_message(fmt_m10_alert("🅼10", tr, "ENTRY"))
                     entries_now += 1
                     print(f"  >>> M10 ENTRY {tkey} {side} @ {entry} qty {tr['qty']} · "
                           f"SL {tr['sl']} (v2.1 · tape {regime} adv {pct}% · daypct {tr['daypct']}%)")
@@ -406,15 +406,15 @@ def mode_live():
             learn_log.harvest("M10", today, st, None, bars_map)
             msg = ("🅼10 EOD · " + report.summary_text(done, dlbl, st["gate"])
                    + "\n(Coach-v2.1 breadth-aligned lab — A/B vs M1, Friday adopt/drop vote)")
+            st["eod_done"] = True
+            save_state(st)          # EOD done + state saved BEFORE send (no-dup hardening 03-Aug): report can never double-send
             tg.send_message(msg)
             tg.send_document(out, caption=f"🅼10 📄 M10 Coach-v2.1 paper report {today}")
-            st["eod_done"] = True
-            save_state(st)          # so a crashed run never re-sends the EOD report
         except Exception as e:
             print(f"  M10 EOD report: {type(e).__name__}: {e}")
 
     # --- per-cycle silent status
-    if "09:20" <= hhmm < "15:26":
+    if "09:20" <= hhmm < "15:26" and hhmm.endswith(":15"):   # hourly only (alert-noise rule, 03-Aug)
         tg.send_message(f"💓 🅼10 {hhmm} IST · {len(st['trades'])} trades · tape {regime} "
                         f"(adv {pct}%) · whitelist·confirm", silent=True)
 

@@ -344,9 +344,9 @@ def mode_live():
             for ev in new_tr["events"]:
                 key = f"{tkey}:{ev['key']}"
                 if ev["key"] != "ENTRY" and key not in st["alerts"]:
-                    tg.send_message(trader.fmt_alert(new_tr, ev["key"]))
                     st["alerts"].append(key)
-                    save_state(st)          # persist alert registry instantly (no-repeat guarantee)
+                    save_state(st)          # registry + state saved BEFORE send (no-dup hardening 03-Aug): crash/resume can never re-send
+                    tg.send_message(trader.fmt_alert(new_tr, ev["key"]))
         except Exception as e:
             print(f"  manage {sym}: {type(e).__name__}: {e}")
 
@@ -472,17 +472,17 @@ def mode_live():
             gh = run_ghosts(st, today, bars_map)
             learn_log.harvest("M1", today, st, gh, bars_map)
             out = report.build(done, dlbl, st["gate"], str(ROOT / f"paper_test_{today}.xlsx"), skipped=sk or None, ghosts=gh or None)
+            st["eod_done"] = True
+            save_state(st)          # EOD done + state saved BEFORE send (no-dup hardening 03-Aug): report can never double-send
             tg.send_message(report.summary_text(done, dlbl, st["gate"], ghosts=gh or None))
             tg.send_document(out, caption=f"📄 Paper test report {today}")
-            st["eod_done"] = True
-            save_state(st)          # so a crashed run never re-sends the EOD report
         except Exception as e:
             print(f"  EOD report: {type(e).__name__}: {e}")
 
     # --- per-cycle silent status line: opening Telegram always shows when the
     #     engine last ran (no sound/notification). Real alerts stay loud.
     new_tg = (len(st["alerts"]) - alerts_before) + raw_new
-    if "09:20" <= hhmm < "15:26":
+    if "09:20" <= hhmm < "15:26" and hhmm.endswith(":15"):   # hourly only (alert-noise rule, 03-Aug)
         tg.send_message(f"💓 {hhmm} IST · {len(st['trades'])} trades · alerts {len(st['alerts'])} · "
                         f"+{new_tg} this cycle · gate {'OK' if gate_ok else 'OFFLINE'}", silent=True)
 

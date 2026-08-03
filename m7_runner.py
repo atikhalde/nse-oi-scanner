@@ -182,15 +182,15 @@ def mode_live():
             learn_log.harvest("M7", today, st, None, bars_map)
             msg = ("🅼7 EOD · " + report.summary_text(done, dlbl, st["gate"])
                    + "\n(raw control — data arm, not a profit model)")
+            st["eod_done"] = True
+            save_state(st)          # EOD done + state saved BEFORE send (no-dup hardening 03-Aug): report can never double-send
             tg.send_message(msg)
             tg.send_document(out, caption=f"🅼7 📄 M7 raw-control paper report {today}")
-            st["eod_done"] = True
-            save_state(st)          # so a crashed run never re-sends the EOD report
         except Exception as e:
             print(f"  M7 EOD report: {type(e).__name__}: {e}")
 
     # --- per-cycle silent status
-    if "09:20" <= hhmm < "15:26":
+    if "09:20" <= hhmm < "15:26" and hhmm.endswith(":15"):   # hourly only (alert-noise rule, 03-Aug)
         tg.send_message(f"💓 🅼7 {hhmm} IST · {len(st['trades'])} trades · RAW control (no filters)",
                         silent=True)
 

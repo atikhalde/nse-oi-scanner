@@ -271,9 +271,9 @@ def mode_live():
             for ev in new_tr["events"]:
                 key = f"{tkey}:{ev['key']}"
                 if ev["key"] != "ENTRY" and key not in st["alerts"]:
-                    tg.send_message("🅼6 · " + trader.fmt_alert(new_tr, ev["key"]))
                     st["alerts"].append(key)
-                    save_state(st)          # persist alert registry instantly (no-repeat guarantee)
+                    save_state(st)          # registry + state saved BEFORE send (no-dup hardening 03-Aug): crash/resume can never re-send
+                    tg.send_message("🅼6 · " + trader.fmt_alert(new_tr, ev["key"]))
         except Exception as e:
             print(f"  manage {tkey}: {type(e).__name__}: {e}")
 
@@ -376,15 +376,15 @@ def mode_live():
             msg = "🅼6 EOD · " + report.summary_text(done, dlbl, st["gate"])
             if gate_ok:
                 msg += "\n\n" + FM.board_text(board)
+            st["eod_done"] = True
+            save_state(st)          # EOD done + state saved BEFORE send (no-dup hardening 03-Aug): report can never double-send
             tg.send_message(msg)
             tg.send_document(out, caption=f"🅼6 📄 M6 sector-flow paper report {today}")
-            st["eod_done"] = True
-            save_state(st)          # so a crashed run never re-sends the EOD report
         except Exception as e:
             print(f"  M6 EOD report: {type(e).__name__}: {e}")
 
     # --- per-cycle silent status
-    if "09:20" <= hhmm < "15:26":
+    if "09:20" <= hhmm < "15:26" and hhmm.endswith(":15"):   # hourly only (alert-noise rule, 03-Aug)
         lead = "—"
         if gate_ok:
             b1 = " · ".join(f"{n} {s:.0f}" for n, s in board["bull_q"][:2]) or "—"

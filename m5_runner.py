@@ -204,9 +204,9 @@ def mode_live():
             for ev in new_tr["events"]:
                 key = f"{tkey}:{ev['key']}"
                 if ev["key"] != "ENTRY" and key not in st["alerts"]:
-                    tg.send_message("🅼5 · " + trader.fmt_alert(new_tr, ev["key"]))
                     st["alerts"].append(key)
-                    save_state(st)          # persist alert registry instantly (no-repeat guarantee)
+                    save_state(st)          # registry + state saved BEFORE send (no-dup hardening 03-Aug): crash/resume can never re-send
+                    tg.send_message("🅼5 · " + trader.fmt_alert(new_tr, ev["key"]))
         except Exception as e:
             print(f"  manage {tkey}: {type(e).__name__}: {e}")
 
@@ -315,16 +315,16 @@ def mode_live():
             reg_line, lbl = regime_label(bars_map, pc)
             st["regime"] = lbl
             learn_log.harvest("M5", today, st, gh, bars_map, extra={"regime": st.get("regime")})
+            st["eod_done"] = True
+            save_state(st)          # EOD done + state saved BEFORE send (no-dup hardening 03-Aug): report can never double-send
             tg.send_message("🅼5 EOD · " + report.summary_text(done, dlbl, st["gate"], ghosts=gh or None)
                             + "\n" + reg_line)
             tg.send_document(out, caption=f"🅼5 📄 M5 lab paper report {today}")
-            st["eod_done"] = True
-            save_state(st)          # so a crashed run never re-sends the EOD report
         except Exception as e:
             print(f"  M5 EOD report: {type(e).__name__}: {e}")
 
     # --- per-cycle silent status
-    if "09:20" <= hhmm < "15:26":
+    if "09:20" <= hhmm < "15:26" and hhmm.endswith(":15"):   # hourly only (alert-noise rule, 03-Aug)
         tg.send_message(f"💓 🅼5 {hhmm} IST · {len(st['trades'])} trades · "
                         f"spurts {'OK' if gate_ok else 'OFFLINE'} · breadth {br*100:.0f}% below-open",
                         silent=True)
