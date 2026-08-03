@@ -1,10 +1,10 @@
-name: "0. ONE-SHOT — REMOVE M9 completely (user request 03-Aug)"
+name: "0. ONE-SHOT — REMOVE M9 files (v2)"
 
 on:
-  workflow_dispatch: {}        # manual one-shot only — deletes itself after running
+  workflow_dispatch: {}        # manual one-shot only
 
 permissions:
-  contents: write
+  contents: write              # enough for code/state/history — NOT for .yml files
 
 concurrency:
   group: cleanup-m9
@@ -16,8 +16,9 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v5
-      - name: purge every M9 file (code, workflows, state, 300MB cash data) + this workflow
+      - name: purge M9 code + state + ~300MB cash-data farm
         run: |
+          set -x
           git config user.name "paper-bot"
           git config user.email "paper-bot@users.noreply.github.com"
           git rm -r -q --ignore-unmatch \
@@ -26,13 +27,17 @@ jobs:
             test_m9_runner.py \
             m9_universe.csv \
             state9a.json state9b.json state9c.json \
-            data/history9 \
-            .github/workflows/9a_live_m9.yml \
-            .github/workflows/9b_live_m9.yml \
-            .github/workflows/9c_live_m9.yml \
-            .github/workflows/0_cleanup_m9.yml
-          git commit -m "remove M9 completely (user request); M1/M2/M5/M6/M7/M8/M10/M11 untouched" \
+            data/history9
+          git commit -m "remove M9 files (code/state/cash data farm; user request)" \
             || echo "nothing staged — already clean"
           git pull --rebase || true
           git push
-      - run: echo "M9 purge committed. KEPT by design: learn/raw_M9*.csv + labeled rows (small ML data)."
+      - name: remaining manual step (GitHub blocks bots from touching workflow yml files)
+        if: success()
+        run: |
+          echo "NEXT (2 min, web UI): delete these 4 files manually —"
+          echo "  .github/workflows/9a_live_m9.yml"
+          echo "  .github/workflows/9b_live_m9.yml"
+          echo "  .github/workflows/9c_live_m9.yml"
+          echo "  .github/workflows/0_cleanup_m9.yml (this one)"
+          echo "KEPT by design: learn/raw_M9*.csv (small ML data). M1/M2/M5/M6/M7/M8/M10/M11 untouched."
