@@ -3,7 +3,6 @@
 Dataframe contract: columns [dt (tz Asia/Kolkata), open, high, low, close, volume], 5-min bars.
 """
 import os
-import time
 import requests
 import pandas as pd
 
@@ -54,6 +53,8 @@ def fetch_fut_oi_dhan(security_id, frm, to):
 
 def fetch_bars_yahoo(symbol, rng="1d"):
     url = f"https://query1.finance.yahoo.com/v8/finance/chart/{symbol}.NS?interval=5m&range={rng}"
+    # NO-WAIT switch (user rule 03-Aug): Dhan failed => go straight to Yahoo; if Yahoo
+    # itself fails, retry immediately with NO sleeping/backoff between attempts.
     for _ in range(3):
         try:
             r = requests.get(url, headers=UA, timeout=25)
@@ -67,8 +68,7 @@ def fetch_bars_yahoo(symbol, rng="1d"):
                                "close": q["close"], "volume": q.get("volume")}).dropna()
             return df
         except Exception as e:
-            print(f"yahoo {symbol}: {e}; retrying")
-            time.sleep(3)
+            print(f"yahoo {symbol}: {e}; retrying (no wait)")
     return None
 
 
