@@ -1,0 +1,67 @@
+name: "12. LIVE M12 — selective reversion (max 5/day, paper-only)"
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "'live' = normal cycle · 'test-alert' = send M12 to all 3 targets"
+        required: true
+        default: "live"
+  schedule:
+    # Five-minute paper ticker: 09:15–15:30 IST (03:45–10:00 UTC), weekdays.
+    # GitHub scheduling can still queue; m12_runner rejects signals >5 min old.
+    - cron: "45-59/5 3 * * 1-5"
+    - cron: "*/5 4-9 * * 1-5"
+    - cron: "0,5 10 * * 1-5"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: live-paper-m12
+  cancel-in-progress: false
+
+jobs:
+  live-m12:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      DHAN_TOKEN: ${{ secrets.DHAN_TOKEN }}
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      # Preferred M12-specific extra targets.
+      M12_BOT_TOKEN_A: ${{ secrets.M12_BOT_TOKEN_A }}
+      M12_CHAT_ID_A: ${{ secrets.M12_CHAT_ID_A }}
+      M12_BOT_TOKEN_B: ${{ secrets.M12_BOT_TOKEN_B }}
+      M12_CHAT_ID_B: ${{ secrets.M12_CHAT_ID_B }}
+      # Backward-compatible reuse of the established M11 A/B targets.
+      M11_BOT_TOKEN_A: ${{ secrets.M11_BOT_TOKEN_A }}
+      M11_CHAT_ID_A: ${{ secrets.M11_CHAT_ID_A }}
+      M11_BOT_TOKEN_B: ${{ secrets.M11_BOT_TOKEN_B }}
+      M11_CHAT_ID_B: ${{ secrets.M11_CHAT_ID_B }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - name: M12 entry tests
+        run: python -u test_m12_entry.py
+      - name: M12 three-target alert test
+        if: github.event.inputs.mode == 'test-alert'
+        run: python -u m12_runner.py --test-alert
+      - name: M12 paper cycle
+        if: github.event.inputs.mode != 'test-alert'
+        run: python -u m12_runner.py --loop 1
+      - name: Commit M12 state, audit labels, and report
+        if: always()
+        run: |
+          git config user.name "paper-bot"
+          git config user.email "paper-bot@users.noreply.github.com"
+          [ ! -e state12.json ] || git add -A -- state12.json
+          [ ! -f data/m12_prev_close.json ] || git add -- data/m12_prev_close.json
+          find learn -maxdepth 1 \( -name 'm12_candidates_*.csv' -o -name 'raw_M12_*.csv' \) -print0 | xargs -0 -r git add --
+          find . -maxdepth 1 -name 'paper_test_M12_*.xlsx' -print0 | xargs -0 -r git add --
+          git diff --cached --quiet || git commit -m "m12cycle $(date -u +%F_%H%M)Z"
+          git pull --rebase || true
+          git push

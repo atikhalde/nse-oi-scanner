@@ -1,0 +1,70 @@
+name: "13. LIVE M13 — equity momentum A+ (max 3/day, paper-only)"
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "'live' = normal cycle · 'test-alert' = send M13 to all 3 targets"
+        required: true
+        default: "live"
+  schedule:
+    # Five-minute paper ticker: 09:15–15:35 IST (03:45–10:05 UTC), weekdays.
+    # Queued signals older than five minutes are rejected by the runner.
+    - cron: "45-59/5 3 * * 1-5"
+    - cron: "*/5 4-9 * * 1-5"
+    - cron: "0,5 10 * * 1-5"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: live-paper-m13
+  cancel-in-progress: false
+
+jobs:
+  live-m13:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      DHAN_TOKEN: ${{ secrets.DHAN_TOKEN }}
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      M13_BOT_TOKEN_A: ${{ secrets.M13_BOT_TOKEN_A }}
+      M13_CHAT_ID_A: ${{ secrets.M13_CHAT_ID_A }}
+      M13_BOT_TOKEN_B: ${{ secrets.M13_BOT_TOKEN_B }}
+      M13_CHAT_ID_B: ${{ secrets.M13_CHAT_ID_B }}
+      # Reuse established M11 A/B targets when M13-specific pairs are absent.
+      M11_BOT_TOKEN_A: ${{ secrets.M11_BOT_TOKEN_A }}
+      M11_CHAT_ID_A: ${{ secrets.M11_CHAT_ID_A }}
+      M11_BOT_TOKEN_B: ${{ secrets.M11_BOT_TOKEN_B }}
+      M11_CHAT_ID_B: ${{ secrets.M11_CHAT_ID_B }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - name: M13 tests
+        run: |
+          python -u test_m13_entry.py
+          python -u test_m13_trader.py
+          python -u test_m13_runner.py
+          python -u test_m13_alerts.py
+      - name: M13 three-target alert test
+        if: github.event.inputs.mode == 'test-alert'
+        run: python -u m13_runner.py --test-alert
+      - name: M13 paper cycle
+        if: github.event.inputs.mode != 'test-alert'
+        run: python -u m13_runner.py --loop 1
+      - name: Commit M13 state, candidate ledger, and report
+        if: always()
+        run: |
+          git config user.name "paper-bot"
+          git config user.email "paper-bot@users.noreply.github.com"
+          [ ! -e state13.json ] || git add -A -- state13.json
+          [ ! -f data/m13_prev_context.json ] || git add -- data/m13_prev_context.json
+          find learn -maxdepth 1 \( -name 'm13_candidates_*.csv' -o -name 'raw_M13_*.csv' \) -print0 | xargs -0 -r git add --
+          find . -maxdepth 1 -name 'paper_test_M13_*.xlsx' -print0 | xargs -0 -r git add --
+          git diff --cached --quiet || git commit -m "m13cycle $(date -u +%F_%H%M)Z"
+          git pull --rebase || true
+          git push
