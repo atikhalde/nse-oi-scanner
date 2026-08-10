@@ -1,9 +1,1359 @@
 {
  "date": "2026-08-10",
- "signals": {},
- "trades": {},
- "alerts": [],
- "gate": {},
+ "signals": {
+  "360ONE": {
+   "nbars": 4
+  },
+  "ABB": {
+   "nbars": 4
+  },
+  "ABCAPITAL": {
+   "nbars": 4
+  },
+  "ADANIENSOL": {
+   "nbars": 4
+  },
+  "ADANIENT": {
+   "nbars": 4
+  },
+  "ADANIGREEN": {
+   "nbars": 4
+  },
+  "ADANIPORTS": {
+   "nbars": 4
+  },
+  "ADANIPOWER": {
+   "nbars": 4
+  },
+  "ALKEM": {
+   "nbars": 4
+  },
+  "AMBER": {
+   "nbars": 4
+  },
+  "AMBUJACEM": {
+   "nbars": 4
+  },
+  "ANGELONE": {
+   "nbars": 4
+  },
+  "APLAPOLLO": {
+   "nbars": 4
+  },
+  "APOLLOHOSP": {
+   "nbars": 4
+  },
+  "ASHOKLEY": {
+   "nbars": 4
+  },
+  "ASIANPAINT": {
+   "nbars": 4
+  },
+  "ASTRAL": {
+   "nbars": 4
+  },
+  "AUBANK": {
+   "nbars": 4
+  },
+  "AUROPHARMA": {
+   "nbars": 4
+  },
+  "AXISBANK": {
+   "nbars": 4
+  },
+  "BAJAJ-AUTO": {
+   "nbars": 4
+  },
+  "BAJAJFINSV": {
+   "nbars": 4
+  },
+  "BAJAJHLDNG": {
+   "nbars": 4
+  },
+  "BAJFINANCE": {
+   "nbars": 4
+  },
+  "BANDHANBNK": {
+   "nbars": 4
+  },
+  "BANKBARODA": {
+   "nbars": 4
+  },
+  "BANKINDIA": {
+   "nbars": 4
+  },
+  "BDL": {
+   "nbars": 4
+  },
+  "BEL": {
+   "nbars": 4
+  },
+  "BHARATFORG": {
+   "nbars": 4
+  },
+  "BHARTIARTL": {
+   "nbars": 4
+  },
+  "BHEL": {
+   "nbars": 4
+  },
+  "BIOCON": {
+   "nbars": 4
+  },
+  "BLUESTARCO": {
+   "nbars": 4
+  },
+  "BOSCHLTD": {
+   "nbars": 4
+  },
+  "BPCL": {
+   "nbars": 4
+  },
+  "BRITANNIA": {
+   "nbars": 4
+  },
+  "BSE": {
+   "nbars": 4
+  },
+  "CAMS": {
+   "nbars": 4
+  },
+  "CANBK": {
+   "nbars": 4
+  },
+  "CDSL": {
+   "nbars": 4
+  },
+  "CGPOWER": {
+   "nbars": 4
+  },
+  "CHOLAFIN": {
+   "nbars": 4
+  },
+  "CIPLA": {
+   "nbars": 4
+  },
+  "COALINDIA": {
+   "nbars": 4
+  },
+  "COCHINSHIP": {
+   "nbars": 4
+  },
+  "COFORGE": {
+   "nbars": 4
+  },
+  "COLPAL": {
+   "nbars": 4
+  },
+  "CONCOR": {
+   "nbars": 4
+  },
+  "CROMPTON": {
+   "nbars": 4
+  },
+  "CUMMINSIND": {
+   "nbars": 4
+  },
+  "DABUR": {
+   "nbars": 4
+  },
+  "DALBHARAT": {
+   "nbars": 4
+  },
+  "DELHIVERY": {
+   "nbars": 4
+  },
+  "DIVISLAB": {
+   "nbars": 4
+  },
+  "DIXON": {
+   "nbars": 4
+  },
+  "DLF": {
+   "nbars": 4
+  },
+  "DMART": {
+   "nbars": 4
+  },
+  "DRREDDY": {
+   "nbars": 4
+  },
+  "EICHERMOT": {
+   "nbars": 4
+  },
+  "ETERNAL": {
+   "nbars": 4
+  },
+  "EXIDEIND": {
+   "nbars": 4
+  },
+  "FEDERALBNK": {
+   "nbars": 4
+  },
+  "FORCEMOT": {
+   "nbars": 4
+  },
+  "FORTIS": {
+   "nbars": 4
+  },
+  "GAIL": {
+   "nbars": 4
+  },
+  "GLENMARK": {
+   "nbars": 4
+  },
+  "GMRAIRPORT": {
+   "nbars": 4
+  },
+  "GODFRYPHLP": {
+   "nbars": 4
+  },
+  "GODREJCP": {
+   "nbars": 4
+  },
+  "GODREJPROP": {
+   "nbars": 4
+  },
+  "GRASIM": {
+   "nbars": 4
+  },
+  "GVT&D": {
+   "nbars": 4
+  },
+  "HAL": {
+   "nbars": 4
+  },
+  "HAVELLS": {
+   "nbars": 4
+  },
+  "HCLTECH": {
+   "nbars": 4
+  },
+  "HDFCAMC": {
+   "nbars": 4
+  },
+  "HDFCBANK": {
+   "nbars": 4
+  },
+  "HDFCLIFE": {
+   "nbars": 4
+  },
+  "HEROMOTOCO": {
+   "nbars": 4
+  },
+  "HINDALCO": {
+   "nbars": 4
+  },
+  "HINDPETRO": {
+   "nbars": 4
+  },
+  "HINDUNILVR": {
+   "nbars": 4
+  },
+  "HINDZINC": {
+   "nbars": 4
+  },
+  "HYUNDAI": {
+   "nbars": 4
+  },
+  "ICICIBANK": {
+   "nbars": 4
+  },
+  "ICICIGI": {
+   "nbars": 4
+  },
+  "ICICIPRULI": {
+   "nbars": 4
+  },
+  "IDEA": {
+   "nbars": 4
+  },
+  "IDFCFIRSTB": {
+   "nbars": 4
+  },
+  "IEX": {
+   "nbars": 4
+  },
+  "INDHOTEL": {
+   "nbars": 4
+  },
+  "INDIANB": {
+   "nbars": 4
+  },
+  "INDIGO": {
+   "nbars": 4
+  },
+  "INDUSINDBK": {
+   "nbars": 4
+  },
+  "INDUSTOWER": {
+   "nbars": 4
+  },
+  "INFY": {
+   "nbars": 4
+  },
+  "INOXWIND": {
+   "nbars": 4
+  },
+  "IOC": {
+   "nbars": 4
+  },
+  "IREDA": {
+   "nbars": 4
+  },
+  "IRFC": {
+   "nbars": 4
+  },
+  "ITC": {
+   "nbars": 4
+  },
+  "JINDALSTEL": {
+   "nbars": 4
+  },
+  "JIOFIN": {
+   "nbars": 4
+  },
+  "JSWENERGY": {
+   "nbars": 4
+  },
+  "JSWSTEEL": {
+   "nbars": 4
+  },
+  "JUBLFOOD": {
+   "nbars": 4
+  },
+  "KALYANKJIL": {
+   "nbars": 4
+  },
+  "KAYNES": {
+   "nbars": 4
+  },
+  "KEI": {
+   "nbars": 4
+  },
+  "KFINTECH": {
+   "nbars": 4
+  },
+  "KOTAKBANK": {
+   "nbars": 4
+  },
+  "KPITTECH": {
+   "nbars": 4
+  },
+  "LAURUSLABS": {
+   "nbars": 4
+  },
+  "LICHSGFIN": {
+   "nbars": 4
+  },
+  "LICI": {
+   "nbars": 4
+  },
+  "LODHA": {
+   "nbars": 4
+  },
+  "LT": {
+   "nbars": 4
+  },
+  "LTF": {
+   "nbars": 4
+  },
+  "LTM": {
+   "nbars": 4
+  },
+  "LUPIN": {
+   "nbars": 4
+  },
+  "M&M": {
+   "nbars": 4
+  },
+  "MANAPPURAM": {
+   "nbars": 4
+  },
+  "MANKIND": {
+   "nbars": 4
+  },
+  "MARICO": {
+   "nbars": 4
+  },
+  "MARUTI": {
+   "nbars": 4
+  },
+  "MAXHEALTH": {
+   "nbars": 4
+  },
+  "MAZDOCK": {
+   "nbars": 4
+  },
+  "MCX": {
+   "nbars": 4
+  },
+  "MFSL": {
+   "nbars": 4
+  },
+  "MOTHERSON": {
+   "nbars": 4
+  },
+  "MOTILALOFS": {
+   "nbars": 4
+  },
+  "MPHASIS": {
+   "nbars": 4
+  },
+  "MUTHOOTFIN": {
+   "nbars": 4
+  },
+  "NAM-INDIA": {
+   "nbars": 4
+  },
+  "NATIONALUM": {
+   "nbars": 4
+  },
+  "NAUKRI": {
+   "nbars": 4
+  },
+  "NBCC": {
+   "nbars": 4
+  },
+  "NESTLEIND": {
+   "nbars": 4
+  },
+  "NHPC": {
+   "nbars": 4
+  },
+  "NMDC": {
+   "nbars": 4
+  },
+  "NTPC": {
+   "nbars": 4
+  },
+  "NUVAMA": {
+   "nbars": 4
+  },
+  "NYKAA": {
+   "nbars": 4
+  },
+  "OBEROIRLTY": {
+   "nbars": 4
+  },
+  "OFSS": {
+   "nbars": 4
+  },
+  "OIL": {
+   "nbars": 4
+  },
+  "ONGC": {
+   "nbars": 4
+  },
+  "PAGEIND": {
+   "nbars": 4
+  },
+  "PATANJALI": {
+   "nbars": 4
+  },
+  "PAYTM": {
+   "nbars": 4
+  },
+  "PERSISTENT": {
+   "nbars": 4
+  },
+  "PETRONET": {
+   "nbars": 4
+  },
+  "PFC": {
+   "nbars": 4
+  },
+  "PGEL": {
+   "nbars": 4
+  },
+  "PHOENIXLTD": {
+   "nbars": 4
+  },
+  "PIDILITIND": {
+   "nbars": 4
+  },
+  "PIIND": {
+   "nbars": 4
+  },
+  "PNB": {
+   "nbars": 4
+  },
+  "PNBHOUSING": {
+   "nbars": 4
+  },
+  "POLICYBZR": {
+   "nbars": 4
+  },
+  "POLYCAB": {
+   "nbars": 4
+  },
+  "POWERGRID": {
+   "nbars": 4
+  },
+  "POWERINDIA": {
+   "nbars": 4
+  },
+  "PREMIERENE": {
+   "nbars": 4
+  },
+  "PRESTIGE": {
+   "nbars": 4
+  },
+  "RADICO": {
+   "nbars": 4
+  },
+  "RBLBANK": {
+   "nbars": 4
+  },
+  "RECLTD": {
+   "nbars": 4
+  },
+  "RELIANCE": {
+   "nbars": 4
+  },
+  "RVNL": {
+   "nbars": 4
+  },
+  "SAIL": {
+   "nbars": 4
+  },
+  "SBICARD": {
+   "nbars": 4
+  },
+  "SBILIFE": {
+   "nbars": 4
+  },
+  "SBIN": {
+   "nbars": 4
+  },
+  "SHREECEM": {
+   "nbars": 4
+  },
+  "SHRIRAMFIN": {
+   "nbars": 4
+  },
+  "SIEMENS": {
+   "nbars": 4
+  },
+  "SOLARINDS": {
+   "nbars": 4
+  },
+  "SONACOMS": {
+   "nbars": 4
+  },
+  "SRF": {
+   "nbars": 4
+  },
+  "SUNPHARMA": {
+   "nbars": 4
+  },
+  "SUPREMEIND": {
+   "nbars": 4
+  },
+  "SUZLON": {
+   "nbars": 4
+  },
+  "SWIGGY": {
+   "nbars": 4
+  },
+  "TATACONSUM": {
+   "nbars": 4
+  },
+  "TATAELXSI": {
+   "nbars": 4
+  },
+  "TATAPOWER": {
+   "nbars": 4
+  },
+  "TATASTEEL": {
+   "nbars": 4
+  },
+  "TCS": {
+   "nbars": 4
+  },
+  "TECHM": {
+   "nbars": 4
+  },
+  "TIINDIA": {
+   "nbars": 4
+  },
+  "TITAN": {
+   "nbars": 4
+  },
+  "TMPV": {
+   "nbars": 4
+  },
+  "TORNTPHARM": {
+   "nbars": 4
+  },
+  "TRENT": {
+   "nbars": 4
+  },
+  "TVSMOTOR": {
+   "nbars": 4
+  },
+  "ULTRACEMCO": {
+   "nbars": 4
+  },
+  "UNIONBANK": {
+   "nbars": 4
+  },
+  "UNITDSPR": {
+   "nbars": 4
+  },
+  "UNOMINDA": {
+   "nbars": 4
+  },
+  "UPL": {
+   "nbars": 4
+  },
+  "VBL": {
+   "nbars": 4
+  },
+  "VEDL": {
+   "nbars": 4
+  },
+  "VMM": {
+   "nbars": 4
+  },
+  "VOLTAS": {
+   "nbars": 4
+  },
+  "WAAREEENER": {
+   "nbars": 4
+  },
+  "WIPRO": {
+   "nbars": 4
+  },
+  "YESBANK": {
+   "nbars": 4
+  },
+  "ZYDUSLIFE": {
+   "nbars": 4
+  }
+ },
+ "trades": {
+  "DABUR": {
+   "symbol": "DABUR",
+   "side": "SELL",
+   "time": "09:30",
+   "signal": "SELL-EX3",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 409.85,
+   "sl": 413.28,
+   "sl_anchor": "session-extreme*",
+   "risk_pts": 3.43,
+   "risk_pct": 0.838,
+   "risk_rs": 415.0,
+   "qty": 121,
+   "qty_full": 121,
+   "qty_capped": false,
+   "capital": 49592.0,
+   "tp1": 70.02,
+   "tp2": 70.02,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "OPEN 09:39",
+     121,
+     410.3500061035156,
+     "09:39"
+    ]
+   ],
+   "exit_text": "OPEN",
+   "leg2_time": "09:39",
+   "pnl": -60.0,
+   "r_total": -0.15,
+   "closed": false,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "09:30",
+     "price": 409.8500061035156
+    }
+   ],
+   "spurt_rank": 72,
+   "movers20": true
+  }
+ },
+ "alerts": [
+  "DABUR:ENTRY"
+ ],
+ "gate": {
+  "spurts": {
+   "status": "OK",
+   "source": "https://www.nseindia.com/api/live-analysis-oi-spurts-underlyings (curl-cffi)",
+   "count": 208
+  },
+  "movers": {
+   "count": 210,
+   "top20_cut": 7.55,
+   "bot20_cut": -3.92
+  },
+  "breadth_bearish": 0.648
+ },
  "eod_done": false,
- "cycles": 0
+ "cycles": 2,
+ "skipped": [
+  {
+   "symbol": "APOLLOHOSP",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 8936.0,
+   "rank": 75,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "BIOCON",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 428.2,
+   "rank": 111,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "DELHIVERY",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 474.4,
+   "rank": 12,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "EICHERMOT",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 7990.0,
+   "rank": 76,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "GVT&D",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 4162.8,
+   "rank": 7,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "ICICIGI",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 1620.7,
+   "rank": 80,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "INDUSINDBK",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 1021.2,
+   "rank": 169,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "IREDA",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 118.93,
+   "rank": 85,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "JINDALSTEL",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 1109.0,
+   "rank": 104,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "LTF",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 309.3,
+   "rank": 82,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "MFSL",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 1491.0,
+   "rank": 101,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "NESTLEIND",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 1545.4,
+   "rank": 81,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "NMDC",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 85.17,
+   "rank": 126,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "OIL",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 458.1,
+   "rank": 11,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "PATANJALI",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 354.7,
+   "rank": 78,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "PRESTIGE",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 1576.9,
+   "rank": 158,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "TATASTEEL",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 189.31,
+   "rank": 141,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "TCS",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 2458.8,
+   "rank": 60,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "TORNTPHARM",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 4971.5,
+   "rank": 164,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "ULTRACEMCO",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 12027.0,
+   "rank": 64,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "ZYDUSLIFE",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 1119.8,
+   "rank": 47,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "ABCAPITAL",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "09:30",
+   "entry": 406.9,
+   "rank": 78,
+   "mv": false,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 (GHOST-shadowed EOD)"
+  },
+  {
+   "symbol": "ADANIENT",
+   "side": "SELL",
+   "signal": "SELL-EX1",
+   "time": "09:30",
+   "entry": 3000.1,
+   "rank": 96,
+   "mv": false,
+   "why": "EX1/EX2 at open blocked \u2014 razor class, allowed from 09:45"
+  },
+  {
+   "symbol": "AMBER",
+   "side": "SELL",
+   "signal": "SELL-EX1",
+   "time": "09:30",
+   "entry": 7280.0,
+   "rank": 13,
+   "mv": false,
+   "why": "EX1/EX2 at open blocked \u2014 razor class, allowed from 09:45"
+  },
+  {
+   "symbol": "ANGELONE",
+   "side": "SELL",
+   "signal": "SELL-EX1",
+   "time": "09:30",
+   "entry": 287.9,
+   "rank": 46,
+   "mv": false,
+   "why": "EX1/EX2 at open blocked \u2014 razor class, allowed from 09:45"
+  },
+  {
+   "symbol": "ASTRAL",
+   "side": "SELL",
+   "signal": "SELL-EX5",
+   "time": "09:30",
+   "entry": 1438.2,
+   "rank": 190,
+   "mv": false,
+   "why": "M5 gate: spurt 190 \u00b7 movers N \u2014 need both"
+  },
+  {
+   "symbol": "CDSL",
+   "side": "SELL",
+   "signal": "SELL-EX2",
+   "time": "09:30",
+   "entry": 1320.5,
+   "rank": 93,
+   "mv": false,
+   "why": "EX1/EX2 at open blocked \u2014 razor class, allowed from 09:45"
+  },
+  {
+   "symbol": "CHOLAFIN",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 1880.0,
+   "rank": 125,
+   "mv": false,
+   "why": "EX1/EX2 at open blocked \u2014 razor class, allowed from 09:45"
+  },
+  {
+   "symbol": "COALINDIA",
+   "side": "SELL",
+   "signal": "SELL-EX1",
+   "time": "09:30",
+   "entry": 412.65,
+   "rank": 159,
+   "mv": false,
+   "why": "EX1/EX2 at open blocked \u2014 razor class, allowed from 09:45"
+  },
+  {
+   "symbol": "COLPAL",
+   "side": "SELL",
+   "signal": "SELL-EX3",
+   "time": "09:30",
+   "entry": 2015.6,
+   "rank": 170,
+   "mv": false,
+   "why": "M5 gate: spurt 170 \u00b7 movers N \u2014 need both"
+  },
+  {
+   "symbol": "DLF",
+   "side": "SELL",
+   "signal": "SELL-EX3",
+   "time": "09:30",
+   "entry": 641.1,
+   "rank": 40,
+   "mv": false,
+   "why": "M5 gate: spurt 40 \u00b7 movers N \u2014 need both"
+  },
+  {
+   "symbol": "EICHERMOT",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 7997.5,
+   "rank": 57,
+   "mv": false,
+   "why": "EX1/EX2 at open blocked \u2014 razor class, allowed from 09:45"
+  },
+  {
+   "symbol": "EXIDEIND",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 491.7,
+   "rank": null,
+   "mv": true,
+   "why": "EX1/EX2 at open blocked \u2014 razor class, allowed from 09:45"
+  },
+  {
+   "symbol": "GAIL",
+   "side": "SELL",
+   "signal": "SELL-EX1",
+   "time": "09:30",
+   "entry": 172.26,
+   "rank": 155,
+   "mv": false,
+   "why": "EX1/EX2 at open blocked \u2014 razor class, allowed from 09:45"
+  },
+  {
+   "symbol": "GODREJCP",
+   "side": "SELL",
+   "signal": "SELL-EX3",
+   "time": "09:30",
+   "entry": 1038.0,
+   "rank": 28,
+   "mv": false,
+   "why": "M5 gate: spurt 28 \u00b7 movers N \u2014 need both"
+  },
+  {
+   "symbol": "GODREJPROP",
+   "side": "SELL",
+   "signal": "SELL-EX3",
+   "time": "09:30",
+   "entry": 2063.1,
+   "rank": 80,
+   "mv": false,
+   "why": "M5 gate: spurt 80 \u00b7 movers N \u2014 need both"
+  },
+  {
+   "symbol": "HDFCLIFE",
+   "side": "SELL",
+   "signal": "SELL-EX1",
+   "time": "09:30",
+   "entry": 534.05,
+   "rank": 45,
+   "mv": false,
+   "why": "EX1/EX2 at open blocked \u2014 razor class, allowed from 09:45"
+  },
+  {
+   "symbol": "HINDUNILVR",
+   "side": "SELL",
+   "signal": "SELL-EX1",
+   "time": "09:30",
+   "entry": 2081.7,
+   "rank": 63,
+   "mv": false,
+   "why": "EX1/EX2 at open blocked \u2014 razor class, allowed from 09:45"
+  },
+  {
+   "symbol": "ICICIGI",
+   "side": "SELL",
+   "signal": "SELL-EX12",
+   "time": "09:30",
+   "entry": 1618.6,
+   "rank": 41,
+   "mv": false,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 (GHOST-shadowed EOD)"
+  },
+  {
+   "symbol": "ICICIPRULI",
+   "side": "SELL",
+   "signal": "SELL-EX3",
+   "time": "09:30",
+   "entry": 494.15,
+   "rank": 24,
+   "mv": false,
+   "why": "M5 gate: spurt 24 \u00b7 movers N \u2014 need both"
+  },
+  {
+   "symbol": "IDFCFIRSTB",
+   "side": "SELL",
+   "signal": "SELL-EX8",
+   "time": "09:30",
+   "entry": 84.55,
+   "rank": 116,
+   "mv": false,
+   "why": "M5 gate: spurt 116 \u00b7 movers N \u2014 need both"
+  },
+  {
+   "symbol": "INDHOTEL",
+   "side": "SELL",
+   "signal": "SELL-EX3",
+   "time": "09:30",
+   "entry": 730.0,
+   "rank": 99,
+   "mv": false,
+   "why": "M5 gate: spurt 99 \u00b7 movers N \u2014 need both"
+  },
+  {
+   "symbol": "INDIGO",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 5325.0,
+   "rank": 94,
+   "mv": false,
+   "why": "EX1/EX2 at open blocked \u2014 razor class, allowed from 09:45"
+  },
+  {
+   "symbol": "INOXWIND",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:30",
+   "entry": 73.89,
+   "rank": 35,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "IREDA",
+   "side": "SELL",
+   "signal": "SELL-EX12",
+   "time": "09:30",
+   "entry": 118.75,
+   "rank": 49,
+   "mv": false,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 (GHOST-shadowed EOD)"
+  },
+  {
+   "symbol": "KFINTECH",
+   "side": "SELL",
+   "signal": "SELL-EX1",
+   "time": "09:30",
+   "entry": 925.0,
+   "rank": 82,
+   "mv": false,
+   "why": "EX1/EX2 at open blocked \u2014 razor class, allowed from 09:45"
+  },
+  {
+   "symbol": "NHPC",
+   "side": "SELL",
+   "signal": "SELL-EX8",
+   "time": "09:30",
+   "entry": 76.69,
+   "rank": 156,
+   "mv": false,
+   "why": "M5 gate: spurt 156 \u00b7 movers N \u2014 need both"
+  },
+  {
+   "symbol": "NTPC",
+   "side": "SELL",
+   "signal": "SELL-EX1",
+   "time": "09:30",
+   "entry": 341.8,
+   "rank": 104,
+   "mv": false,
+   "why": "EX1/EX2 at open blocked \u2014 razor class, allowed from 09:45"
+  },
+  {
+   "symbol": "NYKAA",
+   "side": "SELL",
+   "signal": "SELL-EX1",
+   "time": "09:30",
+   "entry": 329.8,
+   "rank": 120,
+   "mv": false,
+   "why": "EX1/EX2 at open blocked \u2014 razor class, allowed from 09:45"
+  },
+  {
+   "symbol": "OBEROIRLTY",
+   "side": "SELL",
+   "signal": "SELL-EX12",
+   "time": "09:30",
+   "entry": 1766.1,
+   "rank": 182,
+   "mv": false,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 (GHOST-shadowed EOD)"
+  },
+  {
+   "symbol": "PETRONET",
+   "side": "SELL",
+   "signal": "SELL-EX1",
+   "time": "09:30",
+   "entry": 276.35,
+   "rank": 196,
+   "mv": false,
+   "why": "EX1/EX2 at open blocked \u2014 razor class, allowed from 09:45"
+  },
+  {
+   "symbol": "PIIND",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:30",
+   "entry": 2756.8,
+   "rank": 12,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "PRESTIGE",
+   "side": "SELL",
+   "signal": "SELL-EX12",
+   "time": "09:30",
+   "entry": 1570.1,
+   "rank": 175,
+   "mv": false,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 (GHOST-shadowed EOD)"
+  },
+  {
+   "symbol": "SBICARD",
+   "side": "SELL",
+   "signal": "SELL-EX2",
+   "time": "09:30",
+   "entry": 651.4,
+   "rank": 127,
+   "mv": false,
+   "why": "EX1/EX2 at open blocked \u2014 razor class, allowed from 09:45"
+  },
+  {
+   "symbol": "SRF",
+   "side": "SELL",
+   "signal": "SELL-EX8",
+   "time": "09:30",
+   "entry": 2600.8,
+   "rank": 51,
+   "mv": false,
+   "why": "M5 gate: spurt 51 \u00b7 movers N \u2014 need both"
+  },
+  {
+   "symbol": "SUPREMEIND",
+   "side": "SELL",
+   "signal": "SELL-EX5",
+   "time": "09:30",
+   "entry": 3416.2,
+   "rank": 158,
+   "mv": false,
+   "why": "M5 gate: spurt 158 \u00b7 movers N \u2014 need both"
+  },
+  {
+   "symbol": "TVSMOTOR",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 4467.3,
+   "rank": 39,
+   "mv": false,
+   "why": "EX1/EX2 at open blocked \u2014 razor class, allowed from 09:45"
+  },
+  {
+   "symbol": "VBL",
+   "side": "SELL",
+   "signal": "SELL-EX3",
+   "time": "09:30",
+   "entry": 442.1,
+   "rank": 168,
+   "mv": false,
+   "why": "M5 gate: spurt 168 \u00b7 movers N \u2014 need both"
+  },
+  {
+   "symbol": "VMM",
+   "side": "SELL",
+   "signal": "SELL-EX19",
+   "time": "09:30",
+   "entry": 107.78,
+   "rank": 167,
+   "mv": false,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 (GHOST-shadowed EOD)"
+  }
+ ],
+ "ghosts": [
+  {
+   "symbol": "ABCAPITAL",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "code": 102,
+   "time": "09:30",
+   "entry": 406.9,
+   "rank": 78,
+   "mv": false,
+   "grp": "R"
+  },
+  {
+   "symbol": "ICICIGI",
+   "side": "SELL",
+   "signal": "SELL-EX12",
+   "code": 213,
+   "time": "09:30",
+   "entry": 1618.6,
+   "rank": 41,
+   "mv": false,
+   "grp": "R"
+  },
+  {
+   "symbol": "IREDA",
+   "side": "SELL",
+   "signal": "SELL-EX12",
+   "code": 213,
+   "time": "09:30",
+   "entry": 118.75,
+   "rank": 49,
+   "mv": false,
+   "grp": "R"
+  },
+  {
+   "symbol": "OBEROIRLTY",
+   "side": "SELL",
+   "signal": "SELL-EX12",
+   "code": 213,
+   "time": "09:30",
+   "entry": 1766.1,
+   "rank": 182,
+   "mv": false,
+   "grp": "R"
+  },
+  {
+   "symbol": "PRESTIGE",
+   "side": "SELL",
+   "signal": "SELL-EX12",
+   "code": 213,
+   "time": "09:30",
+   "entry": 1570.1,
+   "rank": 175,
+   "mv": false,
+   "grp": "R"
+  },
+  {
+   "symbol": "VMM",
+   "side": "SELL",
+   "signal": "SELL-EX19",
+   "code": 220,
+   "time": "09:30",
+   "entry": 107.78,
+   "rank": 167,
+   "mv": false,
+   "grp": "R"
+  }
+ ]
 }
