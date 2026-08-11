@@ -185,7 +185,7 @@
    "nbars": 72
   },
   "EXIDEIND": {
-   "nbars": 72
+   "nbars": 75
   },
   "FEDERALBNK": {
    "nbars": 72
@@ -299,7 +299,7 @@
    "nbars": 72
   },
   "IREDA": {
-   "nbars": 72
+   "nbars": 73
   },
   "IRFC": {
    "nbars": 72
@@ -428,7 +428,7 @@
    "nbars": 72
   },
   "NUVAMA": {
-   "nbars": 72
+   "nbars": 75
   },
   "NYKAA": {
    "nbars": 72
@@ -633,7 +633,10 @@
   }
  },
  "trades": {},
- "alerts": [],
+ "alerts": [
+  "M13:2026-08-11:EOD_SUMMARY",
+  "M13:2026-08-11:EOD_DOCUMENT"
+ ],
  "decisions": [
   {
    "decision_id": "BHARTIARTL|SELL|11:50|280",
@@ -1014,8 +1017,8 @@
    "why": "opening market breadth below 55% in signal direction"
   }
  ],
- "eod_done": false,
- "cycles": 23,
+ "eod_done": true,
+ "cycles": 24,
  "prev_meta": {
   "status": "OK",
   "source": "data/history bootstrap",
@@ -1028,9 +1031,10 @@
   "last_day": "2026-08-10"
  },
  "feed": {
-  "dhan_calls": 1,
-  "yahoo_calls": 210,
+  "dhan_calls": 26,
+  "yahoo_calls": 185,
   "fallback": "HTTP 429",
   "fed": 210
- }
+ },
+ "eod_cache_count": 2
 }
