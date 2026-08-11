@@ -41,6 +41,9 @@ jobs:
       M11_CHAT_ID_B: ${{ secrets.M11_CHAT_ID_B }}
     steps:
       - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
