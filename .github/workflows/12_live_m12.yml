@@ -63,5 +63,4 @@ jobs:
           find learn -maxdepth 1 \( -name 'm12_candidates_*.csv' -o -name 'raw_M12_*.csv' \) -print0 | xargs -0 -r git add --
           find . -maxdepth 1 -name 'paper_test_M12_*.xlsx' -print0 | xargs -0 -r git add --
           git diff --cached --quiet || git commit -m "m12cycle $(date -u +%F_%H%M)Z"
-          git pull --rebase || true
-          git push
+          bash workflow_safe_push.sh

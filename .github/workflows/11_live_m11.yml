@@ -44,7 +44,7 @@ jobs:
         run: python -u m11_runner.py --test-alert
       - name: live cycle (default)
         if: github.event.inputs.mode != 'test-alert'
-        run: python -u m11_runner.py --loop 2
+        run: python -u m11_runner.py --loop 1
       - name: commit state + reports
         if: always()
         run: |
@@ -52,5 +52,4 @@ jobs:
           git config user.email "paper-bot@users.noreply.github.com"
           git add -A
           git diff --cached --quiet || git commit -m "m11cycle $(date -u +%F_%H%M)Z"
-          git pull --rebase || true
-          git push
+          bash workflow_safe_push.sh
