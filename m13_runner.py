@@ -115,7 +115,15 @@ def breadth_series(side,bars_map,prev,candidate_bars):
 def collect(st,today,now,bars_map,prev,piv,vixret):
  fresh=[];params=L.ms.Params(enable_buy_ex10=False,enable_buy_ex11=False);known_ids={str(x.get('decision_id')) for x in st.get('decisions',[])}
  for sym,tbars in bars_map.items():
-  n=len(tbars);known=int(st['signals'].get(sym,{}).get('nbars',0));known=0 if known>n else known
+  n=len(tbars);cursor=st['signals'].get(sym,{})
+  if 'nbars' in cursor:known=int(cursor.get('nbars',0))
+  else:
+   # Skip historical intraday bars on the first valid post-bootstrap run. M13
+   # never backfills old entries; processing thousands of stale prefixes only
+   # causes timeout and queue growth.
+   closed=[k for k,x in enumerate(tbars.dt) if pd.Timestamp(x)+pd.Timedelta(minutes=5)<=pd.Timestamp(now)]
+   known=closed[-1] if closed else 0
+  known=0 if known>n else known
   for j in range(known,n):
    tk=pd.Timestamp(tbars.dt.iloc[j]);tk=tk.tz_localize(now.tz) if tk.tzinfo is None else tk
    if tk+pd.Timedelta(minutes=5)>pd.Timestamp(now):break

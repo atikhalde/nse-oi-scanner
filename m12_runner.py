@@ -339,7 +339,16 @@ def collect_candidates(st: dict, today: str, now, bars_map: dict[str, pd.DataFra
     known_ids = {str(x.get("decision_id")) for x in st.get("decisions", [])}
     for sym, tbars in bars_map.items():
         n_today = len(tbars)
-        known = int(st["signals"].get(sym, {}).get("nbars", 0))
+        cursor = st["signals"].get(sym, {})
+        if "nbars" in cursor:
+            known = int(cursor.get("nbars", 0))
+        else:
+            # First valid run may occur mid-session after a stale-context/bootstrap
+            # recovery. Old bars are not executable and replaying every prefix is
+            # extremely expensive. Start at only the newest closed bar.
+            closed = [k for k, x in enumerate(tbars["dt"])
+                      if pd.Timestamp(x) + pd.Timedelta(minutes=5) <= pd.Timestamp(now)]
+            known = closed[-1] if closed else 0
         if known > n_today:
             known = 0
         for j in range(known, n_today):
