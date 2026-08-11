@@ -1,45 +1,46 @@
-# M12/M13 Dhan 429 fast-fallback fix
+# Workflow checkout/race fix
 
-## Behavior
+## Confirmed behavior
 
-- M12/M13 try Dhan at the start of a cycle when a Dhan token exists.
-- The first Dhan failure, including HTTP 429, opens a circuit breaker for the rest of that cycle.
-- Every remaining symbol goes directly to Yahoo Finance.
-- Yahoo receives one immediate request only: no retry loop and no sleep.
-- The old 0.15-second per-symbol M12/M13 sleep is removed.
-- One fallback line is logged per cycle instead of 210 Dhan error lines.
-- Feed counters and the fallback reason are persisted in `state12.json` / `state13.json` under `feed`.
+M12 and M13 are now technically working:
+
+- current history is fresh;
+- previous context is OK;
+- both feed 210 stocks after Dhan 429 -> Yahoo fallback;
+- both scanners populate 210 symbol cursors;
+- both record candidate decisions.
+
+Today M12 rejected 7/7 candidates on its anti-chase gate. M13 rejected 5/7 on opening breadth and 2/7 on missing S1. Zero trades is therefore a strategy result, not a scanner/feed failure.
+
+## Why scheduled workflow runs still fail
+
+A queued GitHub Actions event checks out the commit SHA captured when the event was created. While it waits, an earlier run of the same model commits its state. The queued run later modifies an old copy of the same state file; `git pull --rebase` conflicts and the commit step fails.
+
+Manual runs often succeed because they start from a newer SHA. Paper-cycle steps pass; scheduled failures occur in the commit step.
+
+## Fix
+
+Every state-writing workflow now checks out the latest `main` when the job actually starts:
+
+```yaml
+- uses: actions/checkout@v5
+  with:
+    ref: main
+    fetch-depth: 0
+```
+
+They also use one cycle per dispatch and the shared safe rebase/retry push helper.
 
 ## Upload
 
-Upload these root files:
+- Upload `workflow_safe_push.sh` to repository root.
+- Upload all included `.yml` files to `.github/workflows/`.
 
-- `fast_feed.py`
-- `test_fast_feed.py`
-- `workflow_safe_push.sh`
-- `m12_runner.py`
-- `m13_runner.py`
+## Operational cleanup
 
-Upload these workflow files into `.github/workflows/`:
+1. Cancel pending/queued runs created before the upload.
+2. Disable external cron temporarily. Internal repository schedules are already active.
+3. Let one clean schedule cycle complete for each model.
+4. Re-enable only a market-hours-only backup scheduler if needed.
 
-- `12_live_m12.yml`
-- `13_live_m13.yml`
-
-## Verify
-
-Run each workflow once. A Dhan 429 should produce one line similar to:
-
-`FAST-FEED: Dhan disabled for this cycle (HTTP 429); switching immediately to Yahoo`
-
-State should show approximately:
-
-```json
-"feed": {
-  "dhan_calls": 1,
-  "yahoo_calls": 210,
-  "fallback": "HTTP 429",
-  "fed": 210
-}
-```
-
-Actual Yahoo coverage can be lower if an individual Yahoo request fails. Such failures are not retried in the same cycle.
+Do not run internal five-minute schedules and an external full-frequency scheduler simultaneously.
