@@ -5,6 +5,14 @@
  "alerts": [],
  "decisions": [],
  "eod_done": false,
- "cycles": 0,
- "prev_meta": {}
+ "cycles": 1,
+ "prev_meta": {
+  "status": "STALE",
+  "source": "previous-close cache/history",
+  "date": "2026-07-30",
+  "expected_previous_weekday": "2026-08-10",
+  "age_days": 12,
+  "count": 210,
+  "policy": "strict no-entry; EOD will seed cache for next session"
+ }
 }
