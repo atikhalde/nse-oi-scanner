@@ -5,7 +5,7 @@ import argparse,datetime as dt,json,time
 from pathlib import Path
 import pandas as pd
 import live_runner as L
-import feeds,flow_map as FM,learn_log,m11_runner as V,m12_entry as Context
+import feeds,fast_feed,flow_map as FM,learn_log,m11_runner as V,m12_entry as Context
 import m13_alerts as Alerts,m13_entry as E,m13_trader as T
 import costs,report
 
@@ -202,13 +202,13 @@ def mode_live():
  now=L.now_ist();today=now.strftime('%Y-%m-%d');hhmm=now.strftime('%H:%M');st=load_state(today)
  if st.get('eod_done'):print('M13 EOD done — idle');return False
  if hhmm<'09:16':save_state(st);print('M13 pre-market — idle');return False
- prev,piv,meta=load_prev(today);st['prev_meta']=meta;vix=prior_vix_return(today,st);bars_map={}
+ prev,piv,meta=load_prev(today);st['prev_meta']=meta;vix=prior_vix_return(today,st);bars_map={};feed_cycle=fast_feed.FastFeedCycle()
  for sym in L.SYMS:
   try:
-   b,_=feeds.fetch_today(sym,L.SID[sym],now)
+   b,_=feed_cycle.fetch(sym,L.SID[sym],now)
    if b is not None and not b.empty:b=b.sort_values('dt').drop_duplicates('dt').reset_index(drop=True);b['t']=b.dt.dt.strftime('%H:%M');bars_map[sym]=b
   except Exception as exc:print(f'M13 feed {sym}: {exc}')
-  time.sleep(.15)
+ st['feed']={'dhan_calls':feed_cycle.dhan_calls,'yahoo_calls':feed_cycle.yahoo_calls,'fallback':feed_cycle.trip_reason,'fed':len(bars_map)}
  manage(st,today,bars_map,prev)
  if meta.get('status')=='OK' and finite(vix):dispatch(st,today,collect(st,today,now,bars_map,prev,piv,vix),bars_map,prev)
  else:print(f'M13 strict no-entry prev={meta} vix={vix}')

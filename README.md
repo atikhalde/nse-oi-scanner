@@ -1,31 +1,45 @@
-# Final runtime stability fix
+# M12/M13 Dhan 429 fast-fallback fix
 
-## Confirmed causes
+## Behavior
 
-1. Bootstrap was stale because old runs downloaded data but failed their direct push.
-2. The corrected Bootstrap has now succeeded (`bootstrap 2026-08-11_0556Z`) and history includes current 11-Aug bars plus the required 10-Aug previous session.
-3. Existing model workflows still use two full cycles and unsafe push handling; concurrent runs are cancelled or fail at `commit state + reports`.
-4. M12/M13 states were created while history was stale. Their first post-Bootstrap run starts with no cursor and tries to replay every intraday bar for every stock, even though stale signals cannot be executed. That can exceed the job window.
-
-## Fixes in this package
-
-- `workflow_safe_push.sh`: rebase-and-retry state/report pushes.
-- All live workflows: one cycle per dispatch and safe push helper.
-- Bootstrap: safe data push.
-- M12/M13 runners: on the first valid mid-session run, skip old bars and process only the newest closed bar. This is consistent with the no-late-entry rule and prevents thousands of pointless scanner replays.
-
-No strategy gate, score, stop, exit, position size or alert rule is changed.
+- M12/M13 try Dhan at the start of a cycle when a Dhan token exists.
+- The first Dhan failure, including HTTP 429, opens a circuit breaker for the rest of that cycle.
+- Every remaining symbol goes directly to Yahoo Finance.
+- Yahoo receives one immediate request only: no retry loop and no sleep.
+- The old 0.15-second per-symbol M12/M13 sleep is removed.
+- One fallback line is logged per cycle instead of 210 Dhan error lines.
+- Feed counters and the fallback reason are persisted in `state12.json` / `state13.json` under `feed`.
 
 ## Upload
 
-- Upload `workflow_safe_push.sh`, `m12_runner.py`, and `m13_runner.py` to repository root.
-- Upload all `.yml` files to `.github/workflows/`.
+Upload these root files:
 
-## Then
+- `fast_feed.py`
+- `test_fast_feed.py`
+- `workflow_safe_push.sh`
+- `m12_runner.py`
+- `m13_runner.py`
 
-1. Cancel pending/queued runs created before this upload.
-2. Temporarily disable external cron dispatches. Internal repository schedules are already active.
-3. Run M12 once in live mode.
-4. Run M13 once in live mode.
-5. Confirm `prev_meta.status=OK`, `signals` populates, and decisions begin appearing.
-6. Re-enable only a market-hours-only backup scheduler if needed.
+Upload these workflow files into `.github/workflows/`:
+
+- `12_live_m12.yml`
+- `13_live_m13.yml`
+
+## Verify
+
+Run each workflow once. A Dhan 429 should produce one line similar to:
+
+`FAST-FEED: Dhan disabled for this cycle (HTTP 429); switching immediately to Yahoo`
+
+State should show approximately:
+
+```json
+"feed": {
+  "dhan_calls": 1,
+  "yahoo_calls": 210,
+  "fallback": "HTTP 429",
+  "fed": 210
+}
+```
+
+Actual Yahoo coverage can be lower if an individual Yahoo request fails. Such failures are not retried in the same cycle.
