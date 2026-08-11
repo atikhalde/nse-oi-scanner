@@ -750,22 +750,27 @@
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 11:30",
+     "SL 11:55",
      157,
-     316.6,
-     "11:30"
+     316.13676,
+     "11:55"
     ]
    ],
-   "exit_text": "OPEN",
-   "leg2_time": "11:30",
-   "pnl": -251.0,
-   "r_total": -0.78,
-   "closed": false,
+   "exit_text": "100% SL 11:55",
+   "leg2_time": "11:55",
+   "pnl": -324.0,
+   "r_total": -1.0,
+   "closed": true,
    "events": [
     {
      "key": "ENTRY",
      "time": "10:15",
      "price": 318.2
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "11:55",
+     "price": 316.13676
     }
    ]
   },
@@ -839,16 +844,16 @@
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 11:30",
+     "OPEN 12:10",
      127,
-     391.25,
-     "11:30"
+     390.7,
+     "12:10"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "11:30",
-   "pnl": 76.0,
-   "r_total": 0.15,
+   "leg2_time": "12:10",
+   "pnl": 6.0,
+   "r_total": 0.01,
    "closed": false,
    "events": [
     {
@@ -881,16 +886,16 @@
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 11:30",
+     "OPEN 12:10",
      30,
-     1640.0,
-     "11:30"
+     1640.3,
+     "12:10"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "11:30",
-   "pnl": 24.0,
-   "r_total": 0.08,
+   "leg2_time": "12:10",
+   "pnl": 33.0,
+   "r_total": 0.11,
    "closed": false,
    "events": [
     {
@@ -970,16 +975,16 @@
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 11:35",
+     "OPEN 12:10",
      23,
-     1679.0,
-     "11:35"
+     1675.7,
+     "12:10"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "11:35",
-   "pnl": 460.0,
-   "r_total": 0.52,
+   "leg2_time": "12:10",
+   "pnl": 384.0,
+   "r_total": 0.43,
    "closed": false,
    "events": [
     {
@@ -994,34 +999,34 @@
    "side": "BUY",
    "time": "10:35",
    "signal": "BUY-EX12",
-   "setup": "CONTINUATION",
+   "setup": "PULLBACK",
    "sl_mode": "structure",
    "entry": 1094.8,
-   "sl": 1086.08,
-   "sl_anchor": "session-extreme*",
-   "risk_pts": 8.72,
-   "risk_pct": 0.796,
-   "risk_rs": 392.0,
+   "sl": 1091.19,
+   "sl_anchor": "pullback-high/low",
+   "risk_pts": 3.61,
+   "risk_pct": 0.33,
+   "risk_rs": 162.0,
    "qty": 45,
    "qty_full": 45,
    "qty_capped": false,
    "capital": 49266.0,
-   "tp1": 1957.81,
-   "tp2": 1957.81,
+   "tp1": 1451.97,
+   "tp2": 1451.97,
    "trail_armed": false,
-   "trail_style": "EMA9",
+   "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 11:30",
+     "OPEN 12:13",
      45,
-     1095.5,
-     "11:30"
+     1094.199951171875,
+     "12:13"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "11:30",
-   "pnl": 32.0,
-   "r_total": 0.08,
+   "leg2_time": "12:13",
+   "pnl": -27.0,
+   "r_total": -0.17,
    "closed": false,
    "events": [
     {
@@ -1036,40 +1041,45 @@
    "side": "BUY",
    "time": "10:45",
    "signal": "BUY-EX7",
-   "setup": "BREAKOUT",
+   "setup": "PULLBACK",
    "sl_mode": "structure",
    "entry": 2270.2,
-   "sl": 2251.95,
-   "sl_anchor": "pivot",
-   "risk_pts": 18.25,
-   "risk_pct": 0.804,
-   "risk_rs": 402.0,
+   "sl": 2261.97,
+   "sl_anchor": "pullback-high/low",
+   "risk_pts": 8.23,
+   "risk_pct": 0.362,
+   "risk_rs": 181.0,
    "qty": 22,
    "qty_full": 22,
    "qty_capped": false,
    "capital": 49944.0,
-   "tp1": 4077.0,
-   "tp2": 4077.0,
-   "trail_armed": false,
+   "tp1": 3084.92,
+   "tp2": 3084.92,
+   "trail_armed": true,
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 11:30",
+     "OPEN 12:14",
      22,
-     2268.1,
-     "11:30"
+     2275.39990234375,
+     "12:14"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "11:30",
-   "pnl": -46.0,
-   "r_total": -0.12,
+   "leg2_time": "12:14",
+   "pnl": 114.0,
+   "r_total": 0.63,
    "closed": false,
    "events": [
     {
      "key": "ENTRY",
      "time": "10:45",
      "price": 2270.2
+    },
+    {
+     "key": "TRAIL_ON",
+     "time": "12:00",
+     "price": 2279.89990234375
     }
    ]
   }
@@ -1089,7 +1099,9 @@
   "PATANJALI:EXIT_SL",
   "JSWSTEEL:EXIT_SL",
   "BAJFINANCE:ENTRY",
-  "GLENMARK:ENTRY"
+  "GLENMARK:ENTRY",
+  "BPCL:EXIT_SL",
+  "GLENMARK:TRAIL_ON"
  ],
  "gate": {
   "status": "COACH-V2.1 \u00b7 tape BULL (adv 57.1% \u00b7 120\u2191/90\u2193 of 210)",
