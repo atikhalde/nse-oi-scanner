@@ -46,6 +46,7 @@ jobs:
       - run: pip install -r requirements.txt
       - name: M13 tests
         run: |
+          python -u test_fast_feed.py
           python -u test_m13_entry.py
           python -u test_m13_trader.py
           python -u test_m13_runner.py

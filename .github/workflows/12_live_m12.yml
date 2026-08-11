@@ -45,8 +45,10 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install -r requirements.txt
-      - name: M12 entry tests
-        run: python -u test_m12_entry.py
+      - name: M12 entry/feed tests
+        run: |
+          python -u test_fast_feed.py
+          python -u test_m12_entry.py
       - name: M12 three-target alert test
         if: github.event.inputs.mode == 'test-alert'
         run: python -u m12_runner.py --test-alert
