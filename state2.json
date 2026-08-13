@@ -185,7 +185,7 @@
    "nbars": 72
   },
   "EXIDEIND": {
-   "nbars": 72
+   "nbars": 75
   },
   "FEDERALBNK": {
    "nbars": 72
@@ -428,7 +428,7 @@
    "nbars": 72
   },
   "NUVAMA": {
-   "nbars": 72
+   "nbars": 75
   },
   "NYKAA": {
    "nbars": 72
@@ -749,7 +749,7 @@
     [
      "trail 11:10",
      24,
-     2030.7937111816407,
+     2030.79376,
      "11:10"
     ]
    ],
@@ -767,12 +767,12 @@
     {
      "key": "TRAIL_ON",
      "time": "10:05",
-     "price": 2029.0
+     "price": 2029.6
     },
     {
      "key": "EXIT_SL",
      "time": "11:10",
-     "price": 2030.7937111816407
+     "price": 2030.79376
     }
    ],
    "spurt_rank": 53
@@ -785,42 +785,37 @@
    "setup": "BREAKOUT",
    "sl_mode": "structure",
    "entry": 312.5,
-   "sl": 314.91,
+   "sl": 315.96,
    "sl_anchor": "session-extreme*",
-   "risk_pts": 2.41,
-   "risk_pct": 0.772,
-   "risk_rs": 386.0,
+   "risk_pts": 3.46,
+   "risk_pct": 1.108,
+   "risk_rs": 554.0,
    "qty": 160,
    "qty_full": 160,
    "qty_capped": false,
    "capital": 50000.0,
-   "tp1": 73.62,
-   "tp2": 73.62,
+   "tp1": -30.35,
+   "tp2": -30.35,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
     [
-     "SL 14:10",
+     "OPEN 15:10",
      160,
-     314.91297000000003,
-     "14:10"
+     315.0,
+     "15:10"
     ]
    ],
-   "exit_text": "100% SL 14:10",
-   "leg2_time": "14:10",
-   "pnl": -386.0,
-   "r_total": -1.0,
-   "closed": true,
+   "exit_text": "OPEN",
+   "leg2_time": "15:10",
+   "pnl": -400.0,
+   "r_total": -0.72,
+   "closed": false,
    "events": [
     {
      "key": "ENTRY",
      "time": "09:30",
      "price": 312.5
-    },
-    {
-     "key": "EXIT_SL",
-     "time": "14:10",
-     "price": 314.91297000000003
     }
    ],
    "spurt_rank": 58
@@ -833,30 +828,30 @@
    "setup": "BREAKOUT",
    "sl_mode": "structure",
    "entry": 1532.9,
-   "sl": 1506.9,
+   "sl": 1505.7,
    "sl_anchor": "session-extreme*",
-   "risk_pts": 26.0,
-   "risk_pct": 1.696,
-   "risk_rs": 832.0,
+   "risk_pts": 27.2,
+   "risk_pct": 1.774,
+   "risk_rs": 870.0,
    "qty": 32,
    "qty_full": 32,
    "qty_capped": false,
    "capital": 49053.0,
-   "tp1": 4107.04,
-   "tp2": 4107.04,
+   "tp1": 4225.82,
+   "tp2": 4225.82,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
     [
      "SL 14:05",
      32,
-     1506.89856,
+     1505.6988000000001,
      "14:05"
     ]
    ],
    "exit_text": "100% SL 14:05",
    "leg2_time": "14:05",
-   "pnl": -832.0,
+   "pnl": -870.0,
    "r_total": -1.0,
    "closed": true,
    "events": [
@@ -868,7 +863,7 @@
     {
      "key": "EXIT_SL",
      "time": "14:05",
-     "price": 1506.89856
+     "price": 1505.6988000000001
     }
    ],
    "spurt_rank": 74
@@ -898,14 +893,14 @@
     [
      "OPEN 15:10",
      5,
-     8446.5,
+     8447.5,
      "15:10"
     ]
    ],
    "exit_text": "OPEN",
    "leg2_time": "15:10",
-   "pnl": -90.0,
-   "r_total": -0.34,
+   "pnl": -95.0,
+   "r_total": -0.36,
    "closed": false,
    "events": [
     {
@@ -924,30 +919,30 @@
    "setup": "BREAKOUT",
    "sl_mode": "structure",
    "entry": 582.8,
-   "sl": 589.02,
+   "sl": 588.77,
    "sl_anchor": "session-extreme*",
-   "risk_pts": 6.22,
-   "risk_pct": 1.067,
-   "risk_rs": 529.0,
+   "risk_pts": 5.97,
+   "risk_pct": 1.024,
+   "risk_rs": 507.0,
    "qty": 85,
    "qty_full": 85,
    "qty_capped": false,
    "capital": 49538.0,
-   "tp1": -32.76,
-   "tp2": -32.76,
+   "tp1": -8.01,
+   "tp2": -8.01,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
     [
      "SL 10:10",
      85,
-     589.01778,
+     588.7677544189453,
      "10:10"
     ]
    ],
    "exit_text": "100% SL 10:10",
    "leg2_time": "10:10",
-   "pnl": -529.0,
+   "pnl": -507.0,
    "r_total": -1.0,
    "closed": true,
    "events": [
@@ -959,7 +954,7 @@
     {
      "key": "EXIT_SL",
      "time": "10:10",
-     "price": 589.01778
+     "price": 588.7677544189453
     }
    ],
    "spurt_rank": 179
@@ -972,30 +967,30 @@
    "setup": "BREAKOUT",
    "sl_mode": "structure",
    "entry": 594.55,
-   "sl": 580.88,
+   "sl": 580.93,
    "sl_anchor": "session-extreme*",
-   "risk_pts": 13.67,
-   "risk_pct": 2.299,
-   "risk_rs": 888.0,
-   "qty": 65,
+   "risk_pts": 13.62,
+   "risk_pct": 2.29,
+   "risk_rs": 899.0,
+   "qty": 66,
    "qty_full": 84,
    "qty_capped": true,
-   "capital": 38646.0,
-   "tp1": 1947.5,
-   "tp2": 1947.5,
+   "capital": 39240.0,
+   "tp1": 1942.56,
+   "tp2": 1942.56,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
     [
      "SL 12:40",
-     65,
-     580.8838000000001,
+     66,
+     580.9337777954102,
      "12:40"
     ]
    ],
    "exit_text": "100% SL 12:40",
    "leg2_time": "12:40",
-   "pnl": -888.0,
+   "pnl": -899.0,
    "r_total": -1.0,
    "closed": true,
    "events": [
@@ -1007,7 +1002,7 @@
     {
      "key": "EXIT_SL",
      "time": "12:40",
-     "price": 580.8838000000001
+     "price": 580.9337777954102
     }
    ],
    "spurt_rank": 179
@@ -1020,30 +1015,30 @@
    "setup": "BREAKOUT",
    "sl_mode": "structure",
    "entry": 1159.9,
-   "sl": 1169.13,
+   "sl": 1169.03,
    "sl_anchor": "pivot",
-   "risk_pts": 9.23,
-   "risk_pct": 0.796,
-   "risk_rs": 397.0,
+   "risk_pts": 9.13,
+   "risk_pct": 0.787,
+   "risk_rs": 393.0,
    "qty": 43,
    "qty_full": 43,
    "qty_capped": false,
    "capital": 49876.0,
-   "tp1": 245.76,
-   "tp2": 245.76,
+   "tp1": 255.65,
+   "tp2": 255.65,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
     [
      "SL 11:45",
      43,
-     1169.1337800000001,
+     1169.0338088378905,
      "11:45"
     ]
    ],
    "exit_text": "100% SL 11:45",
    "leg2_time": "11:45",
-   "pnl": -397.0,
+   "pnl": -393.0,
    "r_total": -1.0,
    "closed": true,
    "events": [
@@ -1055,7 +1050,7 @@
     {
      "key": "EXIT_SL",
      "time": "11:45",
-     "price": 1169.1337800000001
+     "price": 1169.0338088378905
     }
    ],
    "spurt_rank": 125
@@ -1116,17 +1111,17 @@
    "setup": "BREAKOUT",
    "sl_mode": "structure",
    "entry": 3781.3,
-   "sl": 3849.67,
+   "sl": 3849.77,
    "sl_anchor": "session-extreme*",
-   "risk_pts": 68.37,
-   "risk_pct": 1.808,
-   "risk_rs": 889.0,
+   "risk_pts": 68.47,
+   "risk_pct": 1.811,
+   "risk_rs": 890.0,
    "qty": 13,
    "qty_full": 13,
    "qty_capped": false,
    "capital": 49157.0,
-   "tp1": -2987.31,
-   "tp2": -2987.31,
+   "tp1": -2997.21,
+   "tp2": -2997.21,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
@@ -1452,31 +1447,31 @@
    "setup": "BREAKOUT",
    "sl_mode": "structure",
    "entry": 2809.5,
-   "sl": 2844.17,
+   "sl": 2846.77,
    "sl_anchor": "session-extreme*",
-   "risk_pts": 34.67,
-   "risk_pct": 1.234,
-   "risk_rs": 589.0,
+   "risk_pts": 37.27,
+   "risk_pct": 1.327,
+   "risk_rs": 634.0,
    "qty": 17,
    "qty_full": 17,
    "qty_capped": false,
    "capital": 47762.0,
-   "tp1": -622.7,
-   "tp2": -622.7,
+   "tp1": -880.15,
+   "tp2": -880.15,
    "trail_armed": true,
    "trail_style": "structure swings",
    "legs": [
     [
-     "trail 13:50",
+     "trail 13:55",
      17,
-     2737.24734,
-     "13:50"
+     2740.548,
+     "13:55"
     ]
    ],
-   "exit_text": "100% trail 13:50",
-   "leg2_time": "13:50",
-   "pnl": 1228.0,
-   "r_total": 2.08,
+   "exit_text": "100% trail 13:55",
+   "leg2_time": "13:55",
+   "pnl": 1172.0,
+   "r_total": 1.85,
    "closed": true,
    "events": [
     {
@@ -1486,13 +1481,13 @@
     },
     {
      "key": "TRAIL_ON",
-     "time": "11:05",
-     "price": 2772.5
+     "time": "11:10",
+     "price": 2772.199951171875
     },
     {
      "key": "EXIT_SL",
-     "time": "13:50",
-     "price": 2737.24734
+     "time": "13:55",
+     "price": 2740.548
     }
    ],
    "spurt_rank": 44
@@ -1601,17 +1596,17 @@
    "setup": "BREAKOUT",
    "sl_mode": "structure",
    "entry": 13770.0,
-   "sl": 13642.27,
+   "sl": 13648.27,
    "sl_anchor": "pivot",
-   "risk_pts": 127.73,
-   "risk_pct": 0.928,
-   "risk_rs": 383.0,
+   "risk_pts": 121.73,
+   "risk_pct": 0.884,
+   "risk_rs": 365.0,
    "qty": 3,
    "qty_full": 3,
    "qty_capped": false,
    "capital": 41310.0,
-   "tp1": 26415.17,
-   "tp2": 26415.17,
+   "tp1": 25821.29,
+   "tp2": 25821.29,
    "trail_armed": true,
    "trail_style": "structure swings",
    "legs": [
@@ -1625,7 +1620,7 @@
    "exit_text": "OPEN",
    "leg2_time": "15:10",
    "pnl": 780.0,
-   "r_total": 2.04,
+   "r_total": 2.14,
    "closed": false,
    "events": [
     {
@@ -1649,30 +1644,30 @@
    "setup": "BREAKOUT",
    "sl_mode": "structure",
    "entry": 1257.6,
-   "sl": 1263.05,
+   "sl": 1262.85,
    "sl_anchor": "pivot",
-   "risk_pts": 5.45,
-   "risk_pct": 0.434,
-   "risk_rs": 213.0,
+   "risk_pts": 5.25,
+   "risk_pct": 0.418,
+   "risk_rs": 205.0,
    "qty": 39,
    "qty_full": 39,
    "qty_capped": false,
    "capital": 49046.0,
-   "tp1": 717.8,
-   "tp2": 717.8,
+   "tp1": 737.6,
+   "tp2": 737.6,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
     [
      "SL 11:50",
      39,
-     1263.0525599999999,
+     1262.8524955810547,
      "11:50"
     ]
    ],
    "exit_text": "100% SL 11:50",
    "leg2_time": "11:50",
-   "pnl": -213.0,
+   "pnl": -205.0,
    "r_total": -1.0,
    "closed": true,
    "events": [
@@ -1684,7 +1679,7 @@
     {
      "key": "EXIT_SL",
      "time": "11:50",
-     "price": 1263.0525599999999
+     "price": 1262.8524955810547
     }
    ],
    "spurt_rank": 125
@@ -1697,30 +1692,30 @@
    "setup": "BREAKOUT",
    "sl_mode": "structure",
    "entry": 278.85,
-   "sl": 281.46,
+   "sl": 280.71,
    "sl_anchor": "pivot",
-   "risk_pts": 2.61,
-   "risk_pct": 0.935,
-   "risk_rs": 467.0,
+   "risk_pts": 1.86,
+   "risk_pct": 0.666,
+   "risk_rs": 332.0,
    "qty": 179,
    "qty_full": 179,
    "qty_capped": false,
    "capital": 49914.0,
-   "tp1": 20.83,
-   "tp2": 20.83,
+   "tp1": 95.09,
+   "tp2": 95.09,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
     [
-     "SL 14:30",
+     "SL 12:05",
      179,
-     281.45628,
-     "14:30"
+     280.70612389526366,
+     "12:05"
     ]
    ],
-   "exit_text": "100% SL 14:30",
-   "leg2_time": "14:30",
-   "pnl": -467.0,
+   "exit_text": "100% SL 12:05",
+   "leg2_time": "12:05",
+   "pnl": -332.0,
    "r_total": -1.0,
    "closed": true,
    "events": [
@@ -1731,8 +1726,8 @@
     },
     {
      "key": "EXIT_SL",
-     "time": "14:30",
-     "price": 281.45628
+     "time": "12:05",
+     "price": 280.70612389526366
     }
    ],
    "spurt_rank": 109
@@ -1780,7 +1775,7 @@
     {
      "key": "TRAIL_ON",
      "time": "12:15",
-     "price": 18801.0
+     "price": 18808.0
     },
     {
      "key": "EXIT_SL",
@@ -1906,12 +1901,12 @@
   },
   "movers": {
    "count": 210,
-   "top20_cut": 1.36,
-   "bot20_cut": -0.93
+   "top20_cut": 1.26,
+   "bot20_cut": -1.03
   }
  },
- "eod_done": false,
- "cycles": 11,
+ "eod_done": true,
+ "cycles": 12,
  "skipped": [
   {
    "symbol": "ABCAPITAL",
