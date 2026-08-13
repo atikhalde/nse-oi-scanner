@@ -65,7 +65,7 @@
    "nbars": 72
   },
   "BAJAJFINSV": {
-   "nbars": 73
+   "nbars": 72
   },
   "BAJAJHLDNG": {
    "nbars": 72
@@ -185,7 +185,7 @@
    "nbars": 72
   },
   "EXIDEIND": {
-   "nbars": 72
+   "nbars": 75
   },
   "FEDERALBNK": {
    "nbars": 72
@@ -404,7 +404,7 @@
    "nbars": 72
   },
   "NAM-INDIA": {
-   "nbars": 73
+   "nbars": 72
   },
   "NATIONALUM": {
    "nbars": 72
@@ -428,7 +428,7 @@
    "nbars": 72
   },
   "NUVAMA": {
-   "nbars": 72
+   "nbars": 75
   },
   "NYKAA": {
    "nbars": 72
@@ -704,16 +704,16 @@
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 15:14",
+     "OPEN 15:10",
      15,
-     2959.0,
-     "15:14"
+     2960.5,
+     "15:10"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "15:14",
-   "pnl": -1.0,
-   "r_total": -0.0,
+   "leg2_time": "15:10",
+   "pnl": -24.0,
+   "r_total": -0.03,
    "closed": false,
    "events": [
     {
@@ -747,14 +747,14 @@
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 15:15",
+     "OPEN 15:10",
      160,
      315.0,
-     "15:15"
+     "15:10"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "15:15",
+   "leg2_time": "15:10",
    "pnl": -400.0,
    "r_total": -0.72,
    "closed": false,
@@ -840,14 +840,14 @@
     [
      "OPEN 15:10",
      5,
-     8446.5,
+     8447.5,
      "15:10"
     ]
    ],
    "exit_text": "OPEN",
    "leg2_time": "15:10",
-   "pnl": -90.0,
-   "r_total": -0.34,
+   "pnl": -95.0,
+   "r_total": -0.36,
    "closed": false,
    "events": [
     {
@@ -1058,29 +1058,29 @@
    "setup": "BREAKOUT",
    "sl_mode": "structure",
    "entry": 3781.3,
-   "sl": 3849.77,
+   "sl": 3849.67,
    "sl_anchor": "session-extreme*",
-   "risk_pts": 68.47,
-   "risk_pct": 1.811,
-   "risk_rs": 890.0,
+   "risk_pts": 68.37,
+   "risk_pct": 1.808,
+   "risk_rs": 889.0,
    "qty": 13,
    "qty_full": 13,
    "qty_capped": false,
    "capital": 49157.0,
-   "tp1": -2997.21,
-   "tp2": -2997.21,
+   "tp1": -2987.31,
+   "tp2": -2987.31,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 15:14",
+     "OPEN 15:10",
      13,
      3759.0,
-     "15:14"
+     "15:10"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "15:14",
+   "leg2_time": "15:10",
    "pnl": 290.0,
    "r_total": 0.33,
    "closed": false,
@@ -1101,30 +1101,30 @@
    "setup": "BREAKOUT",
    "sl_mode": "structure",
    "entry": 1517.1,
-   "sl": 1506.2,
+   "sl": 1505.7,
    "sl_anchor": "pivot",
-   "risk_pts": 10.9,
-   "risk_pct": 0.719,
-   "risk_rs": 349.0,
+   "risk_pts": 11.4,
+   "risk_pct": 0.752,
+   "risk_rs": 365.0,
    "qty": 32,
    "qty_full": 32,
    "qty_capped": false,
    "capital": 48547.0,
-   "tp1": 2596.33,
-   "tp2": 2596.33,
+   "tp1": 2645.82,
+   "tp2": 2645.82,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
     [
      "SL 11:05",
      32,
-     1506.1987000000001,
+     1505.6988000000001,
      "11:05"
     ]
    ],
    "exit_text": "100% SL 11:05",
    "leg2_time": "11:05",
-   "pnl": -349.0,
+   "pnl": -365.0,
    "r_total": -1.0,
    "closed": true,
    "events": [
@@ -1136,7 +1136,7 @@
     {
      "key": "EXIT_SL",
      "time": "11:05",
-     "price": 1506.1987000000001
+     "price": 1505.6988000000001
     }
    ],
    "spurt_rank": 55
@@ -1166,7 +1166,7 @@
     [
      "SL 14:30",
      82,
-     612.0724022094727,
+     612.07239,
      "14:30"
     ]
    ],
@@ -1184,7 +1184,7 @@
     {
      "key": "EXIT_SL",
      "time": "14:30",
-     "price": 612.0724022094727
+     "price": 612.07239
     }
    ],
    "spurt_rank": 70
@@ -1197,31 +1197,31 @@
    "setup": "BREAKOUT",
    "sl_mode": "structure",
    "entry": 1137.5,
-   "sl": 1124.48,
+   "sl": 1124.08,
    "sl_anchor": "session-extreme*",
-   "risk_pts": 13.02,
-   "risk_pct": 1.145,
-   "risk_rs": 560.0,
+   "risk_pts": 13.42,
+   "risk_pct": 1.18,
+   "risk_rs": 577.0,
    "qty": 43,
    "qty_full": 43,
    "qty_capped": false,
    "capital": 48912.0,
-   "tp1": 2426.97,
-   "tp2": 2426.97,
+   "tp1": 2466.56,
+   "tp2": 2466.56,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
     [
      "OPEN 15:10",
      43,
-     1130.2,
+     1130.300048828125,
      "15:10"
     ]
    ],
    "exit_text": "OPEN",
    "leg2_time": "15:10",
-   "pnl": -314.0,
-   "r_total": -0.56,
+   "pnl": -310.0,
+   "r_total": -0.54,
    "closed": false,
    "events": [
     {
@@ -1293,31 +1293,31 @@
    "setup": "BREAKOUT",
    "sl_mode": "structure",
    "entry": 1066.0,
-   "sl": 1058.59,
-   "sl_anchor": "session-extreme*",
-   "risk_pts": 7.41,
-   "risk_pct": 0.695,
-   "risk_rs": 341.0,
+   "sl": 1058.79,
+   "sl_anchor": "pivot",
+   "risk_pts": 7.21,
+   "risk_pct": 0.677,
+   "risk_rs": 332.0,
    "qty": 46,
    "qty_full": 46,
    "qty_capped": false,
    "capital": 49036.0,
-   "tp1": 1799.76,
-   "tp2": 1799.76,
+   "tp1": 1779.97,
+   "tp2": 1779.97,
    "trail_armed": true,
    "trail_style": "structure swings",
    "legs": [
     [
-     "trail 12:05",
+     "trail 12:45",
      46,
-     1077.2845,
-     "12:05"
+     1075.2849,
+     "12:45"
     ]
    ],
-   "exit_text": "100% trail 12:05",
-   "leg2_time": "12:05",
-   "pnl": 519.0,
-   "r_total": 1.52,
+   "exit_text": "100% trail 12:45",
+   "leg2_time": "12:45",
+   "pnl": 427.0,
+   "r_total": 1.29,
    "closed": true,
    "events": [
     {
@@ -1328,12 +1328,12 @@
     {
      "key": "TRAIL_ON",
      "time": "10:20",
-     "price": 1075.199951171875
+     "price": 1075.5
     },
     {
      "key": "EXIT_SL",
-     "time": "12:05",
-     "price": 1077.2845
+     "time": "12:45",
+     "price": 1075.2849
     }
    ],
    "spurt_rank": 195
@@ -1399,30 +1399,30 @@
    "setup": "BREAKOUT",
    "sl_mode": "structure",
    "entry": 5021.1,
-   "sl": 5044.31,
+   "sl": 5044.01,
    "sl_anchor": "pivot",
-   "risk_pts": 23.21,
-   "risk_pct": 0.462,
-   "risk_rs": 209.0,
+   "risk_pts": 22.91,
+   "risk_pct": 0.456,
+   "risk_rs": 206.0,
    "qty": 9,
    "qty_full": 9,
    "qty_capped": false,
    "capital": 45190.0,
-   "tp1": 2723.44,
-   "tp2": 2723.44,
+   "tp1": 2753.15,
+   "tp2": 2753.15,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
     [
      "SL 13:45",
      9,
-     5044.30866,
+     5044.0086,
      "13:45"
     ]
    ],
    "exit_text": "100% SL 13:45",
    "leg2_time": "13:45",
-   "pnl": -209.0,
+   "pnl": -206.0,
    "r_total": -1.0,
    "closed": true,
    "events": [
@@ -1434,7 +1434,7 @@
     {
      "key": "EXIT_SL",
      "time": "13:45",
-     "price": 5044.30866
+     "price": 5044.0086
     }
    ],
    "spurt_rank": 163
@@ -1462,14 +1462,14 @@
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 15:15",
+     "OPEN 15:10",
      41,
-     1206.699951171875,
-     "15:15"
+     1206.7,
+     "15:10"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "15:15",
+   "leg2_time": "15:10",
    "pnl": 312.0,
    "r_total": 0.44,
    "closed": false,
@@ -1548,14 +1548,14 @@
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 15:14",
+     "OPEN 15:10",
      42,
      1172.0,
-     "15:14"
+     "15:10"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "15:14",
+   "leg2_time": "15:10",
    "pnl": -13.0,
    "r_total": -0.03,
    "closed": false,
@@ -1723,10 +1723,10 @@
    "top20_cut": 1.29,
    "bot20_cut": -0.93
   },
-  "breadth_bearish": 0.519
+  "breadth_bearish": 0.51
  },
- "eod_done": false,
- "cycles": 11,
+ "eod_done": true,
+ "cycles": 12,
  "skipped": [
   {
    "symbol": "ABCAPITAL",
@@ -3777,6 +3777,26 @@
    "rank": 207,
    "mv": false,
    "why": "M5 gate: spurt 207 \u00b7 movers N \u2014 need both"
+  },
+  {
+   "symbol": "BAJAJFINSV",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "09:50",
+   "entry": 2023.7,
+   "rank": 32,
+   "mv": false,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 (GHOST-shadowed EOD)"
+  },
+  {
+   "symbol": "NAM-INDIA",
+   "side": "SELL",
+   "signal": "NORMAL SELL",
+   "time": "11:00",
+   "entry": 1171.7,
+   "rank": 44,
+   "mv": false,
+   "why": "M5 gate: spurt 44 \u00b7 movers N \u2014 need both"
   }
  ],
  "ghosts": [
@@ -3988,6 +4008,18 @@
    "rank": 203,
    "mv": false,
    "grp": "R"
+  },
+  {
+   "symbol": "BAJAJFINSV",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "code": 102,
+   "time": "09:50",
+   "entry": 2023.7,
+   "rank": 32,
+   "mv": false,
+   "grp": "R"
   }
- ]
+ ],
+ "regime": "MIXED/chop"
 }
