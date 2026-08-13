@@ -185,7 +185,7 @@
    "nbars": 72
   },
   "EXIDEIND": {
-   "nbars": 72
+   "nbars": 75
   },
   "FEDERALBNK": {
    "nbars": 72
@@ -428,7 +428,7 @@
    "nbars": 72
   },
   "NUVAMA": {
-   "nbars": 72
+   "nbars": 75
   },
   "NYKAA": {
    "nbars": 72
@@ -641,30 +641,30 @@
    "setup": "S1+S2",
    "sl_mode": "structure",
    "entry": 7754.0,
-   "sl": 7699.46,
+   "sl": 7698.96,
    "sl_anchor": "pivot",
-   "risk_pts": 54.54,
-   "risk_pct": 0.703,
-   "risk_rs": 327.0,
+   "risk_pts": 55.04,
+   "risk_pct": 0.71,
+   "risk_rs": 330.0,
    "qty": 6,
    "qty_full": 6,
    "qty_capped": false,
    "capital": 46524.0,
-   "tp1": 13153.48,
-   "tp2": 13153.48,
+   "tp1": 13202.97,
+   "tp2": 13202.97,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
     [
      "SL 15:00",
      6,
-     7699.4598000000005,
+     7698.9599,
      "15:00"
     ]
    ],
    "exit_text": "100% SL 15:00",
    "leg2_time": "15:00",
-   "pnl": -327.0,
+   "pnl": -330.0,
    "r_total": -1.0,
    "closed": true,
    "events": [
@@ -676,7 +676,7 @@
     {
      "key": "EXIT_SL",
      "time": "15:00",
-     "price": 7699.4598000000005
+     "price": 7698.9599
     }
    ],
    "setups": [
@@ -708,15 +708,15 @@
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 15:15",
+     "OPEN 15:10",
      165,
-     205.52999877929688,
-     "15:15"
+     205.5,
+     "15:10"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "15:15",
-   "pnl": -201.0,
+   "leg2_time": "15:10",
+   "pnl": -196.0,
    "r_total": -0.22,
    "closed": false,
    "events": [
@@ -754,14 +754,14 @@
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 15:15",
+     "OPEN 15:10",
      41,
      1221.5,
-     "15:15"
+     "15:10"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "15:15",
+   "leg2_time": "15:10",
    "pnl": -131.0,
    "r_total": -0.5,
    "closed": false,
@@ -832,31 +832,31 @@
    "setup": "S1+S4",
    "sl_mode": "structure",
    "entry": 407.3,
-   "sl": 404.52,
+   "sl": 404.57,
    "sl_anchor": "pivot",
-   "risk_pts": 2.78,
-   "risk_pct": 0.683,
-   "risk_rs": 339.0,
+   "risk_pts": 2.73,
+   "risk_pct": 0.67,
+   "risk_rs": 333.0,
    "qty": 122,
    "qty_full": 122,
    "qty_capped": false,
    "capital": 49691.0,
-   "tp1": 682.61,
-   "tp2": 682.61,
+   "tp1": 677.66,
+   "tp2": 677.66,
    "trail_armed": true,
    "trail_style": "structure swings",
    "legs": [
     [
-     "trail 14:35",
+     "trail 14:50",
      122,
-     410.21794,
-     "14:35"
+     409.96797779541015,
+     "14:50"
     ]
    ],
-   "exit_text": "100% trail 14:35",
-   "leg2_time": "14:35",
-   "pnl": 356.0,
-   "r_total": 1.05,
+   "exit_text": "100% trail 14:50",
+   "leg2_time": "14:50",
+   "pnl": 325.0,
+   "r_total": 0.98,
    "closed": true,
    "events": [
     {
@@ -871,8 +871,8 @@
     },
     {
      "key": "EXIT_SL",
-     "time": "14:35",
-     "price": 410.21794
+     "time": "14:50",
+     "price": 409.96797779541015
     }
    ],
    "setups": [
@@ -941,37 +941,47 @@
    "setup": "S1+S4",
    "sl_mode": "structure",
    "entry": 415.6,
-   "sl": 420.08,
+   "sl": 419.03,
    "sl_anchor": "session-extreme*",
-   "risk_pts": 4.48,
-   "risk_pct": 1.079,
-   "risk_rs": 538.0,
+   "risk_pts": 3.43,
+   "risk_pct": 0.826,
+   "risk_rs": 412.0,
    "qty": 120,
    "qty_full": 120,
    "qty_capped": false,
    "capital": 49872.0,
-   "tp1": -28.32,
-   "tp2": -28.32,
-   "trail_armed": false,
+   "tp1": 75.65,
+   "tp2": 75.65,
+   "trail_armed": true,
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 15:15",
+     "trail 14:45",
      120,
-     419.20001220703125,
-     "15:15"
+     414.98297999999994,
+     "14:45"
     ]
    ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:15",
-   "pnl": -432.0,
-   "r_total": -0.8,
-   "closed": false,
+   "exit_text": "100% trail 14:45",
+   "leg2_time": "14:45",
+   "pnl": 74.0,
+   "r_total": 0.18,
+   "closed": true,
    "events": [
     {
      "key": "ENTRY",
      "time": "09:45",
      "price": 415.6
+    },
+    {
+     "key": "TRAIL_ON",
+     "time": "14:10",
+     "price": 412.0
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "14:45",
+     "price": 414.98297999999994
     }
    ],
    "setups": [
@@ -1085,37 +1095,42 @@
    "setup": "S1",
    "sl_mode": "structure",
    "entry": 486.05,
-   "sl": 491.3,
+   "sl": 490.65,
    "sl_anchor": "pivot",
-   "risk_pts": 5.25,
-   "risk_pct": 1.08,
-   "risk_rs": 535.0,
+   "risk_pts": 4.6,
+   "risk_pct": 0.946,
+   "risk_rs": 469.0,
    "qty": 102,
    "qty_full": 102,
    "qty_capped": false,
    "capital": 49577.0,
-   "tp1": -33.53,
-   "tp2": -33.53,
+   "tp1": 30.84,
+   "tp2": 30.84,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 15:15",
+     "EOD 15:20",
      102,
-     485.95,
-     "15:15"
+     485.29998779296875,
+     "15:20"
     ]
    ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:15",
-   "pnl": 10.0,
-   "r_total": 0.02,
-   "closed": false,
+   "exit_text": "100% EOD 15:20",
+   "leg2_time": "15:20",
+   "pnl": 77.0,
+   "r_total": 0.16,
+   "closed": true,
    "events": [
     {
      "key": "ENTRY",
      "time": "10:10",
      "price": 486.05
+    },
+    {
+     "key": "EXIT_EOD",
+     "time": "15:20",
+     "price": 485.29998779296875
     }
    ],
    "setups": [
@@ -1131,31 +1146,31 @@
    "setup": "S1",
    "sl_mode": "structure",
    "entry": 354.6,
-   "sl": 356.32,
+   "sl": 356.22,
    "sl_anchor": "pivot",
-   "risk_pts": 1.72,
-   "risk_pct": 0.485,
-   "risk_rs": 243.0,
+   "risk_pts": 1.62,
+   "risk_pct": 0.457,
+   "risk_rs": 229.0,
    "qty": 141,
    "qty_full": 141,
    "qty_capped": false,
    "capital": 49999.0,
-   "tp1": 184.2,
-   "tp2": 184.2,
+   "tp1": 194.1,
+   "tp2": 194.1,
    "trail_armed": true,
    "trail_style": "structure swings",
    "legs": [
     [
-     "trail 13:05",
+     "trail 13:55",
      141,
-     353.02058999999997,
-     "13:05"
+     353.02060220947266,
+     "13:55"
     ]
    ],
-   "exit_text": "100% trail 13:05",
-   "leg2_time": "13:05",
+   "exit_text": "100% trail 13:55",
+   "leg2_time": "13:55",
    "pnl": 223.0,
-   "r_total": 0.92,
+   "r_total": 0.97,
    "closed": true,
    "events": [
     {
@@ -1166,12 +1181,12 @@
     {
      "key": "TRAIL_ON",
      "time": "11:10",
-     "price": 352.8
+     "price": 352.79998779296875
     },
     {
      "key": "EXIT_SL",
-     "time": "13:05",
-     "price": 353.02058999999997
+     "time": "13:55",
+     "price": 353.02060220947266
     }
    ],
    "setups": [
@@ -1301,30 +1316,30 @@
    "setup": "S1",
    "sl_mode": "structure",
    "entry": 1260.4,
-   "sl": 1267.65,
-   "sl_anchor": "session-extreme*",
-   "risk_pts": 7.25,
-   "risk_pct": 0.575,
-   "risk_rs": 283.0,
+   "sl": 1268.15,
+   "sl_anchor": "pivot",
+   "risk_pts": 7.75,
+   "risk_pct": 0.615,
+   "risk_rs": 302.0,
    "qty": 39,
    "qty_full": 39,
    "qty_capped": false,
    "capital": 49156.0,
-   "tp1": 542.3,
-   "tp2": 542.3,
+   "tp1": 492.8,
+   "tp2": 492.8,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
     [
-     "SL 13:15",
+     "SL 13:35",
      39,
-     1267.6535044189452,
-     "13:15"
+     1268.1535800000001,
+     "13:35"
     ]
    ],
-   "exit_text": "100% SL 13:15",
-   "leg2_time": "13:15",
-   "pnl": -283.0,
+   "exit_text": "100% SL 13:35",
+   "leg2_time": "13:35",
+   "pnl": -302.0,
    "r_total": -1.0,
    "closed": true,
    "events": [
@@ -1335,8 +1350,8 @@
     },
     {
      "key": "EXIT_SL",
-     "time": "13:15",
-     "price": 1267.6535044189452
+     "time": "13:35",
+     "price": 1268.1535800000001
     }
    ],
    "setups": [
@@ -1352,30 +1367,30 @@
    "setup": "S1+S4",
    "sl_mode": "structure",
    "entry": 1620.3,
-   "sl": 1631.23,
+   "sl": 1630.43,
    "sl_anchor": "pivot",
-   "risk_pts": 10.93,
-   "risk_pct": 0.674,
-   "risk_rs": 328.0,
+   "risk_pts": 10.13,
+   "risk_pct": 0.625,
+   "risk_rs": 304.0,
    "qty": 30,
    "qty_full": 30,
    "qty_capped": false,
    "capital": 48609.0,
-   "tp1": 538.61,
-   "tp2": 538.61,
+   "tp1": 617.83,
+   "tp2": 617.83,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
     [
      "SL 12:20",
      30,
-     1631.22618,
+     1630.4259955810546,
      "12:20"
     ]
    ],
    "exit_text": "100% SL 12:20",
    "leg2_time": "12:20",
-   "pnl": -328.0,
+   "pnl": -304.0,
    "r_total": -1.0,
    "closed": true,
    "events": [
@@ -1387,7 +1402,7 @@
     {
      "key": "EXIT_SL",
      "time": "12:20",
-     "price": 1631.22618
+     "price": 1630.4259955810546
     }
    ],
    "setups": [
@@ -1404,30 +1419,30 @@
    "setup": "S1",
    "sl_mode": "structure",
    "entry": 715.15,
-   "sl": 721.09,
-   "sl_anchor": "session-extreme*",
-   "risk_pts": 5.94,
-   "risk_pct": 0.831,
-   "risk_rs": 410.0,
+   "sl": 718.14,
+   "sl_anchor": "pivot",
+   "risk_pts": 2.99,
+   "risk_pct": 0.419,
+   "risk_rs": 207.0,
    "qty": 69,
    "qty_full": 69,
    "qty_capped": false,
    "capital": 49345.0,
-   "tp1": 126.68,
-   "tp2": 126.68,
+   "tp1": 418.78,
+   "tp2": 418.78,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
     [
-     "SL 13:40",
+     "SL 12:30",
      69,
-     721.09419,
-     "13:40"
+     718.1436,
+     "12:30"
     ]
    ],
-   "exit_text": "100% SL 13:40",
-   "leg2_time": "13:40",
-   "pnl": -410.0,
+   "exit_text": "100% SL 12:30",
+   "leg2_time": "12:30",
+   "pnl": -207.0,
    "r_total": -1.0,
    "closed": true,
    "events": [
@@ -1438,8 +1453,8 @@
     },
     {
      "key": "EXIT_SL",
-     "time": "13:40",
-     "price": 721.09419
+     "time": "12:30",
+     "price": 718.1436
     }
    ],
    "setups": [
@@ -1506,30 +1521,30 @@
    "setup": "S1+S2",
    "sl_mode": "structure",
    "entry": 140.28,
-   "sl": 141.07,
+   "sl": 141.09,
    "sl_anchor": "pivot",
-   "risk_pts": 0.79,
-   "risk_pct": 0.562,
-   "risk_rs": 281.0,
+   "risk_pts": 0.81,
+   "risk_pct": 0.576,
+   "risk_rs": 288.0,
    "qty": 356,
    "qty_full": 356,
    "qty_capped": false,
    "capital": 49940.0,
-   "tp1": 62.25,
-   "tp2": 62.25,
+   "tp1": 60.27,
+   "tp2": 60.27,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
     [
      "SL 12:10",
      356,
-     141.06820128479004,
+     141.088212,
      "12:10"
     ]
    ],
    "exit_text": "100% SL 12:10",
    "leg2_time": "12:10",
-   "pnl": -281.0,
+   "pnl": -288.0,
    "r_total": -1.0,
    "closed": true,
    "events": [
@@ -1541,7 +1556,7 @@
     {
      "key": "EXIT_SL",
      "time": "12:10",
-     "price": 141.06820128479004
+     "price": 141.088212
     }
    ],
    "setups": [
@@ -1675,14 +1690,14 @@
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 15:14",
+     "OPEN 15:10",
      13,
      3759.0,
-     "15:14"
+     "15:10"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "15:14",
+   "leg2_time": "15:10",
    "pnl": 290.0,
    "r_total": 0.33,
    "closed": false,
@@ -1706,42 +1721,37 @@
    "setup": "S1",
    "sl_mode": "structure",
    "entry": 503.0,
-   "sl": 505.45,
+   "sl": 505.6,
    "sl_anchor": "pivot",
-   "risk_pts": 2.45,
-   "risk_pct": 0.487,
-   "risk_rs": 243.0,
+   "risk_pts": 2.6,
+   "risk_pct": 0.517,
+   "risk_rs": 258.0,
    "qty": 99,
    "qty_full": 99,
    "qty_capped": false,
    "capital": 49797.0,
-   "tp1": 260.34,
-   "tp2": 260.34,
-   "trail_armed": true,
+   "tp1": 245.49,
+   "tp2": 245.49,
+   "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 15:14",
+     "OPEN 15:10",
      99,
-     501.29998779296875,
-     "15:14"
+     501.3,
+     "15:10"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "15:14",
+   "leg2_time": "15:10",
    "pnl": 168.0,
-   "r_total": 0.69,
+   "r_total": 0.65,
    "closed": false,
    "events": [
     {
      "key": "ENTRY",
      "time": "10:15",
      "price": 503.0
-    },
-    {
-     "key": "TRAIL_ON",
-     "time": "14:25",
-     "price": 500.45001220703125
     }
    ],
    "setups": [
@@ -1875,16 +1885,16 @@
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 15:14",
+     "OPEN 15:10",
      55,
-     898.0,
-     "15:14"
+     899.5,
+     "15:10"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "15:14",
-   "pnl": -385.0,
-   "r_total": -0.65,
+   "leg2_time": "15:10",
+   "pnl": -302.0,
+   "r_total": -0.51,
    "closed": false,
    "events": [
     {
@@ -1907,31 +1917,31 @@
    "setup": "S1+S4",
    "sl_mode": "structure",
    "entry": 85.21,
-   "sl": 85.8,
+   "sl": 85.81,
    "sl_anchor": "session-extreme*",
-   "risk_pts": 0.59,
-   "risk_pct": 0.689,
-   "risk_rs": 344.0,
+   "risk_pts": 0.6,
+   "risk_pct": 0.701,
+   "risk_rs": 350.0,
    "qty": 586,
    "qty_full": 586,
    "qty_capped": false,
    "capital": 49933.0,
-   "tp1": 27.08,
-   "tp2": 27.08,
+   "tp1": 26.09,
+   "tp2": 26.09,
    "trail_armed": true,
    "trail_style": "structure swings",
    "legs": [
     [
      "trail 13:40",
      586,
-     84.846966,
+     84.8469678314209,
      "13:40"
     ]
    ],
    "exit_text": "100% trail 13:40",
    "leg2_time": "13:40",
    "pnl": 213.0,
-   "r_total": 0.62,
+   "r_total": 0.61,
    "closed": true,
    "events": [
     {
@@ -1942,12 +1952,12 @@
     {
      "key": "TRAIL_ON",
      "time": "12:55",
-     "price": 84.59
+     "price": 84.61000061035156
     },
     {
      "key": "EXIT_SL",
      "time": "13:40",
-     "price": 84.846966
+     "price": 84.8469678314209
     }
    ],
    "setups": [
@@ -1964,30 +1974,30 @@
    "setup": "S1+S3",
    "sl_mode": "structure",
    "entry": 275.45,
-   "sl": 277.81,
+   "sl": 277.6,
    "sl_anchor": "pullback-high/low",
-   "risk_pts": 2.36,
-   "risk_pct": 0.855,
-   "risk_rs": 426.0,
+   "risk_pts": 2.15,
+   "risk_pct": 0.779,
+   "risk_rs": 388.0,
    "qty": 181,
    "qty_full": 181,
    "qty_capped": false,
    "capital": 49856.0,
-   "tp1": 42.17,
-   "tp2": 42.17,
+   "tp1": 62.97,
+   "tp2": 62.97,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
     [
      "SL 11:25",
      181,
-     277.8063244638576,
+     277.5962622820203,
      "11:25"
     ]
    ],
    "exit_text": "100% SL 11:25",
    "leg2_time": "11:25",
-   "pnl": -426.0,
+   "pnl": -388.0,
    "r_total": -1.0,
    "closed": true,
    "events": [
@@ -1999,7 +2009,7 @@
     {
      "key": "EXIT_SL",
      "time": "11:25",
-     "price": 277.8063244638576
+     "price": 277.5962622820203
     }
    ],
    "setups": [
@@ -2025,20 +2035,20 @@
    "qty_full": 19,
    "qty_capped": false,
    "capital": 47559.0,
-   "tp1": 5274.62,
-   "tp2": 5274.62,
+   "tp1": 5274.61,
+   "tp2": 5274.61,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
     [
-     "SL 14:20",
+     "SL 14:25",
      19,
-     2475.10488,
-     "14:20"
+     2475.104977636719,
+     "14:25"
     ]
    ],
-   "exit_text": "100% SL 14:20",
-   "leg2_time": "14:20",
+   "exit_text": "100% SL 14:25",
+   "leg2_time": "14:25",
    "pnl": -532.0,
    "r_total": -1.0,
    "closed": true,
@@ -2050,8 +2060,8 @@
     },
     {
      "key": "EXIT_SL",
-     "time": "14:20",
-     "price": 2475.10488
+     "time": "14:25",
+     "price": 2475.104977636719
     }
    ],
    "setups": [
@@ -2085,7 +2095,7 @@
     [
      "SL 11:55",
      187,
-     267.7535522094727,
+     267.75354,
      "11:55"
     ]
    ],
@@ -2103,7 +2113,7 @@
     {
      "key": "EXIT_SL",
      "time": "11:55",
-     "price": 267.7535522094727
+     "price": 267.75354
     }
    ],
    "setups": [
@@ -2227,30 +2237,30 @@
    "setup": "S1",
    "sl_mode": "structure",
    "entry": 342.6,
-   "sl": 345.27,
+   "sl": 345.17,
    "sl_anchor": "session-extreme*",
-   "risk_pts": 2.67,
-   "risk_pct": 0.779,
-   "risk_rs": 387.0,
+   "risk_pts": 2.57,
+   "risk_pct": 0.75,
+   "risk_rs": 373.0,
    "qty": 145,
    "qty_full": 145,
    "qty_capped": false,
    "capital": 49677.0,
-   "tp1": 78.37,
-   "tp2": 78.37,
+   "tp1": 88.27,
+   "tp2": 88.27,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
     [
-     "SL 14:30",
+     "SL 14:25",
      145,
-     345.26903999999996,
-     "14:30"
+     345.1690261047363,
+     "14:25"
     ]
    ],
-   "exit_text": "100% SL 14:30",
-   "leg2_time": "14:30",
-   "pnl": -387.0,
+   "exit_text": "100% SL 14:25",
+   "leg2_time": "14:25",
+   "pnl": -373.0,
    "r_total": -1.0,
    "closed": true,
    "events": [
@@ -2261,8 +2271,8 @@
     },
     {
      "key": "EXIT_SL",
-     "time": "14:30",
-     "price": 345.26903999999996
+     "time": "14:25",
+     "price": 345.1690261047363
     }
    ],
    "setups": [
@@ -2339,15 +2349,15 @@
    "qty_full": 14,
    "qty_capped": false,
    "capital": 48234.0,
-   "tp1": 1198.64,
-   "tp2": 1198.64,
+   "tp1": 1198.65,
+   "tp2": 1198.65,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
     [
      "SL 13:45",
      14,
-     3467.9935088378907,
+     3467.99346,
      "13:45"
     ]
    ],
@@ -2365,7 +2375,7 @@
     {
      "key": "EXIT_SL",
      "time": "13:45",
-     "price": 3467.9935088378907
+     "price": 3467.99346
     }
    ],
    "setups": [
@@ -2383,31 +2393,31 @@
    "setup": "S1+S2",
    "sl_mode": "structure",
    "entry": 1066.0,
-   "sl": 1058.79,
-   "sl_anchor": "pivot",
-   "risk_pts": 7.21,
-   "risk_pct": 0.677,
-   "risk_rs": 332.0,
+   "sl": 1058.59,
+   "sl_anchor": "session-extreme*",
+   "risk_pts": 7.41,
+   "risk_pct": 0.695,
+   "risk_rs": 341.0,
    "qty": 46,
    "qty_full": 46,
    "qty_capped": false,
    "capital": 49036.0,
-   "tp1": 1779.97,
-   "tp2": 1779.97,
+   "tp1": 1799.76,
+   "tp2": 1799.76,
    "trail_armed": true,
    "trail_style": "structure swings",
    "legs": [
     [
-     "trail 12:45",
+     "trail 12:05",
      46,
-     1075.2849,
-     "12:45"
+     1077.2845,
+     "12:05"
     ]
    ],
-   "exit_text": "100% trail 12:45",
-   "leg2_time": "12:45",
-   "pnl": 427.0,
-   "r_total": 1.29,
+   "exit_text": "100% trail 12:05",
+   "leg2_time": "12:05",
+   "pnl": 519.0,
+   "r_total": 1.52,
    "closed": true,
    "events": [
     {
@@ -2418,12 +2428,12 @@
     {
      "key": "TRAIL_ON",
      "time": "10:20",
-     "price": 1075.5
+     "price": 1075.199951171875
     },
     {
      "key": "EXIT_SL",
-     "time": "12:45",
-     "price": 1075.2849
+     "time": "12:05",
+     "price": 1077.2845
     }
    ],
    "setups": [
@@ -2671,16 +2681,16 @@
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 15:14",
+     "OPEN 15:10",
      58,
-     862.75,
-     "15:14"
+     861.9000244140625,
+     "15:10"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "15:14",
-   "pnl": 310.0,
-   "r_total": 1.09,
+   "leg2_time": "15:10",
+   "pnl": 261.0,
+   "r_total": 0.91,
    "closed": false,
    "events": [
     {
@@ -2775,14 +2785,14 @@
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 15:15",
+     "OPEN 15:10",
      31,
      1613.0,
-     "15:15"
+     "15:10"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "15:15",
+   "leg2_time": "15:10",
    "pnl": 521.0,
    "r_total": 1.21,
    "closed": false,
@@ -2795,7 +2805,7 @@
     {
      "key": "TRAIL_ON",
      "time": "13:55",
-     "price": 1610.4000244140625
+     "price": 1610.4
     }
    ],
    "setups": [
@@ -2812,17 +2822,17 @@
    "setup": "S1",
    "sl_mode": "structure",
    "entry": 4320.1,
-   "sl": 4359.77,
+   "sl": 4358.87,
    "sl_anchor": "pivot",
-   "risk_pts": 39.67,
-   "risk_pct": 0.918,
-   "risk_rs": 436.0,
+   "risk_pts": 38.77,
+   "risk_pct": 0.897,
+   "risk_rs": 426.0,
    "qty": 11,
    "qty_full": 11,
    "qty_capped": false,
    "capital": 47521.0,
-   "tp1": 392.59,
-   "tp2": 392.59,
+   "tp1": 481.71,
+   "tp2": 481.71,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
@@ -2836,7 +2846,7 @@
    "exit_text": "OPEN",
    "leg2_time": "15:10",
    "pnl": 111.0,
-   "r_total": 0.25,
+   "r_total": 0.26,
    "closed": false,
    "events": [
     {
@@ -2858,42 +2868,37 @@
    "setup": "S3",
    "sl_mode": "structure",
    "entry": 899.0,
-   "sl": 896.62,
+   "sl": 888.97,
    "sl_anchor": "pivot",
-   "risk_pts": 2.38,
-   "risk_pct": 0.265,
-   "risk_rs": 131.0,
+   "risk_pts": 10.03,
+   "risk_pct": 1.115,
+   "risk_rs": 552.0,
    "qty": 55,
    "qty_full": 55,
    "qty_capped": false,
    "capital": 49445.0,
-   "tp1": 1134.56,
-   "tp2": 1134.56,
+   "tp1": 1891.75,
+   "tp2": 1891.75,
    "trail_armed": false,
    "trail_style": "EMA9",
    "legs": [
     [
-     "SL 13:05",
+     "OPEN 15:10",
      55,
-     896.62064,
-     "13:05"
+     903.8499755859375,
+     "15:10"
     ]
    ],
-   "exit_text": "100% SL 13:05",
-   "leg2_time": "13:05",
-   "pnl": -131.0,
-   "r_total": -1.0,
-   "closed": true,
+   "exit_text": "OPEN",
+   "leg2_time": "15:10",
+   "pnl": 267.0,
+   "r_total": 0.48,
+   "closed": false,
    "events": [
     {
      "key": "ENTRY",
      "time": "10:55",
      "price": 899.0
-    },
-    {
-     "key": "EXIT_SL",
-     "time": "13:05",
-     "price": 896.62064
     }
    ],
    "setups": [
@@ -2926,7 +2931,7 @@
     [
      "SL 12:00",
      45,
-     1098.81972,
+     1098.8196955810547,
      "12:00"
     ]
    ],
@@ -2944,7 +2949,7 @@
     {
      "key": "EXIT_SL",
      "time": "12:00",
-     "price": 1098.81972
+     "price": 1098.8196955810547
     }
    ],
    "setups": [
@@ -3026,14 +3031,14 @@
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 15:14",
+     "OPEN 15:10",
      42,
      1172.0,
-     "15:14"
+     "15:10"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "15:14",
+   "leg2_time": "15:10",
    "pnl": -13.0,
    "r_total": -0.03,
    "closed": false,
@@ -3130,16 +3135,16 @@
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 15:15",
+     "OPEN 15:10",
      62,
-     793.9000244140625,
-     "15:15"
+     794.5,
+     "15:10"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "15:15",
-   "pnl": 397.0,
-   "r_total": 0.88,
+   "leg2_time": "15:10",
+   "pnl": 360.0,
+   "r_total": 0.79,
    "closed": false,
    "events": [
     {
@@ -3269,37 +3274,42 @@
    "setup": "S1",
    "sl_mode": "structure",
    "entry": 1645.1,
-   "sl": 1656.63,
+   "sl": 1651.73,
    "sl_anchor": "pivot",
-   "risk_pts": 11.53,
-   "risk_pct": 0.701,
-   "risk_rs": 346.0,
+   "risk_pts": 6.63,
+   "risk_pct": 0.403,
+   "risk_rs": 199.0,
    "qty": 30,
    "qty_full": 30,
    "qty_capped": false,
    "capital": 49353.0,
-   "tp1": 503.51,
-   "tp2": 503.51,
+   "tp1": 988.7,
+   "tp2": 988.7,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 15:10",
+     "SL 13:50",
      30,
-     1653.0,
-     "15:10"
+     1651.7303044189453,
+     "13:50"
     ]
    ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:10",
-   "pnl": -237.0,
-   "r_total": -0.69,
-   "closed": false,
+   "exit_text": "100% SL 13:50",
+   "leg2_time": "13:50",
+   "pnl": -199.0,
+   "r_total": -1.0,
+   "closed": true,
    "events": [
     {
      "key": "ENTRY",
      "time": "11:20",
      "price": 1645.1
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "13:50",
+     "price": 1651.7303044189453
     }
    ],
    "setups": [
@@ -3315,31 +3325,31 @@
    "setup": "S1",
    "sl_mode": "structure",
    "entry": 418.7,
-   "sl": 423.43,
-   "sl_anchor": "session-extreme*",
-   "risk_pts": 4.73,
-   "risk_pct": 1.131,
-   "risk_rs": 563.0,
+   "sl": 420.68,
+   "sl_anchor": "pivot",
+   "risk_pts": 1.98,
+   "risk_pct": 0.474,
+   "risk_rs": 236.0,
    "qty": 119,
    "qty_full": 119,
    "qty_capped": false,
    "capital": 49825.0,
-   "tp1": -50.03,
-   "tp2": -50.03,
+   "tp1": 222.27,
+   "tp2": 222.27,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
     [
      "OPEN 15:10",
      119,
-     418.45,
+     418.45001220703125,
      "15:10"
     ]
    ],
    "exit_text": "OPEN",
    "leg2_time": "15:10",
    "pnl": 30.0,
-   "r_total": 0.05,
+   "r_total": 0.13,
    "closed": false,
    "events": [
     {
@@ -3435,14 +3445,14 @@
     [
      "OPEN 15:10",
      159,
-     313.6,
+     313.45001220703125,
      "15:10"
     ]
    ],
    "exit_text": "OPEN",
    "leg2_time": "15:10",
-   "pnl": 87.0,
-   "r_total": 0.28,
+   "pnl": 111.0,
+   "r_total": 0.36,
    "closed": false,
    "events": [
     {
@@ -3465,30 +3475,30 @@
    "setup": "S1+S4",
    "sl_mode": "structure",
    "entry": 410.65,
-   "sl": 406.42,
+   "sl": 408.92,
    "sl_anchor": "pivot",
-   "risk_pts": 4.23,
-   "risk_pct": 1.03,
-   "risk_rs": 512.0,
+   "risk_pts": 1.73,
+   "risk_pct": 0.422,
+   "risk_rs": 210.0,
    "qty": 121,
    "qty_full": 121,
    "qty_capped": false,
    "capital": 49689.0,
-   "tp1": 829.55,
-   "tp2": 829.55,
+   "tp1": 582.1,
+   "tp2": 582.1,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
     [
-     "SL 12:20",
+     "SL 11:45",
      121,
-     406.4187,
-     "12:20"
+     408.9182,
+     "11:45"
     ]
    ],
-   "exit_text": "100% SL 12:20",
-   "leg2_time": "12:20",
-   "pnl": -512.0,
+   "exit_text": "100% SL 11:45",
+   "leg2_time": "11:45",
+   "pnl": -210.0,
    "r_total": -1.0,
    "closed": true,
    "events": [
@@ -3499,8 +3509,8 @@
     },
     {
      "key": "EXIT_SL",
-     "time": "12:20",
-     "price": 406.4187
+     "time": "11:45",
+     "price": 408.9182
     }
    ],
    "setups": [
@@ -3517,37 +3527,42 @@
    "setup": "S1",
    "sl_mode": "structure",
    "entry": 25085.0,
-   "sl": 25170.03,
+   "sl": 25165.03,
    "sl_anchor": "pivot",
-   "risk_pts": 85.03,
-   "risk_pct": 0.339,
-   "risk_rs": 85.0,
+   "risk_pts": 80.03,
+   "risk_pct": 0.319,
+   "risk_rs": 80.0,
    "qty": 1,
    "qty_full": 1,
    "qty_capped": false,
    "capital": 25085.0,
-   "tp1": 16666.73,
-   "tp2": 16666.73,
+   "tp1": 17161.83,
+   "tp2": 17161.83,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 15:15",
+     "SL 12:40",
      1,
-     25080.0,
-     "15:15"
+     25165.032,
+     "12:40"
     ]
    ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:15",
-   "pnl": 5.0,
-   "r_total": 0.06,
-   "closed": false,
+   "exit_text": "100% SL 12:40",
+   "leg2_time": "12:40",
+   "pnl": -80.0,
+   "r_total": -1.0,
+   "closed": true,
    "events": [
     {
      "key": "ENTRY",
      "time": "11:20",
      "price": 25085.0
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "12:40",
+     "price": 25165.032
     }
    ],
    "setups": [
@@ -3598,7 +3613,7 @@
     {
      "key": "TRAIL_ON",
      "time": "12:15",
-     "price": 18801.0
+     "price": 18808.0
     },
     {
      "key": "EXIT_SL",
@@ -3737,14 +3752,14 @@
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 15:15",
+     "OPEN 15:10",
      42,
      1172.0,
-     "15:15"
+     "15:10"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "15:15",
+   "leg2_time": "15:10",
    "pnl": -63.0,
    "r_total": -0.14,
    "closed": false,
@@ -3883,7 +3898,9 @@
   "MARICO:TRAIL_ON",
   "JSWENERGY:EXIT_SL",
   "SONACOMS:TRAIL_ON",
-  "BIOCON:EXIT_SL"
+  "BIOCON:EXIT_SL",
+  "BHEL:EXIT_SL",
+  "EXIDEIND:EXIT_EOD"
  ],
  "gate": {
   "status": "MASTER\u00d7VIDEO-4 (pure alignment, vote B)",
@@ -3997,8 +4014,8 @@
   "RVNL": 229.54,
   "ZYDUSLIFE": 1200.7
  },
- "eod_done": false,
- "cycles": 11,
+ "eod_done": true,
+ "cycles": 12,
  "skipped": [
   {
    "symbol": "ABCAPITAL",
