@@ -185,7 +185,7 @@
    "nbars": 72
   },
   "EXIDEIND": {
-   "nbars": 72
+   "nbars": 75
   },
   "FEDERALBNK": {
    "nbars": 72
@@ -428,7 +428,7 @@
    "nbars": 72
   },
   "NUVAMA": {
-   "nbars": 72
+   "nbars": 75
   },
   "NYKAA": {
    "nbars": 72
@@ -641,30 +641,30 @@
    "setup": "BREAKOUT",
    "sl_mode": "structure",
    "entry": 1532.9,
-   "sl": 1505.7,
+   "sl": 1506.9,
    "sl_anchor": "session-extreme*",
-   "risk_pts": 27.2,
-   "risk_pct": 1.774,
-   "risk_rs": 870.0,
+   "risk_pts": 26.0,
+   "risk_pct": 1.696,
+   "risk_rs": 832.0,
    "qty": 32,
    "qty_full": 32,
    "qty_capped": false,
    "capital": 49053.0,
-   "tp1": 4225.82,
-   "tp2": 4225.82,
+   "tp1": 4107.04,
+   "tp2": 4107.04,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
     [
      "SL 14:05",
      32,
-     1505.6988000000001,
+     1506.89856,
      "14:05"
     ]
    ],
    "exit_text": "100% SL 14:05",
    "leg2_time": "14:05",
-   "pnl": -870.0,
+   "pnl": -832.0,
    "r_total": -1.0,
    "closed": true,
    "events": [
@@ -676,7 +676,7 @@
     {
      "key": "EXIT_SL",
      "time": "14:05",
-     "price": 1505.6988000000001
+     "price": 1506.89856
     }
    ],
    "sector": "DEF"
@@ -706,14 +706,14 @@
     [
      "SL 11:10",
      3,
-     13717.743,
+     13724.0,
      "11:10"
     ]
    ],
    "exit_text": "100% SL 11:10",
    "leg2_time": "11:10",
-   "pnl": -185.0,
-   "r_total": -1.0,
+   "pnl": -204.0,
+   "r_total": -1.1,
    "closed": true,
    "events": [
     {
@@ -724,7 +724,7 @@
     {
      "key": "EXIT_SL",
      "time": "11:10",
-     "price": 13717.743
+     "price": 13724.0
     }
    ],
    "sector": "CDUR"
@@ -838,30 +838,30 @@
    "setup": "BREAKOUT",
    "sl_mode": "structure",
    "entry": 5021.1,
-   "sl": 5044.31,
+   "sl": 5044.01,
    "sl_anchor": "pivot",
-   "risk_pts": 23.21,
-   "risk_pct": 0.462,
-   "risk_rs": 209.0,
+   "risk_pts": 22.91,
+   "risk_pct": 0.456,
+   "risk_rs": 206.0,
    "qty": 9,
    "qty_full": 9,
    "qty_capped": false,
    "capital": 45190.0,
-   "tp1": 2723.44,
-   "tp2": 2723.44,
+   "tp1": 2753.15,
+   "tp2": 2753.15,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
     [
      "SL 13:45",
      9,
-     5044.30866,
+     5044.0086,
      "13:45"
     ]
    ],
    "exit_text": "100% SL 13:45",
    "leg2_time": "13:45",
-   "pnl": -209.0,
+   "pnl": -206.0,
    "r_total": -1.0,
    "closed": true,
    "events": [
@@ -873,7 +873,7 @@
     {
      "key": "EXIT_SL",
      "time": "13:45",
-     "price": 5044.30866
+     "price": 5044.0086
     }
    ],
    "sector": "CDUR"
@@ -1002,62 +1002,57 @@
   "status": "OK",
   "source": "official 17/17 ok \u00b7 synth 13/13"
  },
- "eod_done": false,
- "cycles": 11,
+ "eod_done": true,
+ "cycles": 12,
  "sector_board": {
-  "time": "15:18",
-  "net_tilt": 8.6,
+  "time": "15:31",
+  "net_tilt": 15.0,
   "tilt": "STRONG BULLISH",
   "bull_q": [
    [
     "DEF",
-    87.06
+    84.84
    ],
    [
     "FMCG",
-    77.59
-   ]
-  ],
-  "bear_q": [
-   [
-    "MET",
-    82.33
+    79.91
    ],
    [
-    "PSUBK",
-    62.77
+    "PSE",
+    66.35
    ],
    [
-    "AUTO",
-    58.89
+    "REALTY",
+    61.72
    ]
   ],
+  "bear_q": [],
   "persist_bull": [
    [
     "DEF",
-    96.39
+    97.54
    ],
    [
     "BUILDMAT",
-    92.81
+    93.4
    ],
    [
     "LOGISTICS",
-    92.22
+    92.91
    ]
   ],
   "persist_bear": [
    [
-    "MET",
-    92.01
+    "CEMENT",
+    82.06
    ],
    [
-    "CEMENT",
-    84.72
+    "MET",
+    81.4
    ],
    [
     "CAPGOODS",
-    65.52
+    70.09
    ]
   ],
   "hold": "timed",
@@ -1066,9 +1061,9 @@
    "CDUR",
    "DEF",
    "FMCG",
-   "HOSPITALS",
    "LOGISTICS",
    "NEWAGE",
+   "PSE",
    "REALTY",
    "TRAVEL"
   ],
