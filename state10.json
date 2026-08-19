@@ -185,7 +185,7 @@
    "nbars": 72
   },
   "EXIDEIND": {
-   "nbars": 72
+   "nbars": 75
   },
   "FEDERALBNK": {
    "nbars": 72
@@ -428,7 +428,7 @@
    "nbars": 72
   },
   "NUVAMA": {
-   "nbars": 72
+   "nbars": 75
   },
   "NYKAA": {
    "nbars": 72
@@ -443,7 +443,7 @@
    "nbars": 72
   },
   "ONGC": {
-   "nbars": 72
+   "nbars": 73
   },
   "PAGEIND": {
    "nbars": 72
@@ -578,7 +578,7 @@
    "nbars": 72
   },
   "TITAN": {
-   "nbars": 72
+   "nbars": 73
   },
   "TMPV": {
    "nbars": 72
@@ -656,16 +656,16 @@
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 15:14",
+     "OPEN 15:10",
      42,
-     1178.5999755859375,
-     "15:14"
+     1178.0999755859375,
+     "15:10"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "15:14",
-   "pnl": 172.0,
-   "r_total": 0.25,
+   "leg2_time": "15:10",
+   "pnl": 151.0,
+   "r_total": 0.22,
    "closed": false,
    "events": [
     {
@@ -698,16 +698,16 @@
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 15:15",
+     "OPEN 15:10",
      172,
-     288.1499938964844,
-     "15:15"
+     288.20001220703125,
+     "15:10"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "15:15",
-   "pnl": -413.0,
-   "r_total": -0.52,
+   "leg2_time": "15:10",
+   "pnl": -404.0,
+   "r_total": -0.51,
    "closed": false,
    "events": [
     {
@@ -740,16 +740,16 @@
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 15:14",
+     "OPEN 15:10",
      23,
-     1779.0,
-     "15:14"
+     1780.0,
+     "15:10"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "15:14",
-   "pnl": 0.0,
-   "r_total": 0.0,
+   "leg2_time": "15:10",
+   "pnl": 23.0,
+   "r_total": 0.03,
    "closed": false,
    "events": [
     {
@@ -782,16 +782,16 @@
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 15:14",
+     "OPEN 15:10",
      131,
-     382.20001220703125,
-     "15:14"
+     381.54998779296875,
+     "15:10"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "15:14",
-   "pnl": -229.0,
-   "r_total": -0.48,
+   "leg2_time": "15:10",
+   "pnl": -144.0,
+   "r_total": -0.3,
    "closed": false,
    "events": [
     {
@@ -871,15 +871,15 @@
    "trail_style": "EMA9",
    "legs": [
     [
-     "OPEN 15:15",
+     "OPEN 15:10",
      8,
-     4118.0,
-     "15:15"
+     4118.10009765625,
+     "15:10"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "15:15",
-   "pnl": -528.0,
+   "leg2_time": "15:10",
+   "pnl": -529.0,
    "r_total": -0.6,
    "closed": false,
    "events": [
@@ -1174,8 +1174,8 @@
  "regime": "BEAR",
  "regime_raw": null,
  "regime_cnt": 0,
- "eod_done": false,
- "cycles": 16,
+ "eod_done": true,
+ "cycles": 17,
  "skipped": [
   {
    "symbol": "ABB",
