@@ -633,7 +633,10 @@
   }
  },
  "trades": {},
- "alerts": [],
+ "alerts": [
+  "M13:2026-08-19:EOD_SUMMARY",
+  "M13:2026-08-19:EOD_DOCUMENT"
+ ],
  "decisions": [
   {
    "decision_id": "PETRONET|BUY|09:40|102",
@@ -8142,8 +8145,8 @@
    "why": "not a real enabled chart master variant"
   }
  ],
- "eod_done": false,
- "cycles": 34,
+ "eod_done": true,
+ "cycles": 35,
  "prev_meta": {
   "status": "OK",
   "source": "data/history bootstrap",
@@ -8160,5 +8163,6 @@
   "yahoo_calls": 210,
   "fallback": "HTTP 401",
   "fed": 210
- }
+ },
+ "eod_cache_count": 2
 }
