@@ -5,7 +5,7 @@
  "alerts": [],
  "decisions": [],
  "eod_done": false,
- "cycles": 21,
+ "cycles": 22,
  "prev_meta": {
   "status": "STALE",
   "source": "m13 cache/history",
@@ -21,7 +21,7 @@
  "feed": {
   "dhan_calls": 1,
   "yahoo_calls": 210,
-  "fallback": "ConnectionError",
+  "fallback": "HTTP 401",
   "fed": 210
  }
 }
