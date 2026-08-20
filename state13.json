@@ -2,10 +2,13 @@
  "date": "2026-08-20",
  "signals": {},
  "trades": {},
- "alerts": [],
+ "alerts": [
+  "M13:2026-08-20:EOD_SUMMARY",
+  "M13:2026-08-20:EOD_DOCUMENT"
+ ],
  "decisions": [],
- "eod_done": false,
- "cycles": 35,
+ "eod_done": true,
+ "cycles": 36,
  "prev_meta": {
   "status": "STALE",
   "source": "m13 cache/history",
@@ -23,5 +26,6 @@
   "yahoo_calls": 210,
   "fallback": "HTTP 401",
   "fed": 210
- }
+ },
+ "eod_cache_count": 2
 }
