@@ -1,28 +1,10 @@
 {
- "date": "2026-08-20",
+ "date": "2026-08-21",
  "signals": {},
  "trades": {},
- "alerts": [
-  "M12:2026-08-20:EOD_SUMMARY",
-  "M12:2026-08-20:EOD_DOCUMENT"
- ],
+ "alerts": [],
  "decisions": [],
- "eod_done": true,
- "cycles": 24,
- "prev_meta": {
-  "status": "STALE",
-  "source": "previous-close cache/history",
-  "date": "2026-08-18",
-  "expected_previous_weekday": "2026-08-19",
-  "age_days": 2,
-  "count": 210,
-  "policy": "strict no-entry; EOD will seed cache for next session"
- },
- "feed": {
-  "dhan_calls": 1,
-  "yahoo_calls": 210,
-  "fallback": "HTTP 401",
-  "fed": 210
- },
- "eod_cache_count": 2
+ "eod_done": false,
+ "cycles": 0,
+ "prev_meta": {}
 }

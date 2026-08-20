@@ -189,9 +189,31 @@ def load_previous_closes(today: str) -> tuple[dict[str, float], dict]:
     day = _parse_day(common)
     age = (td - day).days if td and day else 999
     vals = {s: px for s, (d, px) in rows.items() if d == common and px > 0}
-    if common and day == expected and len(vals) >= 180:
-        return vals, {"status": "OK", "source": "data/history bootstrap",
-                      "date": common, "age_days": age, "count": len(vals)}
+    # Fallback: allow latest available previous session when exact previous weekday
+    # is missing (e.g., holiday/gap). This is the fix for stale previous close.
+    if not (common and day == expected and len(vals) >= 180):
+        latest_rows = {}
+        latest_days_all = []
+        for sym in L.SYMS:
+            fp = L.HIST / f"{sym}.csv"
+            try:
+                h = pd.read_csv(fp, usecols=["dt", "close"])
+                h["day"] = h["dt"].astype(str).str[:10]
+                h = h[h["day"] < today]
+                if len(h):
+                    latest_day_sym = str(h["day"].iloc[-1])
+                    latest_rows[sym] = (latest_day_sym, float(h["close"].iloc[-1]))
+                    latest_days_all.append(latest_day_sym)
+            except Exception:
+                continue
+        common = pd.Series(latest_days_all).mode().iloc[0] if latest_days_all else None
+        day = _parse_day(common)
+        age = (td - day).days if td and day else 999
+        vals = {s: px for s, (d, px) in latest_rows.items() if d == common and px > 0}
+    if common and len(vals) >= 180:
+        return vals, {"status": "OK", "source": "data/history bootstrap" if common == str(expected) else "data/history fallback (latest available)",
+                      "date": common, "age_days": age, "count": len(vals),
+                      "expected_previous_weekday": str(expected)}
     return {}, {"status": "STALE", "source": "previous-close cache/history",
                 "date": common, "expected_previous_weekday": str(expected),
                 "age_days": age, "count": len(vals),
