@@ -46,6 +46,31 @@ def load_prev(today):
     cl=float(q.close.iloc[-1]);vals[sym]=cl;piv[sym]=(float(q.high.max())+float(q.low.min())+cl)/3
   except:continue
  if len(vals)>=180:return vals,piv,{'status':'OK','source':'data/history bootstrap','date':str(exp),'count':len(vals)}
+ # Fallback: use latest available previous session if exact previous weekday missing
+ latest_vals={};latest_piv={};latest_day=None;latest_days_all=[]
+ for sym in L.SYMS:
+  try:
+   h=pd.read_csv(L.HIST/f'{sym}.csv',usecols=['dt','high','low','close']);h['day']=h.dt.astype(str).str[:10];q_all=h[h.day<str(today)]
+   if len(q_all):
+    d=str(q_all['day'].iloc[-1]);cl=float(q_all['close'].iloc[-1])
+    latest_vals[sym]=cl;latest_piv[sym]=(float(q_all['high'].max())+float(q_all['low'].min())+cl)/3;latest_days_all.append(d)
+  except:continue
+ common_fallback=pd.Series(latest_days_all).mode().iloc[0] if latest_days_all else None
+ latest_vals_filt={s:cl for s,cl in latest_vals.items() if s not in [k for k in latest_vals] or True}
+ # Only use fallback if we have a common latest day with enough stocks
+ if common_fallback:
+  latest_vals_filt={k:v for k,v in latest_vals.items() if True}  # keep all from latest common
+  # Re-filter properly: only stocks whose latest day matches common_fallback
+  latest_vals_filt={}
+  latest_piv_filt={}
+  for sym in L.SYMS:
+   try:
+    h=pd.read_csv(L.HIST/f'{sym}.csv',usecols=['dt','high','low','close']);h['day']=h.dt.astype(str).str[:10];q_all=h[h.day<str(today)];q_filt=q_all[q_all['day']==str(common_fallback)]
+    if len(q_filt):
+     cl=float(q_filt['close'].iloc[-1]);latest_vals_filt[sym]=cl;latest_piv_filt[sym]=(float(q_filt['high'].max())+float(q_filt['low'].min())+cl)/3
+   except:continue
+  if len(latest_vals_filt)>=180:
+   return latest_vals_filt,latest_piv_filt,{'status':'OK','source':'data/history fallback (latest available)','date':str(common_fallback),'count':len(latest_vals_filt),'expected_previous_weekday':str(exp)}
  return {},{}, {'status':'STALE','source':'m13 cache/history','expected':str(exp),'count':len(vals),'policy':'no entry; seed at EOD'}
 def seed_prev(today,bars_map):
  vals={};piv={};last=[]

@@ -1,21 +1,12 @@
 {
- "date": "2026-08-20",
+ "date": "2026-08-21",
  "signals": {},
  "trades": {},
- "alerts": [
-  "M13:2026-08-20:EOD_SUMMARY",
-  "M13:2026-08-20:EOD_DOCUMENT"
- ],
+ "alerts": [],
  "decisions": [],
- "eod_done": true,
- "cycles": 36,
- "prev_meta": {
-  "status": "STALE",
-  "source": "m13 cache/history",
-  "expected": "2026-08-19",
-  "count": 0,
-  "policy": "no entry; seed at EOD"
- },
+ "eod_done": false,
+ "cycles": 0,
+ "prev_meta": {},
  "vix": {
   "date": "2026-08-20",
   "prior_return": -0.4401,
