@@ -55,4 +55,27 @@ class FastFeedCycle:
             return d,'yahoo-fast' if d is not None and not d.empty else 'none'
         except Exception as exc:
             print(f'FAST-FEED Yahoo {symbol}: {type(exc).__name__}: {exc}')
-            return None,'none'
+        # Final fallback: load latest available session from local history file
+        # so the paper pipeline can continue even when external feeds fail.
+        try:
+            fp = feeds.L.HIST / f'{symbol}.csv' if hasattr(feeds, 'L') else None
+            # Try to find history via common paths used by runners
+            import live_runner as L
+            fp = L.HIST / f'{symbol}.csv'
+            if fp.exists():
+                h = pd.read_csv(fp, usecols=['dt','open','high','low','close','volume'])
+                h['dt'] = pd.to_datetime(h['dt'], utc=True).dt.tz_convert(IST)
+                h['day'] = h['dt'].dt.strftime('%Y-%m-%d')
+                today_str = now_ist.strftime('%Y-%m-%d')
+                available = h[h['day'] < today_str]
+                if not available.empty:
+                    latest_day = available['day'].iloc[-1]
+                    latest = available[available['day'] == latest_day].copy()
+                    if not latest.empty:
+                        latest = latest.sort_values('dt').reset_index(drop=True)
+                        latest['t'] = latest['dt'].dt.strftime('%H:%M')
+                        print(f'FAST-FEED {symbol}: using history fallback for {latest_day} ({len(latest)} bars)')
+                        return latest, 'history-fallback'
+        except Exception as exc:
+            print(f'FAST-FEED history fallback {symbol}: {exc}')
+        return None,'none'
