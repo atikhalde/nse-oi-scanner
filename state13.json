@@ -11,7 +11,7 @@
    "nbars": 72
   },
   "ADANIENSOL": {
-   "nbars": 72
+   "nbars": 73
   },
   "ADANIENT": {
    "nbars": 72
@@ -185,7 +185,7 @@
    "nbars": 72
   },
   "EXIDEIND": {
-   "nbars": 72
+   "nbars": 76
   },
   "FEDERALBNK": {
    "nbars": 72
@@ -212,7 +212,7 @@
    "nbars": 72
   },
   "GODREJPROP": {
-   "nbars": 72
+   "nbars": 73
   },
   "GRASIM": {
    "nbars": 72
@@ -281,7 +281,7 @@
    "nbars": 72
   },
   "INDIGO": {
-   "nbars": 72
+   "nbars": 73
   },
   "INDUSINDBK": {
    "nbars": 72
@@ -305,13 +305,13 @@
    "nbars": 72
   },
   "ITC": {
-   "nbars": 72
+   "nbars": 73
   },
   "JINDALSTEL": {
    "nbars": 72
   },
   "JIOFIN": {
-   "nbars": 72
+   "nbars": 73
   },
   "JSWENERGY": {
    "nbars": 72
@@ -329,7 +329,7 @@
    "nbars": 72
   },
   "KEI": {
-   "nbars": 72
+   "nbars": 73
   },
   "KFINTECH": {
    "nbars": 72
@@ -428,16 +428,16 @@
    "nbars": 72
   },
   "NUVAMA": {
-   "nbars": 72
+   "nbars": 76
   },
   "NYKAA": {
    "nbars": 72
   },
   "OBEROIRLTY": {
-   "nbars": 72
+   "nbars": 73
   },
   "OFSS": {
-   "nbars": 72
+   "nbars": 73
   },
   "OIL": {
    "nbars": 72
@@ -461,7 +461,7 @@
    "nbars": 72
   },
   "PFC": {
-   "nbars": 72
+   "nbars": 73
   },
   "PGEL": {
    "nbars": 72
@@ -476,7 +476,7 @@
    "nbars": 72
   },
   "PNB": {
-   "nbars": 72
+   "nbars": 73
   },
   "PNBHOUSING": {
    "nbars": 72
@@ -488,7 +488,7 @@
    "nbars": 72
   },
   "POWERGRID": {
-   "nbars": 72
+   "nbars": 73
   },
   "POWERINDIA": {
    "nbars": 72
@@ -524,7 +524,7 @@
    "nbars": 72
   },
   "SBIN": {
-   "nbars": 72
+   "nbars": 73
   },
   "SHREECEM": {
    "nbars": 72
@@ -548,7 +548,7 @@
    "nbars": 72
   },
   "SUPREMEIND": {
-   "nbars": 72
+   "nbars": 73
   },
   "SUZLON": {
    "nbars": 72
@@ -596,7 +596,7 @@
    "nbars": 72
   },
   "UNIONBANK": {
-   "nbars": 72
+   "nbars": 73
   },
   "UNITDSPR": {
    "nbars": 72
@@ -633,7 +633,10 @@
   }
  },
  "trades": {},
- "alerts": [],
+ "alerts": [
+  "M13:2026-08-21:EOD_SUMMARY",
+  "M13:2026-08-21:EOD_DOCUMENT"
+ ],
  "decisions": [
   {
    "decision_id": "PETRONET|BUY|09:45|101",
@@ -4686,8 +4689,8 @@
    "why": "S1 Morning Base is mandatory"
   }
  ],
- "eod_done": false,
- "cycles": 10,
+ "eod_done": true,
+ "cycles": 11,
  "prev_meta": {
   "status": "OK",
   "source": "data/history fallback (latest available)",
