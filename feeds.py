@@ -52,12 +52,18 @@ def fetch_fut_oi_dhan(security_id, frm, to):
 
 
 def fetch_bars_yahoo(symbol, rng="1d"):
-    url = f"https://query1.finance.yahoo.com/v8/finance/chart/{symbol}.NS?interval=5m&range={rng}"
-    # NO-WAIT switch (user rule 03-Aug): Dhan failed => go straight to Yahoo; if Yahoo
-    # itself fails, retry immediately with NO sleeping/backoff between attempts.
-    for _ in range(3):
+    # Crumb + query1/query2. Bare v8 URLs often return HTTP 404 after Yahoo auth changes.
+    for host in ("query1.finance.yahoo.com", "query2.finance.yahoo.com"):
         try:
-            r = requests.get(url, headers=UA, timeout=25)
+            sess, crumb = _yahoo_session()
+            url = f"https://{host}/v8/finance/chart/{symbol}.NS?interval=5m&range={rng}"
+            if crumb:
+                url += f"&crumb={requests.utils.quote(crumb)}"
+            r = sess.get(url, timeout=25)
+            if r.status_code == 404:
+                print(f"yahoo {symbol}: HTTP 404 on {host}; trying next host")
+                continue
+            r.raise_for_status()
             j = r.json()["chart"]["result"][0]
             ts = j.get("timestamp")
             if not ts:
