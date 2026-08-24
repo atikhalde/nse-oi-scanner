@@ -3,7 +3,77 @@
  "signals": {},
  "trades": {},
  "alerts": [],
- "gate": {},
+ "gate": {
+  "status": "OK",
+  "source": "official 17/17 ok \u00b7 synth 0/13"
+ },
  "eod_done": false,
- "cycles": 0
+ "cycles": 1,
+ "sector_board": {
+  "time": "09:30",
+  "net_tilt": -4.9,
+  "tilt": "BEARISH",
+  "bull_q": [
+   [
+    "REALTY",
+    70.94
+   ]
+  ],
+  "bear_q": [
+   [
+    "CDUR",
+    73.51
+   ],
+   [
+    "DEF",
+    62.6
+   ],
+   [
+    "AUTO",
+    61.83
+   ]
+  ],
+  "persist_bull": [
+   [
+    "IT",
+    79.06
+   ],
+   [
+    "REALTY",
+    74.19
+   ],
+   [
+    "OIL",
+    54.5
+   ]
+  ],
+  "persist_bear": [
+   [
+    "CDUR",
+    81.64
+   ],
+   [
+    "DEF",
+    66.67
+   ],
+   [
+    "AUTO",
+    58.16
+   ]
+  ],
+  "hold": "timed",
+  "held_bull": [
+   "FIN",
+   "IT",
+   "MEDIA",
+   "MET",
+   "REALTY"
+  ],
+  "held_bear": [
+   "AUTO",
+   "CDUR",
+   "DEF",
+   "PHA"
+  ]
+ }
 }
