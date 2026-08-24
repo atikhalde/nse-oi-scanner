@@ -8,61 +8,66 @@
   "source": "official 17/17 ok \u00b7 synth 0/13"
  },
  "eod_done": false,
- "cycles": 3,
+ "cycles": 4,
  "sector_board": {
-  "time": "10:11",
-  "net_tilt": -8.9,
-  "tilt": "STRONG BEARISH",
+  "time": "10:30",
+  "net_tilt": -7.4,
+  "tilt": "BEARISH",
   "bull_q": [
    [
-    "MET",
-    73.19
+    "REALTY",
+    65.84
    ]
   ],
-  "bear_q": [],
+  "bear_q": [
+   [
+    "FMCG",
+    67.96
+   ],
+   [
+    "PSUBK",
+    62.78
+   ]
+  ],
   "persist_bull": [
    [
     "MET",
-    78.86
+    78.83
    ],
    [
     "REALTY",
-    62.11
+    71.05
    ],
    [
     "IT",
-    59.18
+    60.83
    ]
   ],
   "persist_bear": [
    [
     "DEF",
-    75.0
+    77.26
    ],
    [
     "CDUR",
-    73.86
+    75.51
    ],
    [
-    "FMCG",
-    57.48
+    "PSUBK",
+    66.9
    ]
   ],
   "hold": "timed",
   "held_bull": [
    "ENE",
-   "FIN",
-   "IT",
    "MET",
-   "OIL",
    "REALTY"
   ],
   "held_bear": [
-   "AUTO",
    "CDUR",
-   "CONSUMPTION",
    "DEF",
-   "FMCG"
+   "FMCG",
+   "PSUBK"
   ]
  }
 }
