@@ -51,6 +51,37 @@ def fetch_fut_oi_dhan(security_id, frm, to):
                          "oi": j.get("open_interest", [None] * len(j["timestamp"]))})
 
 
+_YH_SESSION = None  # cached (requests.Session, crumb-or-None)
+
+
+def _yahoo_session():
+    """Session with Yahoo cookie + crumb (required for equity .NS charts).
+
+    Bare v8 chart URLs return 401/404 for equities since Yahoo's auth change:
+    GET fc.yahoo.com to pick up the consent cookie (it returns an error status
+    on purpose — only the cookie matters), then GET /v1/test/getcrumb with it.
+    Cached module-wide so a 210-symbol cycle costs one cookie/crumb handshake.
+    """
+    global _YH_SESSION
+    if _YH_SESSION is not None:
+        return _YH_SESSION
+    sess = requests.Session()
+    sess.headers.update(UA)
+    crumb = None
+    try:
+        sess.get("https://fc.yahoo.com", timeout=15)  # cookie only; status is irrelevant
+    except Exception:
+        pass
+    try:
+        r = sess.get("https://query1.finance.yahoo.com/v1/test/getcrumb", timeout=15)
+        if r.ok and r.text and not r.text.lstrip().startswith("<"):
+            crumb = r.text.strip()
+    except Exception:
+        pass
+    _YH_SESSION = (sess, crumb)
+    return _YH_SESSION
+
+
 def fetch_bars_yahoo(symbol, rng="1d"):
     # Crumb + query1/query2. Bare v8 URLs often return HTTP 404 after Yahoo auth changes.
     for host in ("query1.finance.yahoo.com", "query2.finance.yahoo.com"):
@@ -60,6 +91,11 @@ def fetch_bars_yahoo(symbol, rng="1d"):
             if crumb:
                 url += f"&crumb={requests.utils.quote(crumb)}"
             r = sess.get(url, timeout=25)
+            if r.status_code in (401, 403):
+                # Crumb/cookie rejected — force a fresh handshake for the next try.
+                print(f"yahoo {symbol}: HTTP {r.status_code} on {host}; re-handshaking")
+                globals()["_YH_SESSION"] = None
+                continue
             if r.status_code == 404:
                 print(f"yahoo {symbol}: HTTP 404 on {host}; trying next host")
                 continue
@@ -74,7 +110,9 @@ def fetch_bars_yahoo(symbol, rng="1d"):
                                "close": q["close"], "volume": q.get("volume")}).dropna()
             return df
         except Exception as e:
-            print(f"yahoo {symbol}: {e}; retrying (no wait)")
+            # Include the exception type: a silent bare message hid a NameError
+            # in _yahoo_session for days while every symbol returned None.
+            print(f"yahoo {symbol}: {type(e).__name__}: {e}; retrying (no wait)")
     return None
 
 
