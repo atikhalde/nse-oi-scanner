@@ -8,62 +8,43 @@
   "source": "official 17/17 ok \u00b7 synth 0/13"
  },
  "eod_done": false,
- "cycles": 6,
+ "cycles": 7,
  "sector_board": {
-  "time": "11:30",
+  "time": "11:56",
   "net_tilt": -22.5,
   "tilt": "STRONG BEARISH",
   "bull_q": [],
-  "bear_q": [
-   [
-    "PSUBK",
-    92.73
-   ],
-   [
-    "BANK",
-    80.67
-   ],
-   [
-    "CDUR",
-    78.33
-   ],
-   [
-    "FMCG",
-    77.31
-   ]
-  ],
+  "bear_q": [],
   "persist_bull": [
    [
     "MET",
-    76.51
+    70.04
    ],
    [
     "IT",
-    66.62
+    55.81
    ],
    [
     "PHA",
-    62.82
+    49.19
    ]
   ],
   "persist_bear": [
    [
     "PSUBK",
-    94.02
+    86.27
    ],
    [
     "DEF",
-    83.52
+    81.07
    ],
    [
     "CDUR",
-    83.41
+    80.9
    ]
   ],
   "hold": "timed",
   "held_bull": [
-   "AUTO",
-   "IT",
    "MET"
   ],
   "held_bear": [
