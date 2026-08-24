@@ -185,7 +185,7 @@
    "nbars": 72
   },
   "EXIDEIND": {
-   "nbars": 72
+   "nbars": 75
   },
   "FEDERALBNK": {
    "nbars": 72
@@ -428,7 +428,7 @@
    "nbars": 72
   },
   "NUVAMA": {
-   "nbars": 72
+   "nbars": 75
   },
   "NYKAA": {
    "nbars": 72
@@ -633,10 +633,13 @@
   }
  },
  "trades": {},
- "alerts": [],
+ "alerts": [
+  "M13:2026-08-24:EOD_SUMMARY",
+  "M13:2026-08-24:EOD_DOCUMENT"
+ ],
  "decisions": [],
- "eod_done": false,
- "cycles": 32,
+ "eod_done": true,
+ "cycles": 33,
  "prev_meta": {
   "status": "OK",
   "source": "data/history fallback (latest available)",
@@ -654,5 +657,6 @@
   "yahoo_calls": 210,
   "fallback": "HTTP 401",
   "fed": 210
- }
+ },
+ "eod_cache_count": 2
 }
