@@ -3,11 +3,14 @@
  "signals": {},
  "trades": {},
  "alerts": [],
- "gate": {},
+ "gate": {
+  "status": "COACH-V2.1 \u00b7 tape NEUTRAL (adv None% \u00b7 0\u2191/0\u2193 of 0)",
+  "source": "BOTH sides \u00b7 whitelist BUY{EX17,5,6,7,12}+SELL{EX8,12,19} \u00b7 side-gate BULL\u226555%\u2192BUY-only / BEAR\u226445%\u2192SELL-only (2-cycle anti-flap; NEUTRAL = both) \u00b7 green-day confirm (BEAR-tape SELLs exempt) \u00b7 sector breadth LOGGED only (veto parked: w1 n=7) \u00b7 no time gate \u00b7 90/290 + <09:26 blocked \u00b7 exits = M1 spec (paper lab)"
+ },
  "pcmap": {},
  "regime": "NEUTRAL",
  "regime_raw": null,
  "regime_cnt": 0,
  "eod_done": false,
- "cycles": 0
+ "cycles": 1
 }
