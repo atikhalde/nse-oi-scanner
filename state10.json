@@ -379,16 +379,16 @@
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 12:53",
+     "OPEN 13:23",
      34,
-     1428.4000244140625,
-     "12:53"
+     1425.9000244140625,
+     "13:23"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "12:53",
-   "pnl": -224.0,
-   "r_total": -0.36,
+   "leg2_time": "13:23",
+   "pnl": -309.0,
+   "r_total": -0.5,
    "closed": false,
    "events": [
     {
@@ -421,16 +421,16 @@
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 12:53",
+     "OPEN 13:23",
      6,
-     8053.5,
-     "12:53"
+     8035.0,
+     "13:23"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "12:53",
-   "pnl": -69.0,
-   "r_total": -0.15,
+   "leg2_time": "13:23",
+   "pnl": -180.0,
+   "r_total": -0.39,
    "closed": false,
    "events": [
     {
@@ -445,7 +445,7 @@
    "side": "SELL",
    "time": "09:30",
    "signal": "SELL-EX19",
-   "setup": "M10-CoachV2.1",
+   "setup": "BREAKOUT",
    "sl_mode": "structure",
    "entry": 1045.35,
    "sl": 1057.31,
@@ -478,28 +478,21 @@
     {
      "key": "ENTRY",
      "time": "09:30",
-     "price": 1045.3499755859375
+     "price": 1045.35
     },
     {
      "key": "EXIT_SL",
      "time": "10:25",
      "price": 1057.3113955810547
     }
-   ],
-   "coach_via": "sell-220",
-   "pc": 1046.35,
-   "daypct": -0.1,
-   "regime": "BEAR",
-   "adv": 42.1,
-   "sec": "MET",
-   "sec_adv": 90.0
+   ]
   },
   "ITC": {
    "symbol": "ITC",
    "side": "SELL",
    "time": "09:30",
    "signal": "SELL-EX12",
-   "setup": "M10-CoachV2.1",
+   "setup": "BREAKOUT",
    "sl_mode": "structure",
    "entry": 269.1,
    "sl": 270.5,
@@ -517,36 +510,29 @@
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 12:54",
+     "OPEN 13:24",
      185,
-     267.5,
-     "12:54"
+     267.79998779296875,
+     "13:24"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "12:54",
-   "pnl": 296.0,
-   "r_total": 1.14,
+   "leg2_time": "13:24",
+   "pnl": 241.0,
+   "r_total": 0.93,
    "closed": false,
    "events": [
     {
      "key": "ENTRY",
      "time": "09:30",
-     "price": 269.1000061035156
+     "price": 269.1
     },
     {
      "key": "TRAIL_ON",
      "time": "11:10",
      "price": 267.6499938964844
     }
-   ],
-   "coach_via": "sell-213",
-   "pc": 272.7,
-   "daypct": -1.32,
-   "regime": "BEAR",
-   "adv": 42.1,
-   "sec": "FMCG",
-   "sec_adv": 7.7
+   ]
   }
  },
  "alerts": [
@@ -555,10 +541,12 @@
   "EICHERMOT:ENTRY",
   "ANGELONE:EXIT_SL",
   "HINDALCO:ENTRY",
-  "ITC:ENTRY"
+  "ITC:ENTRY",
+  "HINDALCO:EXIT_SL",
+  "ITC:TRAIL_ON"
  ],
  "gate": {
-  "status": "COACH-V2.1 \u00b7 tape BEAR (adv 42.1% \u00b7 88\u2191/121\u2193 of 209)",
+  "status": "COACH-V2.1 \u00b7 tape BEAR (adv 41.9% \u00b7 88\u2191/122\u2193 of 210)",
   "source": "BOTH sides \u00b7 whitelist BUY{EX17,5,6,7,12}+SELL{EX8,12,19} \u00b7 side-gate BULL\u226555%\u2192BUY-only / BEAR\u226445%\u2192SELL-only (2-cycle anti-flap; NEUTRAL = both) \u00b7 green-day confirm (BEAR-tape SELLs exempt) \u00b7 sector breadth LOGGED only (veto parked: w1 n=7) \u00b7 no time gate \u00b7 90/290 + <09:26 blocked \u00b7 exits = M1 spec (paper lab)"
  },
  "pcmap": {
