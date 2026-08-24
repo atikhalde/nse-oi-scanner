@@ -3,7 +3,18 @@
  "signals": {},
  "trades": {},
  "alerts": [],
- "gate": {},
+ "gate": {
+  "spurts": {
+   "status": "OK",
+   "source": "https://www.nseindia.com/api/live-analysis-oi-spurts-underlyings (curl-cffi)",
+   "count": 208
+  },
+  "movers": {
+   "count": 0,
+   "top20_cut": null,
+   "bot20_cut": null
+  }
+ },
  "eod_done": false,
- "cycles": 0
+ "cycles": 1
 }
