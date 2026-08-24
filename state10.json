@@ -379,16 +379,16 @@
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 13:23",
+     "OPEN 13:49",
      34,
-     1425.9000244140625,
-     "13:23"
+     1424.5,
+     "13:49"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "13:23",
-   "pnl": -309.0,
-   "r_total": -0.5,
+   "leg2_time": "13:49",
+   "pnl": -357.0,
+   "r_total": -0.58,
    "closed": false,
    "events": [
     {
@@ -421,16 +421,16 @@
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 13:23",
+     "OPEN 13:49",
      6,
-     8035.0,
-     "13:23"
+     8029.0,
+     "13:49"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "13:23",
-   "pnl": -180.0,
-   "r_total": -0.39,
+   "leg2_time": "13:49",
+   "pnl": -216.0,
+   "r_total": -0.47,
    "closed": false,
    "events": [
     {
@@ -510,17 +510,17 @@
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 13:24",
+     "trail 13:25",
      185,
-     267.79998779296875,
-     "13:24"
+     267.9035761047363,
+     "13:25"
     ]
    ],
-   "exit_text": "OPEN",
-   "leg2_time": "13:24",
-   "pnl": 241.0,
-   "r_total": 0.93,
-   "closed": false,
+   "exit_text": "100% trail 13:25",
+   "leg2_time": "13:25",
+   "pnl": 221.0,
+   "r_total": 0.85,
+   "closed": true,
    "events": [
     {
      "key": "ENTRY",
@@ -531,6 +531,11 @@
      "key": "TRAIL_ON",
      "time": "11:10",
      "price": 267.6499938964844
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "13:25",
+     "price": 267.9035761047363
     }
    ]
   }
@@ -543,10 +548,11 @@
   "HINDALCO:ENTRY",
   "ITC:ENTRY",
   "HINDALCO:EXIT_SL",
-  "ITC:TRAIL_ON"
+  "ITC:TRAIL_ON",
+  "ITC:EXIT_SL"
  ],
  "gate": {
-  "status": "COACH-V2.1 \u00b7 tape BEAR (adv 41.9% \u00b7 88\u2191/122\u2193 of 210)",
+  "status": "COACH-V2.1 \u00b7 tape BEAR (adv 41.4% \u00b7 87\u2191/123\u2193 of 210)",
   "source": "BOTH sides \u00b7 whitelist BUY{EX17,5,6,7,12}+SELL{EX8,12,19} \u00b7 side-gate BULL\u226555%\u2192BUY-only / BEAR\u226445%\u2192SELL-only (2-cycle anti-flap; NEUTRAL = both) \u00b7 green-day confirm (BEAR-tape SELLs exempt) \u00b7 sector breadth LOGGED only (veto parked: w1 n=7) \u00b7 no time gate \u00b7 90/290 + <09:26 blocked \u00b7 exits = M1 spec (paper lab)"
  },
  "pcmap": {
