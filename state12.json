@@ -5,6 +5,19 @@
  "alerts": [],
  "decisions": [],
  "eod_done": false,
- "cycles": 0,
- "prev_meta": {}
+ "cycles": 1,
+ "prev_meta": {
+  "status": "OK",
+  "source": "data/history fallback (latest available)",
+  "date": "2026-08-18",
+  "age_days": 6,
+  "count": 210,
+  "expected_previous_weekday": "2026-08-21"
+ },
+ "feed": {
+  "dhan_calls": 1,
+  "yahoo_calls": 210,
+  "fallback": "HTTP 401",
+  "fed": 0
+ }
 }
