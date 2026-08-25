@@ -185,7 +185,7 @@
    "nbars": 72
   },
   "EXIDEIND": {
-   "nbars": 72
+   "nbars": 75
   },
   "FEDERALBNK": {
    "nbars": 72
@@ -428,7 +428,7 @@
    "nbars": 72
   },
   "NUVAMA": {
-   "nbars": 72
+   "nbars": 75
   },
   "NYKAA": {
    "nbars": 72
@@ -446,7 +446,7 @@
    "nbars": 72
   },
   "PAGEIND": {
-   "nbars": 72
+   "nbars": 73
   },
   "PATANJALI": {
    "nbars": 72
@@ -633,7 +633,10 @@
   }
  },
  "trades": {},
- "alerts": [],
+ "alerts": [
+  "M12:2026-08-25:EOD_SUMMARY",
+  "M12:2026-08-25:EOD_DOCUMENT"
+ ],
  "decisions": [
   {
    "decision_id": "BPCL|SELL|09:25|290",
@@ -6330,8 +6333,8 @@
    "why": "anti-chase displacement failed (+2.211% not in [-1.00%, +0.20%])"
   }
  ],
- "eod_done": false,
- "cycles": 21,
+ "eod_done": true,
+ "cycles": 22,
  "prev_meta": {
   "status": "OK",
   "source": "data/history fallback (latest available)",
@@ -6345,5 +6348,6 @@
   "yahoo_calls": 210,
   "fallback": "HTTP 401",
   "fed": 210
- }
+ },
+ "eod_cache_count": 2
 }
