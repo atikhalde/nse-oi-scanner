@@ -752,16 +752,16 @@
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 15:10",
+     "OPEN 15:15",
      31,
-     1581.5999755859375,
-     "15:10"
+     1592.5,
+     "15:15"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "15:10",
-   "pnl": -468.0,
-   "r_total": -0.64,
+   "leg2_time": "15:15",
+   "pnl": -130.0,
+   "r_total": -0.18,
    "closed": false,
    "events": [
     {
@@ -843,16 +843,16 @@
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 15:10",
+     "OPEN 15:15",
      19,
-     2288.5,
-     "15:10"
+     2296.199951171875,
+     "15:15"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "15:10",
-   "pnl": -410.0,
-   "r_total": -0.47,
+   "leg2_time": "15:15",
+   "pnl": -557.0,
+   "r_total": -0.64,
    "closed": false,
    "events": [
     {
@@ -1032,14 +1032,14 @@
     [
      "OPEN 15:10",
      226,
-     218.35000610351562,
+     218.39999389648438,
      "15:10"
     ]
    ],
    "exit_text": "OPEN",
    "leg2_time": "15:10",
-   "pnl": 450.0,
-   "r_total": 0.52,
+   "pnl": 438.0,
+   "r_total": 0.51,
    "closed": false,
    "events": [
     {
@@ -1073,16 +1073,16 @@
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 15:10",
+     "OPEN 15:15",
      151,
-     329.8500061035156,
-     "15:10"
+     331.0,
+     "15:15"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "15:10",
-   "pnl": -45.0,
-   "r_total": -0.06,
+   "leg2_time": "15:15",
+   "pnl": 128.0,
+   "r_total": 0.18,
    "closed": false,
    "events": [
     {
@@ -1116,16 +1116,16 @@
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 15:10",
+     "OPEN 15:15",
      30,
-     1712.0,
-     "15:10"
+     1718.0,
+     "15:15"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "15:10",
-   "pnl": 2082.0,
-   "r_total": 6.02,
+   "leg2_time": "15:15",
+   "pnl": 2262.0,
+   "r_total": 6.54,
    "closed": false,
    "events": [
     {
@@ -1214,7 +1214,9 @@
   "MAZDOCK:EXIT_SL",
   "LICI:EXIT_SL",
   "TECHM:EXIT_SL",
-  "DIXON:ENTRY"
+  "DIXON:ENTRY",
+  "DIXON:TRAIL_ON",
+  "DIXON:EXIT_SL"
  ],
  "gate": {
   "status": "OK",
@@ -1223,54 +1225,54 @@
  "eod_done": false,
  "cycles": 14,
  "sector_board": {
-  "time": "15:34",
-  "net_tilt": 29.8,
+  "time": "16:08",
+  "net_tilt": 31.7,
   "tilt": "STRONG BULLISH",
   "bull_q": [
    [
+    "NEWAGE",
+    90.22
+   ],
+   [
+    "TELECOM",
+    85.86
+   ],
+   [
     "CDUR",
-    83.08
+    83.31
    ],
    [
-    "TRAVEL",
-    76.55
-   ],
-   [
-    "PSUBK",
-    73.34
-   ],
-   [
-    "PHA",
-    71.17
+    "HOSPITALS",
+    81.69
    ]
   ],
   "bear_q": [],
   "persist_bull": [
    [
-    "TELECOM",
-    95.55
-   ],
-   [
     "NEWAGE",
-    95.3
+    98.53
    ],
    [
-    "CDUR",
-    89.68
+    "TELECOM",
+    96.65
+   ],
+   [
+    "HOSPITALS",
+    92.38
    ]
   ],
   "persist_bear": [
    [
     "RAILWAYS",
-    85.18
+    71.35
+   ],
+   [
+    "CHEMICALS",
+    64.57
    ],
    [
     "GREEN",
-    58.0
-   ],
-   [
-    "MEDIA",
-    51.7
+    57.92
    ]
   ],
   "hold": "timed",
