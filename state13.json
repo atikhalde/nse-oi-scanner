@@ -185,7 +185,7 @@
    "nbars": 72
   },
   "EXIDEIND": {
-   "nbars": 72
+   "nbars": 75
   },
   "FEDERALBNK": {
    "nbars": 72
@@ -428,7 +428,7 @@
    "nbars": 72
   },
   "NUVAMA": {
-   "nbars": 72
+   "nbars": 75
   },
   "NYKAA": {
    "nbars": 72
@@ -446,7 +446,7 @@
    "nbars": 72
   },
   "PAGEIND": {
-   "nbars": 72
+   "nbars": 73
   },
   "PATANJALI": {
    "nbars": 72
@@ -777,7 +777,9 @@
   "RVNL:ENTRY",
   "RVNL:BOOK_075",
   "RVNL:RUNNER_LOCK",
-  "RVNL:EXIT_RUNNER"
+  "RVNL:EXIT_RUNNER",
+  "M13:2026-08-25:EOD_SUMMARY",
+  "M13:2026-08-25:EOD_DOCUMENT"
  ],
  "decisions": [
   {
@@ -8666,8 +8668,8 @@
    "why": "A+ score 36.42 below 70.00"
   }
  ],
- "eod_done": false,
- "cycles": 34,
+ "eod_done": true,
+ "cycles": 35,
  "prev_meta": {
   "status": "OK",
   "source": "data/history fallback (latest available)",
@@ -8685,5 +8687,6 @@
   "yahoo_calls": 210,
   "fallback": "HTTP 401",
   "fed": 210
- }
+ },
+ "eod_cache_count": 2
 }
