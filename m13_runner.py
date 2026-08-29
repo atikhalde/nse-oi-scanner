@@ -69,8 +69,8 @@ def load_prev(today):
     if len(q_filt):
      cl=float(q_filt['close'].iloc[-1]);latest_vals_filt[sym]=cl;latest_piv_filt[sym]=(float(q_filt['high'].max())+float(q_filt['low'].min())+cl)/3
    except:continue
-  if len(latest_vals_filt)>=180:
-   return latest_vals_filt,latest_piv_filt,{'status':'OK','source':'data/history fallback (latest available)','date':str(common_fallback),'count':len(latest_vals_filt),'expected_previous_weekday':str(exp)}
+  if parse_day(common_fallback) == exp and len(latest_vals_filt) >= 180:
+   return latest_vals_filt,latest_piv_filt,{'status':'OK','source':'data/history bootstrap','date':str(common_fallback),'count':len(latest_vals_filt),'expected_previous_weekday':str(exp)}
  return {},{}, {'status':'STALE','source':'m13 cache/history','expected':str(exp),'count':len(vals),'policy':'no entry; seed at EOD'}
 def seed_prev(today,bars_map):
  vals={};piv={};last=[]

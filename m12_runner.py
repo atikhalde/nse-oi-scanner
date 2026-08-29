@@ -210,8 +210,8 @@ def load_previous_closes(today: str) -> tuple[dict[str, float], dict]:
         day = _parse_day(common)
         age = (td - day).days if td and day else 999
         vals = {s: px for s, (d, px) in latest_rows.items() if d == common and px > 0}
-    if common and len(vals) >= 180:
-        return vals, {"status": "OK", "source": "data/history bootstrap" if common == str(expected) else "data/history fallback (latest available)",
+    if common and day == expected and len(vals) >= 180:
+        return vals, {"status": "OK", "source": "data/history bootstrap",
                       "date": common, "age_days": age, "count": len(vals),
                       "expected_previous_weekday": str(expected)}
     return {}, {"status": "STALE", "source": "previous-close cache/history",
