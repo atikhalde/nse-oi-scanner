@@ -11,7 +11,6 @@ import numpy as np
 import pandas as pd
 
 import costs
-import fast_feed
 import feeds
 import learn_log
 import live_runner as L
@@ -595,10 +594,10 @@ def mode_live() -> bool:
     vix = prior_vix_return(today, st)
 
     bars_map = {}
-    feed_cycle = fast_feed.FastFeedCycle()
+    feeds.reset_feed_stats()
     for sym in L.SYMS:
         try:
-            b, _ = feed_cycle.fetch(sym, L.SID[sym], now)
+            b, _ = feeds.fetch_today(sym, L.SID[sym], now)
             if b is not None and not b.empty:
                 b = b.sort_values("dt").drop_duplicates("dt").reset_index(drop=True)
                 b["t"] = b["dt"].dt.strftime("%H:%M")
@@ -606,10 +605,11 @@ def mode_live() -> bool:
         except Exception as exc:
             print(f"M14 feed {sym}: {exc}")
 
+    _fs = feeds.feed_stats()
     st["feed"] = {
-        "dhan_calls": feed_cycle.dhan_calls,
-        "yahoo_calls": feed_cycle.yahoo_calls,
-        "fallback": feed_cycle.trip_reason,
+        "dhan_calls": _fs["dhan_calls"],
+        "yahoo_calls": _fs["yahoo_calls"],
+        "fallback": _fs["fallback"],
         "fed": len(bars_map),
     }
 

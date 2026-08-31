@@ -19,7 +19,6 @@ import pandas as pd
 import live_runner as L
 import costs
 import feeds
-import fast_feed
 import learn_log
 import m11_runner as V
 import m12_entry as E
@@ -628,18 +627,19 @@ def mode_live() -> bool:
     print(f"M12 previous-close source: {prev_meta}")
 
     bars_map = {}
-    feed_cycle = fast_feed.FastFeedCycle()
+    feeds.reset_feed_stats()
     for sym in L.SYMS:
         try:
-            b, _src = feed_cycle.fetch(sym, L.SID[sym], now)
+            b, _src = feeds.fetch_today(sym, L.SID[sym], now)
             if b is not None and not b.empty:
                 b = b.sort_values("dt").drop_duplicates("dt").reset_index(drop=True)
                 b["t"] = b["dt"].dt.strftime("%H:%M")
                 bars_map[sym] = b
         except Exception as exc:
             print(f"  M12 feed {sym}: {type(exc).__name__}: {exc}")
-    st["feed"] = {"dhan_calls": feed_cycle.dhan_calls, "yahoo_calls": feed_cycle.yahoo_calls,
-                  "fallback": feed_cycle.trip_reason, "fed": len(bars_map)}
+    _fs = feeds.feed_stats()
+    st["feed"] = {"dhan_calls": _fs["dhan_calls"], "yahoo_calls": _fs["yahoo_calls"],
+                  "fallback": _fs["fallback"], "fed": len(bars_map)}
 
     manage_trades(st, today, bars_map)
     if prev_meta.get("status") == "OK":

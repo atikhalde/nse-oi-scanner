@@ -269,15 +269,15 @@ def mode_bootstrap(kind="full"):
     n_ok = 0
     for sym in SYMS:
         df = None
-        if os.environ.get("DHAN_TOKEN"):
+        df = feeds.fetch_bars_yahoo(sym, "60d")
+        if df is not None and not df.empty:
+            time.sleep(1.2)
+        if (df is None or df.empty) and os.environ.get("DHAN_TOKEN"):
             try:
                 df = feeds.fetch_bars_dhan(SID[sym], since, to)
                 time.sleep(0.6)
             except Exception as e:
-                print(f"  dhan {sym}: {e}")
-        if df is None or df.empty:
-            df = feeds.fetch_bars_yahoo(sym, "60d")
-            time.sleep(1.2)
+                print(f"  dhan fallback {sym}: {e}")
         if df is None or df.empty:
             print(f"  !! {sym}: no data")
             continue

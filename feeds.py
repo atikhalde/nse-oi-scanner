@@ -1,6 +1,8 @@
-"""Market-data feeds: Dhan (preferred, real-time) -> Yahoo (free, ~15min delayed).
+"""Market-data feeds: Yahoo (primary, free, ~15min delayed) -> Dhan (secondary, real-time).
 
-Dataframe contract: columns [dt (tz Asia/Kolkata), open, high, low, close, volume], 5-min bars.
+Every runner uses the same ladder: Yahoo first, Dhan only as a fallback when
+Yahoo returns nothing for a symbol. Dataframe contract: columns
+[dt (tz Asia/Kolkata), open, high, low, close, volume], 5-min bars.
 """
 import os
 import requests
@@ -52,6 +54,18 @@ def fetch_fut_oi_dhan(security_id, frm, to):
 
 
 _YH_SESSION = None  # cached (requests.Session, crumb-or-None)
+
+# Per-cycle feed counters (reset by runners via reset_feed_stats() before each
+# symbol loop). M12/M13/M14 read these to keep their st["feed"] audit record.
+_FEED_STATS = {"yahoo_calls": 0, "dhan_calls": 0, "fallback": None, "last_source": None}
+
+
+def reset_feed_stats():
+    _FEED_STATS.update({"yahoo_calls": 0, "dhan_calls": 0, "fallback": None, "last_source": None})
+
+
+def feed_stats():
+    return dict(_FEED_STATS)
 
 
 def _yahoo_session():
@@ -117,18 +131,28 @@ def fetch_bars_yahoo(symbol, rng="1d"):
 
 
 def fetch_today(symbol, security_id, now_ist):
-    """Today's 5-min bars (09:15 .. now). Ladder: Dhan -> Yahoo."""
+    """Today's 5-min bars (09:15 .. now). Ladder: Yahoo (primary) -> Dhan (fallback).
+
+    One Yahoo miss never kills the cycle: the symbol falls back to Dhan when a
+    token is configured. Counters are updated for the st["feed"] audit record.
+    """
     src = "none"
-    frm = now_ist.strftime("%Y-%m-%d 09:15:00")
-    to = now_ist.strftime("%Y-%m-%d %H:%M:%S")
-    df = None
+    _FEED_STATS["yahoo_calls"] += 1
+    df = fetch_bars_yahoo(symbol, "1d")
+    if df is not None and not df.empty:
+        src = "yahoo"
+        _FEED_STATS["last_source"] = src
+        return df, src
     if dhan_ok():
+        _FEED_STATS["dhan_calls"] += 1
+        if _FEED_STATS["fallback"] is None:
+            _FEED_STATS["fallback"] = "yahoo-miss"
+        frm = now_ist.strftime("%Y-%m-%d 09:15:00")
+        to = now_ist.strftime("%Y-%m-%d %H:%M:%S")
         try:
             df = fetch_bars_dhan(security_id, frm, to)
             src = "dhan"
         except Exception as e:
-            print(f"dhan {symbol} fail: {e}")
-    if df is None or df.empty:
-        df = fetch_bars_yahoo(symbol, "1d")
-        src = "yahoo-delayed"
+            print(f"dhan fallback {symbol} fail: {e}")
+    _FEED_STATS["last_source"] = src
     return df, src
