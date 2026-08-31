@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import json,tempfile
+import json,tempfile,os
 from pathlib import Path
 import pandas as pd
 import m13_runner as R
@@ -28,6 +28,7 @@ def main():
  ok('M13 pointer ahead of empty feed clamps to zero',R.clamp_cursor(100,0)==0)
  ok('M13 normal pointer is untouched',R.clamp_cursor(3,5)==3)
  old_cache=R.PREV_CACHE
+ os.environ['SEED_PREV_DAILY_TOPUP']='0'   # keep this test offline; top-up covered in test_seed_prev_context
  try:
   with tempfile.TemporaryDirectory() as td:
    R.PREV_CACHE=Path(td)/'m13_prev_context.json'
@@ -45,5 +46,6 @@ def main():
    ok('M13 partial seed never overwrites an existing cache','KEEP' in (json.loads(R.PREV_CACHE.read_text()).get('close') or {}))
  finally:
   R.PREV_CACHE=old_cache
+  os.environ.pop('SEED_PREV_DAILY_TOPUP',None)
  print('ALL M13 RUNNER TESTS PASSED')
 if __name__=='__main__':main()

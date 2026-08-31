@@ -20,6 +20,7 @@ import m14_alerts as Alerts
 import m14_entry as E
 import m14_trader as T
 import report
+import seed_prev_context as SP
 import flow_map as FM
 
 ROOT = L.ROOT
@@ -157,9 +158,20 @@ def seed_prev(today: str, bars_map: dict[str, pd.DataFrame]) -> dict:
         "generated_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
     }
     if len(vals) < 180:
-        # Never overwrite a good cache with a partial session.
+        # Yahoo lags the 15:25 cycle; top the intraday seed up from the daily
+        # 5-minute history (same >=15:20 official-close floor) before failing.
+        try:
+            vals, piv, added = SP.top_up(vals, piv, today, L.SYMS, deadline_s=420.0)
+            j["topped_up"] = added
+            print(f"M14 EOD seed daily top-up: +{added} -> {len(vals)} symbols")
+        except Exception as exc:
+            print(f"M14 EOD seed top-up failed: {type(exc).__name__}: {exc}")
+        j["count"] = len(vals)
+    if len(vals) < 180:
+        # Never overwrite a good cache with a partial session. The 16:10 IST
+        # post-close reseed job rebuilds it from finalised daily data.
         j["status"] = "INSUFFICIENT"
-        j["policy"] = "cache not written; next session fails closed until complete EOD seed"
+        j["policy"] = "cache not written; post-close reseed (16:10 IST) or next session fails closed"
         print(f"M14 EOD seed skipped: {len(vals)}/<180 symbols "
               f"(last bar {j['last_bar_min']}) — cache left untouched")
         return j

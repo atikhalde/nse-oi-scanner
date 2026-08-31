@@ -7,7 +7,7 @@ import pandas as pd
 import live_runner as L
 import feeds,fast_feed,flow_map as FM,learn_log,m11_runner as V,m12_entry as Context
 import m13_alerts as Alerts,m13_entry as E,m13_trader as T
-import costs,report
+import costs,report,seed_prev_context as SP
 
 ROOT=L.ROOT;STATE=ROOT/'state13.json';PREV_CACHE=ROOT/'data'/'m13_prev_context.json';SECTOR_OF=dict(pd.read_csv(ROOT/'fno_sector_map.csv').values)
 
@@ -83,8 +83,16 @@ def seed_prev(today,bars_map):
   cl=float(late.close.iloc[-1]);vals[sym]=cl;piv[sym]=(float(q.high.max())+float(q.low.min())+cl)/3;last.append(lm)
  meta={'date':today,'count':len(vals),'last_bar_min':min(last) if last else None,'total_fed':len(bars_map),'generated_utc':dt.datetime.now(dt.timezone.utc).isoformat()}
  if len(vals)<180:
+  # Yahoo lags the 15:25 cycle; top the intraday seed up from the daily
+  # 5-minute history (same >=15:20 official-close floor) before failing.
+  try:
+   vals,piv,added=SP.top_up(vals,piv,today,L.SYMS,deadline_s=420.0)
+   meta['topped_up']=added;print(f'M13 EOD seed daily top-up: +{added} -> {len(vals)} symbols')
+  except Exception as exc:print(f'M13 EOD seed top-up failed: {type(exc).__name__}: {exc}')
+  meta['count']=len(vals)
+ if len(vals)<180:
   # Never overwrite a cache with a partial session (poisoned the cache on 08-28).
-  meta['status']='INSUFFICIENT';meta['policy']='cache not written; next session fails closed until complete EOD seed'
+  meta['status']='INSUFFICIENT';meta['policy']='cache not written; post-close reseed (16:10 IST) or next session fails closed'
   print(f'M13 EOD seed skipped: {len(vals)}/<180 symbols (last bar {meta["last_bar_min"]}) — cache left untouched')
   return meta
  meta.update(close=vals,pivot=piv,status='OK');PREV_CACHE.parent.mkdir(exist_ok=True);PREV_CACHE.write_text(json.dumps(meta,indent=1));return meta
