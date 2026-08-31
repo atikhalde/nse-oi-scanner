@@ -141,19 +141,29 @@ def seed_prev(today: str, bars_map: dict[str, pd.DataFrame]) -> dict:
         late = q[q["t"] >= "15:20"]
         if late.empty:
             late = q.tail(1)  # Fallback to last available bar of session
+        last_min = str(late["t"].iloc[-1])
+        if last_min < "15:20":
+            continue  # 15:10/15:15 mark is not an official session close
         cl = float(late["close"].iloc[-1])
         vals[sym] = cl
         piv[sym] = (float(q["high"].max()) + float(q["low"].min()) + cl) / 3.0
-        last.append(str(q["t"].iloc[-1]))
+        last.append(last_min)
 
     j = {
         "date": today,
-        "close": vals,
-        "pivot": piv,
         "count": len(vals),
         "last_bar_min": min(last) if last else None,
+        "total_fed": len(bars_map),
         "generated_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
     }
+    if len(vals) < 180:
+        # Never overwrite a good cache with a partial session.
+        j["status"] = "INSUFFICIENT"
+        j["policy"] = "cache not written; next session fails closed until complete EOD seed"
+        print(f"M14 EOD seed skipped: {len(vals)}/<180 symbols "
+              f"(last bar {j['last_bar_min']}) — cache left untouched")
+        return j
+    j.update(close=vals, pivot=piv, status="OK")
     PREV_CACHE.parent.mkdir(exist_ok=True)
     PREV_CACHE.write_text(json.dumps(j, indent=1))
     return j

@@ -72,6 +72,42 @@ class TestM14Runner(unittest.TestCase):
         self.assertIn("RELIANCE", R.taken_symbols(st))
         self.assertIn("OIL", R.taken_sectors(st))
 
+    def _bars(self, last_t: str):
+        t = pd.date_range("2026-08-28 09:15", periods=3, freq="5min", tz="Asia/Kolkata")
+        d = pd.DataFrame({"dt": t, "open": [100.0] * 3, "high": [101.0] * 3,
+                          "low": [99.0] * 3, "close": [100.5] * 3, "volume": [1000] * 3})
+        d["t"] = d["dt"].dt.strftime("%H:%M")
+        d.loc[d.index[-1], "t"] = last_t
+        return d
+
+    def test_seed_prev_coverage_guard(self):
+        """Partial (<180) EOD seeds must never overwrite the prev-close cache.
+
+        The 2026-08-28 M12/M13 cache was overwritten with 3 symbols because the
+        15:25 cycle's Yahoo feed had not yet delivered 15:20+ bars for most names;
+        M12/M13/M14 then stayed STALE for 2026-08-31.
+        """
+        old_cache = R.PREV_CACHE
+        try:
+            with tempfile.TemporaryDirectory() as td:
+                R.PREV_CACHE = Path(td) / "m14_prev_context.json"
+                full = {f"S{i}": self._bars("15:20") for i in range(180)}
+                full["LATE"] = self._bars("15:15")
+                j = R.seed_prev("2026-08-28", full)
+                self.assertEqual(j["status"], "OK")
+                self.assertTrue(R.PREV_CACHE.exists())
+                saved = json.loads(R.PREV_CACHE.read_text())
+                self.assertNotIn("LATE", saved.get("close") or {})
+                self.assertEqual(len(saved["close"]), 180)
+
+                R.PREV_CACHE.write_text(json.dumps({"date": "2026-08-27", "close": {"KEEP": 1.0}}))
+                j = R.seed_prev("2026-08-28", {f"P{i}": self._bars("15:20") for i in range(3)})
+                self.assertEqual(j["status"], "INSUFFICIENT")
+                saved = json.loads(R.PREV_CACHE.read_text())
+                self.assertIn("KEEP", saved.get("close") or {})
+        finally:
+            R.PREV_CACHE = old_cache
+
 
 if __name__ == "__main__":
     unittest.main()

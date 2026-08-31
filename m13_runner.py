@@ -77,9 +77,17 @@ def seed_prev(today,bars_map):
  for sym,b in bars_map.items():
   if b is None or b.empty:continue
   q=b.sort_values('dt');late=q[q.t>='15:20']
-  if late.empty:continue
-  cl=float(late.close.iloc[-1]);vals[sym]=cl;piv[sym]=(float(q.high.max())+float(q.low.min())+cl)/3;last.append(str(late.t.iloc[-1]))
- j={'date':today,'close':vals,'pivot':piv,'count':len(vals),'last_bar_min':min(last) if last else None,'generated_utc':dt.datetime.now(dt.timezone.utc).isoformat()};PREV_CACHE.parent.mkdir(exist_ok=True);PREV_CACHE.write_text(json.dumps(j,indent=1));return j
+  if late.empty:late=q.tail(1)  # Yahoo can lag the 15:25 cycle; accept session-final bar
+  lm=str(late.t.iloc[-1])
+  if lm<'15:20':continue        # 15:10/15:15 mark is not an official close
+  cl=float(late.close.iloc[-1]);vals[sym]=cl;piv[sym]=(float(q.high.max())+float(q.low.min())+cl)/3;last.append(lm)
+ meta={'date':today,'count':len(vals),'last_bar_min':min(last) if last else None,'total_fed':len(bars_map),'generated_utc':dt.datetime.now(dt.timezone.utc).isoformat()}
+ if len(vals)<180:
+  # Never overwrite a cache with a partial session (poisoned the cache on 08-28).
+  meta['status']='INSUFFICIENT';meta['policy']='cache not written; next session fails closed until complete EOD seed'
+  print(f'M13 EOD seed skipped: {len(vals)}/<180 symbols (last bar {meta["last_bar_min"]}) — cache left untouched')
+  return meta
+ meta.update(close=vals,pivot=piv,status='OK');PREV_CACHE.parent.mkdir(exist_ok=True);PREV_CACHE.write_text(json.dumps(meta,indent=1));return meta
 
 def prior_vix_return(today,st):
  v=st.setdefault('vix',{})
@@ -137,6 +145,10 @@ def breadth_series(side,bars_map,prev,candidate_bars):
    bull=up/total;out[str(t)]=bull if side=='BUY' else 1-bull
  return out
 
+def clamp_cursor(known,n):
+ # Never let a shortened feed trigger a whole-session replay (diagnosis §7.8).
+ return min(known,max(n-1,0)) if known>n else known
+
 def collect(st,today,now,bars_map,prev,piv,vixret):
  fresh=[];params=L.ms.Params(enable_buy_ex10=False,enable_buy_ex11=False);known_ids={str(x.get('decision_id')) for x in st.get('decisions',[])}
  for sym,tbars in bars_map.items():
@@ -148,7 +160,7 @@ def collect(st,today,now,bars_map,prev,piv,vixret):
    # causes timeout and queue growth.
    closed=[k for k,x in enumerate(tbars.dt) if pd.Timestamp(x)+pd.Timedelta(minutes=5)<=pd.Timestamp(now)]
    known=closed[-1] if closed else 0
-  known=0 if known>n else known
+  known=clamp_cursor(known,n)
   for j in range(known,n):
    tk=pd.Timestamp(tbars.dt.iloc[j]);tk=tk.tz_localize(now.tz) if tk.tzinfo is None else tk
    if tk+pd.Timedelta(minutes=5)>pd.Timestamp(now):break

@@ -174,9 +174,52 @@ def test_previous_close_freshness():
         R.PREV_CACHE, R.L.HIST, R.L.SYMS = old_cache, old_hist, old_syms
 
 
+def _bars(nrows=2, first_t="15:20"):
+    t = pd.date_range("2026-08-28 09:15", periods=nrows, freq="5min", tz="Asia/Kolkata")
+    d = pd.DataFrame({"dt": t, "open": 100., "high": 101., "low": 99.,
+                      "close": 100.5, "volume": 1000})
+    d["t"] = d["dt"].dt.strftime("%H:%M")
+    if first_t:
+        d.loc[d.index[-1], "t"] = first_t
+    return d
+
+
+def test_cursor_clamp():
+    import m12_runner as R
+    ok("pointer ahead of a shortened feed clamps to newest bar",
+       R.clamp_cursor(100, 5) == 4)
+    ok("pointer ahead of empty feed clamps to zero", R.clamp_cursor(100, 0) == 0)
+    ok("normal pointer is untouched", R.clamp_cursor(3, 5) == 3)
+
+
+def test_seed_previous_close_cache_guards():
+    import json
+    import m12_runner as R
+    old_cache = R.PREV_CACHE
+    try:
+        with tempfile.TemporaryDirectory() as td:
+            R.PREV_CACHE = Path(td) / "m12_prev_close.json"
+            bars = {f"S{i}": _bars(first_t="15:20") for i in range(180)}
+            bars["LATE"] = _bars(nrows=3, first_t="15:15")  # pre-15:20 mark: must be excluded
+            j = R.seed_previous_close_cache("2026-08-28", bars)
+            ok("full 15:20+ seed writes the cache", j["status"] == "OK" and R.PREV_CACHE.exists())
+            ok("pre-15:20 final bar is not recorded as a close",
+               "LATE" not in (json.loads(R.PREV_CACHE.read_text()).get("close") or {}))
+
+            R.PREV_CACHE.write_text(json.dumps({"date": "2026-08-27", "close": {"KEEP": 1.0}}))
+            partial = {f"P{i}": _bars(first_t="15:20") for i in range(3)}
+            j = R.seed_previous_close_cache("2026-08-28", partial)
+            ok("partial (<180) seed is refused", j["status"] == "INSUFFICIENT")
+            ok("partial seed never overwrites an existing cache",
+               "KEEP" in (json.loads(R.PREV_CACHE.read_text()).get("close") or {}))
+    finally:
+        R.PREV_CACHE = old_cache
+
+
 def main():
     test_decisions(); test_cap_policy(); test_feature_causality(); test_timestamp_breadth()
     test_three_bot_fanout(); test_strict_alert_registry(); test_previous_close_freshness()
+    test_cursor_clamp(); test_seed_previous_close_cache_guards()
     print("ALL M12 ENTRY TESTS PASSED")
 
 

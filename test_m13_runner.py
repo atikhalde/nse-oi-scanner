@@ -23,5 +23,27 @@ def main():
    before=list(st['alerts']);ok('duplicate reservation cannot resend',not R.reserve(st,before[0]) and st['alerts']==before)
  finally:
   R.STATE,R.Alerts.send_message,R.warmup=old_state,old_send,old_warm
+ # Regression: cursor reset and EOD seed guard (diagnosis §7.8 / §P0-4.5)
+ ok('M13 pointer ahead of a shortened feed clamps to newest bar',R.clamp_cursor(100,5)==4)
+ ok('M13 pointer ahead of empty feed clamps to zero',R.clamp_cursor(100,0)==0)
+ ok('M13 normal pointer is untouched',R.clamp_cursor(3,5)==3)
+ old_cache=R.PREV_CACHE
+ try:
+  with tempfile.TemporaryDirectory() as td:
+   R.PREV_CACHE=Path(td)/'m13_prev_context.json'
+   def bars(first_t):
+    t=pd.date_range('2026-08-28 09:15',periods=3,freq='5min',tz='Asia/Kolkata')
+    d=pd.DataFrame({'dt':t,'open':[100.]*3,'high':[101.]*3,'low':[99.]*3,'close':[100.5]*3,'volume':[1000]*3})
+    d['t']=d['dt'].dt.strftime('%H:%M');d.loc[d.index[-1],'t']=first_t;return d
+   full={f'S{i}':bars('15:20') for i in range(180)};full['LATE']=bars('15:15')
+   j=R.seed_prev('2026-08-28',full)
+   ok('M13 full 15:20+ seed writes cache',j['status']=='OK' and R.PREV_CACHE.exists())
+   saved=json.loads(R.PREV_CACHE.read_text());ok('M13 pre-15:20 final bar not recorded', 'LATE' not in (saved.get('close') or {}))
+   R.PREV_CACHE.write_text(json.dumps({'date':'2026-08-27','close':{'KEEP':1.0}}))
+   j=R.seed_prev('2026-08-28',{f'P{i}':bars('15:20') for i in range(3)})
+   ok('M13 partial (<180) seed is refused',j['status']=='INSUFFICIENT')
+   ok('M13 partial seed never overwrites an existing cache','KEEP' in (json.loads(R.PREV_CACHE.read_text()).get('close') or {}))
+ finally:
+  R.PREV_CACHE=old_cache
  print('ALL M13 RUNNER TESTS PASSED')
 if __name__=='__main__':main()

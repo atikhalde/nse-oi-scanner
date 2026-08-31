@@ -261,18 +261,34 @@ def seed_previous_close_cache(today: str, bars_map: dict[str, pd.DataFrame]) -> 
         if b is None or b.empty:
             continue
         allq = b.sort_values("dt")
-        # A 15:10/15:15 mark is not an official previous-session close. Excluding
-        # incomplete feeds makes tomorrow fail closed instead of using a stale proxy.
+        # Official previous-session close needs the 15:20 sq-off bar. Yahoo's
+        # intraday feed can lag a few minutes behind the 15:25 cycle, so accept
+        # the FINAL bar of the session when the 15:20+ slice is missing — but
+        # never a 15:10/15:15 mark: that would seed tomorrow with a stale proxy.
         late = allq[allq["t"] >= trader.SQOFF]
         if late.empty:
+            late = allq.tail(1)
+        last_min = str(late["t"].iloc[-1])
+        if last_min < trader.SQOFF:
             continue
         close = float(late["close"].iloc[-1])
         vals[sym] = close
         pivots[sym] = (float(allq["high"].max()) + float(allq["low"].min()) + close) / 3.0
-        last_times.append(str(late["t"].iloc[-1]))
-    meta = {"date": today, "close": vals, "pivot": pivots, "count": len(vals),
+        last_times.append(last_min)
+    meta = {"date": today, "count": len(vals),
             "last_bar_min": min(last_times) if last_times else None,
+            "total_fed": len(bars_map),
             "generated_utc": dt.datetime.now(dt.timezone.utc).isoformat()}
+    if len(vals) < 180:
+        # Do NOT overwrite an existing cache with a partial session: a 3-symbol
+        # write is exactly what poisoned the cache on 2026-08-28 and left M12/M13
+        # STALE for 08-31. Tomorrow fails closed and this cycle logs the reason.
+        meta["status"] = "INSUFFICIENT"
+        meta["policy"] = "cache not written; next session will fail closed until a complete EOD seed lands"
+        print(f"M12 EOD seed skipped: {len(vals)}/<180 complete symbols "
+              f"(last bar {meta['last_bar_min']}) — cache left untouched")
+        return meta
+    meta.update(close=vals, pivot=pivots, status="OK")
     PREV_CACHE.parent.mkdir(parents=True, exist_ok=True)
     PREV_CACHE.write_text(json.dumps(meta, indent=1))
     return meta
@@ -355,6 +371,15 @@ def manage_trades(st: dict, today: str, bars_map: dict[str, pd.DataFrame]) -> No
             print(f"  M12 manage {tkey}: {type(exc).__name__}: {exc}")
 
 
+def clamp_cursor(known: int, n: int) -> int:
+    """Never let a shortened feed trigger a whole-session replay (diagnosis §7.8).
+
+    If the persisted pointer is ahead of what the feed returned, clamp to the
+    newest closed bar instead of resetting to 0.
+    """
+    return min(known, max(n - 1, 0)) if known > n else known
+
+
 def collect_candidates(st: dict, today: str, now, bars_map: dict[str, pd.DataFrame],
                        prev: dict[str, float], pivots: dict[str, float]) -> list[dict]:
     fresh = []
@@ -372,8 +397,7 @@ def collect_candidates(st: dict, today: str, now, bars_map: dict[str, pd.DataFra
             closed = [k for k, x in enumerate(tbars["dt"])
                       if pd.Timestamp(x) + pd.Timedelta(minutes=5) <= pd.Timestamp(now)]
             known = closed[-1] if closed else 0
-        if known > n_today:
-            known = 0
+        known = clamp_cursor(known, n_today)
         for j in range(known, n_today):
             tk = pd.Timestamp(tbars["dt"].iloc[j])
             if tk.tzinfo is None:
