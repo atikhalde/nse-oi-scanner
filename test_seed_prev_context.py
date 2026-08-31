@@ -209,6 +209,107 @@ class TestTopUpKillSwitchAndRunnerIntegration(unittest.TestCase):
                 SP.daily_prev_context = orig
 
 
+class TestSelfHeal(unittest.TestCase):
+    """The recovery path that was missing for M12/M13 (and now M14)."""
+
+    def setUp(self):
+        self._cache_files = SP.CACHE_FILES
+        self._daily = SP.daily_prev_context
+        self._td = tempfile.TemporaryDirectory()
+        SP.CACHE_FILES = {
+            "m12": Path(self._td.name) / "m12_prev_close.json",
+            "m13": Path(self._td.name) / "m13_prev_context.json",
+            "m14": Path(self._td.name) / "m14_prev_context.json",
+        }
+
+    def tearDown(self):
+        SP.CACHE_FILES = self._cache_files
+        SP.daily_prev_context = self._daily
+        self._td.cleanup()
+
+    @staticmethod
+    def _fake_daily(n_ok, day="2026-08-28"):
+        def _fake(symbols, day_, **kw):
+            symbols = list(symbols)
+            got = symbols[:n_ok]
+            return {"date": str(day_ or day), "close": {s: 99.5 for s in got},
+                    "pivot": {s: 100.0 for s in got}, "count": len(got),
+                    "tried": len(symbols), "last_bar_min": "15:25"}
+        return _fake
+
+    def test_self_heal_targets_previous_session(self):
+        """A Monday heal must seed Friday's closes, not Monday's live bars."""
+        seen = {}
+
+        def _fake(symbols, day, **kw):
+            seen["day"] = str(day)
+            seen["rng"] = kw.get("rng")
+            symbols = list(symbols)
+            return {"date": str(day), "close": {s: 99.5 for s in symbols},
+                    "pivot": {s: 100.0 for s in symbols}, "count": len(symbols),
+                    "tried": len(symbols), "last_bar_min": "15:25"}
+
+        SP.daily_prev_context = _fake
+        ok, meta = SP.self_heal("m12", "2026-08-31", deadline_s=30.0)
+        self.assertTrue(ok)
+        self.assertEqual(seen["day"], "2026-08-28")     # Fri, not Mon
+        self.assertEqual(seen["rng"], "1mo")            # survives the weekend
+        self.assertEqual(meta["status"], "OK")
+
+    def test_self_heal_refuses_partial_and_leaves_cache_absent(self):
+        SP.daily_prev_context = self._fake_daily(3)     # the 08-28 poison size
+        ok, meta = SP.self_heal("m12", "2026-08-31", deadline_s=30.0)
+        self.assertFalse(ok)
+        self.assertEqual(meta["status"], "INSUFFICIENT")
+        self.assertFalse(SP.CACHE_FILES["m12"].exists())
+
+    def test_self_heal_writes_only_when_complete(self):
+        SP.daily_prev_context = self._fake_daily(210)
+        ok, meta = SP.self_heal("m12", "2026-08-31", deadline_s=30.0)
+        self.assertTrue(ok)
+        j = json.loads(SP.CACHE_FILES["m12"].read_text())
+        self.assertEqual(j["date"], "2026-08-28")
+        self.assertEqual(j["count"], 210)
+        self.assertEqual(j["status"], "OK")
+
+    def test_self_heal_seeds_all_models_from_one_network_pass(self):
+        """m12+m13+m14 together must cost one pass, not three."""
+        calls = []
+
+        def _fake(symbols, day, **kw):
+            calls.append(1)
+            symbols = list(symbols)
+            return {"date": str(day), "close": {s: 99.5 for s in symbols},
+                    "pivot": {s: 100.0 for s in symbols}, "count": len(symbols),
+                    "tried": len(symbols), "last_bar_min": "15:25"}
+
+        SP.daily_prev_context = _fake
+        SP.seed_models(["m12", "m13", "m14"], "2026-08-28", deadline_s=30.0)
+        self.assertEqual(len(calls), 1)
+
+    def test_should_self_heal_is_once_per_hour(self):
+        st: dict = {}
+        self.assertTrue(SP.should_self_heal(st, "2026-08-31", "09:20"))
+        SP.mark_self_heal(st, "2026-08-31", "09:20")
+        self.assertFalse(SP.should_self_heal(st, "2026-08-31", "09:45"))
+        self.assertTrue(SP.should_self_heal(st, "2026-08-31", "10:05"))
+
+    def test_daily_prev_context_retries_transient_misses(self):
+        """A single 429 must not silently drop a symbol from the seed."""
+        attempts = []
+
+        def _flaky(sym, rng):
+            attempts.append(sym)
+            return None if len(attempts) == 1 else bars(
+                "2026-08-28", [("15:25", 100.0, 99.0, 99.5)])
+
+        ctx = SP.daily_prev_context(["AAA"], "2026-08-28", fetch=_flaky,
+                                    sleep_s=0.0, deadline_s=10, rng="1mo")
+        self.assertEqual(len(attempts), 2)          # retried once
+        self.assertEqual(ctx["count"], 1)
+        self.assertEqual(ctx["tried"], 1)           # still one symbol, not two
+
+
 class TestDates(unittest.TestCase):
     def test_expected_previous_weekday(self):
         self.assertEqual(SP.expected_previous_weekday(pd.Timestamp("2026-08-31").date()),

@@ -259,7 +259,15 @@ def mode_live():
   else:print('M13 EOD done — idle')
   return False
  if hhmm<'09:16':save_state(st);print('M13 pre-market — idle');return False
- prev,piv,meta=load_prev(today);st['prev_meta']=meta;vix=prior_vix_return(today,st);bars_map={};feeds.reset_feed_stats()
+ prev,piv,meta=load_prev(today)
+ # M13 has no 16:10 post-close reseed job (M14 does) and its in-runner self-heal
+ # window (15:36-16:30) is unreachable because the cron schedule stops at 15:35.
+ # Rebuild from finalised daily history rather than idle a whole session STALE.
+ if meta.get('status')!='OK' and SP.should_self_heal(st,today,hhmm):
+  SP.mark_self_heal(st,today,hhmm);save_state(st)
+  ok,heal=SP.self_heal('m13',today,deadline_s=600.0);st['prev_heal']=heal
+  if ok:prev,piv,meta=load_prev(today)
+ st['prev_meta']=meta;vix=prior_vix_return(today,st);bars_map={};feeds.reset_feed_stats()
  for sym in L.SYMS:
   try:
    b,_=feeds.fetch_today(sym,L.SID[sym],now)

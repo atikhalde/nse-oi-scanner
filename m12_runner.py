@@ -623,6 +623,17 @@ def mode_live() -> bool:
         return False
 
     prev, prev_meta = load_previous_closes(today)
+    if prev_meta.get("status") != "OK" and SP.should_self_heal(st, today, hhmm):
+        # M12 has no 16:10 post-close reseed job (M14 does), and its in-runner
+        # self-heal window (15:36-16:30) is unreachable because the cron
+        # schedule stops at 15:35. Rebuild the baseline from the *finalised*
+        # daily history instead of idling the whole session on a stale one.
+        SP.mark_self_heal(st, today, hhmm)
+        save_state(st)
+        ok, heal_meta = SP.self_heal("m12", today, deadline_s=600.0)
+        st["prev_heal"] = heal_meta
+        if ok:
+            prev, prev_meta = load_previous_closes(today)
     st["prev_meta"] = prev_meta
     print(f"M12 previous-close source: {prev_meta}")
 

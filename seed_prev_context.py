@@ -115,12 +115,24 @@ def daily_prev_context(symbols: Iterable[str], day,
                        fetch: Callable[[str, str], pd.DataFrame | None] | None = None,
                        min_bar: str | None = "15:20",
                        sleep_s: float = 0.12,
-                       deadline_s: float = 420.0) -> dict:
+                       deadline_s: float = 420.0,
+                       rng: str = "5d",
+                       retries: int = 2) -> dict:
     """Official close/pivot maps for `day` pulled from the daily 5m history.
 
     `min_bar="15:20"` keeps the quality floor used by the runners' EOD seeds:
     a session whose final bar is a 15:10/15:15 mark is not an official close.
     Pass `min_bar=None` to accept any final bar (already-finalised daily data).
+
+    `rng` is the Yahoo range passed to the fetcher. "5d" is enough for a
+    consecutive trading day, but a Monday or a post-holiday session needs a
+    wider window to still contain the previous session — the self-heal path
+    uses "1mo" for exactly that reason.
+
+    `retries` re-attempts a failed symbol with a short backoff. Yahoo rate
+    limits (429) under load, and a single transient miss used to drop the
+    symbol from the seed permanently; with Dhan's token dead every symbol
+    depends on Yahoo, so one 429 storm emptied the whole cache.
     """
     fetch = fetch or feeds.fetch_bars_yahoo
     deadline = time.monotonic() + max(0.0, deadline_s)
@@ -130,14 +142,25 @@ def daily_prev_context(symbols: Iterable[str], day,
     tried = 0
     for sym in symbols:
         if time.monotonic() > deadline:
+            print(f"  seed deadline hit after {tried} symbols "
+                  f"({len(closes)} closes) — raise --deadline-seconds if this persists")
             break
         tried += 1
-        try:
-            df = fetch(sym, "5d")
-        except Exception as exc:
-            print(f"  seed {sym}: {type(exc).__name__}: {exc}")
-            df = None
+        df = None
+        for attempt in range(max(1, retries)):
+            if attempt and time.monotonic() > deadline:
+                break
+            try:
+                df = fetch(sym, rng)
+            except Exception as exc:
+                print(f"  seed {sym}: {type(exc).__name__}: {exc}")
+                df = None
+            if df is not None and not df.empty:
+                break
+            if attempt + 1 < max(1, retries):
+                time.sleep(0.4 * (attempt + 1))   # backoff before retrying
         if df is None or df.empty:
+            print(f"  seed {sym}: no data after {max(1, retries)} attempt(s)")
             continue
         try:
             ohlc = session_ohlc(df, day)
@@ -212,18 +235,74 @@ def write_cache(model: str, day, closes: Mapping[str, float],
 
 def seed_models(models: Iterable[str], day, min_count: int = MIN_COUNT_DEFAULT,
                 min_bar: str | None = "15:20", deadline_s: float = 420.0,
-                symbols: Iterable[str] | None = None, fetch=None) -> dict:
-    """Rebuild every requested model's prev-close cache for `day`."""
+                symbols: Iterable[str] | None = None, fetch=None,
+                rng: str = "5d") -> dict:
+    """Rebuild every requested model's prev-close cache for `day`.
+
+    One network pass is shared by all `models` — seeding m12/m13/m14 together
+    costs 210 fetches, not 630, which matters when Yahoo is rate limiting.
+    """
     symbols = list(symbols if symbols is not None else L.SYMS)
     out: dict[str, dict] = {}
+    ctx = daily_prev_context(symbols, day, fetch=fetch, min_bar=min_bar,
+                             deadline_s=deadline_s, rng=rng)
     for model in models:
-        ctx = daily_prev_context(symbols, day, fetch=fetch, min_bar=min_bar,
-                                 deadline_s=deadline_s)
         out[model] = write_cache(model, ctx["date"], ctx["close"], ctx["pivot"],
                                  ctx["last_bar_min"], ctx["tried"],
                                  source="daily history seed", min_count=min_count)
         out[model]["last_bar_min_observed"] = ctx["last_bar_min"]
+        out[model]["date"] = ctx["date"]
     return out
+
+
+def self_heal(model: str, today, deadline_s: float = 600.0,
+              min_count: int = MIN_COUNT_DEFAULT,
+              min_bar: str | None = "15:20", fetch=None) -> tuple[bool, dict]:
+    """Rebuild `model`'s cache for the previous session from finalised daily data.
+
+    This is the recovery path that was missing for M12/M13: their EOD seed only
+    ran inside the 15:25 cycle, the in-runner self-heal window (15:36-16:30)
+    was unreachable because their cron schedule stops at 15:35, and unlike M14
+    they had no 16:10 post-close reseed job. One bad cache therefore silenced
+    them permanently until someone rebuilt it by hand.
+
+    Safe to call every cycle — the caller gates it — because:
+      * it targets the *previous* session, whose bars are final, so it cannot
+        seed a live session with a partial day;
+      * `write_cache` refuses anything under `min_count`, so a bad run leaves
+        the existing cache untouched instead of poisoning it;
+      * it uses range="1mo" so a Monday / post-holiday session still finds the
+        previous trading day inside the fetched window.
+
+    Returns (ok, meta). `ok` is True only when a >=min_count cache was written.
+    """
+    day = expected_previous_weekday(parse_day(today) or now_ist().date())
+    print(f"seed_prev_context[{model}]: self-heal for {day} "
+          f"(deadline {deadline_s:.0f}s)")
+    try:
+        summary = seed_models([model], day, min_count=min_count, min_bar=min_bar,
+                              deadline_s=deadline_s, rng="1mo", fetch=fetch)
+    except Exception as exc:
+        print(f"seed_prev_context[{model}]: self-heal failed "
+              f"({type(exc).__name__}: {exc})")
+        return False, {"status": "ERROR", "error": f"{type(exc).__name__}: {exc}"}
+    meta = summary.get(model) or {}
+    return meta.get("status") == "OK", meta
+
+
+def should_self_heal(st: dict, today: str, hhmm: str) -> bool:
+    """Rate-limit guard: at most one self-heal attempt per model per hour.
+
+    Without this a 5-minute ticker would fire 210 Yahoo fetches twelve times an
+    hour, which is what gets the whole feed rate limited in the first place.
+    Callers store the returned marker in their state dict.
+    """
+    marker = f"{today}:{str(hhmm)[:2]}"
+    return st.get("prev_repair_marker") != marker
+
+
+def mark_self_heal(st: dict, today: str, hhmm: str) -> None:
+    st["prev_repair_marker"] = f"{today}:{str(hhmm)[:2]}"
 
 
 def main() -> int:
@@ -238,6 +317,10 @@ def main() -> int:
                     help="quality floor for the day's final bar (default 15:20); "
                          "'none' accepts any final bar")
     ap.add_argument("--deadline-seconds", type=float, default=420.0)
+    ap.add_argument("--range", default="5d", dest="rng",
+                    help="Yahoo range for the daily fetch (default 5d). Use 1mo "
+                         "after a weekend/holiday so the window still contains "
+                         "the previous session.")
     args = ap.parse_args()
 
     models = [m.strip().lower() for m in args.models.split(",") if m.strip()]
@@ -250,7 +333,7 @@ def main() -> int:
     print(f"seed_prev_context: models={models} day={day} min_count={args.min_count} "
           f"min_bar={min_bar or 'any'}")
     summary = seed_models(models, day, min_count=args.min_count, min_bar=min_bar,
-                          deadline_s=args.deadline_seconds)
+                          deadline_s=args.deadline_seconds, rng=args.rng)
     print(json.dumps({m: {k: v for k, v in s.items() if k != "close" and k != "pivot"}
                       for m, s in summary.items()}, indent=1))
     if any(s.get("status") != "OK" for s in summary.values()):
