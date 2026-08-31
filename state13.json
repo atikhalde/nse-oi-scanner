@@ -5,7 +5,23 @@
  "alerts": [],
  "decisions": [],
  "eod_done": false,
- "cycles": 0,
- "prev_meta": {},
- "vix": {}
+ "cycles": 1,
+ "prev_meta": {
+  "status": "STALE",
+  "source": "m13 cache/history",
+  "expected": "2026-08-28",
+  "count": 0,
+  "policy": "no entry; seed at EOD"
+ },
+ "vix": {
+  "date": "2026-08-31",
+  "prior_return": -4.8753,
+  "last_day": "2026-08-28"
+ },
+ "feed": {
+  "dhan_calls": 1,
+  "yahoo_calls": 210,
+  "fallback": "HTTP 401",
+  "fed": 210
+ }
 }
