@@ -5,6 +5,20 @@
  "alerts": [],
  "decisions": [],
  "eod_done": false,
- "cycles": 0,
- "prev_meta": {}
+ "cycles": 1,
+ "prev_meta": {
+  "status": "STALE",
+  "source": "previous-close cache/history",
+  "date": "2026-08-18",
+  "expected_previous_weekday": "2026-08-28",
+  "age_days": 13,
+  "count": 210,
+  "policy": "strict no-entry; EOD will seed cache for next session"
+ },
+ "feed": {
+  "dhan_calls": 1,
+  "yahoo_calls": 210,
+  "fallback": "HTTP 401",
+  "fed": 210
+ }
 }
