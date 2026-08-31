@@ -50,11 +50,14 @@ class TestSessionOHLC(unittest.TestCase):
 
 class TestDailyPrevContext(unittest.TestCase):
     def test_min_bar_quality_floor(self):
-        good = bars("2026-08-28", [("15:25", 100.0, 99.0, 99.5)])
-        lagged = bars("2026-08-28", [("15:15", 100.0, 99.0, 99.5)])  # not official
+        # Yahoo's final NSE bar is a 15:10/15:15 mark for ~99% of symbols, so
+        # the default CLOSE_BAR_FLOOR (15:05) accepts it; a truncated
+        # mid-afternoon snapshot is still rejected.
+        good = bars("2026-08-28", [("15:10", 100.0, 99.0, 99.5)])
+        truncated = bars("2026-08-28", [("14:55", 100.0, 99.0, 99.5)])
 
         def fetch(sym, rng):
-            return good if sym == "AAA" else lagged
+            return good if sym == "AAA" else truncated
 
         ctx = SP.daily_prev_context(["AAA", "BBB"], "2026-08-28", fetch=fetch,
                                     sleep_s=0.0, deadline_s=5)
@@ -62,10 +65,18 @@ class TestDailyPrevContext(unittest.TestCase):
         self.assertIn("AAA", ctx["close"])
         self.assertNotIn("BBB", ctx["close"])
 
-    def test_min_bar_none_accepts_final_bar(self):
+    def test_strict_min_bar_override_still_enforced(self):
+        # Operators can still pass a stricter floor explicitly.
         lagged = bars("2026-08-28", [("15:15", 100.0, 99.0, 99.5)])
-        ctx = SP.daily_prev_context(["BBB"], "2026-08-28",
+        ctx = SP.daily_prev_context(["AAA"], "2026-08-28",
                                     fetch=lambda s, r: lagged,
+                                    min_bar="15:20", sleep_s=0.0, deadline_s=5)
+        self.assertEqual(ctx["count"], 0)
+
+    def test_min_bar_none_accepts_final_bar(self):
+        truncated = bars("2026-08-28", [("14:30", 100.0, 99.0, 99.5)])
+        ctx = SP.daily_prev_context(["BBB"], "2026-08-28",
+                                    fetch=lambda s, r: truncated,
                                     min_bar=None, sleep_s=0.0, deadline_s=5)
         self.assertEqual(ctx["count"], 1)
 
@@ -308,6 +319,159 @@ class TestSelfHeal(unittest.TestCase):
         self.assertEqual(len(attempts), 2)          # retried once
         self.assertEqual(ctx["count"], 1)
         self.assertEqual(ctx["tried"], 1)           # still one symbol, not two
+
+
+class TestLocalPrevContext(unittest.TestCase):
+    """The zero-network baseline reader that ends the Yahoo dependency."""
+
+    def setUp(self):
+        self._td = tempfile.TemporaryDirectory()
+        self.addCleanup(self._td.cleanup)
+        self.hist = Path(self._td.name)
+
+    def _write(self, sym, day, last_bar="15:10", close=99.5, high=100.0, low=99.0):
+        df = pd.DataFrame({
+            "dt": [f"{day} 09:15:00+05:30", f"{day} {last_bar}:00+05:30"],
+            "high": [high] * 2, "low": [low] * 2, "close": [close] * 2,
+        })
+        df.to_csv(self.hist / f"{sym}.csv", index=False)
+
+    def test_reads_closes_and_pivots_from_history_csvs(self):
+        self._write("AAA", "2026-08-28")
+        ctx = SP.local_prev_context(["AAA", "MISSING"], "2026-08-28",
+                                    hist_dir=self.hist)
+        self.assertEqual(ctx["count"], 1)
+        self.assertEqual(ctx["close"]["AAA"], 99.5)
+        self.assertAlmostEqual(ctx["pivot"]["AAA"], (100.0 + 99.0 + 99.5) / 3.0)
+        self.assertEqual(ctx["last_bar_min"], "15:10")
+        self.assertNotIn("MISSING", ctx["close"])
+
+    def test_yahoo_shaped_final_bar_15_10_passes_default_floor(self):
+        self._write("AAA", "2026-08-28", last_bar="15:10")
+        ctx = SP.local_prev_context(["AAA"], "2026-08-28", hist_dir=self.hist)
+        self.assertEqual(ctx["count"], 1)
+
+    def test_truncated_afternoon_snapshot_rejected(self):
+        self._write("AAA", "2026-08-28", last_bar="14:55")
+        ctx = SP.local_prev_context(["AAA"], "2026-08-28", hist_dir=self.hist)
+        self.assertEqual(ctx["count"], 0)
+
+    def test_other_days_ignored(self):
+        self._write("AAA", "2026-08-27")
+        ctx = SP.local_prev_context(["AAA"], "2026-08-28", hist_dir=self.hist)
+        self.assertEqual(ctx["count"], 0)
+
+
+class TestLocalFirstSeeding(unittest.TestCase):
+    def setUp(self):
+        self._cache_files = SP.CACHE_FILES
+        self._daily = SP.daily_prev_context
+        self._local = SP.local_prev_context
+        self._net_fetch = SP.feeds.fetch_bars_yahoo
+        self._td = tempfile.TemporaryDirectory()
+        SP.CACHE_FILES = {
+            "m12": Path(self._td.name) / "m12_prev_close.json",
+            "m13": Path(self._td.name) / "m13_prev_context.json",
+            "m14": Path(self._td.name) / "m14_prev_context.json",
+        }
+        self.addCleanup(self._restore)
+
+    def _restore(self):
+        SP.CACHE_FILES = self._cache_files
+        SP.daily_prev_context = self._daily
+        SP.local_prev_context = self._local
+        SP.feeds.fetch_bars_yahoo = self._net_fetch
+        self._td.cleanup()
+
+    def test_daily_prev_context_local_first_skips_network(self):
+        calls = []
+
+        def _net(symbols, day, **kw):
+            calls.append(list(symbols))
+            return {"date": str(day), "close": {}, "pivot": {}, "count": 0,
+                    "tried": 0, "last_bar_min": None}
+
+        SP.local_prev_context = lambda symbols, day, min_bar=None: {
+            "date": str(day), "close": {s: 99.5 for s in symbols},
+            "pivot": {s: 100.0 for s in symbols}, "count": len(list(symbols)),
+            "tried": len(list(symbols)), "last_bar_min": "15:10"}
+
+        ctx = SP.daily_prev_context(["AAA", "BBB"], "2026-08-28", fetch=None,
+                                    sleep_s=0.0, deadline_s=5, use_local=True)
+        self.assertEqual(calls, [])          # zero network fetches
+        self.assertEqual(ctx["count"], 2)
+
+    def test_daily_prev_context_fetches_only_local_misses(self):
+        calls = []
+
+        def fetch(sym, rng):
+            calls.append(sym)
+            return bars("2026-08-28", [("15:25", 100.0, 99.0, 97.5)])
+
+        SP.local_prev_context = lambda symbols, day, min_bar=None: {
+            "date": str(day), "close": {"AAA": 99.5}, "pivot": {"AAA": 100.0},
+            "count": 1, "tried": len(list(symbols)), "last_bar_min": "15:10"}
+
+        ctx = SP.daily_prev_context(["AAA", "BBB"], "2026-08-28", fetch=fetch,
+                                    sleep_s=0.0, deadline_s=5, use_local=True)
+        self.assertEqual(calls, ["BBB"])     # only the local miss went to network
+        self.assertEqual(ctx["close"]["AAA"], 99.5)
+        self.assertEqual(ctx["close"]["BBB"], 97.5)
+        self.assertEqual(ctx["count"], 2)
+
+    def test_self_heal_uses_local_when_asked(self):
+        net_calls = []
+
+        def _local(symbols, day, min_bar=None):
+            symbols = list(symbols)
+            return {"date": str(day), "close": {s: 99.5 for s in symbols},
+                    "pivot": {s: 100.0 for s in symbols}, "count": len(symbols),
+                    "tried": len(symbols), "last_bar_min": "15:10"}
+
+        def _net(sym, rng):
+            net_calls.append(sym)
+            return None
+
+        SP.local_prev_context = _local
+        SP.feeds.fetch_bars_yahoo = _net
+        ok, meta = SP.self_heal("m12", "2026-08-31", deadline_s=30.0,
+                                use_local=True)
+        self.assertTrue(ok)
+        self.assertEqual(net_calls, [])    # local history covered everything
+        j = json.loads(SP.CACHE_FILES["m12"].read_text())
+        self.assertEqual(j["date"], "2026-08-28")
+        self.assertEqual(j["count"], len(list(__import__("live_runner").SYMS)))
+        self.assertEqual(j["status"], "OK")
+
+
+class TestCliExitCodes(unittest.TestCase):
+    """INSUFFICIENT is the documented fail-closed policy, not a crash."""
+
+    def test_insufficient_exits_zero(self):
+        with unittest.mock.patch(
+                "sys.argv",
+                ["seed_prev_context.py", "--models", "m12", "--no-local"]):
+            with unittest.mock.patch(
+                    "seed_prev_context.seed_models",
+                    return_value={"m12": {"status": "INSUFFICIENT", "count": 3}}):
+                self.assertEqual(SP.main(), 0)
+
+    def test_ok_exits_zero(self):
+        with unittest.mock.patch(
+                "sys.argv",
+                ["seed_prev_context.py", "--models", "m12", "--no-local"]):
+            with unittest.mock.patch(
+                    "seed_prev_context.seed_models",
+                    return_value={"m12": {"status": "OK", "count": 210}}):
+                self.assertEqual(SP.main(), 0)
+
+    def test_missing_model_result_still_fails(self):
+        with unittest.mock.patch(
+                "sys.argv",
+                ["seed_prev_context.py", "--models", "m12", "--no-local"]):
+            with unittest.mock.patch(
+                    "seed_prev_context.seed_models", return_value={}):
+                self.assertEqual(SP.main(), 2)
 
 
 class TestDates(unittest.TestCase):

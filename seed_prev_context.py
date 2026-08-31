@@ -8,16 +8,32 @@ minutes, fewer than the required 180 of 210 symbols have a >=15:20 bar at that
 moment, the seed refuses to write, and the next session starts STALE ->
 strict no-entry. That is exactly what silenced M12/M13 on 2026-08-28/31.
 
-This module rebuilds the previous-close cache from the *daily* 5-minute
-history (`fetch_bars_yahoo(sym, "5d")`), which is complete and final shortly
-after the session close. It is used two ways:
+2026-08-31 root cause addendum — the "3/210" was NOT a Yahoo outage
+-------------------------------------------------------------------
+Finalised Yahoo 5-minute data for NSE simply *ends* at 15:10-15:15 for ~99%
+of symbols (measured on 2026-08-28: 73 files end 15:10, 134 end 15:15, only 3
+end 15:25). The old >=15:20 "official close" floor therefore rejected
+everything except those ~3 symbols on EVERY path (EOD seed, daily top-up,
+self-heal, post-close reseed), starving M12/M13/M14 of a baseline while M11 —
+which reads the previous day straight from local history with no bar-time
+floor — kept trading. The floor is now `CLOSE_BAR_FLOOR = "15:05"`: a last bar
+at/after 15:05 of a closed session is the official close (it matches what the
+runners' history-bootstrap fallback and M11 have always used), while a
+truncated mid-afternoon snapshot (e.g. a 14:30 last bar from a lagged fetch)
+is still rejected.
+
+This module now prefers the LOCAL daily history (`data/history/*.csv`,
+refreshed every morning at 08:45 IST by the `2. Bootstrap` workflow) over live
+Yahoo fetches — `use_local=True` — so rebuilding a baseline costs zero network
+calls and cannot be rate limited. It is used three ways:
 
 1. `top_up()` / `daily_prev_context()` from each runner's EOD seed — fills the
-   symbols the intraday map missed (quality floor: the day's final bar must be
-   >= 15:20, i.e. an official close, never a 15:10/15:15 mark).
-2. CLI `python -u seed_prev_context.py [--models m12,m13,m14] [--date D]` —
-   the post-close reseed run by the live workflows at 16:10 IST, and usable
-   manually any time a cache goes missing or stale.
+   symbols the intraday map missed from the daily 5-minute history.
+2. `self_heal()` from each runner's first cycle — rebuilds a missing/stale
+   cache for the previous session from local history first, network second.
+3. CLI `python -u seed_prev_context.py [--models m12,m13,m14] [--date D]` —
+   the post-close reseed run by the live workflows at 16:10 IST (cron
+   `40 10 * * 1-5`), and usable manually any time a cache goes missing.
 
 Cache contract (all three files under data/):
   {"date", "close": {sym: px}, "pivot": {sym: px}, "count",
@@ -51,6 +67,12 @@ CACHE_FILES = {
 }
 
 MIN_COUNT_DEFAULT = 180  # of ~210 F&O symbols — matches every runner's guard
+
+# A session's last bar at/after this time counts as the official close.
+# Yahoo's NSE 5-minute data ends at 15:10/15:15 for ~99% of symbols (there is
+# no 15:20/15:25 bucket after the 15:15 candle for most names), so the old
+# 15:20 floor rejected nearly every symbol — the "3/210 cache" outage.
+CLOSE_BAR_FLOOR = "15:05"
 
 
 def now_ist() -> dt.datetime:
@@ -111,18 +133,70 @@ def session_ohlc(df: pd.DataFrame, day) -> dict | None:
     }
 
 
+def local_prev_context(symbols: Iterable[str], day,
+                       min_bar: str | None = CLOSE_BAR_FLOOR,
+                       hist_dir=None) -> dict:
+    """Official close/pivot maps for `day` read from the LOCAL daily history.
+
+    `data/history/*.csv` is refreshed every morning (08:45 IST) by the
+    `2. Bootstrap` workflow, so for any *past* session this needs zero network
+    calls and is immune to Yahoo rate limiting — the exact failure that
+    starved every network-only seeding path on 2026-08-31.
+
+    Same return contract as `daily_prev_context`. Symbols without a history
+    file or without the requested session are simply absent from `close`.
+    """
+    hist = Path(hist_dir) if hist_dir else L.HIST
+    closes: dict[str, float] = {}
+    pivots: dict[str, float] = {}
+    bar_mins: list[str] = []
+    tried = 0
+    for sym in symbols:
+        fp = hist / f"{sym}.csv"
+        if not fp.exists():
+            continue
+        tried += 1
+        try:
+            df = pd.read_csv(fp, usecols=["dt", "high", "low", "close"])
+            ohlc = session_ohlc(df, day)
+        except Exception:
+            continue
+        if ohlc is None:
+            continue
+        if min_bar and ohlc["bar_min"] < min_bar:
+            continue
+        closes[sym] = ohlc["close"]
+        pivots[sym] = ohlc["pivot"]
+        bar_mins.append(ohlc["bar_min"])
+    return {
+        "date": str(parse_day(day) or day),
+        "close": closes,
+        "pivot": pivots,
+        "count": len(closes),
+        "tried": tried,
+        "last_bar_min": min(bar_mins) if bar_mins else None,
+    }
+
+
 def daily_prev_context(symbols: Iterable[str], day,
                        fetch: Callable[[str, str], pd.DataFrame | None] | None = None,
-                       min_bar: str | None = "15:20",
+                       min_bar: str | None = CLOSE_BAR_FLOOR,
                        sleep_s: float = 0.12,
                        deadline_s: float = 420.0,
                        rng: str = "5d",
-                       retries: int = 2) -> dict:
+                       retries: int = 2,
+                       use_local: bool = False) -> dict:
     """Official close/pivot maps for `day` pulled from the daily 5m history.
 
-    `min_bar="15:20"` keeps the quality floor used by the runners' EOD seeds:
-    a session whose final bar is a 15:10/15:15 mark is not an official close.
-    Pass `min_bar=None` to accept any final bar (already-finalised daily data).
+    `min_bar` defaults to `CLOSE_BAR_FLOOR` ("15:05"): Yahoo's final NSE bar
+    is a 15:10/15:15 mark for ~99% of symbols, which the old 15:20 floor
+    rejected (the "3/210" outage). A truncated mid-afternoon snapshot (e.g. a
+    14:30 last bar) is still rejected. Pass `min_bar=None` to accept any final
+    bar (already-finalised daily data).
+
+    `use_local=True` serves every symbol found in `data/history/*.csv` from
+    disk (see `local_prev_context`) and only fetches the remainder from the
+    network — with a fresh morning bootstrap that is zero Yahoo calls.
 
     `rng` is the Yahoo range passed to the fetcher. "5d" is enough for a
     consecutive trading day, but a Monday or a post-holiday session needs a
@@ -134,12 +208,28 @@ def daily_prev_context(symbols: Iterable[str], day,
     symbol from the seed permanently; with Dhan's token dead every symbol
     depends on Yahoo, so one 429 storm emptied the whole cache.
     """
-    fetch = fetch or feeds.fetch_bars_yahoo
-    deadline = time.monotonic() + max(0.0, deadline_s)
+    symbols = list(symbols)
     closes: dict[str, float] = {}
     pivots: dict[str, float] = {}
     bar_mins: list[str] = []
     tried = 0
+
+    if use_local and symbols:
+        local = local_prev_context(symbols, day, min_bar=min_bar)
+        closes.update(local["close"])
+        pivots.update(local["pivot"])
+        if local["last_bar_min"]:
+            bar_mins.append(local["last_bar_min"])
+        symbols = [s for s in symbols if s not in closes]
+        tried += local["tried"]
+        if not symbols:
+            return {"date": str(parse_day(day) or day), "close": closes,
+                    "pivot": pivots, "count": len(closes), "tried": tried,
+                    "last_bar_min": min(bar_mins) if bar_mins else None,
+                    "local_count": len(closes), "network_count": 0}
+
+    fetch = fetch or feeds.fetch_bars_yahoo
+    deadline = time.monotonic() + max(0.0, deadline_s)
     for sym in symbols:
         if time.monotonic() > deadline:
             print(f"  seed deadline hit after {tried} symbols "
@@ -234,22 +324,29 @@ def write_cache(model: str, day, closes: Mapping[str, float],
 
 
 def seed_models(models: Iterable[str], day, min_count: int = MIN_COUNT_DEFAULT,
-                min_bar: str | None = "15:20", deadline_s: float = 420.0,
+                min_bar: str | None = CLOSE_BAR_FLOOR, deadline_s: float = 420.0,
                 symbols: Iterable[str] | None = None, fetch=None,
-                rng: str = "5d") -> dict:
+                rng: str = "5d", use_local: bool = False) -> dict:
     """Rebuild every requested model's prev-close cache for `day`.
 
     One network pass is shared by all `models` — seeding m12/m13/m14 together
     costs 210 fetches, not 630, which matters when Yahoo is rate limiting.
+    With `use_local=True` symbols found in `data/history/*.csv` cost no fetch
+    at all; only the remainder goes to the network. `day` is always a fully
+    closed session here (never the live one), so local history is authoritative
+    whenever the morning bootstrap has landed.
     """
     symbols = list(symbols if symbols is not None else L.SYMS)
     out: dict[str, dict] = {}
     ctx = daily_prev_context(symbols, day, fetch=fetch, min_bar=min_bar,
-                             deadline_s=deadline_s, rng=rng)
+                             deadline_s=deadline_s, rng=rng, use_local=use_local)
+    local_n = ctx.get("local_count", 0) or 0
+    source = ("local history seed" if local_n == len(symbols) and ctx["count"] == len(symbols)
+              else f"local+daily history seed (local:{local_n})")
     for model in models:
         out[model] = write_cache(model, ctx["date"], ctx["close"], ctx["pivot"],
                                  ctx["last_bar_min"], ctx["tried"],
-                                 source="daily history seed", min_count=min_count)
+                                 source=source, min_count=min_count)
         out[model]["last_bar_min_observed"] = ctx["last_bar_min"]
         out[model]["date"] = ctx["date"]
     return out
@@ -257,31 +354,37 @@ def seed_models(models: Iterable[str], day, min_count: int = MIN_COUNT_DEFAULT,
 
 def self_heal(model: str, today, deadline_s: float = 600.0,
               min_count: int = MIN_COUNT_DEFAULT,
-              min_bar: str | None = "15:20", fetch=None) -> tuple[bool, dict]:
+              min_bar: str | None = CLOSE_BAR_FLOOR, fetch=None,
+              use_local: bool = False) -> tuple[bool, dict]:
     """Rebuild `model`'s cache for the previous session from finalised daily data.
 
     This is the recovery path that was missing for M12/M13: their EOD seed only
     ran inside the 15:25 cycle, the in-runner self-heal window (15:36-16:30)
     was unreachable because their cron schedule stops at 15:35, and unlike M14
     they had no 16:10 post-close reseed job. One bad cache therefore silenced
-    them permanently until someone rebuilt it by hand.
+    them permanently until someone rebuilt it by hand. All three now also get
+    a 16:10 IST reseed cron in their live workflows.
 
     Safe to call every cycle — the caller gates it — because:
       * it targets the *previous* session, whose bars are final, so it cannot
         seed a live session with a partial day;
+      * with `use_local=True` (what the runners pass) it reads the local
+        `data/history` first, so a fresh bootstrap makes it a zero-network,
+        rate-limit-proof operation;
       * `write_cache` refuses anything under `min_count`, so a bad run leaves
         the existing cache untouched instead of poisoning it;
-      * it uses range="1mo" so a Monday / post-holiday session still finds the
-        previous trading day inside the fetched window.
+      * the network remainder uses range="1mo" so a Monday / post-holiday
+        session still finds the previous trading day inside the window.
 
     Returns (ok, meta). `ok` is True only when a >=min_count cache was written.
     """
     day = expected_previous_weekday(parse_day(today) or now_ist().date())
     print(f"seed_prev_context[{model}]: self-heal for {day} "
-          f"(deadline {deadline_s:.0f}s)")
+          f"(deadline {deadline_s:.0f}s, use_local={use_local})")
     try:
         summary = seed_models([model], day, min_count=min_count, min_bar=min_bar,
-                              deadline_s=deadline_s, rng="1mo", fetch=fetch)
+                              deadline_s=deadline_s, rng="1mo", fetch=fetch,
+                              use_local=use_local)
     except Exception as exc:
         print(f"seed_prev_context[{model}]: self-heal failed "
               f"({type(exc).__name__}: {exc})")
@@ -313,14 +416,16 @@ def main() -> int:
                     help="session whose closes to record, YYYY-MM-DD "
                          "(default: latest fully-closed IST session)")
     ap.add_argument("--min-count", type=int, default=MIN_COUNT_DEFAULT)
-    ap.add_argument("--min-bar", default="15:20",
-                    help="quality floor for the day's final bar (default 15:20); "
+    ap.add_argument("--min-bar", default=CLOSE_BAR_FLOOR,
+                    help=f"quality floor for the day's final bar (default {CLOSE_BAR_FLOOR}); "
                          "'none' accepts any final bar")
     ap.add_argument("--deadline-seconds", type=float, default=420.0)
     ap.add_argument("--range", default="5d", dest="rng",
                     help="Yahoo range for the daily fetch (default 5d). Use 1mo "
                          "after a weekend/holiday so the window still contains "
                          "the previous session.")
+    ap.add_argument("--no-local", action="store_true",
+                    help="skip data/history and fetch every symbol from the network")
     args = ap.parse_args()
 
     models = [m.strip().lower() for m in args.models.split(",") if m.strip()]
@@ -331,13 +436,25 @@ def main() -> int:
     day = parse_day(args.date) or latest_closed_session()
     min_bar = None if args.min_bar.lower() in ("none", "any") else args.min_bar
     print(f"seed_prev_context: models={models} day={day} min_count={args.min_count} "
-          f"min_bar={min_bar or 'any'}")
+          f"min_bar={min_bar or 'any'} local={'off' if args.no_local else 'first'}")
     summary = seed_models(models, day, min_count=args.min_count, min_bar=min_bar,
-                          deadline_s=args.deadline_seconds, rng=args.rng)
+                          deadline_s=args.deadline_seconds, rng=args.rng,
+                          use_local=not args.no_local)
     print(json.dumps({m: {k: v for k, v in s.items() if k != "close" and k != "pivot"}
                       for m, s in summary.items()}, indent=1))
-    if any(s.get("status") != "OK" for s in summary.values()):
+    missing = [m for m in models if not summary.get(m)]
+    if missing:
+        print(f"seed_prev_context: no result for {','.join(missing)}")
         return 2
+    # A model that could not reach min_count is the documented fail-closed
+    # policy (existing cache left untouched, next session runs the history
+    # bootstrap). It is a warning, not a workflow failure — exit 2 here used
+    # to red-X the whole M14 post-close reseed run.
+    insufficient = [m for m in models if summary[m].get("status") != "OK"]
+    if insufficient:
+        print(f"seed_prev_context: WARNING cache not written for "
+              f"{','.join(insufficient)} (below min_count; existing cache "
+              f"left untouched — fails closed)")
     return 0
 
 

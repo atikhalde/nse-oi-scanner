@@ -85,9 +85,11 @@ class TestM14Runner(unittest.TestCase):
     def test_seed_prev_coverage_guard(self):
         """Partial (<180) EOD seeds must never overwrite the prev-close cache.
 
-        The 2026-08-28 M12/M13 cache was overwritten with 3 symbols because the
-        15:25 cycle's Yahoo feed had not yet delivered 15:20+ bars for most names;
-        M12/M13/M14 then stayed STALE for 2026-08-31.
+        The 2026-08-28 M12/M13 cache was overwritten with 3 symbols; M12/M13/M14
+        then stayed STALE for 2026-08-31. Root cause: the old 15:20 floor
+        rejected Yahoo's actual final NSE bars (15:10/15:15 for ~99% of names).
+        Those are now accepted (CLOSE_BAR_FLOOR 15:05); a truncated
+        mid-afternoon snapshot (14:55) is still rejected.
         The daily top-up is disabled here so this test stays offline: the
         top-up path itself is covered in test_seed_prev_context.py.
         """
@@ -96,8 +98,8 @@ class TestM14Runner(unittest.TestCase):
         try:
             with tempfile.TemporaryDirectory() as td:
                 R.PREV_CACHE = Path(td) / "m14_prev_context.json"
-                full = {f"S{i}": self._bars("15:20") for i in range(180)}
-                full["LATE"] = self._bars("15:15")
+                full = {f"S{i}": self._bars("15:10") for i in range(180)}
+                full["LATE"] = self._bars("14:55")
                 with mock.patch.dict(os.environ, env):
                     j = R.seed_prev("2026-08-28", full)
                 self.assertEqual(j["status"], "OK")
@@ -108,7 +110,7 @@ class TestM14Runner(unittest.TestCase):
 
                 R.PREV_CACHE.write_text(json.dumps({"date": "2026-08-27", "close": {"KEEP": 1.0}}))
                 with mock.patch.dict(os.environ, env):
-                    j = R.seed_prev("2026-08-28", {f"P{i}": self._bars("15:20") for i in range(3)})
+                    j = R.seed_prev("2026-08-28", {f"P{i}": self._bars("15:10") for i in range(3)})
                 self.assertEqual(j["status"], "INSUFFICIENT")
                 saved = json.loads(R.PREV_CACHE.read_text())
                 self.assertIn("KEEP", saved.get("close") or {})

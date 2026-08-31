@@ -1,5 +1,42 @@
 # Workflow checkout/race fix
 
+## 2026-08-31 (evening) — the real M12/M13/M14 root cause: 15:20 close floor vs Yahoo's 15:10/15:15 data
+
+The morning fix below was necessary but not sufficient: every prev-close path
+still required a **final bar ≥ 15:20**, while Yahoo's finalised NSE 5-minute
+data ends at **15:10/15:15 for ~99% of symbols** (measured: 08-28 → 73×15:10,
+134×15:15, 3×15:25). Exactly those ~3 symbols passed on *every* path — EOD
+seed, top-up, self-heal, reseed — so all three models sat in strict no-entry
+again while M11 (no floor) kept trading. See `M12_M13_M14_CLOSE_FLOOR_FIX.md`.
+
+Fixes now on main:
+
+1. `CLOSE_BAR_FLOOR = "15:05"` in `seed_prev_context.py` (and the runners'
+   EOD seeds use it): a closed session's last bar ≥ 15:05 is the official
+   close; a truncated 14:55 snapshot is still rejected.
+2. **Local-history-first baselines**: `local_prev_context()` +
+   `use_local=True` rebuild any cache from `data/history/*.csv` with zero
+   network (verified 210/210 OK in ~10 s). Morning self-heal, in-runner
+   post-close reseed and the CLI are all local-first now — no more 210-fetch
+   retry storms feeding Yahoo's 429s.
+3. **M12/M13 reseed parity**: `12_live_m12.yml` / `13_live_m13.yml` gained
+   the same 16:10 IST post-close reseed cron (`40 10 * * 1-5`) and dispatch
+   `mode=reseed` that M14 already had.
+4. **INSUFFICIENT ≠ failure**: the reseed CLI prints a warning and exits 0
+   when it correctly refuses to write a partial cache (this is what red-Xed
+   M14's 17:41 UTC run); exit 2 is reserved for a missing model result.
+5. **Bootstrap order fixed for real**: `2_bootstrap.yml` commits the
+   refreshed `data/history` immediately after the download; `label_learn.py`
+   runs after, time-boxed to 30 min and non-fatal. The frozen-history
+   lockout cannot recur.
+6. **Baselines committed**: `data/m1{2,3,4}_prev_*.json` (2026-08-31, 210
+   symbols, OK, local seed) are in the repo so the next session starts clean;
+   verified `load_prev("2026-09-01")` → OK/210 for all three models.
+
+Still open (manual): the Dhan token returns **HTTP 401** — every cycle runs on
+the Yahoo fallback. Rotate the `DHAN_TOKEN` secret to restore the real-time
+primary feed.
+
 ## 2026-08-31 — M12/M13/M14 silent-lockout fix
 
 Symptom: M12/M13 workflows ran green every 5 minutes but fired zero entry

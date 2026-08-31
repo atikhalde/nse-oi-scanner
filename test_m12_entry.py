@@ -202,15 +202,19 @@ def test_seed_previous_close_cache_guards():
     try:
         with tempfile.TemporaryDirectory() as td:
             R.PREV_CACHE = Path(td) / "m12_prev_close.json"
-            bars = {f"S{i}": _bars(first_t="15:20") for i in range(180)}
-            bars["LATE"] = _bars(nrows=3, first_t="15:15")  # pre-15:20 mark: must be excluded
+            bars = {f"S{i}": _bars(first_t="15:10") for i in range(180)}
+            # Yahoo's final NSE bar is a 15:10/15:15 mark for ~99% of symbols —
+            # that IS the official close (the old 15:20 floor caused the 3/210
+            # outage). A truncated mid-afternoon snapshot is still rejected.
+            bars["LATE"] = _bars(nrows=3, first_t="14:55")
             j = R.seed_previous_close_cache("2026-08-28", bars)
-            ok("full 15:20+ seed writes the cache", j["status"] == "OK" and R.PREV_CACHE.exists())
-            ok("pre-15:20 final bar is not recorded as a close",
+            ok("full seed with Yahoo-final 15:10 bars writes the cache",
+               j["status"] == "OK" and R.PREV_CACHE.exists())
+            ok("truncated (<15:05) final bar is not recorded as a close",
                "LATE" not in (json.loads(R.PREV_CACHE.read_text()).get("close") or {}))
 
             R.PREV_CACHE.write_text(json.dumps({"date": "2026-08-27", "close": {"KEEP": 1.0}}))
-            partial = {f"P{i}": _bars(first_t="15:20") for i in range(3)}
+            partial = {f"P{i}": _bars(first_t="15:10") for i in range(3)}
             j = R.seed_previous_close_cache("2026-08-28", partial)
             ok("partial (<180) seed is refused", j["status"] == "INSUFFICIENT")
             ok("partial seed never overwrites an existing cache",

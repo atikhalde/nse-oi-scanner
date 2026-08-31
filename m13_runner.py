@@ -76,15 +76,15 @@ def seed_prev(today,bars_map):
  vals={};piv={};last=[]
  for sym,b in bars_map.items():
   if b is None or b.empty:continue
-  q=b.sort_values('dt');late=q[q.t>='15:20']
+  q=b.sort_values('dt');late=q[q.t>=SP.CLOSE_BAR_FLOOR]
   if late.empty:late=q.tail(1)  # Yahoo can lag the 15:25 cycle; accept session-final bar
   lm=str(late.t.iloc[-1])
-  if lm<'15:20':continue        # 15:10/15:15 mark is not an official close
+  if lm<SP.CLOSE_BAR_FLOOR:continue  # truncated mid-afternoon snapshot is not a close
   cl=float(late.close.iloc[-1]);vals[sym]=cl;piv[sym]=(float(q.high.max())+float(q.low.min())+cl)/3;last.append(lm)
  meta={'date':today,'count':len(vals),'last_bar_min':min(last) if last else None,'total_fed':len(bars_map),'generated_utc':dt.datetime.now(dt.timezone.utc).isoformat()}
  if len(vals)<180:
   # Yahoo lags the 15:25 cycle; top the intraday seed up from the daily
-  # 5-minute history (same >=15:20 official-close floor) before failing.
+  # 5-minute history before failing.
   try:
    vals,piv,added=SP.top_up(vals,piv,today,L.SYMS,deadline_s=420.0)
    meta['topped_up']=added;print(f'M13 EOD seed daily top-up: +{added} -> {len(vals)} symbols')
@@ -251,7 +251,7 @@ def mode_live():
   if int(st.get('eod_cache_count',0) or 0)<180 and '15:36'<=hhmm<='16:30':
    print('M13: EOD prev-cache short — post-close reseed from daily history')
    try:
-    summary=SP.seed_models(['m13'],today,deadline_s=420.0)
+    summary=SP.seed_models(['m13'],today,deadline_s=420.0,use_local=True)
     st['eod_cache_count']=summary['m13']['count']
     st['prev_meta']={'status':summary['m13'].get('status'),'source':'post-close reseed','date':today,'count':summary['m13']['count']}
     save_state(st)
@@ -260,12 +260,12 @@ def mode_live():
   return False
  if hhmm<'09:16':save_state(st);print('M13 pre-market — idle');return False
  prev,piv,meta=load_prev(today)
- # M13 has no 16:10 post-close reseed job (M14 does) and its in-runner self-heal
- # window (15:36-16:30) is unreachable because the cron schedule stops at 15:35.
- # Rebuild from finalised daily history rather than idle a whole session STALE.
+ # Rebuild from finalised daily history — local data/history first (zero
+ # network, rate-limit-proof), network only for the remainder — rather than
+ # idle a whole session STALE.
  if meta.get('status')!='OK' and SP.should_self_heal(st,today,hhmm):
   SP.mark_self_heal(st,today,hhmm);save_state(st)
-  ok,heal=SP.self_heal('m13',today,deadline_s=600.0);st['prev_heal']=heal
+  ok,heal=SP.self_heal('m13',today,deadline_s=600.0,use_local=True);st['prev_heal']=heal
   if ok:prev,piv,meta=load_prev(today)
  st['prev_meta']=meta;vix=prior_vix_return(today,st);bars_map={};feeds.reset_feed_stats()
  for sym in L.SYMS:

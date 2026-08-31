@@ -138,12 +138,12 @@ def seed_prev(today: str, bars_map: dict[str, pd.DataFrame]) -> dict:
         if b is None or b.empty:
             continue
         q = b.sort_values("dt")
-        late = q[q["t"] >= "15:20"]
+        late = q[q["t"] >= SP.CLOSE_BAR_FLOOR]
         if late.empty:
             late = q.tail(1)  # Fallback to last available bar of session
         last_min = str(late["t"].iloc[-1])
-        if last_min < "15:20":
-            continue  # 15:10/15:15 mark is not an official session close
+        if last_min < SP.CLOSE_BAR_FLOOR:
+            continue  # truncated mid-afternoon snapshot is not a session close
         cl = float(late["close"].iloc[-1])
         vals[sym] = cl
         piv[sym] = (float(q["high"].max()) + float(q["low"].min()) + cl) / 3.0
@@ -158,7 +158,7 @@ def seed_prev(today: str, bars_map: dict[str, pd.DataFrame]) -> dict:
     }
     if len(vals) < 180:
         # Yahoo lags the 15:25 cycle; top the intraday seed up from the daily
-        # 5-minute history (same >=15:20 official-close floor) before failing.
+        # 5-minute history before failing.
         try:
             vals, piv, added = SP.top_up(vals, piv, today, L.SYMS, deadline_s=420.0)
             j["topped_up"] = added
@@ -573,7 +573,8 @@ def mode_live() -> bool:
         if int(st.get("eod_cache_count", 0) or 0) < 180 and "15:36" <= hhmm <= "16:30":
             print("M14: EOD prev-cache short — post-close reseed from daily history")
             try:
-                summary = SP.seed_models(["m14"], today, deadline_s=420.0)
+                summary = SP.seed_models(["m14"], today, deadline_s=420.0,
+                                         use_local=True)
                 st["eod_cache_count"] = summary["m14"]["count"]
                 st["prev_meta"] = {"status": summary["m14"].get("status"),
                                    "source": "post-close reseed",
@@ -591,13 +592,14 @@ def mode_live() -> bool:
 
     prev, piv, meta = load_prev(today)
     if meta.get("status") != "OK" and SP.should_self_heal(st, today, hhmm):
-        # M14 already has a 16:10 post-close reseed job, but that only fires on
-        # the GitHub `schedule` event — which has been unreliable. Recovering
-        # in-run means the model is not dead for a whole session when the
-        # overnight reseed is missed.
+        # The 16:10 post-close reseed cron only fires on the GitHub `schedule`
+        # event — which has been unreliable. Recovering in-run (local
+        # data/history first, zero network when the morning bootstrap landed)
+        # means the model is not dead for a whole session when the overnight
+        # reseed is missed.
         SP.mark_self_heal(st, today, hhmm)
         save_state(st)
-        ok, heal = SP.self_heal("m14", today, deadline_s=600.0)
+        ok, heal = SP.self_heal("m14", today, deadline_s=600.0, use_local=True)
         st["prev_heal"] = heal
         if ok:
             prev, piv, meta = load_prev(today)
