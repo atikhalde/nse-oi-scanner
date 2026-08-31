@@ -590,6 +590,17 @@ def mode_live() -> bool:
         return False
 
     prev, piv, meta = load_prev(today)
+    if meta.get("status") != "OK" and SP.should_self_heal(st, today, hhmm):
+        # M14 already has a 16:10 post-close reseed job, but that only fires on
+        # the GitHub `schedule` event — which has been unreliable. Recovering
+        # in-run means the model is not dead for a whole session when the
+        # overnight reseed is missed.
+        SP.mark_self_heal(st, today, hhmm)
+        save_state(st)
+        ok, heal = SP.self_heal("m14", today, deadline_s=600.0)
+        st["prev_heal"] = heal
+        if ok:
+            prev, piv, meta = load_prev(today)
     st["prev_meta"] = meta
     vix = prior_vix_return(today, st)
 

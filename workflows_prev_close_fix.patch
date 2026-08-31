@@ -1,0 +1,179 @@
+diff --git a/.github/workflows/12_live_m12.yml b/.github/workflows/12_live_m12.yml
+index 995ec56..84bf5ed 100644
+--- a/.github/workflows/12_live_m12.yml
++++ b/.github/workflows/12_live_m12.yml
+@@ -4,7 +4,7 @@ on:
+   workflow_dispatch:
+     inputs:
+       mode:
+-        description: "'live' = normal cycle · 'test-alert' = send M12 to all 3 targets"
++        description: "'live' = normal cycle · 'test-alert' = send M12 to all 3 targets · 'reseed' = rebuild prev-close cache only"
+         required: true
+         default: "live"
+   schedule:
+@@ -13,6 +13,10 @@ on:
+     - cron: "45-59/5 3 * * 1-5"
+     - cron: "*/5 4-9 * * 1-5"
+     - cron: "0,5 10 * * 1-5"
++    # 16:10 IST post-close: rebuild tomorrow's prev-close cache from finalised
++    # daily data. Without this M12 had no way back from a bad cache: the ticker
++    # stops at 15:35 IST, so the in-runner 15:36–16:30 self-heal never fired.
++    - cron: "40 10 * * 1-5"
+ 
+ permissions:
+   contents: write
+@@ -49,6 +53,7 @@ jobs:
+           python-version: "3.12"
+       - run: pip install -r requirements.txt
+       - name: M12 entry/feed tests
++        if: github.event.schedule != '40 10 * * 1-5' && github.event.inputs.mode != 'reseed'
+         run: |
+           python -u test_fast_feed.py
+           python -u test_m12_entry.py
+@@ -56,8 +61,11 @@ jobs:
+         if: github.event.inputs.mode == 'test-alert'
+         run: python -u m12_runner.py --test-alert
+       - name: M12 paper cycle
+-        if: github.event.inputs.mode != 'test-alert'
++        if: github.event.inputs.mode != 'test-alert' && github.event.inputs.mode != 'reseed' && github.event.schedule != '40 10 * * 1-5'
+         run: python -u m12_runner.py --loop 1
++      - name: M12 post-close prev-close reseed
++        if: github.event.schedule == '40 10 * * 1-5' || github.event.inputs.mode == 'reseed'
++        run: python -u seed_prev_context.py --models m12 --range 1mo --deadline-seconds 900 || echo "M12 reseed incomplete (non-fatal)"
+       - name: Commit M12 state, audit labels, and report
+         if: always()
+         run: |
+diff --git a/.github/workflows/13_live_m13.yml b/.github/workflows/13_live_m13.yml
+index da40aa4..f866e6a 100644
+--- a/.github/workflows/13_live_m13.yml
++++ b/.github/workflows/13_live_m13.yml
+@@ -4,7 +4,7 @@ on:
+   workflow_dispatch:
+     inputs:
+       mode:
+-        description: "'live' = normal cycle · 'test-alert' = send M13 to all 3 targets"
++        description: "'live' = normal cycle · 'test-alert' = send M13 to all 3 targets · 'reseed' = rebuild prev-close cache only"
+         required: true
+         default: "live"
+   schedule:
+@@ -13,6 +13,10 @@ on:
+     - cron: "45-59/5 3 * * 1-5"
+     - cron: "*/5 4-9 * * 1-5"
+     - cron: "0,5 10 * * 1-5"
++    # 16:10 IST post-close: rebuild tomorrow's prev-close cache from finalised
++    # daily data. Without this M13 had no way back from a bad cache: the ticker
++    # stops at 15:35 IST, so the in-runner 15:36–16:30 self-heal never fired.
++    - cron: "40 10 * * 1-5"
+ 
+ permissions:
+   contents: write
+@@ -48,6 +52,7 @@ jobs:
+           python-version: "3.12"
+       - run: pip install -r requirements.txt
+       - name: M13 tests
++        if: github.event.schedule != '40 10 * * 1-5' && github.event.inputs.mode != 'reseed'
+         run: |
+           python -u test_fast_feed.py
+           python -u test_m13_entry.py
+@@ -58,8 +63,11 @@ jobs:
+         if: github.event.inputs.mode == 'test-alert'
+         run: python -u m13_runner.py --test-alert
+       - name: M13 paper cycle
+-        if: github.event.inputs.mode != 'test-alert'
++        if: github.event.inputs.mode != 'test-alert' && github.event.inputs.mode != 'reseed' && github.event.schedule != '40 10 * * 1-5'
+         run: python -u m13_runner.py --loop 1
++      - name: M13 post-close prev-close reseed
++        if: github.event.schedule == '40 10 * * 1-5' || github.event.inputs.mode == 'reseed'
++        run: python -u seed_prev_context.py --models m13 --range 1mo --deadline-seconds 900 || echo "M13 reseed incomplete (non-fatal)"
+       - name: Commit M13 state, candidate ledger, and report
+         if: always()
+         run: |
+diff --git a/.github/workflows/14_live_m14.yml b/.github/workflows/14_live_m14.yml
+index 56cc98e..7bc15ad 100644
+--- a/.github/workflows/14_live_m14.yml
++++ b/.github/workflows/14_live_m14.yml
+@@ -71,7 +71,7 @@ jobs:
+         run: python -u m14_runner.py --loop 1
+       - name: M14 post-close prev-close reseed
+         if: github.event.schedule == '40 10 * * 1-5' || github.event.inputs.mode == 'reseed'
+-        run: python -u seed_prev_context.py --models m14
++        run: python -u seed_prev_context.py --models m14 --range 1mo --deadline-seconds 900 || echo "M14 reseed incomplete (non-fatal)"
+       - name: Commit M14 state, candidate ledger, and report
+         if: always()
+         run: |
+diff --git a/.github/workflows/2_bootstrap.yml b/.github/workflows/2_bootstrap.yml
+index 8eb569c..dfc5c5d 100644
+--- a/.github/workflows/2_bootstrap.yml
++++ b/.github/workflows/2_bootstrap.yml
+@@ -15,7 +15,11 @@ concurrency:
+ jobs:
+   bootstrap:
+     runs-on: ubuntu-latest
+-    timeout-minutes: 55
++    # Each stage commits as soon as it finishes (bootstrap_commit.sh), so a
++    # cancellation in stage 2 or 3 can never discard the stage-1 history
++    # refresh. Raised from 55 -> 180 min because the optional stages below are
++    # user-visible data farms, not prerequisites.
++    timeout-minutes: 180
+     env:
+       DHAN_TOKEN: ${{ secrets.DHAN_TOKEN }}
+     steps:
+@@ -27,31 +31,31 @@ jobs:
+         with:
+           python-version: "3.12"
+       - run: pip install -r requirements.txt
+-      - run: python -u live_runner.py --bootstrap refresh-60d
+-      - run: python -u m9_bootstrap.py || echo "m9 bootstrap failed (non-fatal)"   # M9 cash data-farm history9 (~1,050 syms)
+-      - run: python -u label_learn.py   # Phase-0 Learning Log labeler (ML dataset build-up)
+-      - name: commit data safely against moving main
+-        run: |
+-          set -euo pipefail
+-          git config user.name "paper-bot"
+-          git config user.email "paper-bot@users.noreply.github.com"
+-          git add data/ learn/
+-          if git diff --cached --quiet; then
+-            echo "nothing to commit"
+-            exit 0
+-          fi
+-          git commit -m "bootstrap $(date -u +%F_%H%M)Z"
+ 
+-          # Live paper workflows may advance main while the 20–30 minute data
+-          # refresh is running. Rebase and retry instead of losing the refresh.
+-          for attempt in 1 2 3 4 5 6; do
+-            echo "bootstrap push attempt ${attempt}/6"
+-            git pull --rebase origin main
+-            if git push origin HEAD:main; then
+-              echo "bootstrap data committed successfully"
+-              exit 0
+-            fi
+-            sleep $((attempt * 5))
+-          done
+-          echo "bootstrap push failed after 6 rebased attempts" >&2
+-          exit 1
++      # --- Stage 1 (critical): the 210-symbol history every model reads.
++      # M12/M13/M14 previous-close gates and every engine ATR/EMA warmup come
++      # from these files. Must commit before the slow stages run.
++      - name: Refresh 60d history (210 F&O symbols)
++        run: python -u live_runner.py --bootstrap refresh-60d
++      - name: Commit history refresh
++        run: bash bootstrap_commit.sh "bootstrap history $(date -u +%F_%H%M)Z"
++
++      # --- Stage 2 (optional): M9 cash data-farm history (~1,050 symbols).
++      # Non-fatal and on its own timeout: it must never be able to cancel the
++      # run before stage 1 has been committed.
++      - name: M9 cash history (~1050 symbols, optional)
++        continue-on-error: true
++        timeout-minutes: 60
++        run: python -u m9_bootstrap.py
++      - name: Commit M9 history
++        continue-on-error: true
++        run: bash bootstrap_commit.sh "bootstrap m9 $(date -u +%F_%H%M)Z"
++
++      # --- Stage 3 (optional): Phase-0 learning-log labels.
++      - name: Label newest session
++        continue-on-error: true
++        timeout-minutes: 60
++        run: python -u label_learn.py
++      - name: Commit learning labels
++        continue-on-error: true
++        run: bash bootstrap_commit.sh "bootstrap labels $(date -u +%F_%H%M)Z"
