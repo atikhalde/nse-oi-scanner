@@ -2,6 +2,7 @@
 """Unit tests for the standalone M12 entry logic."""
 from __future__ import annotations
 
+import os
 import tempfile
 from pathlib import Path
 
@@ -196,6 +197,8 @@ def test_seed_previous_close_cache_guards():
     import json
     import m12_runner as R
     old_cache = R.PREV_CACHE
+    old_topup = os.environ.get("SEED_PREV_DAILY_TOPUP")
+    os.environ["SEED_PREV_DAILY_TOPUP"] = "0"   # stay offline; top-up covered in test_seed_prev_context
     try:
         with tempfile.TemporaryDirectory() as td:
             R.PREV_CACHE = Path(td) / "m12_prev_close.json"
@@ -214,6 +217,10 @@ def test_seed_previous_close_cache_guards():
                "KEEP" in (json.loads(R.PREV_CACHE.read_text()).get("close") or {}))
     finally:
         R.PREV_CACHE = old_cache
+        if old_topup is None:
+            os.environ.pop("SEED_PREV_DAILY_TOPUP", None)
+        else:
+            os.environ["SEED_PREV_DAILY_TOPUP"] = old_topup
 
 
 def main():

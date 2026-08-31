@@ -7,7 +7,7 @@ import pandas as pd
 import live_runner as L
 import feeds,fast_feed,flow_map as FM,learn_log,m11_runner as V,m12_entry as Context
 import m13_alerts as Alerts,m13_entry as E,m13_trader as T
-import costs,report
+import costs,report,seed_prev_context as SP
 
 ROOT=L.ROOT;STATE=ROOT/'state13.json';PREV_CACHE=ROOT/'data'/'m13_prev_context.json';SECTOR_OF=dict(pd.read_csv(ROOT/'fno_sector_map.csv').values)
 
@@ -83,8 +83,16 @@ def seed_prev(today,bars_map):
   cl=float(late.close.iloc[-1]);vals[sym]=cl;piv[sym]=(float(q.high.max())+float(q.low.min())+cl)/3;last.append(lm)
  meta={'date':today,'count':len(vals),'last_bar_min':min(last) if last else None,'total_fed':len(bars_map),'generated_utc':dt.datetime.now(dt.timezone.utc).isoformat()}
  if len(vals)<180:
+  # Yahoo lags the 15:25 cycle; top the intraday seed up from the daily
+  # 5-minute history (same >=15:20 official-close floor) before failing.
+  try:
+   vals,piv,added=SP.top_up(vals,piv,today,L.SYMS,deadline_s=420.0)
+   meta['topped_up']=added;print(f'M13 EOD seed daily top-up: +{added} -> {len(vals)} symbols')
+  except Exception as exc:print(f'M13 EOD seed top-up failed: {type(exc).__name__}: {exc}')
+  meta['count']=len(vals)
+ if len(vals)<180:
   # Never overwrite a cache with a partial session (poisoned the cache on 08-28).
-  meta['status']='INSUFFICIENT';meta['policy']='cache not written; next session fails closed until complete EOD seed'
+  meta['status']='INSUFFICIENT';meta['policy']='cache not written; post-close reseed (16:10 IST) or next session fails closed'
   print(f'M13 EOD seed skipped: {len(vals)}/<180 symbols (last bar {meta["last_bar_min"]}) — cache left untouched')
   return meta
  meta.update(close=vals,pivot=piv,status='OK');PREV_CACHE.parent.mkdir(exist_ok=True);PREV_CACHE.write_text(json.dumps(meta,indent=1));return meta
@@ -237,7 +245,19 @@ def finish_eod(st,today,now,bars_map,prev):
 
 def mode_live():
  now=L.now_ist();today=now.strftime('%Y-%m-%d');hhmm=now.strftime('%H:%M');st=load_state(today)
- if st.get('eod_done'):print('M13 EOD done — idle');return False
+ if st.get('eod_done'):
+  # Post-close self-heal: rebuild a short EOD seed from finalised daily data
+  # on the last scheduled cycle so tomorrow's session does not start STALE.
+  if int(st.get('eod_cache_count',0) or 0)<180 and '15:36'<=hhmm<='16:30':
+   print('M13: EOD prev-cache short — post-close reseed from daily history')
+   try:
+    summary=SP.seed_models(['m13'],today,deadline_s=420.0)
+    st['eod_cache_count']=summary['m13']['count']
+    st['prev_meta']={'status':summary['m13'].get('status'),'source':'post-close reseed','date':today,'count':summary['m13']['count']}
+    save_state(st)
+   except Exception as exc:print(f'M13 post-close reseed failed: {type(exc).__name__}: {exc}')
+  else:print('M13 EOD done — idle')
+  return False
  if hhmm<'09:16':save_state(st);print('M13 pre-market — idle');return False
  prev,piv,meta=load_prev(today);st['prev_meta']=meta;vix=prior_vix_return(today,st);bars_map={};feed_cycle=fast_feed.FastFeedCycle()
  for sym in L.SYMS:

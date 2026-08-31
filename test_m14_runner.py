@@ -1,8 +1,10 @@
 """Unit tests for M14 Ultra High-Conviction Paper Runner."""
 import json
+import os
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 import pandas as pd
 import m14_runner as R
 
@@ -86,14 +88,18 @@ class TestM14Runner(unittest.TestCase):
         The 2026-08-28 M12/M13 cache was overwritten with 3 symbols because the
         15:25 cycle's Yahoo feed had not yet delivered 15:20+ bars for most names;
         M12/M13/M14 then stayed STALE for 2026-08-31.
+        The daily top-up is disabled here so this test stays offline: the
+        top-up path itself is covered in test_seed_prev_context.py.
         """
         old_cache = R.PREV_CACHE
+        env = {"SEED_PREV_DAILY_TOPUP": "0"}
         try:
             with tempfile.TemporaryDirectory() as td:
                 R.PREV_CACHE = Path(td) / "m14_prev_context.json"
                 full = {f"S{i}": self._bars("15:20") for i in range(180)}
                 full["LATE"] = self._bars("15:15")
-                j = R.seed_prev("2026-08-28", full)
+                with mock.patch.dict(os.environ, env):
+                    j = R.seed_prev("2026-08-28", full)
                 self.assertEqual(j["status"], "OK")
                 self.assertTrue(R.PREV_CACHE.exists())
                 saved = json.loads(R.PREV_CACHE.read_text())
@@ -101,7 +107,8 @@ class TestM14Runner(unittest.TestCase):
                 self.assertEqual(len(saved["close"]), 180)
 
                 R.PREV_CACHE.write_text(json.dumps({"date": "2026-08-27", "close": {"KEEP": 1.0}}))
-                j = R.seed_prev("2026-08-28", {f"P{i}": self._bars("15:20") for i in range(3)})
+                with mock.patch.dict(os.environ, env):
+                    j = R.seed_prev("2026-08-28", {f"P{i}": self._bars("15:20") for i in range(3)})
                 self.assertEqual(j["status"], "INSUFFICIENT")
                 saved = json.loads(R.PREV_CACHE.read_text())
                 self.assertIn("KEEP", saved.get("close") or {})

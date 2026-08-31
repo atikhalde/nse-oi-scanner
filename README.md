@@ -1,5 +1,30 @@
 # Workflow checkout/race fix
 
+## 2026-08-31 — M12/M13/M14 silent-lockout fix
+
+Symptom: M12/M13 workflows ran green every 5 minutes but fired zero entry
+alerts; M14 never ran at all. Three stacked causes, three fixes:
+
+1. **M14 had no workflow.** `14_live_m14.yml` now exists (same five-minute
+   ticker, tests, state commit, safe push as M12/M13; alert targets fall back
+   M14→M13→M11 env chains automatically).
+2. **`2. Bootstrap` was cancelled at its 55-min job timeout 8+ days running**
+   while `label_learn.py` grinded, so the commit publishing the refreshed
+   history never executed and `data/history` stayed frozen at 2026-08-18. The
+   workflow now commits the refreshed history **immediately** after the
+   download; the slow learners run afterwards, time-boxed and non-fatal.
+3. **The EOD prev-close seed could not reach 180/210 symbols** when Yahoo
+   lagged the 15:25 IST cycle (Friday 08-28 produced a 3-symbol cache →
+   Monday's runners enforced strict no-entry). Each runner's EOD seed now tops
+   up from the daily 5-minute history via `seed_prev_context.py`
+   (`SEED_PREV_DAILY_TOPUP=0` disables), and every live workflow runs a
+   **16:10 IST post-close reseed** (`cron 40 10 * * 1-5`, or dispatch
+   `mode=reseed`) that rebuilds the cache from finalised daily data.
+
+Still open (manual): the Dhan token returns **HTTP 401** — every cycle runs on
+the Yahoo fallback. Rotate the `DHAN_TOKEN` secret to restore the real-time
+primary feed.
+
 ## Confirmed behavior
 
 M12 and M13 are now technically working:

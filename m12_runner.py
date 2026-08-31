@@ -24,6 +24,7 @@ import learn_log
 import m11_runner as V
 import m12_entry as E
 import report
+import seed_prev_context as SP
 import telegram_bot as tg
 import trader
 
@@ -280,11 +281,24 @@ def seed_previous_close_cache(today: str, bars_map: dict[str, pd.DataFrame]) -> 
             "total_fed": len(bars_map),
             "generated_utc": dt.datetime.now(dt.timezone.utc).isoformat()}
     if len(vals) < 180:
+        # Yahoo can lag the 15:25 cycle, leaving most final bars at a 15:15
+        # mark that fails the SQOFF floor above. Top the intraday seed up from
+        # the daily 5-minute history (same >=15:20 quality bar) before failing.
+        try:
+            vals, pivots, added = SP.top_up(vals, pivots, today, L.SYMS,
+                                            deadline_s=420.0)
+            meta["topped_up"] = added
+            print(f"M12 EOD seed daily top-up: +{added} -> {len(vals)} symbols")
+        except Exception as exc:
+            print(f"M12 EOD seed top-up failed: {type(exc).__name__}: {exc}")
+        meta["count"] = len(vals)
+    if len(vals) < 180:
         # Do NOT overwrite an existing cache with a partial session: a 3-symbol
         # write is exactly what poisoned the cache on 2026-08-28 and left M12/M13
-        # STALE for 08-31. Tomorrow fails closed and this cycle logs the reason.
+        # STALE for 08-31. Tomorrow fails closed and this cycle logs the reason;
+        # the 16:10 IST post-close reseed job rebuilds the cache from final data.
         meta["status"] = "INSUFFICIENT"
-        meta["policy"] = "cache not written; next session will fail closed until a complete EOD seed lands"
+        meta["policy"] = "cache not written; post-close reseed (16:10 IST) or next session fails closed"
         print(f"M12 EOD seed skipped: {len(vals)}/<180 complete symbols "
               f"(last bar {meta['last_bar_min']}) — cache left untouched")
         return meta
@@ -587,7 +601,22 @@ def mode_live() -> bool:
     hhmm = now.strftime("%H:%M")
     st = load_state(today)
     if st.get("eod_done"):
-        print("M12: EOD done — idle")
+        # Post-close self-heal: if the EOD seed could not reach 180 symbols
+        # (Yahoo lagged the 15:25 cycle), the last scheduled cycle at 15:35+
+        # rebuilds the cache from finalised daily data so tomorrow starts OK.
+        if int(st.get("eod_cache_count", 0) or 0) < 180 and "15:36" <= hhmm <= "16:30":
+            print("M12: EOD prev-cache short — post-close reseed from daily history")
+            try:
+                summary = SP.seed_models(["m12"], today, deadline_s=420.0)
+                st["eod_cache_count"] = summary["m12"]["count"]
+                st["prev_meta"] = {"status": summary["m12"].get("status"),
+                                   "source": "post-close reseed",
+                                   "date": today, "count": summary["m12"]["count"]}
+                save_state(st)
+            except Exception as exc:
+                print(f"M12 post-close reseed failed: {type(exc).__name__}: {exc}")
+        else:
+            print("M12: EOD done — idle")
         return False
     if hhmm < "09:16":
         print("M12: pre-market — idle")
