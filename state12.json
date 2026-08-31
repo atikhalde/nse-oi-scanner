@@ -5,7 +5,7 @@
  "alerts": [],
  "decisions": [],
  "eod_done": false,
- "cycles": 11,
+ "cycles": 12,
  "prev_meta": {
   "status": "STALE",
   "source": "previous-close cache/history",
@@ -20,5 +20,17 @@
   "yahoo_calls": 210,
   "fallback": null,
   "fed": 210
+ },
+ "prev_repair_marker": "2026-08-31:14",
+ "prev_heal": {
+  "date": "2026-08-28",
+  "count": 3,
+  "last_bar_min": "15:25",
+  "total_fed": 210,
+  "generated_utc": "2026-08-31T09:23:18.596718+00:00",
+  "source": "daily history seed",
+  "status": "INSUFFICIENT",
+  "policy": "cache not written; existing cache left untouched",
+  "last_bar_min_observed": "15:25"
  }
 }
