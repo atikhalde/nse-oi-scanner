@@ -46,17 +46,37 @@ class TestM14Runner(unittest.TestCase):
         exp_tue = R.expected_prev(tue)
         self.assertEqual(exp_tue, R.parse_day("2026-08-31"))
 
-    def test_load_prev_fail_closed_on_stale_history(self):
-        # When cache or history does not match expected_prev, return STALE
+    def test_load_prev_degraded_fallback_on_stale_history(self):
+        # When cache/history lag the expected prior weekday but history exists,
+        # return a usable FALLBACK baseline (M11-style) so M14 still scans and
+        # fires, instead of failing closed for the whole session. The date is
+        # recorded as the actual (degraded) baseline for the audit trail.
         orig_cache = R.PREV_CACHE
         R.PREV_CACHE = self.tmp_path / "non_existent_cache.json"
         try:
             vals, pivs, meta = R.load_prev("2026-08-28")
-            # If historical data files are stale (e.g. 2026-08-18 vs 2026-08-27 expected), status must be STALE
+            # If historical data files are stale (e.g. 2026-08-18 vs 2026-08-27
+            # expected), status must be FALLBACK (usable) and still carry data.
             if meta.get("date") != "2026-08-27":
-                self.assertEqual(meta["status"], "STALE")
+                self.assertEqual(meta["status"], "FALLBACK")
+                self.assertGreaterEqual(meta.get("count", 0), 1)
+                self.assertEqual(len(vals), meta.get("count"))
         finally:
             R.PREV_CACHE = orig_cache
+
+    def test_load_prev_stale_on_no_history(self):
+        # If there is genuinely no history/cache at all, still fail closed STALE.
+        orig_cache = R.PREV_CACHE
+        orig_hist = R.L.HIST
+        try:
+            R.PREV_CACHE = self.tmp_path / "non_existent_cache.json"
+            R.L.HIST = self.tmp_path / "empty_history"   # directory with no CSVs
+            vals, pivs, meta = R.load_prev("2026-08-28")
+            self.assertEqual(meta["status"], "STALE")
+            self.assertEqual(vals, {})
+        finally:
+            R.PREV_CACHE = orig_cache
+            R.L.HIST = orig_hist
 
     def test_portfolio_limits(self):
         st = {

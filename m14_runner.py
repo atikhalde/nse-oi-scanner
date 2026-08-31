@@ -76,6 +76,37 @@ def finite(v) -> bool:
         return False
 
 
+def _fallback_prev_context(today: str) -> tuple[dict[str, float], dict[str, float], str | None, int]:
+    """M11-style best-effort baseline: each symbol's latest history bar before today.
+
+    Returns (closes, pivots, actual_day, age_days). Used only when the pristine
+    previous-weekday cache/history is unavailable, so the scanner can still run
+    (like M11) instead of idling the session STALE. Never changes entry rules.
+    """
+    td = parse_day(today)
+    vals: dict[str, float] = {}
+    pivots: dict[str, float] = {}
+    days = []
+    for sym in L.SYMS:
+        fp = L.HIST / f"{sym}.csv"
+        try:
+            h = pd.read_csv(fp, usecols=["dt", "high", "low", "close"])
+            h["day"] = h["dt"].astype(str).str[:10]
+            q = h[h["day"] < today]
+            if len(q):
+                last = q.iloc[-1]
+                cl = float(last["close"])
+                vals[sym] = cl
+                pivots[sym] = (float(q["high"].max()) + float(q["low"].min()) + cl) / 3.0
+                days.append(str(last["day"]))
+        except Exception:
+            continue
+    actual = pd.Series(days).mode().iloc[0] if days else None
+    day = parse_day(actual)
+    age = (td - day).days if td and day else 999
+    return vals, pivots, actual, age
+
+
 def load_prev(today: str) -> tuple[dict[str, float], dict[str, float], dict]:
     """Strict previous-close source. A stale history file or cache never silently passes."""
     td = parse_day(today)
@@ -118,6 +149,21 @@ def load_prev(today: str) -> tuple[dict[str, float], dict[str, float], dict]:
             "source": "data/history bootstrap",
             "date": str(exp),
             "count": len(vals),
+        }
+
+    # M11-style degraded baseline: run the scanner on the best-available previous
+    # close when the pristine (prior weekday, >=180) source is missing. Entry rules
+    # are untouched; the degradation is recorded for the audit trail.
+    f_vals, f_pivs, f_day, f_age = _fallback_prev_context(today)
+    if f_vals:
+        return f_vals, f_pivs, {
+            "status": "FALLBACK",
+            "source": "data/history fallback (latest available)",
+            "date": f_day,
+            "age_days": f_age,
+            "count": len(f_vals),
+            "expected_previous_weekday": str(exp),
+            "policy": "degraded baseline: not refreshed to prior weekday; entering on best-available previous close (M11-style)",
         }
 
     # Strict Fail Closed: If date != expected previous weekday, do NOT pass as OK
@@ -590,7 +636,7 @@ def mode_live() -> bool:
         return False
 
     prev, piv, meta = load_prev(today)
-    if meta.get("status") != "OK" and SP.should_self_heal(st, today, hhmm):
+    if meta.get("status") not in ("OK", "FALLBACK") and SP.should_self_heal(st, today, hhmm):
         # M14 already has a 16:10 post-close reseed job, but that only fires on
         # the GitHub `schedule` event — which has been unreliable. Recovering
         # in-run means the model is not dead for a whole session when the
@@ -626,7 +672,7 @@ def mode_live() -> bool:
 
     manage(st, today, bars_map, prev)
 
-    if meta.get("status") == "OK" and vix is not None:
+    if meta.get("status") in ("OK", "FALLBACK") and vix is not None:
         dispatch(st, today, collect(st, today, now, bars_map, prev, piv, vix), bars_map, prev)
     else:
         print(f"M14 strict no-entry prev={meta} vix={vix}")

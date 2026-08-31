@@ -214,10 +214,54 @@ def load_previous_closes(today: str) -> tuple[dict[str, float], dict]:
         return vals, {"status": "OK", "source": "data/history bootstrap",
                       "date": common, "age_days": age, "count": len(vals),
                       "expected_previous_weekday": str(expected)}
+    # M11-style degraded baseline: when the pristine source (exact previous
+    # weekday + >=180 symbols) is unavailable, let the model scan and fire
+    # against each symbol's latest available previous close instead of idling
+    # the entire session. Entry rules are untouched — only the baseline is
+    # relaxed, and the degradation is logged in prev_meta for the audit trail.
+    f_vals, _f_pivots, f_day, f_age = _fallback_previous_context(today)
+    if f_vals:
+        return f_vals, {"status": "FALLBACK",
+                        "source": "data/history fallback (latest available)",
+                        "date": f_day, "age_days": f_age, "count": len(f_vals),
+                        "expected_previous_weekday": str(expected),
+                        "policy": ("degraded baseline: history not refreshed to prior "
+                                   "weekday; entering on best-available previous close")}
     return {}, {"status": "STALE", "source": "previous-close cache/history",
                 "date": common, "expected_previous_weekday": str(expected),
                 "age_days": age, "count": len(vals),
                 "policy": "strict no-entry; EOD will seed cache for next session"}
+
+
+def _fallback_previous_context(today: str) -> tuple[dict[str, float], dict[str, float], str | None, int]:
+    """M11-style best-effort baseline: each symbol's latest history bar before today.
+
+    Returns (closes, pivots, actual_day, age_days). Used only when the pristine
+    previous-weekday cache/history is unavailable, so the scanner can still run
+    (like M11) instead of idling the session STALE. Never changes entry rules.
+    """
+    td = _parse_day(today)
+    vals: dict[str, float] = {}
+    pivots: dict[str, float] = {}
+    days = []
+    for sym in L.SYMS:
+        fp = L.HIST / f"{sym}.csv"
+        try:
+            h = pd.read_csv(fp, usecols=["dt", "high", "low", "close"])
+            h["day"] = h["dt"].astype(str).str[:10]
+            q = h[h["day"] < today]
+            if len(q):
+                last = q.iloc[-1]
+                cl = float(last["close"])
+                vals[sym] = cl
+                pivots[sym] = (float(q["high"].max()) + float(q["low"].min()) + cl) / 3.0
+                days.append(str(last["day"]))
+        except Exception:
+            continue
+    actual = pd.Series(days).mode().iloc[0] if days else None
+    day = _parse_day(actual)
+    age = (td - day).days if td and day else 999
+    return vals, pivots, actual, age
 
 
 def load_previous_pivots(today: str) -> dict[str, float]:
@@ -244,7 +288,12 @@ def load_previous_pivots(today: str) -> dict[str, float]:
                             + float(q["close"].iloc[-1])) / 3.0
         except Exception:
             continue
-    return out
+    if len(out) >= 180:
+        return out
+    # M11-style fallback: mine the latest available prior-session pivots when the
+    # exact previous weekday has no data (matches the FALLBACK close baseline).
+    _, fpivots, _, _ = _fallback_previous_context(today)
+    return fpivots
 
 
 def _finite_num(v) -> bool:
@@ -623,11 +672,11 @@ def mode_live() -> bool:
         return False
 
     prev, prev_meta = load_previous_closes(today)
-    if prev_meta.get("status") != "OK" and SP.should_self_heal(st, today, hhmm):
-        # M12 has no 16:10 post-close reseed job (M14 does), and its in-runner
-        # self-heal window (15:36-16:30) is unreachable because the cron
-        # schedule stops at 15:35. Rebuild the baseline from the *finalised*
-        # daily history instead of idling the whole session on a stale one.
+    if prev_meta.get("status") not in ("OK", "FALLBACK") and SP.should_self_heal(st, today, hhmm):
+        # M12 now also has a 16:10 IST post-close reseed job (added to mirror M14),
+        # but if it is missed the in-runner self-heal window (15:36-16:30) is still
+        # needed. Rebuild the baseline from the *finalised* daily history instead of
+        # idling the whole session on a stale one.
         SP.mark_self_heal(st, today, hhmm)
         save_state(st)
         ok, heal_meta = SP.self_heal("m12", today, deadline_s=600.0)
@@ -653,7 +702,7 @@ def mode_live() -> bool:
                   "fallback": _fs["fallback"], "fed": len(bars_map)}
 
     manage_trades(st, today, bars_map)
-    if prev_meta.get("status") == "OK":
+    if prev_meta.get("status") in ("OK", "FALLBACK"):
         pivots = load_previous_pivots(today)
         fresh = collect_candidates(st, today, now, bars_map, prev, pivots)
         dispatch_candidates(st, today, fresh, bars_map)

@@ -71,6 +71,11 @@ def load_prev(today):
    except:continue
   if parse_day(common_fallback) == exp and len(latest_vals_filt) >= 180:
    return latest_vals_filt,latest_piv_filt,{'status':'OK','source':'data/history bootstrap','date':str(common_fallback),'count':len(latest_vals_filt),'expected_previous_weekday':str(exp)}
+  # M11-style degraded baseline: run the scanner on the best-available previous
+  # close when the pristine (prior weekday, >=180) source is missing. Entry rules
+  # are untouched; the degradation is recorded for the audit trail.
+  if latest_vals_filt:
+   return latest_vals_filt,latest_piv_filt,{'status':'FALLBACK','source':'data/history fallback (latest available)','date':str(common_fallback),'count':len(latest_vals_filt),'expected_previous_weekday':str(exp),'policy':'degraded baseline: not refreshed to prior weekday; entering on best-available previous close (M11-style)'}
  return {},{}, {'status':'STALE','source':'m13 cache/history','expected':str(exp),'count':len(vals),'policy':'no entry; seed at EOD'}
 def seed_prev(today,bars_map):
  vals={};piv={};last=[]
@@ -260,10 +265,10 @@ def mode_live():
   return False
  if hhmm<'09:16':save_state(st);print('M13 pre-market — idle');return False
  prev,piv,meta=load_prev(today)
- # M13 has no 16:10 post-close reseed job (M14 does) and its in-runner self-heal
- # window (15:36-16:30) is unreachable because the cron schedule stops at 15:35.
- # Rebuild from finalised daily history rather than idle a whole session STALE.
- if meta.get('status')!='OK' and SP.should_self_heal(st,today,hhmm):
+ # M13 now also has a 16:10 IST post-close reseed job (added to mirror M14), but
+ # if it is missed this in-runner recovery still covers the session. Rebuild from
+ # finalised daily history rather than idle a whole session STALE.
+ if meta.get('status') not in ('OK','FALLBACK') and SP.should_self_heal(st,today,hhmm):
   SP.mark_self_heal(st,today,hhmm);save_state(st)
   ok,heal=SP.self_heal('m13',today,deadline_s=600.0);st['prev_heal']=heal
   if ok:prev,piv,meta=load_prev(today)
@@ -275,7 +280,7 @@ def mode_live():
   except Exception as exc:print(f'M13 feed {sym}: {exc}')
  _fs=feeds.feed_stats();st['feed']={'dhan_calls':_fs['dhan_calls'],'yahoo_calls':_fs['yahoo_calls'],'fallback':_fs['fallback'],'fed':len(bars_map)}
  manage(st,today,bars_map,prev)
- if meta.get('status')=='OK' and finite(vix):dispatch(st,today,collect(st,today,now,bars_map,prev,piv,vix),bars_map,prev)
+ if meta.get('status') in ('OK','FALLBACK') and finite(vix):dispatch(st,today,collect(st,today,now,bars_map,prev,piv,vix),bars_map,prev)
  else:print(f'M13 strict no-entry prev={meta} vix={vix}')
  if eod_ready(st,hhmm):finish_eod(st,today,now,bars_map,prev)
  st['cycles']=int(st.get('cycles',0))+1;save_state(st);print(f"M13 cycle trades={trade_count(st)}/3 open={open_count(st)} candidates={len(st.get('decisions',[]))} feeds={len(bars_map)}");return True
