@@ -641,12 +641,10 @@
  "eod_done": true,
  "cycles": 14,
  "prev_meta": {
-  "status": "OK",
-  "source": "data/history bootstrap",
-  "date": "2026-08-28",
-  "age_days": 3,
-  "count": 210,
-  "expected_previous_weekday": "2026-08-28"
+  "status": "INSUFFICIENT",
+  "source": "post-close reseed",
+  "date": "2026-08-31",
+  "count": 3
  },
  "feed": {
   "dhan_calls": 0,
