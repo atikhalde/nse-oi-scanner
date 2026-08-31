@@ -36,12 +36,15 @@ def main():
     t=pd.date_range('2026-08-28 09:15',periods=3,freq='5min',tz='Asia/Kolkata')
     d=pd.DataFrame({'dt':t,'open':[100.]*3,'high':[101.]*3,'low':[99.]*3,'close':[100.5]*3,'volume':[1000]*3})
     d['t']=d['dt'].dt.strftime('%H:%M');d.loc[d.index[-1],'t']=first_t;return d
-   full={f'S{i}':bars('15:20') for i in range(180)};full['LATE']=bars('15:15')
+   # Yahoo's final NSE bar is a 15:10/15:15 mark for ~99% of symbols — that IS
+   # the official close (the old 15:20 floor caused the 3/210 outage). A
+   # truncated mid-afternoon snapshot is still rejected.
+   full={f'S{i}':bars('15:10') for i in range(180)};full['LATE']=bars('14:55')
    j=R.seed_prev('2026-08-28',full)
-   ok('M13 full 15:20+ seed writes cache',j['status']=='OK' and R.PREV_CACHE.exists())
-   saved=json.loads(R.PREV_CACHE.read_text());ok('M13 pre-15:20 final bar not recorded', 'LATE' not in (saved.get('close') or {}))
+   ok('M13 full seed with Yahoo-final 15:10 bars writes cache',j['status']=='OK' and R.PREV_CACHE.exists())
+   saved=json.loads(R.PREV_CACHE.read_text());ok('M13 truncated (<15:05) final bar not recorded', 'LATE' not in (saved.get('close') or {}))
    R.PREV_CACHE.write_text(json.dumps({'date':'2026-08-27','close':{'KEEP':1.0}}))
-   j=R.seed_prev('2026-08-28',{f'P{i}':bars('15:20') for i in range(3)})
+   j=R.seed_prev('2026-08-28',{f'P{i}':bars('15:10') for i in range(3)})
    ok('M13 partial (<180) seed is refused',j['status']=='INSUFFICIENT')
    ok('M13 partial seed never overwrites an existing cache','KEEP' in (json.loads(R.PREV_CACHE.read_text()).get('close') or {}))
  finally:

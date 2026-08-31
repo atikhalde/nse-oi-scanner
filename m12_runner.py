@@ -261,15 +261,17 @@ def seed_previous_close_cache(today: str, bars_map: dict[str, pd.DataFrame]) -> 
         if b is None or b.empty:
             continue
         allq = b.sort_values("dt")
-        # Official previous-session close needs the 15:20 sq-off bar. Yahoo's
-        # intraday feed can lag a few minutes behind the 15:25 cycle, so accept
-        # the FINAL bar of the session when the 15:20+ slice is missing — but
-        # never a 15:10/15:15 mark: that would seed tomorrow with a stale proxy.
-        late = allq[allq["t"] >= trader.SQOFF]
+        # Official previous-session close: the FINAL bar of a closed session.
+        # Yahoo's NSE data ends at 15:10/15:15 for ~99% of symbols (there is
+        # no 15:20/15:25 bucket after the 15:15 candle for most names), so the
+        # old >=15:20 floor rejected nearly everything — the 3/210 cache
+        # outage of 08-28/08-31. CLOSE_BAR_FLOOR (15:05) still rejects a
+        # truncated mid-afternoon snapshot from a lagged feed.
+        late = allq[allq["t"] >= SP.CLOSE_BAR_FLOOR]
         if late.empty:
             late = allq.tail(1)
         last_min = str(late["t"].iloc[-1])
-        if last_min < trader.SQOFF:
+        if last_min < SP.CLOSE_BAR_FLOOR:
             continue
         close = float(late["close"].iloc[-1])
         vals[sym] = close
@@ -280,9 +282,8 @@ def seed_previous_close_cache(today: str, bars_map: dict[str, pd.DataFrame]) -> 
             "total_fed": len(bars_map),
             "generated_utc": dt.datetime.now(dt.timezone.utc).isoformat()}
     if len(vals) < 180:
-        # Yahoo can lag the 15:25 cycle, leaving most final bars at a 15:15
-        # mark that fails the SQOFF floor above. Top the intraday seed up from
-        # the daily 5-minute history (same >=15:20 quality bar) before failing.
+        # Yahoo can lag the 15:25 cycle; top the intraday seed up from the
+        # daily 5-minute history before failing.
         try:
             vals, pivots, added = SP.top_up(vals, pivots, today, L.SYMS,
                                             deadline_s=420.0)
@@ -606,7 +607,8 @@ def mode_live() -> bool:
         if int(st.get("eod_cache_count", 0) or 0) < 180 and "15:36" <= hhmm <= "16:30":
             print("M12: EOD prev-cache short — post-close reseed from daily history")
             try:
-                summary = SP.seed_models(["m12"], today, deadline_s=420.0)
+                summary = SP.seed_models(["m12"], today, deadline_s=420.0,
+                                         use_local=True)
                 st["eod_cache_count"] = summary["m12"]["count"]
                 st["prev_meta"] = {"status": summary["m12"].get("status"),
                                    "source": "post-close reseed",
@@ -624,13 +626,14 @@ def mode_live() -> bool:
 
     prev, prev_meta = load_previous_closes(today)
     if prev_meta.get("status") != "OK" and SP.should_self_heal(st, today, hhmm):
-        # M12 has no 16:10 post-close reseed job (M14 does), and its in-runner
-        # self-heal window (15:36-16:30) is unreachable because the cron
-        # schedule stops at 15:35. Rebuild the baseline from the *finalised*
-        # daily history instead of idling the whole session on a stale one.
+        # Rebuild the baseline from the *finalised* daily history — local
+        # data/history first (zero network, rate-limit-proof), network only for
+        # what the local files still miss — instead of idling the whole session
+        # on a stale cache.
         SP.mark_self_heal(st, today, hhmm)
         save_state(st)
-        ok, heal_meta = SP.self_heal("m12", today, deadline_s=600.0)
+        ok, heal_meta = SP.self_heal("m12", today, deadline_s=600.0,
+                                     use_local=True)
         st["prev_heal"] = heal_meta
         if ok:
             prev, prev_meta = load_previous_closes(today)
