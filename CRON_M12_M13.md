@@ -29,12 +29,13 @@ Body:
 
 Success is **204 No Content**.
 
-Event types: `live-m1`, `live-m2`, `live-m5` … `live-m13` (also short aliases `m12`, `m13`, …).
+Event types: `live-m1`, `live-m2`, `live-m5` … `live-m14` (also short aliases `m12`, `m13`, `m14`, …).
 
 ## Alternate: workflow_dispatch (must be POST, not GET)
 
 - M12: `https://api.github.com/repos/atikhalde/nse-oi-scanner/actions/workflows/12_live_m12.yml/dispatches`
 - M13: `https://api.github.com/repos/atikhalde/nse-oi-scanner/actions/workflows/13_live_m13.yml/dispatches`
+- M14: `https://api.github.com/repos/atikhalde/nse-oi-scanner/actions/workflows/14_live_m14.yml/dispatches`
 
 Body:
 
@@ -59,6 +60,7 @@ Never put the token in the URL, repository, request body, issue, log, or chat.
 
 - M12: `https://github.com/atikhalde/nse-oi-scanner/actions/workflows/12_live_m12.yml`
 - M13: `https://github.com/atikhalde/nse-oi-scanner/actions/workflows/13_live_m13.yml`
+- M14: `https://github.com/atikhalde/nse-oi-scanner/actions/workflows/14_live_m14.yml`
 
 ## Schedule
 

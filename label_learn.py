@@ -42,6 +42,7 @@ import trader, costs  # noqa: E402
 THRESH_V = dict(gaps=70, bear1030=0.55, green=0.55, bear_tr_dn=(0.70, 0.65), bear_tr_up=(0.30, 0.35))
 
 _DF = {}
+_WARM = {}
 
 
 def _load(sym):
@@ -57,6 +58,21 @@ def _load(sym):
             h["t"] = h["dt"].dt.strftime("%H:%M")
             _DF[sym] = h
     return _DF[sym]
+
+
+def _warmup(sym, day):
+    """Warmup bars for (sym, day), computed once and cached.
+
+    trader.load_warmup() re-reads the whole per-symbol CSV on every call, and
+    label_row() used to call it once per candidate row (~40k rows/day backfill =
+    tens of thousands of redundant 4k-line file reads). That is what pushed the
+    08:45 bootstrap job past its 55-minute limit and cancelled the commit of the
+    refreshed history — leaving M12/M13/M14 with a stale previous-close forever.
+    """
+    key = (sym, day)
+    if key not in _WARM:
+        _WARM[key] = trader.load_warmup(_hist_fp(sym), day)
+    return _WARM[key]
 
 
 def day_universe_stats(day):
@@ -108,7 +124,7 @@ def label_row(r):
     s = 1 if side == "BUY" else -1
     try:
         tr = trader.evaluate(sym, side, etime, float(r["entry"]), str(r["sig"]), t,
-                             warmup=trader.load_warmup(_hist_fp(sym), str(r["day"])),
+                             warmup=_warmup(sym, str(r["day"])),
                              today_date=str(r["day"]), sl_mode="structure")
         if "error" not in tr:
             c = costs.trade_costs(tr)
@@ -142,7 +158,10 @@ def label_row(r):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--day", default=None)
+    ap.add_argument("--day", default=None,
+                    help="label only this session (YYYY-MM-DD)")
+    ap.add_argument("--all", action="store_true", dest="all_days",
+                    help="label every pending session (slow backfill; default is the newest only)")
     ap.add_argument("--force", action="store_true")
     a = ap.parse_args()
     raws = sorted(LEARN.glob("raw_*_*.csv"))
@@ -150,12 +169,30 @@ def main():
     for fp in raws:
         d = fp.stem.split("_", 2)[2]
         days.setdefault(d, []).append(fp)
-    for day, files in sorted(days.items()):
-        if a.day and day != a.day:
-            continue
+    # Default: newest pending session only. The 08:45 bootstrap job must finish
+    # inside the workflow timeout; a multi-day backfill labels ~1,300 rows/day and
+    # previously pushed the job past 55 minutes, cancelling the data commit and
+    # leaving every M12/M13/M14 previous-close STALE.
+    if a.day:
+        pending = [d for d in sorted(days) if d == a.day]
+    elif a.all_days:
+        pending = sorted(days)
+    else:
+        pending = sorted(days)[-1:]
+    for day in pending:
+        files = days[day]
         out_fp = LEARN / f"labeled_{day}.csv"
         if not a.force and out_fp.exists() and all(out_fp.stat().st_mtime > f.stat().st_mtime for f in files):
-            continue
+            # Content guard: a file written against stale/dead history (0 rows
+            # evaluated) must NOT block re-labelling once refreshed history lands.
+            try:
+                prev = pd.read_csv(out_fp, usecols=["cf_net"], dtype=str)
+                has_labels = bool((prev["cf_net"].notna() &
+                                   (prev["cf_net"].astype(str).str.strip() != "")).any())
+                if has_labels:
+                    continue
+            except Exception:
+                pass
         frames = []
         for f in files:
             try:
