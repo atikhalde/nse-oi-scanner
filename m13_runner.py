@@ -245,7 +245,19 @@ def finish_eod(st,today,now,bars_map,prev):
 
 def mode_live():
  now=L.now_ist();today=now.strftime('%Y-%m-%d');hhmm=now.strftime('%H:%M');st=load_state(today)
- if st.get('eod_done'):print('M13 EOD done — idle');return False
+ if st.get('eod_done'):
+  # Post-close self-heal: rebuild a short EOD seed from finalised daily data
+  # on the last scheduled cycle so tomorrow's session does not start STALE.
+  if int(st.get('eod_cache_count',0) or 0)<180 and '15:36'<=hhmm<='16:30':
+   print('M13: EOD prev-cache short — post-close reseed from daily history')
+   try:
+    summary=SP.seed_models(['m13'],today,deadline_s=420.0)
+    st['eod_cache_count']=summary['m13']['count']
+    st['prev_meta']={'status':summary['m13'].get('status'),'source':'post-close reseed','date':today,'count':summary['m13']['count']}
+    save_state(st)
+   except Exception as exc:print(f'M13 post-close reseed failed: {type(exc).__name__}: {exc}')
+  else:print('M13 EOD done — idle')
+  return False
  if hhmm<'09:16':save_state(st);print('M13 pre-market — idle');return False
  prev,piv,meta=load_prev(today);st['prev_meta']=meta;vix=prior_vix_return(today,st);bars_map={};feed_cycle=fast_feed.FastFeedCycle()
  for sym in L.SYMS:

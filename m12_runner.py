@@ -601,7 +601,22 @@ def mode_live() -> bool:
     hhmm = now.strftime("%H:%M")
     st = load_state(today)
     if st.get("eod_done"):
-        print("M12: EOD done — idle")
+        # Post-close self-heal: if the EOD seed could not reach 180 symbols
+        # (Yahoo lagged the 15:25 cycle), the last scheduled cycle at 15:35+
+        # rebuilds the cache from finalised daily data so tomorrow starts OK.
+        if int(st.get("eod_cache_count", 0) or 0) < 180 and "15:36" <= hhmm <= "16:30":
+            print("M12: EOD prev-cache short — post-close reseed from daily history")
+            try:
+                summary = SP.seed_models(["m12"], today, deadline_s=420.0)
+                st["eod_cache_count"] = summary["m12"]["count"]
+                st["prev_meta"] = {"status": summary["m12"].get("status"),
+                                   "source": "post-close reseed",
+                                   "date": today, "count": summary["m12"]["count"]}
+                save_state(st)
+            except Exception as exc:
+                print(f"M12 post-close reseed failed: {type(exc).__name__}: {exc}")
+        else:
+            print("M12: EOD done — idle")
         return False
     if hhmm < "09:16":
         print("M12: pre-market — idle")

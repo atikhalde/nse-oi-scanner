@@ -1,0 +1,253 @@
+diff --git a/.github/workflows/12_live_m12.yml b/.github/workflows/12_live_m12.yml
+index 995ec56b..4578b636 100644
+--- a/.github/workflows/12_live_m12.yml
++++ b/.github/workflows/12_live_m12.yml
+@@ -4,7 +4,7 @@ on:
+   workflow_dispatch:
+     inputs:
+       mode:
+-        description: "'live' = normal cycle · 'test-alert' = send M12 to all 3 targets"
++        description: "'live' = normal cycle · 'test-alert' = send M12 to all 3 targets · 'reseed' = rebuild prev-close cache only"
+         required: true
+         default: "live"
+   schedule:
+@@ -13,6 +13,9 @@ on:
+     - cron: "45-59/5 3 * * 1-5"
+     - cron: "*/5 4-9 * * 1-5"
+     - cron: "0,5 10 * * 1-5"
++    # 16:10 IST post-close: rebuild tomorrow's prev-close cache from finalised
++    # daily data (covers Yahoo lag at the 15:25 EOD cycle).
++    - cron: "40 10 * * 1-5"
+ 
+ permissions:
+   contents: write
+@@ -52,12 +55,16 @@ jobs:
+         run: |
+           python -u test_fast_feed.py
+           python -u test_m12_entry.py
++          python -u test_seed_prev_context.py
+       - name: M12 three-target alert test
+         if: github.event.inputs.mode == 'test-alert'
+         run: python -u m12_runner.py --test-alert
+       - name: M12 paper cycle
+-        if: github.event.inputs.mode != 'test-alert'
++        if: github.event.inputs.mode != 'test-alert' && github.event.inputs.mode != 'reseed' && github.event.schedule != '40 10 * * 1-5'
+         run: python -u m12_runner.py --loop 1
++      - name: M12 post-close prev-close reseed
++        if: github.event.schedule == '40 10 * * 1-5' || github.event.inputs.mode == 'reseed'
++        run: python -u seed_prev_context.py --models m12
+       - name: Commit M12 state, audit labels, and report
+         if: always()
+         run: |
+diff --git a/.github/workflows/13_live_m13.yml b/.github/workflows/13_live_m13.yml
+index da40aa47..55dbc89a 100644
+--- a/.github/workflows/13_live_m13.yml
++++ b/.github/workflows/13_live_m13.yml
+@@ -4,7 +4,7 @@ on:
+   workflow_dispatch:
+     inputs:
+       mode:
+-        description: "'live' = normal cycle · 'test-alert' = send M13 to all 3 targets"
++        description: "'live' = normal cycle · 'test-alert' = send M13 to all 3 targets · 'reseed' = rebuild prev-close cache only"
+         required: true
+         default: "live"
+   schedule:
+@@ -13,6 +13,9 @@ on:
+     - cron: "45-59/5 3 * * 1-5"
+     - cron: "*/5 4-9 * * 1-5"
+     - cron: "0,5 10 * * 1-5"
++    # 16:10 IST post-close: rebuild tomorrow's prev-close cache from finalised
++    # daily data (covers Yahoo lag at the 15:25 EOD cycle).
++    - cron: "40 10 * * 1-5"
+ 
+ permissions:
+   contents: write
+@@ -54,12 +57,16 @@ jobs:
+           python -u test_m13_trader.py
+           python -u test_m13_runner.py
+           python -u test_m13_alerts.py
++          python -u test_seed_prev_context.py
+       - name: M13 three-target alert test
+         if: github.event.inputs.mode == 'test-alert'
+         run: python -u m13_runner.py --test-alert
+       - name: M13 paper cycle
+-        if: github.event.inputs.mode != 'test-alert'
++        if: github.event.inputs.mode != 'test-alert' && github.event.inputs.mode != 'reseed' && github.event.schedule != '40 10 * * 1-5'
+         run: python -u m13_runner.py --loop 1
++      - name: M13 post-close prev-close reseed
++        if: github.event.schedule == '40 10 * * 1-5' || github.event.inputs.mode == 'reseed'
++        run: python -u seed_prev_context.py --models m13
+       - name: Commit M13 state, candidate ledger, and report
+         if: always()
+         run: |
+diff --git a/.github/workflows/14_live_m14.yml b/.github/workflows/14_live_m14.yml
+new file mode 100644
+index 00000000..56cc98ee
+--- /dev/null
++++ b/.github/workflows/14_live_m14.yml
+@@ -0,0 +1,85 @@
++name: "14. LIVE M14 — ultra high-conviction A+ (max 3/day, paper-only)"
++
++on:
++  workflow_dispatch:
++    inputs:
++      mode:
++        description: "'live' = normal cycle · 'test-alert' = send M14 to all 3 targets · 'reseed' = rebuild prev-close cache only"
++        required: true
++        default: "live"
++  schedule:
++    # Five-minute paper ticker: 09:15–15:30 IST (03:45–10:00 UTC), weekdays.
++    - cron: "45-59/5 3 * * 1-5"
++    - cron: "*/5 4-9 * * 1-5"
++    - cron: "0,5 10 * * 1-5"
++    # 16:10 IST post-close: rebuild tomorrow's prev-close cache from finalised
++    # daily data. Covers the case where Yahoo lagged the 15:25 EOD cycle and
++    # the in-runner seed could not reach 180 symbols.
++    - cron: "40 10 * * 1-5"
++
++permissions:
++  contents: write
++
++concurrency:
++  group: live-paper-m14
++  cancel-in-progress: false
++
++jobs:
++  live-m14:
++    runs-on: ubuntu-latest
++    timeout-minutes: 25
++    env:
++      DHAN_TOKEN: ${{ secrets.DHAN_TOKEN }}
++      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
++      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
++      # Preferred M14-specific extra targets.
++      M14_BOT_TOKEN_A: ${{ secrets.M14_BOT_TOKEN_A }}
++      M14_CHAT_ID_A: ${{ secrets.M14_CHAT_ID_A }}
++      M14_BOT_TOKEN_B: ${{ secrets.M14_BOT_TOKEN_B }}
++      M14_CHAT_ID_B: ${{ secrets.M14_CHAT_ID_B }}
++      # Fallback reuse of the established M13/M11 A/B targets.
++      M13_BOT_TOKEN_A: ${{ secrets.M13_BOT_TOKEN_A }}
++      M13_CHAT_ID_A: ${{ secrets.M13_CHAT_ID_A }}
++      M13_BOT_TOKEN_B: ${{ secrets.M13_BOT_TOKEN_B }}
++      M13_CHAT_ID_B: ${{ secrets.M13_CHAT_ID_B }}
++      M11_BOT_TOKEN_A: ${{ secrets.M11_BOT_TOKEN_A }}
++      M11_CHAT_ID_A: ${{ secrets.M11_CHAT_ID_A }}
++      M11_BOT_TOKEN_B: ${{ secrets.M11_BOT_TOKEN_B }}
++      M11_CHAT_ID_B: ${{ secrets.M11_CHAT_ID_B }}
++    steps:
++      - uses: actions/checkout@v5
++        with:
++          ref: main
++          fetch-depth: 0
++      - uses: actions/setup-python@v6
++        with:
++          python-version: "3.12"
++      - run: pip install -r requirements.txt
++      - name: M14 tests
++        if: github.event.schedule != '40 10 * * 1-5' && github.event.inputs.mode != 'reseed'
++        run: |
++          python -u test_fast_feed.py
++          python -u test_m14_entry.py
++          python -u test_m14_trader.py
++          python -u test_m14_runner.py
++          python -u test_seed_prev_context.py
++      - name: M14 three-target alert test
++        if: github.event.inputs.mode == 'test-alert'
++        run: python -u m14_runner.py --test-alert
++      - name: M14 paper cycle
++        if: github.event.inputs.mode != 'test-alert' && github.event.inputs.mode != 'reseed' && github.event.schedule != '40 10 * * 1-5'
++        run: python -u m14_runner.py --loop 1
++      - name: M14 post-close prev-close reseed
++        if: github.event.schedule == '40 10 * * 1-5' || github.event.inputs.mode == 'reseed'
++        run: python -u seed_prev_context.py --models m14
++      - name: Commit M14 state, candidate ledger, and report
++        if: always()
++        run: |
++          git config user.name "paper-bot"
++          git config user.email "paper-bot@users.noreply.github.com"
++          [ ! -e state14.json ] || git add -A -- state14.json
++          [ ! -f data/m14_prev_context.json ] || git add -- data/m14_prev_context.json
++          find learn -maxdepth 1 \( -name 'm14_candidates_*.csv' -o -name 'raw_M14_*.csv' \) -print0 | xargs -0 -r git add --
++          find . -maxdepth 1 -name 'paper_test_M14_*.xlsx' -print0 | xargs -0 -r git add --
++          git diff --cached --quiet || git commit -m "m14cycle $(date -u +%F_%H%M)Z"
++          bash workflow_safe_push.sh
+diff --git a/.github/workflows/2_bootstrap.yml b/.github/workflows/2_bootstrap.yml
+index 8eb569c9..bab74653 100644
+--- a/.github/workflows/2_bootstrap.yml
++++ b/.github/workflows/2_bootstrap.yml
+@@ -15,7 +15,7 @@ concurrency:
+ jobs:
+   bootstrap:
+     runs-on: ubuntu-latest
+-    timeout-minutes: 55
++    timeout-minutes: 70
+     env:
+       DHAN_TOKEN: ${{ secrets.DHAN_TOKEN }}
+     steps:
+@@ -27,31 +27,47 @@ jobs:
+         with:
+           python-version: "3.12"
+       - run: pip install -r requirements.txt
+-      - run: python -u live_runner.py --bootstrap refresh-60d
+-      - run: python -u m9_bootstrap.py || echo "m9 bootstrap failed (non-fatal)"   # M9 cash data-farm history9 (~1,050 syms)
+-      - run: python -u label_learn.py   # Phase-0 Learning Log labeler (ML dataset build-up)
+-      - name: commit data safely against moving main
++
++      # 1) Refresh history FIRST and commit it IMMEDIATELY. This data is the
++      #    prev-close fallback for M12/M13/M14; losing it to a later timeout
++      #    is what froze data/history at 2026-08-18 and silenced the models.
++      - name: Refresh 60d intraday history
++        timeout-minutes: 35
++        run: python -u live_runner.py --bootstrap refresh-60d
++      - name: Commit refreshed history (do not let later steps lose it)
++        if: always()
+         run: |
+           set -euo pipefail
+           git config user.name "paper-bot"
+           git config user.email "paper-bot@users.noreply.github.com"
+-          git add data/ learn/
++          git add data/
+           if git diff --cached --quiet; then
+-            echo "nothing to commit"
++            echo "no history changes to commit"
+             exit 0
+           fi
+           git commit -m "bootstrap $(date -u +%F_%H%M)Z"
++          bash workflow_safe_push.sh
+ 
+-          # Live paper workflows may advance main while the 20–30 minute data
+-          # refresh is running. Rebase and retry instead of losing the refresh.
+-          for attempt in 1 2 3 4 5 6; do
+-            echo "bootstrap push attempt ${attempt}/6"
+-            git pull --rebase origin main
+-            if git push origin HEAD:main; then
+-              echo "bootstrap data committed successfully"
+-              exit 0
+-            fi
+-            sleep $((attempt * 5))
+-          done
+-          echo "bootstrap push failed after 6 rebased attempts" >&2
+-          exit 1
++      # 2) Slow learners run AFTER the history commit, each time-boxed and
++      #    non-fatal: their artifacts are committed if they finish in time.
++      - name: M9 cash data-farm history (non-fatal)
++        timeout-minutes: 10
++        continue-on-error: true
++        run: python -u m9_bootstrap.py || echo "m9 bootstrap failed (non-fatal)"
++      - name: Phase-0 Learning Log labeler (time-boxed, non-fatal)
++        timeout-minutes: 15
++        continue-on-error: true
++        run: python -u label_learn.py
++      - name: Commit learn artifacts (always)
++        if: always()
++        run: |
++          set -euo pipefail
++          git config user.name "paper-bot"
++          git config user.email "paper-bot@users.noreply.github.com"
++          git add learn/ || true
++          if git diff --cached --quiet; then
++            echo "no learn changes to commit"
++            exit 0
++          fi
++          git commit -m "bootstrap-learn $(date -u +%F_%H%M)Z"
++          bash workflow_safe_push.sh

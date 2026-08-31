@@ -569,7 +569,21 @@ def mode_live() -> bool:
     st = load_state(today)
 
     if st.get("eod_done"):
-        print("M14 EOD done — idle")
+        # Post-close self-heal: rebuild a short EOD seed from finalised daily
+        # data on the last scheduled cycle so tomorrow does not start STALE.
+        if int(st.get("eod_cache_count", 0) or 0) < 180 and "15:36" <= hhmm <= "16:30":
+            print("M14: EOD prev-cache short — post-close reseed from daily history")
+            try:
+                summary = SP.seed_models(["m14"], today, deadline_s=420.0)
+                st["eod_cache_count"] = summary["m14"]["count"]
+                st["prev_meta"] = {"status": summary["m14"].get("status"),
+                                   "source": "post-close reseed",
+                                   "date": today, "count": summary["m14"]["count"]}
+                save_state(st)
+            except Exception as exc:
+                print(f"M14 post-close reseed failed: {type(exc).__name__}: {exc}")
+        else:
+            print("M14 EOD done — idle")
         return False
     if hhmm < "09:16":
         save_state(st)
