@@ -24,6 +24,11 @@ def yahoo_df():
         "open": [100], "high": [101], "low": [99], "close": [100.5], "volume": [1000],
     })
 
+def dhan_payload():
+    ts = int(pd.Timestamp("2026-08-11 10:00", tz="Asia/Kolkata").timestamp())
+    return {"timestamp": [ts], "open": [100], "high": [101], "low": [99],
+            "close": [100.5], "volume": [1000]}
+
 def test_yahoo_session_contract():
     """Regression: a missing _yahoo_session NameError was swallowed by the
     broad except inside feeds.fetch_bars_yahoo, silently returning None for
@@ -85,7 +90,7 @@ def main():
         os.environ["DHAN_TOKEN"] = "dummy"
         def post(*a, **k):
             calls["post"] += 1
-            return Resp(429)
+            return Resp(200, dhan_payload())
         def yfetch(*a, **k):
             calls["get"] += 1
             return yahoo_df()
@@ -94,20 +99,29 @@ def main():
         c = F.FastFeedCycle()
         now = dt.datetime(2026, 8, 11, 10, 0, tzinfo=dt.timezone(dt.timedelta(hours=5, minutes=30)))
         d, s = c.fetch("AAA", 1, now)
-        ok("first Dhan 429 falls through immediately to Yahoo",
-           s == "yahoo-fast" and len(d) == 1 and calls == {"post": 1, "get": 1})
+        ok("Yahoo is primary: Dhan untouched while Yahoo works",
+           s == "yahoo-fast" and len(d) == 1 and calls == {"post": 0, "get": 1})
         d, s = c.fetch("BBB", 2, now)
-        ok("circuit breaker skips Dhan for every remaining symbol",
-           s == "yahoo-fast" and calls == {"post": 1, "get": 2})
-        ok("429 reason logged once per cycle", c.trip_reason == "HTTP 429")
+        ok("every remaining symbol uses the same Yahoo-first ladder",
+           s == "yahoo-fast" and calls == {"post": 0, "get": 2})
+        ok("no fallback reason while Yahoo serves the cycle", c.trip_reason is None)
 
-        def badfetch(*a, **k):
+        def empty_yahoo(*a, **k):
             calls["get"] += 1
-            raise F.requests.Timeout("x")
-        F.feeds.fetch_bars_yahoo = badfetch
-        before = calls["get"]
+            return None
+        F.feeds.fetch_bars_yahoo = empty_yahoo
         d, s = c.fetch("CCC", 3, now)
-        ok("Yahoo failure has no retry or sleep", d is None and s == "none" and calls["get"] == before + 1)
+        ok("Yahoo miss falls through immediately to Dhan fallback",
+           s == "dhan-fast" and len(d) == 1 and calls == {"post": 1, "get": 3})
+        ok("fallback reason logged once per cycle", c.trip_reason == "empty Yahoo response")
+
+        def post429(*a, **k):
+            calls["post"] += 1
+            return Resp(429)
+        F.requests.post = post429
+        d, s = c.fetch("DDD", 4, now)
+        ok("Dhan fallback failure has no retry or sleep",
+           d is None and s == "none" and calls == {"post": 2, "get": 4})
     finally:
         F.requests.post = oldpost
         F.feeds.fetch_bars_yahoo = oldyahoo
