@@ -158,7 +158,7 @@
    "nbars": 72
   },
   "DALBHARAT": {
-   "nbars": 72
+   "nbars": 75
   },
   "DELHIVERY": {
    "nbars": 72
@@ -185,7 +185,7 @@
    "nbars": 72
   },
   "EXIDEIND": {
-   "nbars": 72
+   "nbars": 75
   },
   "FEDERALBNK": {
    "nbars": 72
@@ -428,7 +428,7 @@
    "nbars": 72
   },
   "NUVAMA": {
-   "nbars": 72
+   "nbars": 75
   },
   "NYKAA": {
    "nbars": 72
@@ -689,7 +689,9 @@
  },
  "alerts": [
   "360ONE:ENTRY",
-  "360ONE:EXIT_SL"
+  "360ONE:EXIT_SL",
+  "M14:2026-09-02:EOD_SUMMARY",
+  "M14:2026-09-02:EOD_DOCUMENT"
  ],
  "decisions": [
   {
@@ -3994,8 +3996,8 @@
    "why": "feature failure: AttributeError: module 'm14_entry' has no attribute 'causal_price_features'"
   }
  ],
- "eod_done": false,
- "cycles": 26,
+ "eod_done": true,
+ "cycles": 27,
  "prev_meta": {
   "status": "OK",
   "source": "m14_prev_context.json",
@@ -4012,5 +4014,6 @@
   "yahoo_calls": 210,
   "fallback": null,
   "fed": 210
- }
+ },
+ "eod_cache_count": 210
 }
