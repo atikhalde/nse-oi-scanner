@@ -11,7 +11,7 @@
    "nbars": 72
   },
   "ADANIENSOL": {
-   "nbars": 72
+   "nbars": 73
   },
   "ADANIENT": {
    "nbars": 72
@@ -53,7 +53,7 @@
    "nbars": 72
   },
   "AUBANK": {
-   "nbars": 72
+   "nbars": 73
   },
   "AUROPHARMA": {
    "nbars": 72
@@ -62,7 +62,7 @@
    "nbars": 72
   },
   "BAJAJ-AUTO": {
-   "nbars": 72
+   "nbars": 73
   },
   "BAJAJFINSV": {
    "nbars": 72
@@ -134,10 +134,10 @@
    "nbars": 72
   },
   "COALINDIA": {
-   "nbars": 72
+   "nbars": 73
   },
   "COCHINSHIP": {
-   "nbars": 72
+   "nbars": 73
   },
   "COFORGE": {
    "nbars": 72
@@ -149,7 +149,7 @@
    "nbars": 72
   },
   "CROMPTON": {
-   "nbars": 72
+   "nbars": 73
   },
   "CUMMINSIND": {
    "nbars": 72
@@ -158,7 +158,7 @@
    "nbars": 72
   },
   "DALBHARAT": {
-   "nbars": 72
+   "nbars": 75
   },
   "DELHIVERY": {
    "nbars": 72
@@ -185,7 +185,7 @@
    "nbars": 72
   },
   "EXIDEIND": {
-   "nbars": 72
+   "nbars": 75
   },
   "FEDERALBNK": {
    "nbars": 72
@@ -305,7 +305,7 @@
    "nbars": 72
   },
   "ITC": {
-   "nbars": 72
+   "nbars": 73
   },
   "JINDALSTEL": {
    "nbars": 72
@@ -323,7 +323,7 @@
    "nbars": 72
   },
   "KALYANKJIL": {
-   "nbars": 72
+   "nbars": 73
   },
   "KAYNES": {
    "nbars": 72
@@ -338,7 +338,7 @@
    "nbars": 72
   },
   "KPITTECH": {
-   "nbars": 72
+   "nbars": 73
   },
   "LAURUSLABS": {
    "nbars": 72
@@ -407,31 +407,31 @@
    "nbars": 72
   },
   "NATIONALUM": {
-   "nbars": 72
+   "nbars": 73
   },
   "NAUKRI": {
    "nbars": 72
   },
   "NBCC": {
-   "nbars": 72
+   "nbars": 73
   },
   "NESTLEIND": {
-   "nbars": 72
+   "nbars": 73
   },
   "NHPC": {
    "nbars": 72
   },
   "NMDC": {
-   "nbars": 72
+   "nbars": 73
   },
   "NTPC": {
    "nbars": 72
   },
   "NUVAMA": {
-   "nbars": 72
+   "nbars": 75
   },
   "NYKAA": {
-   "nbars": 72
+   "nbars": 73
   },
   "OBEROIRLTY": {
    "nbars": 72
@@ -440,7 +440,7 @@
    "nbars": 72
   },
   "OIL": {
-   "nbars": 72
+   "nbars": 73
   },
   "ONGC": {
    "nbars": 72
@@ -476,7 +476,7 @@
    "nbars": 72
   },
   "PNB": {
-   "nbars": 72
+   "nbars": 73
   },
   "PNBHOUSING": {
    "nbars": 72
@@ -491,7 +491,7 @@
    "nbars": 72
   },
   "POWERINDIA": {
-   "nbars": 72
+   "nbars": 73
   },
   "PREMIERENE": {
    "nbars": 72
@@ -503,7 +503,7 @@
    "nbars": 72
   },
   "RBLBANK": {
-   "nbars": 72
+   "nbars": 73
   },
   "RECLTD": {
    "nbars": 72
@@ -575,7 +575,7 @@
    "nbars": 72
   },
   "TIINDIA": {
-   "nbars": 72
+   "nbars": 73
   },
   "TITAN": {
    "nbars": 72
@@ -608,7 +608,7 @@
    "nbars": 72
   },
   "VBL": {
-   "nbars": 72
+   "nbars": 73
   },
   "VEDL": {
    "nbars": 72
@@ -695,7 +695,9 @@
  "alerts": [
   "360ONE:ENTRY",
   "360ONE:TRAIL_ARMED",
-  "360ONE:EXIT_TRAIL"
+  "360ONE:EXIT_TRAIL",
+  "M14:2026-09-04:EOD_SUMMARY",
+  "M14:2026-09-04:EOD_DOCUMENT"
  ],
  "decisions": [
   {
@@ -4700,8 +4702,8 @@
    "why": "feature failure: AttributeError: module 'm14_entry' has no attribute 'causal_price_features'"
   }
  ],
- "eod_done": false,
- "cycles": 25,
+ "eod_done": true,
+ "cycles": 26,
  "prev_meta": {
   "status": "OK",
   "source": "m14_prev_context.json",
@@ -4718,5 +4720,6 @@
   "yahoo_calls": 210,
   "fallback": null,
   "fed": 210
- }
+ },
+ "eod_cache_count": 210
 }
