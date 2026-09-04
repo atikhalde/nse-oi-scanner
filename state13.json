@@ -59,7 +59,7 @@
    "nbars": 72
   },
   "AXISBANK": {
-   "nbars": 72
+   "nbars": 73
   },
   "BAJAJ-AUTO": {
    "nbars": 72
@@ -95,7 +95,7 @@
    "nbars": 72
   },
   "BHEL": {
-   "nbars": 72
+   "nbars": 73
   },
   "BIOCON": {
    "nbars": 72
@@ -155,10 +155,10 @@
    "nbars": 72
   },
   "DABUR": {
-   "nbars": 72
+   "nbars": 73
   },
   "DALBHARAT": {
-   "nbars": 72
+   "nbars": 75
   },
   "DELHIVERY": {
    "nbars": 72
@@ -185,7 +185,7 @@
    "nbars": 72
   },
   "EXIDEIND": {
-   "nbars": 72
+   "nbars": 75
   },
   "FEDERALBNK": {
    "nbars": 72
@@ -221,7 +221,7 @@
    "nbars": 72
   },
   "HAL": {
-   "nbars": 72
+   "nbars": 73
   },
   "HAVELLS": {
    "nbars": 72
@@ -314,7 +314,7 @@
    "nbars": 72
   },
   "JSWENERGY": {
-   "nbars": 72
+   "nbars": 73
   },
   "JSWSTEEL": {
    "nbars": 72
@@ -347,7 +347,7 @@
    "nbars": 72
   },
   "LICI": {
-   "nbars": 72
+   "nbars": 73
   },
   "LODHA": {
    "nbars": 72
@@ -362,7 +362,7 @@
    "nbars": 72
   },
   "LUPIN": {
-   "nbars": 72
+   "nbars": 73
   },
   "M&M": {
    "nbars": 72
@@ -404,7 +404,7 @@
    "nbars": 72
   },
   "NAM-INDIA": {
-   "nbars": 72
+   "nbars": 73
   },
   "NATIONALUM": {
    "nbars": 72
@@ -413,7 +413,7 @@
    "nbars": 72
   },
   "NBCC": {
-   "nbars": 72
+   "nbars": 73
   },
   "NESTLEIND": {
    "nbars": 72
@@ -428,7 +428,7 @@
    "nbars": 72
   },
   "NUVAMA": {
-   "nbars": 72
+   "nbars": 75
   },
   "NYKAA": {
    "nbars": 72
@@ -449,7 +449,7 @@
    "nbars": 72
   },
   "PATANJALI": {
-   "nbars": 72
+   "nbars": 73
   },
   "PAYTM": {
    "nbars": 72
@@ -494,7 +494,7 @@
    "nbars": 72
   },
   "PREMIERENE": {
-   "nbars": 72
+   "nbars": 73
   },
   "PRESTIGE": {
    "nbars": 72
@@ -509,7 +509,7 @@
    "nbars": 72
   },
   "RELIANCE": {
-   "nbars": 72
+   "nbars": 73
   },
   "RVNL": {
    "nbars": 72
@@ -545,7 +545,7 @@
    "nbars": 72
   },
   "SUNPHARMA": {
-   "nbars": 72
+   "nbars": 73
   },
   "SUPREMEIND": {
    "nbars": 72
@@ -557,13 +557,13 @@
    "nbars": 72
   },
   "TATACONSUM": {
-   "nbars": 72
+   "nbars": 73
   },
   "TATAELXSI": {
    "nbars": 72
   },
   "TATAPOWER": {
-   "nbars": 72
+   "nbars": 73
   },
   "TATASTEEL": {
    "nbars": 72
@@ -593,7 +593,7 @@
    "nbars": 72
   },
   "ULTRACEMCO": {
-   "nbars": 72
+   "nbars": 73
   },
   "UNIONBANK": {
    "nbars": 72
@@ -617,10 +617,10 @@
    "nbars": 72
   },
   "VOLTAS": {
-   "nbars": 72
+   "nbars": 73
   },
   "WAAREEENER": {
-   "nbars": 72
+   "nbars": 73
   },
   "WIPRO": {
    "nbars": 72
@@ -1040,7 +1040,9 @@
   "HDFCLIFE:EXIT_RUNNER",
   "BLUESTARCO:ENTRY",
   "HDFCLIFE:EXIT_TIME",
-  "BLUESTARCO:EXIT_SL"
+  "BLUESTARCO:EXIT_SL",
+  "M13:2026-09-04:EOD_SUMMARY",
+  "M13:2026-09-04:EOD_DOCUMENT"
  ],
  "decisions": [
   {
@@ -11793,8 +11795,8 @@
    "why": "S1 Morning Base is mandatory"
   }
  ],
- "eod_done": false,
- "cycles": 26,
+ "eod_done": true,
+ "cycles": 27,
  "prev_meta": {
   "status": "OK",
   "source": "m13_prev_context.json",
@@ -11811,5 +11813,6 @@
   "yahoo_calls": 210,
   "fallback": null,
   "fed": 210
- }
+ },
+ "eod_cache_count": 210
 }
