@@ -575,16 +575,16 @@
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 12:31",
+     "OPEN 13:31",
      11,
-     1733.800048828125,
-     "12:31"
+     1727.5,
+     "13:31"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "12:31",
-   "pnl": 387.0,
-   "r_total": 0.46,
+   "leg2_time": "13:31",
+   "pnl": 456.0,
+   "r_total": 0.55,
    "closed": false,
    "events": [
     {
@@ -618,16 +618,16 @@
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 12:31",
+     "OPEN 13:31",
      90,
-     388.1000061035156,
-     "12:31"
+     388.79998779296875,
+     "13:31"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "12:31",
-   "pnl": 540.0,
-   "r_total": 0.6,
+   "leg2_time": "13:31",
+   "pnl": 603.0,
+   "r_total": 0.68,
    "closed": false,
    "events": [
     {
@@ -661,16 +661,16 @@
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 12:31",
+     "OPEN 13:31",
      27,
-     1097.199951171875,
-     "12:31"
+     1096.699951171875,
+     "13:31"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "12:31",
-   "pnl": 211.0,
-   "r_total": 0.24,
+   "leg2_time": "13:31",
+   "pnl": 224.0,
+   "r_total": 0.25,
    "closed": false,
    "events": [
     {
@@ -698,28 +698,28 @@
    "qty_full": 28,
    "qty_capped": true,
    "capital": 37145.0,
-   "tp1": 5941.2,
-   "tp2": 5941.2,
+   "tp1": 5941.19,
+   "tp2": 5941.19,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 12:31",
+     "OPEN 13:31",
      21,
-     1803.800048828125,
-     "12:31"
+     1804.0999755859375,
+     "13:31"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "12:31",
-   "pnl": 735.0,
-   "r_total": 0.83,
+   "leg2_time": "13:31",
+   "pnl": 741.0,
+   "r_total": 0.84,
    "closed": false,
    "events": [
     {
      "key": "ENTRY",
      "time": "09:50",
-     "price": 1768.800048828125
+     "price": 1768.8
     }
    ],
    "sector": "NEWAGE"
@@ -741,28 +741,33 @@
    "qty_full": 20,
    "qty_capped": false,
    "capital": 49244.0,
-   "tp1": -705.68,
-   "tp2": -705.68,
+   "tp1": -705.67,
+   "tp2": -705.67,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 12:31",
+     "SL 12:55",
      20,
-     2484.39990234375,
-     "12:31"
+     2494.1986911621093,
+     "12:55"
     ]
    ],
-   "exit_text": "OPEN",
-   "leg2_time": "12:31",
-   "pnl": -444.0,
-   "r_total": -0.69,
-   "closed": false,
+   "exit_text": "100% SL 12:55",
+   "leg2_time": "12:55",
+   "pnl": -640.0,
+   "r_total": -1.0,
+   "closed": true,
    "events": [
     {
      "key": "ENTRY",
      "time": "09:35",
-     "price": 2462.199951171875
+     "price": 2462.2
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "12:55",
+     "price": 2494.1986911621093
     }
    ],
    "sector": "CHEMICALS"
@@ -817,7 +822,8 @@
   "LODHA:ENTRY",
   "PAYTM:ENTRY",
   "SRF:ENTRY",
-  "SUPREMEIND:ENTRY"
+  "SUPREMEIND:ENTRY",
+  "SRF:EXIT_SL"
  ],
  "gate": {
   "status": "OK",
@@ -826,68 +832,52 @@
  "eod_done": false,
  "cycles": 0,
  "sector_board": {
-  "time": "12:30",
-  "net_tilt": -8.7,
-  "tilt": "STRONG BEARISH",
-  "bull_q": [
-   [
-    "TELECOM",
-    83.69
-   ]
-  ],
+  "time": "13:31",
+  "net_tilt": -5.8,
+  "tilt": "BEARISH",
+  "bull_q": [],
   "bear_q": [
    [
-    "CHEMICALS",
-    86.14
-   ],
-   [
     "BUILDMAT",
-    79.13
+    92.21
    ]
   ],
   "persist_bull": [
    [
     "TELECOM",
-    94.67
+    89.92
    ],
    [
     "NEWAGE",
-    76.26
+    61.69
    ],
    [
     "INSURANCE",
-    65.57
+    57.91
    ]
   ],
   "persist_bear": [
    [
-    "CHEMICALS",
-    94.58
-   ],
-   [
     "BUILDMAT",
-    91.42
+    98.48
    ],
    [
     "REALTY",
-    82.08
+    81.39
+   ],
+   [
+    "CHEMICALS",
+    77.39
    ]
   ],
   "hold": "timed",
   "held_bull": [
-   "HOSPITALS",
    "INSURANCE",
-   "IT",
-   "MEDIA",
-   "NEWAGE",
    "TELECOM"
   ],
   "held_bear": [
    "BUILDMAT",
-   "CHEMICALS",
-   "LOGISTICS",
-   "RAILWAYS",
-   "REALTY"
+   "CHEMICALS"
   ]
  },
  "skipped": [
