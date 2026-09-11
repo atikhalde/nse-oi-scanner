@@ -575,16 +575,16 @@
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 13:31",
+     "OPEN 13:56",
      11,
-     1727.5,
-     "13:31"
+     1724.5,
+     "13:56"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "13:31",
-   "pnl": 456.0,
-   "r_total": 0.55,
+   "leg2_time": "13:56",
+   "pnl": 490.0,
+   "r_total": 0.58,
    "closed": false,
    "events": [
     {
@@ -618,16 +618,16 @@
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 13:31",
+     "OPEN 13:56",
      90,
-     388.79998779296875,
-     "13:31"
+     388.5,
+     "13:56"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "13:31",
-   "pnl": 603.0,
-   "r_total": 0.68,
+   "leg2_time": "13:56",
+   "pnl": 576.0,
+   "r_total": 0.64,
    "closed": false,
    "events": [
     {
@@ -661,16 +661,16 @@
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 13:31",
+     "OPEN 13:56",
      27,
-     1096.699951171875,
-     "13:31"
+     1097.4000244140625,
+     "13:56"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "13:31",
-   "pnl": 224.0,
-   "r_total": 0.25,
+   "leg2_time": "13:56",
+   "pnl": 205.0,
+   "r_total": 0.23,
    "closed": false,
    "events": [
     {
@@ -700,26 +700,31 @@
    "capital": 37145.0,
    "tp1": 5941.19,
    "tp2": 5941.19,
-   "trail_armed": false,
+   "trail_armed": true,
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 13:31",
+     "OPEN 13:56",
      21,
-     1804.0999755859375,
-     "13:31"
+     1809.5,
+     "13:56"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "13:31",
-   "pnl": 741.0,
-   "r_total": 0.84,
+   "leg2_time": "13:56",
+   "pnl": 855.0,
+   "r_total": 0.97,
    "closed": false,
    "events": [
     {
      "key": "ENTRY",
      "time": "09:50",
      "price": 1768.8
+    },
+    {
+     "key": "TRAIL_ON",
+     "time": "13:50",
+     "price": 1811.4000244140625
     }
    ],
    "sector": "NEWAGE"
@@ -823,7 +828,8 @@
   "PAYTM:ENTRY",
   "SRF:ENTRY",
   "SUPREMEIND:ENTRY",
-  "SRF:EXIT_SL"
+  "SRF:EXIT_SL",
+  "PAYTM:TRAIL_ON"
  ],
  "gate": {
   "status": "OK",
@@ -832,52 +838,47 @@
  "eod_done": false,
  "cycles": 0,
  "sector_board": {
-  "time": "13:31",
-  "net_tilt": -5.8,
-  "tilt": "BEARISH",
+  "time": "13:56",
+  "net_tilt": -11.4,
+  "tilt": "STRONG BEARISH",
   "bull_q": [],
-  "bear_q": [
-   [
-    "BUILDMAT",
-    92.21
-   ]
-  ],
+  "bear_q": [],
   "persist_bull": [
    [
     "TELECOM",
-    89.92
+    91.23
    ],
    [
     "NEWAGE",
-    61.69
+    63.08
    ],
    [
-    "INSURANCE",
-    57.91
+    "IT",
+    51.94
    ]
   ],
   "persist_bear": [
    [
     "BUILDMAT",
-    98.48
+    94.96
    ],
    [
     "REALTY",
-    81.39
+    83.01
    ],
    [
     "CHEMICALS",
-    77.39
+    79.68
    ]
   ],
   "hold": "timed",
   "held_bull": [
-   "INSURANCE",
    "TELECOM"
   ],
   "held_bear": [
    "BUILDMAT",
-   "CHEMICALS"
+   "ENE",
+   "OIL"
   ]
  },
  "skipped": [
