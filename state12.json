@@ -1,26 +1,10 @@
 {
- "date": "2026-09-14",
+ "date": "2026-09-15",
  "signals": {},
  "trades": {},
- "alerts": [
-  "M12:2026-09-14:EOD_SUMMARY",
-  "M12:2026-09-14:EOD_DOCUMENT"
- ],
+ "alerts": [],
  "decisions": [],
- "eod_done": true,
- "cycles": 3,
- "prev_meta": {
-  "status": "OK",
-  "source": "m12_prev_close.json",
-  "date": "2026-09-11",
-  "age_days": 3,
-  "count": 210
- },
- "feed": {
-  "dhan_calls": 210,
-  "yahoo_calls": 210,
-  "fallback": "yahoo-miss",
-  "fed": 0
- },
- "eod_cache_count": 0
+ "eod_done": false,
+ "cycles": 0,
+ "prev_meta": {}
 }
