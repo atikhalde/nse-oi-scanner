@@ -1,30 +1,11 @@
 {
- "date": "2026-09-14",
+ "date": "2026-09-15",
  "signals": {},
  "trades": {},
- "alerts": [
-  "M14:2026-09-14:EOD_SUMMARY",
-  "M14:2026-09-14:EOD_DOCUMENT"
- ],
+ "alerts": [],
  "decisions": [],
- "eod_done": true,
- "cycles": 3,
- "prev_meta": {
-  "status": "OK",
-  "source": "m14_prev_context.json",
-  "date": "2026-09-11",
-  "count": 210
- },
- "vix": {
-  "date": "2026-09-14",
-  "prior_return": 4.6645,
-  "last_day": "2026-09-11"
- },
- "feed": {
-  "dhan_calls": 210,
-  "yahoo_calls": 210,
-  "fallback": "yahoo-miss",
-  "fed": 0
- },
- "eod_cache_count": 0
+ "eod_done": false,
+ "cycles": 0,
+ "prev_meta": {},
+ "vix": {}
 }
