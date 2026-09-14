@@ -1,20 +1,9 @@
 {
- "date": "2026-09-14",
+ "date": "2026-09-15",
  "signals": {},
  "trades": {},
  "alerts": [],
- "gate": {
-  "spurts": {
-   "status": "OK",
-   "source": "https://www.nseindia.com/api/live-analysis-oi-spurts-underlyings (curl-cffi)",
-   "count": 207
-  },
-  "movers": {
-   "count": 0,
-   "top20_cut": null,
-   "bot20_cut": null
-  }
- },
- "eod_done": true,
- "cycles": 3
+ "gate": {},
+ "eod_done": false,
+ "cycles": 0
 }
