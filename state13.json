@@ -5,7 +5,7 @@
  "alerts": [],
  "decisions": [],
  "eod_done": false,
- "cycles": 24,
+ "cycles": 25,
  "prev_meta": {
   "status": "STALE",
   "source": "m13 cache/history",
@@ -18,13 +18,13 @@
   "prior_return": 4.3025,
   "last_day": "2026-09-11"
  },
- "prev_repair_marker": "2026-09-15:14",
+ "prev_repair_marker": "2026-09-15:15",
  "prev_heal": {
   "date": "2026-09-14",
   "count": 0,
   "last_bar_min": null,
   "total_fed": 420,
-  "generated_utc": "2026-09-15T08:31:20.113882+00:00",
+  "generated_utc": "2026-09-15T09:31:35.116551+00:00",
   "source": "local+daily history seed (local:0)",
   "status": "INSUFFICIENT",
   "policy": "cache not written; existing cache left untouched",
