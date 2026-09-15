@@ -5,7 +5,35 @@
  "alerts": [],
  "decisions": [],
  "eod_done": false,
- "cycles": 0,
- "prev_meta": {},
- "vix": {}
+ "cycles": 1,
+ "prev_meta": {
+  "status": "STALE",
+  "source": "m14 cache/history",
+  "expected": "2026-09-14",
+  "count": 0,
+  "policy": "no entry; seed at EOD"
+ },
+ "vix": {
+  "date": "2026-09-15",
+  "prior_return": 4.3025,
+  "last_day": "2026-09-11"
+ },
+ "prev_repair_marker": "2026-09-15:09",
+ "prev_heal": {
+  "date": "2026-09-14",
+  "count": 0,
+  "last_bar_min": null,
+  "total_fed": 420,
+  "generated_utc": "2026-09-15T04:01:33.770827+00:00",
+  "source": "local+daily history seed (local:0)",
+  "status": "INSUFFICIENT",
+  "policy": "cache not written; existing cache left untouched",
+  "last_bar_min_observed": null
+ },
+ "feed": {
+  "dhan_calls": 0,
+  "yahoo_calls": 210,
+  "fallback": null,
+  "fed": 210
+ }
 }
