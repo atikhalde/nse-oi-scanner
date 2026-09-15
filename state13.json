@@ -2,10 +2,13 @@
  "date": "2026-09-15",
  "signals": {},
  "trades": {},
- "alerts": [],
+ "alerts": [
+  "M13:2026-09-15:EOD_SUMMARY",
+  "M13:2026-09-15:EOD_DOCUMENT"
+ ],
  "decisions": [],
- "eod_done": false,
- "cycles": 26,
+ "eod_done": true,
+ "cycles": 27,
  "prev_meta": {
   "status": "STALE",
   "source": "m13 cache/history",
@@ -35,5 +38,6 @@
   "yahoo_calls": 210,
   "fallback": null,
   "fed": 210
- }
+ },
+ "eod_cache_count": 210
 }
