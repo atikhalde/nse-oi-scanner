@@ -5,7 +5,7 @@
  "alerts": [],
  "decisions": [],
  "eod_done": false,
- "cycles": 1,
+ "cycles": 2,
  "prev_meta": {
   "status": "STALE",
   "source": "previous-close cache/history",
@@ -15,13 +15,13 @@
   "count": 210,
   "policy": "strict no-entry; EOD will seed cache for next session"
  },
- "prev_repair_marker": "2026-09-15:09",
+ "prev_repair_marker": "2026-09-15:10",
  "prev_heal": {
   "date": "2026-09-14",
   "count": 0,
   "last_bar_min": null,
   "total_fed": 420,
-  "generated_utc": "2026-09-15T04:01:42.183987+00:00",
+  "generated_utc": "2026-09-15T04:31:22.026886+00:00",
   "source": "local+daily history seed (local:0)",
   "status": "INSUFFICIENT",
   "policy": "cache not written; existing cache left untouched",
