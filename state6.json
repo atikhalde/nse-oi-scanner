@@ -361,26 +361,31 @@
    "capital": 35320.0,
    "tp1": -6069.5,
    "tp2": -6069.5,
-   "trail_armed": false,
+   "trail_armed": true,
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 11:30",
+     "OPEN 13:30",
      8,
-     4314.5,
-     "11:30"
+     4302.7001953125,
+     "13:30"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "11:30",
-   "pnl": 804.0,
-   "r_total": 0.95,
+   "leg2_time": "13:30",
+   "pnl": 898.0,
+   "r_total": 1.06,
    "closed": false,
    "events": [
     {
      "key": "ENTRY",
      "time": "09:40",
      "price": 4415.0
+    },
+    {
+     "key": "TRAIL_ON",
+     "time": "13:15",
+     "price": 4306.5
     }
    ],
    "sector": "CAPGOODS"
@@ -431,7 +436,8 @@
  },
  "alerts": [
   "GVT&D:ENTRY",
-  "KPITTECH:ENTRY"
+  "KPITTECH:ENTRY",
+  "GVT&D:TRAIL_ON"
  ],
  "gate": {
   "status": "OK",
@@ -440,67 +446,65 @@
  "eod_done": false,
  "cycles": 0,
  "sector_board": {
-  "time": "11:30",
-  "net_tilt": -60.8,
+  "time": "13:30",
+  "net_tilt": -64.5,
   "tilt": "STRONG BEARISH",
   "bull_q": [],
   "bear_q": [
    [
-    "CAPGOODS",
-    95.52
+    "REALTY",
+    86.52
    ],
    [
     "DEF",
-    95.35
+    85.43
    ],
    [
-    "REALTY",
-    94.9
+    "GREEN",
+    79.66
    ],
    [
-    "LOGISTICS",
-    93.78
+    "CDUR",
+    79.63
    ]
   ],
   "persist_bull": [
    [
     "IT",
-    79.14
+    51.77
    ],
    [
     "FMCG",
-    55.79
+    51.27
    ],
    [
     "OIL",
-    26.91
+    22.01
    ]
   ],
   "persist_bear": [
    [
+    "REALTY",
+    97.93
+   ],
+   [
     "DEF",
-    99.06
+    97.52
    ],
    [
-    "CAPGOODS",
-    98.92
-   ],
-   [
-    "LOGISTICS",
-    98.52
+    "CEMENT",
+    96.75
    ]
   ],
   "hold": "timed",
-  "held_bull": [
-   "IT"
-  ],
+  "held_bull": [],
   "held_bear": [
    "AUTO",
-   "BANK",
-   "CAPGOODS",
+   "BUILDMAT",
    "CAPMKTS",
    "CDUR",
    "CEMENT",
+   "CHEMICALS",
    "DEF",
    "ENE",
    "FIN",
@@ -508,14 +512,14 @@
    "INFRA",
    "INSURANCE",
    "LOGISTICS",
-   "MEDIA",
    "MET",
    "NEWAGE",
    "PSE",
    "PSUBK",
    "RAILWAYS",
    "REALTY",
-   "TELECOM"
+   "TELECOM",
+   "TRAVEL"
   ]
  },
  "skipped": [
