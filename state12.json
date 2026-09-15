@@ -5,6 +5,32 @@
  "alerts": [],
  "decisions": [],
  "eod_done": false,
- "cycles": 0,
- "prev_meta": {}
+ "cycles": 1,
+ "prev_meta": {
+  "status": "STALE",
+  "source": "previous-close cache/history",
+  "date": "2026-09-11",
+  "expected_previous_weekday": "2026-09-14",
+  "age_days": 4,
+  "count": 210,
+  "policy": "strict no-entry; EOD will seed cache for next session"
+ },
+ "prev_repair_marker": "2026-09-15:09",
+ "prev_heal": {
+  "date": "2026-09-14",
+  "count": 0,
+  "last_bar_min": null,
+  "total_fed": 420,
+  "generated_utc": "2026-09-15T04:01:42.183987+00:00",
+  "source": "local+daily history seed (local:0)",
+  "status": "INSUFFICIENT",
+  "policy": "cache not written; existing cache left untouched",
+  "last_bar_min_observed": null
+ },
+ "feed": {
+  "dhan_calls": 0,
+  "yahoo_calls": 210,
+  "fallback": null,
+  "fed": 210
+ }
 }
