@@ -365,16 +365,16 @@
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 13:30",
+     "OPEN 14:29",
      8,
-     4302.7001953125,
-     "13:30"
+     4225.7998046875,
+     "14:29"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "13:30",
-   "pnl": 898.0,
-   "r_total": 1.06,
+   "leg2_time": "14:29",
+   "pnl": 1514.0,
+   "r_total": 1.79,
    "closed": false,
    "events": [
     {
@@ -413,22 +413,27 @@
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 11:30",
+     "SL 13:35",
      77,
-     575.2000122070312,
-     "11:30"
+     567.13655,
+     "13:35"
     ]
    ],
-   "exit_text": "OPEN",
-   "leg2_time": "11:30",
-   "pnl": -270.0,
-   "r_total": -0.3,
-   "closed": false,
+   "exit_text": "100% SL 13:35",
+   "leg2_time": "13:35",
+   "pnl": -890.0,
+   "r_total": -1.0,
+   "closed": true,
    "events": [
     {
      "key": "ENTRY",
      "time": "10:25",
-     "price": 578.7000122070312
+     "price": 578.7
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "13:35",
+     "price": 567.13655
     }
    ],
    "sector": "IT"
@@ -437,7 +442,8 @@
  "alerts": [
   "GVT&D:ENTRY",
   "KPITTECH:ENTRY",
-  "GVT&D:TRAIL_ON"
+  "GVT&D:TRAIL_ON",
+  "KPITTECH:EXIT_SL"
  ],
  "gate": {
   "status": "OK",
@@ -446,65 +452,66 @@
  "eod_done": false,
  "cycles": 0,
  "sector_board": {
-  "time": "13:30",
-  "net_tilt": -64.5,
+  "time": "14:28",
+  "net_tilt": -70.3,
   "tilt": "STRONG BEARISH",
   "bull_q": [],
   "bear_q": [
    [
     "REALTY",
-    86.52
+    90.84
+   ],
+   [
+    "CAPGOODS",
+    90.71
    ],
    [
     "DEF",
-    85.43
+    89.24
    ],
    [
-    "GREEN",
-    79.66
-   ],
-   [
-    "CDUR",
-    79.63
+    "MET",
+    88.17
    ]
   ],
   "persist_bull": [
    [
     "IT",
-    51.77
+    50.61
    ],
    [
     "FMCG",
-    51.27
+    41.26
    ],
    [
-    "OIL",
-    22.01
+    "HOSPITALS",
+    27.37
    ]
   ],
   "persist_bear": [
    [
-    "REALTY",
-    97.93
+    "CAPGOODS",
+    98.47
    ],
    [
     "DEF",
-    97.52
+    98.31
    ],
    [
-    "CEMENT",
-    96.75
+    "REALTY",
+    98.13
    ]
   ],
   "hold": "timed",
   "held_bull": [],
   "held_bear": [
    "AUTO",
+   "BANK",
    "BUILDMAT",
+   "CAPGOODS",
    "CAPMKTS",
    "CDUR",
    "CEMENT",
-   "CHEMICALS",
    "DEF",
    "ENE",
    "FIN",
@@ -512,6 +519,7 @@
    "INFRA",
    "INSURANCE",
    "LOGISTICS",
+   "MEDIA",
    "MET",
    "NEWAGE",
    "PSE",
