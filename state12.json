@@ -633,10 +633,13 @@
   }
  },
  "trades": {},
- "alerts": [],
+ "alerts": [
+  "M12:2026-09-19:EOD_SUMMARY",
+  "M12:2026-09-19:EOD_DOCUMENT"
+ ],
  "decisions": [],
- "eod_done": false,
- "cycles": 12,
+ "eod_done": true,
+ "cycles": 13,
  "prev_meta": {
   "status": "OK",
   "source": "m12_prev_close.json",
@@ -649,5 +652,6 @@
   "yahoo_calls": 210,
   "fallback": null,
   "fed": 210
- }
+ },
+ "eod_cache_count": 210
 }
