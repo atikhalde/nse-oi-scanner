@@ -657,8 +657,8 @@
     [
      "OPEN",
      46,
-     1077.0999755859375,
-     "14:50"
+     1077.0,
+     "14:52"
     ]
    ],
    "events": [
@@ -668,9 +668,9 @@
      "price": 1068.5
     }
    ],
-   "exit_text": "OPEN 14:50 @ \u20b91077.10",
-   "leg2_time": "14:50",
-   "pnl": -396.0,
+   "exit_text": "OPEN 14:52 @ \u20b91077.00",
+   "leg2_time": "14:52",
+   "pnl": -391.0,
    "r_total": -0.55,
    "closed": false,
    "features": {},
@@ -3649,7 +3649,7 @@
   }
  ],
  "eod_done": false,
- "cycles": 23,
+ "cycles": 24,
  "prev_meta": {
   "status": "OK",
   "source": "data/history bootstrap",
