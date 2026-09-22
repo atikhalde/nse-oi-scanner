@@ -158,7 +158,7 @@
    "nbars": 72
   },
   "DALBHARAT": {
-   "nbars": 72
+   "nbars": 75
   },
   "DELHIVERY": {
    "nbars": 72
@@ -185,13 +185,13 @@
    "nbars": 72
   },
   "EXIDEIND": {
-   "nbars": 72
+   "nbars": 75
   },
   "FEDERALBNK": {
    "nbars": 72
   },
   "FORCEMOT": {
-   "nbars": 72
+   "nbars": 73
   },
   "FORTIS": {
    "nbars": 72
@@ -428,7 +428,7 @@
    "nbars": 72
   },
   "NUVAMA": {
-   "nbars": 72
+   "nbars": 75
   },
   "NYKAA": {
    "nbars": 72
@@ -503,7 +503,7 @@
    "nbars": 72
   },
   "RBLBANK": {
-   "nbars": 72
+   "nbars": 73
   },
   "RECLTD": {
    "nbars": 72
@@ -633,7 +633,10 @@
   }
  },
  "trades": {},
- "alerts": [],
+ "alerts": [
+  "M13:2026-09-22:EOD_SUMMARY",
+  "M13:2026-09-22:EOD_DOCUMENT"
+ ],
  "decisions": [
   {
    "decision_id": "INOXWIND|BUY|09:25|90",
@@ -11382,8 +11385,8 @@
    "why": "opening market breadth below 55% in signal direction"
   }
  ],
- "eod_done": false,
- "cycles": 26,
+ "eod_done": true,
+ "cycles": 27,
  "prev_meta": {
   "status": "OK",
   "source": "m13_prev_context.json",
@@ -11400,5 +11403,6 @@
   "yahoo_calls": 210,
   "fallback": null,
   "fed": 210
- }
+ },
+ "eod_cache_count": 210
 }
