@@ -158,7 +158,7 @@
    "nbars": 72
   },
   "DALBHARAT": {
-   "nbars": 72
+   "nbars": 75
   },
   "DELHIVERY": {
    "nbars": 72
@@ -185,7 +185,7 @@
    "nbars": 72
   },
   "EXIDEIND": {
-   "nbars": 72
+   "nbars": 75
   },
   "FEDERALBNK": {
    "nbars": 72
@@ -422,13 +422,13 @@
    "nbars": 72
   },
   "NMDC": {
-   "nbars": 72
+   "nbars": 73
   },
   "NTPC": {
    "nbars": 72
   },
   "NUVAMA": {
-   "nbars": 72
+   "nbars": 75
   },
   "NYKAA": {
    "nbars": 72
@@ -557,7 +557,7 @@
    "nbars": 72
   },
   "TATACONSUM": {
-   "nbars": 72
+   "nbars": 73
   },
   "TATAELXSI": {
    "nbars": 72
@@ -605,7 +605,7 @@
    "nbars": 72
   },
   "UPL": {
-   "nbars": 72
+   "nbars": 73
   },
   "VBL": {
    "nbars": 72
@@ -657,8 +657,8 @@
     [
      "OPEN",
      37,
-     1338.5999755859375,
-     "15:15"
+     1342.300048828125,
+     "15:10"
     ]
    ],
    "events": [
@@ -668,10 +668,10 @@
      "price": 1324.8
     }
    ],
-   "exit_text": "OPEN 15:15 @ \u20b91338.60",
-   "leg2_time": "15:15",
-   "pnl": -511.0,
-   "r_total": -0.75,
+   "exit_text": "OPEN 15:10 @ \u20b91342.30",
+   "leg2_time": "15:10",
+   "pnl": -648.0,
+   "r_total": -0.95,
    "closed": false,
    "features": {},
    "m14_score": 0.0,
@@ -683,7 +683,9 @@
   }
  },
  "alerts": [
-  "ADANIENSOL:ENTRY"
+  "ADANIENSOL:ENTRY",
+  "M14:2026-09-25:EOD_SUMMARY",
+  "M14:2026-09-25:EOD_DOCUMENT"
  ],
  "decisions": [
   {
@@ -5108,8 +5110,8 @@
    "why": "feature failure: AttributeError: module 'm14_entry' has no attribute 'causal_price_features'"
   }
  ],
- "eod_done": false,
- "cycles": 26,
+ "eod_done": true,
+ "cycles": 27,
  "prev_meta": {
   "status": "OK",
   "source": "m14_prev_context.json",
@@ -5126,5 +5128,6 @@
   "yahoo_calls": 210,
   "fallback": null,
   "fed": 210
- }
+ },
+ "eod_cache_count": 210
 }
