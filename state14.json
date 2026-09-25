@@ -657,8 +657,8 @@
     [
      "OPEN",
      37,
-     1336.699951171875,
-     "14:36"
+     1338.0,
+     "14:39"
     ]
    ],
    "events": [
@@ -668,10 +668,10 @@
      "price": 1324.8
     }
    ],
-   "exit_text": "OPEN 14:36 @ \u20b91336.70",
-   "leg2_time": "14:36",
-   "pnl": -440.0,
-   "r_total": -0.64,
+   "exit_text": "OPEN 14:39 @ \u20b91338.00",
+   "leg2_time": "14:39",
+   "pnl": -488.0,
+   "r_total": -0.72,
    "closed": false,
    "features": {},
    "m14_score": 0.0,
@@ -5109,7 +5109,7 @@
   }
  ],
  "eod_done": false,
- "cycles": 22,
+ "cycles": 23,
  "prev_meta": {
   "status": "OK",
   "source": "m14_prev_context.json",
