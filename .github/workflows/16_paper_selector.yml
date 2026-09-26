@@ -1,0 +1,35 @@
+name: "16. PAPER selector — two-trade shadow"
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "20 10 * * 1-5"  # 15:50 IST, after M5 EOD state is published
+permissions:
+  contents: write
+concurrency:
+  group: shadow-selector
+  cancel-in-progress: false
+jobs:
+  selector:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: arena/01a0de40-nse-oi-scanner
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements.txt
+      - run: python -m unittest test_execution_audit.py
+      - name: read M5 state from its publishing branch
+        run: git show origin/main:state5.json > /tmp/m5_state.json
+      - run: python two_trade_selector.py --day "$(TZ=Asia/Kolkata date +%F)" --state /tmp/m5_state.json
+      - name: commit shadow report
+        if: success()
+        run: |
+          git config user.name "paper-bot"
+          git config user.email "paper-bot@users.noreply.github.com"
+          git add -- paper_selector_*.xlsx
+          git diff --cached --quiet || git commit -m "selector $(date -u +%F_%H%M)Z"
+          git pull --rebase origin arena/01a0de40-nse-oi-scanner
+          git push origin arena/01a0de40-nse-oi-scanner

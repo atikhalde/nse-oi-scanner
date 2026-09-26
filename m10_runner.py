@@ -50,6 +50,7 @@ Log automatically as model M10 (label_learn globs learn/raw_M10_*.csv).
 Usage: python -u m10_runner.py [--loop N]
 """
 import argparse
+import execution_audit
 import json
 import time
 
@@ -295,7 +296,7 @@ def mode_live():
             new_tr = trader.evaluate(sym, tr["side"], tr["time"], float(tr["entry"]), tr["signal"], tbars,
                                      warmup=trader.load_warmup(L.HIST / f"{sym}.csv", today),
                                      sl_mode=tr.get("sl_mode", "structure"))
-            st["trades"][tkey] = new_tr
+            st["trades"][tkey] = execution_audit.preserve(tr, new_tr)
             for ev in new_tr["events"]:
                 key = f"{tkey}:{ev['key']}"
                 if ev["key"] != "ENTRY" and key not in st["alerts"]:
@@ -382,7 +383,7 @@ def mode_live():
                     tkey, k = sym, 2
                     while tkey in st["trades"]:
                         tkey = f"{sym}#{k}"; k += 1
-                    st["trades"][tkey] = tr
+                    st["trades"][tkey] = execution_audit.capture(tr, tbars)
                     st["alerts"].append(f"{tkey}:ENTRY")
                     save_state(st)          # registry + state saved BEFORE send (no-dup hardening 03-Aug): crash/resume can never re-send
                     tg.send_message(fmt_m10_alert("🅼10", tr, "ENTRY"))

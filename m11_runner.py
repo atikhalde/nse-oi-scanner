@@ -79,6 +79,7 @@ keep using telegram_bot's default single-chat path — untouched.
 Usage: python -u m11_runner.py [--loop N]
 """
 import argparse
+import execution_audit
 import json
 import os
 import time
@@ -404,7 +405,7 @@ def mode_live():
             new_tr["setups"] = tr.get("setups", [])        # M8-style: thread custom tags
             new_tr["cls_trader"] = tr.get("cls_trader") or new_tr.get("setup")
             new_tr["setup"] = tr.get("setup", new_tr.get("setup"))   # keep video tag (learn cls)
-            st["trades"][tkey] = new_tr
+            st["trades"][tkey] = execution_audit.preserve(tr, new_tr)
             for ev in new_tr["events"]:
                 key = f"{tkey}:{ev['key']}"
                 if ev["key"] != "ENTRY" and key not in st["alerts"]:
@@ -487,7 +488,7 @@ def mode_live():
                     tkey, k = sym, 2
                     while tkey in st["trades"]:
                         tkey = f"{sym}#{k}"; k += 1
-                    st["trades"][tkey] = tr
+                    st["trades"][tkey] = execution_audit.capture(tr, tbars)
                     st["alerts"].append(f"{tkey}:ENTRY")
                     save_state(st)          # registry-first (rule 3b): crash/resume can never re-send
                     _send_m11(fmt_m11_alert(tr, "ENTRY"))

@@ -15,6 +15,7 @@ State lives in state.json (committed back to the repo by the workflow).
 Env: DHAN_TOKEN, TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID (all optional).
 """
 import argparse
+import execution_audit
 import datetime as dt
 import json
 import os
@@ -340,7 +341,7 @@ def mode_live():
         try:
             new_tr = trader.evaluate(sym, tr["side"], tr["time"], float(tr["entry"]), tr["signal"], tbars, warmup=trader.load_warmup(HIST / f"{sym}.csv", today), sl_mode=tr.get("sl_mode", "structure"))
             new_tr["gate_rank"] = tr.get("gate_rank")
-            st["trades"][tkey] = new_tr
+            st["trades"][tkey] = execution_audit.preserve(tr, new_tr)
             for ev in new_tr["events"]:
                 key = f"{tkey}:{ev['key']}"
                 if ev["key"] != "ENTRY" and key not in st["alerts"]:
@@ -449,7 +450,7 @@ def mode_live():
                             tkey, k = sym, 2
                             while tkey in st["trades"]:       # one paper trade per signal,
                                 tkey = f"{sym}#{k}"; k += 1   # keyed like the chart's labels
-                            st["trades"][tkey] = tr
+                            st["trades"][tkey] = execution_audit.capture(tr, tbars)
                             st["alerts"].append(f"{tkey}:ENTRY")
                             save_state(st)          # persist alert registry instantly (no-repeat guarantee)
                             suffix = f" · #{k-1} on {sym}" if tkey != sym else ""

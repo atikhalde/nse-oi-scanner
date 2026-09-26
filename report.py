@@ -4,6 +4,7 @@ older single-exit trade dicts too."""
 import os
 from datetime import datetime
 import costs as Costs
+import execution_audit
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from openpyxl.utils import get_column_letter
@@ -193,6 +194,26 @@ def build(trades, date_lbl, gate_meta, out_path, skipped=None, rules_note=None, 
         ws.cell(row=r, column=1, value="Ghost rows are shadows only — blocked weak-EX chart signals replayed after "
                                        "the close; nothing was traded from this table. Grp R = release candidate "
                                        "(user spec, prev-candle SL) · EX9 = BUY-EX9, blocked either way.").font = GREY
+    audit_ws = wb.create_sheet('Execution audit')
+    audit_ws.append(['Symbol', 'Side', 'Signal time', 'Observed at IST',
+                     'Delay min after bar close', 'Signal close proxy ₹',
+                     'Observation bar', 'Observed close proxy ₹', 'Status',
+                     'Reported net ₹', 'Final-only net ₹', 'Limitations'])
+    for tr in trades:
+        a = tr.get('audit') or {}
+        final = execution_audit.is_final(tr)
+        net = Costs.trade_costs(tr)['net']
+        status = 'FINAL' if final else ('OPEN / MARK' if tr.get('closed') is False else 'UNVERIFIED')
+        audit_ws.append([tr.get('symbol'), tr.get('side'), tr.get('time'),
+                         a.get('observed_at'), a.get('delay_minutes'), tr.get('entry'),
+                         a.get('observation_bar'), a.get('observation_price'),
+                         status, net, net if final else None,
+                         'No broker fill; observation close is NOT an executable quote'
+                         if a else 'Legacy row: first observation not captured'])
+    audit_ws.freeze_panes = 'A2'
+    audit_ws.auto_filter.ref = audit_ws.dimensions
+    for col, width in {'A': 20, 'D': 27, 'I': 20, 'L': 64}.items():
+        audit_ws.column_dimensions[col].width = width
     wb.save(out_path)
     return out_path
 
@@ -208,11 +229,15 @@ def summary_text(trades, date_lbl, gate_meta, ghosts=None):
     lines = [f"📊 <b>PAPER TEST {date_lbl} — EOD</b>",
              f"Gate: {st} ({src}) · exits v2 · costs+slippage included (₹20-brokerage + STT + txn + GST + fill haircut)",
              f"Trades: {len(trades)} · Wins (gross/net): {len(wins)}/{len(wins_net)}",
-             f"P&L gross: <b>₹{tot:+,.0f}</b> · costs+slip −₹{costs_tot:,.0f} · <b>NET ₹{tot-costs_tot:+,.0f}</b> · {rsum:+.2f}R"]
+             f"P&L marked gross: <b>₹{tot:+,.0f}</b> · costs+slip −₹{costs_tot:,.0f} · <b>MARKED NET ₹{tot-costs_tot:+,.0f}</b> · {rsum:+.2f}R"]
     for t in trades:
         tag = f"{t.get('setup','')[:4]} " if t.get("setup") else ""
         cn = Costs.trade_costs(t)
-        lines.append(f"• {t['symbol']} {t['side']} {tag}{t['signal']} ₹{t['pnl']:+,.0f} (net {cn['net']:+,.0f}, c{cn['drag']:.0f}) {exit_path(t)}")
+        lines.append(f"• {t['symbol']} {t['side']} {tag}{t['signal']} ₹{t['pnl']:+,.0f} ({'final' if execution_audit.is_final(t) else 'MARK'} net {cn['net']:+,.0f}, c{cn['drag']:.0f}) {exit_path(t)}")
+    final_trades = [t for t in trades if execution_audit.is_final(t)]
+    lines.append(f"Execution audit: {len(final_trades)}/{len(trades)} FINAL · "
+                 f"final-only net ₹{sum(Costs.trade_costs(t)['net'] for t in final_trades):+,.0f} "
+                 "(other rows are OPEN/UNVERIFIED marks; no broker fills verified)")
     if ghosts:
         ts, _ = _gnet(ghosts, "structure")
         tp, _ = _gnet(ghosts, "prevbar")

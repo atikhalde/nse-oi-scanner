@@ -21,3 +21,12 @@ M1/M2/M5–M11 remain independent historical paper controls and are not changed
 by M15. The retired M12–M14 implementations, workflows, state and reports were
 removed at the user's request. Their aggregate outcomes are retained only in
 the audit document.
+
+## Prospective execution audit and shadow selection
+
+All active runner reports now include an `Execution audit` worksheet separating
+final simulated exits from OPEN marks and recording first-observation delay.
+`two_trade_selector.py` produces a separate M5 SELL-EX8 EOD shadow report capped
+at two observations per day; it does not open independent paper positions.
+See [EXECUTION_AUDIT.md](EXECUTION_AUDIT.md) for important limitations and
+workflow integration instructions.

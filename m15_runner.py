@@ -5,6 +5,7 @@ Requires a completed recent bar; cannot guarantee a minimum number of valid trad
 Usage: python m15_runner.py --loop 1
 """
 import argparse
+import execution_audit
 import json
 import time
 import pandas as pd
@@ -62,7 +63,7 @@ def cycle():
             if 'error' in tr:
                 continue
             tr['setup'] = 'RANGE_RECLAIM'
-            st['trades'][sym] = tr
+            st['trades'][sym] = execution_audit.preserve(old, tr)
             for ev in tr['events']:
                 key = f"{sym}:{ev['key']}"
                 if ev['key'] != 'ENTRY' and key not in st['alerts']:
@@ -105,7 +106,7 @@ def cycle():
             st['skipped'].append({'sym': sym, 'reason': tr['error']})
             continue
         tr['setup'] = 'RANGE_RECLAIM'
-        st['trades'][sym] = tr
+        st['trades'][sym] = execution_audit.capture(tr, b)
         st['alerts'].append(f'{sym}:ENTRY')
         save(st)
         tg.send_message('🅼15 · ' + trader.fmt_alert(tr, 'ENTRY'))

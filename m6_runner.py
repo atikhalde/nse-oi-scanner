@@ -35,6 +35,7 @@ Exits/sizing identical (structure SL ∓0.02%, no targets, +1R trail, ₹50k/₹
 Usage: python -u m6_runner.py [--loop N]
 """
 import argparse
+import execution_audit
 import datetime as dt
 import json
 import sys
@@ -267,7 +268,7 @@ def mode_live():
                                      warmup=trader.load_warmup(L.HIST / f"{sym}.csv", today),
                                      sl_mode=tr.get("sl_mode", "structure"))
             new_tr["sector"] = tr.get("sector")
-            st["trades"][tkey] = new_tr
+            st["trades"][tkey] = execution_audit.preserve(tr, new_tr)
             for ev in new_tr["events"]:
                 key = f"{tkey}:{ev['key']}"
                 if ev["key"] != "ENTRY" and key not in st["alerts"]:
@@ -351,7 +352,7 @@ def mode_live():
                     tkey, k = sym, 2
                     while tkey in st["trades"]:
                         tkey = f"{sym}#{k}"; k += 1
-                    st["trades"][tkey] = tr
+                    st["trades"][tkey] = execution_audit.capture(tr, tbars)
                     st["alerts"].append(f"{tkey}:ENTRY")
                     save_state(st)          # persist alert registry instantly (no-repeat guarantee)
                     suffix = f" · #{k-1} on {sym}" if tkey != sym else ""
