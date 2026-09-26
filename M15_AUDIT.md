@@ -1,3 +1,5 @@
+> Detailed re-audit: [analysis/REPORT_AUDIT.md](analysis/REPORT_AUDIT.md).
+
 # Entry-model audit and M15 status (26 September 2026)
 
 Historical EOD paper XLSX files were parsed using the trade rows (side BUY/SELL,
@@ -11,10 +13,10 @@ have a different layout and were not included in the numerical trade totals.
 | M2 | 48 | 851 | 439 | 51.6 | +16,389 |
 | M5 | 45 | 756 | 394 | 52.1 | +20,382 |
 | M6 | 43 | 410 | 191 | 46.6 | -16,708 |
-| M7 | 45 | 6,709 | 2,650 | 39.5 | -457,835 |
+| M7 | 45 | 6,709 | 2,648 | 39.5 | -457,835 |
 | M8 | 41 | 333 | 153 | 45.9 | -7,051 |
 | M10 | 39 | 708 | 306 | 43.2 | -38,816 |
-| M11 | 40 | 1,982 | 846 | 42.7 | -98,458 |
+| M11 | 40 | 1,982 | 847 | 42.7 | -98,458 |
 | M12 | 35 | 3 | 0 | 0 | -628 |
 | M13 | 36 | 10 | 5 | 50 | -1,786 |
 | M14 | 22 | 17 | 8 | 47.1 | -1,300 |
