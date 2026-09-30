@@ -29,7 +29,7 @@
    "nbars": 73
   },
   "AMBER": {
-   "nbars": 72
+   "nbars": 73
   },
   "AMBUJACEM": {
    "nbars": 73
@@ -86,7 +86,7 @@
    "nbars": 73
   },
   "BEL": {
-   "nbars": 72
+   "nbars": 73
   },
   "BHARATFORG": {
    "nbars": 73
@@ -215,7 +215,142 @@
    "nbars": 73
   },
   "GRASIM": {
-   "nbars": 25
+   "nbars": 73
+  },
+  "GVT&D": {
+   "nbars": 73
+  },
+  "HAL": {
+   "nbars": 73
+  },
+  "HAVELLS": {
+   "nbars": 73
+  },
+  "HCLTECH": {
+   "nbars": 73
+  },
+  "HDFCAMC": {
+   "nbars": 73
+  },
+  "HDFCBANK": {
+   "nbars": 73
+  },
+  "HDFCLIFE": {
+   "nbars": 73
+  },
+  "HEROMOTOCO": {
+   "nbars": 73
+  },
+  "HINDALCO": {
+   "nbars": 73
+  },
+  "HINDPETRO": {
+   "nbars": 73
+  },
+  "HINDUNILVR": {
+   "nbars": 73
+  },
+  "HINDZINC": {
+   "nbars": 73
+  },
+  "HYUNDAI": {
+   "nbars": 73
+  },
+  "ICICIBANK": {
+   "nbars": 72
+  },
+  "ICICIGI": {
+   "nbars": 72
+  },
+  "ICICIPRULI": {
+   "nbars": 73
+  },
+  "IDEA": {
+   "nbars": 73
+  },
+  "IDFCFIRSTB": {
+   "nbars": 72
+  },
+  "IEX": {
+   "nbars": 73
+  },
+  "INDHOTEL": {
+   "nbars": 73
+  },
+  "INDIANB": {
+   "nbars": 73
+  },
+  "INDIGO": {
+   "nbars": 72
+  },
+  "INDUSINDBK": {
+   "nbars": 73
+  },
+  "INDUSTOWER": {
+   "nbars": 72
+  },
+  "INFY": {
+   "nbars": 73
+  },
+  "INOXWIND": {
+   "nbars": 73
+  },
+  "IOC": {
+   "nbars": 73
+  },
+  "IREDA": {
+   "nbars": 73
+  },
+  "IRFC": {
+   "nbars": 73
+  },
+  "ITC": {
+   "nbars": 73
+  },
+  "JINDALSTEL": {
+   "nbars": 73
+  },
+  "JIOFIN": {
+   "nbars": 73
+  },
+  "JSWENERGY": {
+   "nbars": 73
+  },
+  "JSWSTEEL": {
+   "nbars": 73
+  },
+  "JUBLFOOD": {
+   "nbars": 73
+  },
+  "KALYANKJIL": {
+   "nbars": 73
+  },
+  "KAYNES": {
+   "nbars": 73
+  },
+  "KEI": {
+   "nbars": 73
+  },
+  "KFINTECH": {
+   "nbars": 73
+  },
+  "KOTAKBANK": {
+   "nbars": 73
+  },
+  "KPITTECH": {
+   "nbars": 73
+  },
+  "LAURUSLABS": {
+   "nbars": 73
+  },
+  "LICHSGFIN": {
+   "nbars": 73
+  },
+  "LICI": {
+   "nbars": 73
+  },
+  "LODHA": {
+   "nbars": 12
   }
  },
  "trades": {
@@ -622,7 +757,7 @@
     {
      "key": "ENTRY",
      "time": "09:45",
-     "price": 409.54998779296875
+     "price": 409.55
     },
     {
      "key": "TRAIL_ON",
@@ -635,10 +770,10 @@
      "price": 403.48067389526364
     }
    ],
-   "cls_trader": "BREAKOUT",
    "setups": [
     "S1"
-   ]
+   ],
+   "cls_trader": "BREAKOUT"
   },
   "DIVISLAB": {
    "symbol": "DIVISLAB",
@@ -681,10 +816,10 @@
      "price": 9315.0
     }
    ],
-   "cls_trader": "BREAKOUT",
    "setups": [
     "S1"
-   ]
+   ],
+   "cls_trader": "BREAKOUT"
   },
   "EICHERMOT": {
    "symbol": "EICHERMOT",
@@ -732,12 +867,12 @@
      "price": 7223.9445
     }
    ],
-   "cls_trader": "BREAKOUT",
    "setups": [
     "S1",
     "S2",
     "S4"
-   ]
+   ],
+   "cls_trader": "BREAKOUT"
   },
   "FORTIS": {
    "symbol": "FORTIS",
@@ -777,7 +912,7 @@
     {
      "key": "ENTRY",
      "time": "10:20",
-     "price": 780.5499877929688
+     "price": 780.55
     },
     {
      "key": "TRAIL_ON",
@@ -790,11 +925,11 @@
      "price": 762.8799806596271
     }
    ],
-   "cls_trader": "CONTINUATION",
    "setups": [
     "S1",
     "S3"
-   ]
+   ],
+   "cls_trader": "CONTINUATION"
   },
   "GLENMARK": {
    "symbol": "GLENMARK",
@@ -834,7 +969,7 @@
     {
      "key": "ENTRY",
      "time": "11:20",
-     "price": 2363.300048828125
+     "price": 2363.3
     },
     {
      "key": "EXIT_SL",
@@ -842,10 +977,10 @@
      "price": 2379.175691162109
     }
    ],
-   "cls_trader": "BREAKOUT",
    "setups": [
     "S1"
-   ]
+   ],
+   "cls_trader": "BREAKOUT"
   },
   "GMRAIRPORT": {
    "symbol": "GMRAIRPORT",
@@ -885,7 +1020,7 @@
     {
      "key": "ENTRY",
      "time": "10:55",
-     "price": 93.66999816894531
+     "price": 93.67
     },
     {
      "key": "EXIT_SL",
@@ -893,13 +1028,13 @@
      "price": 94.83896369476318
     }
    ],
-   "cls_trader": "BREAKOUT",
    "setups": [
     "S1",
     "S2",
     "S3",
     "S4"
-   ]
+   ],
+   "cls_trader": "BREAKOUT"
   },
   "GODREJPROP": {
    "symbol": "GODREJPROP",
@@ -939,7 +1074,7 @@
     {
      "key": "ENTRY",
      "time": "10:55",
-     "price": 1631.9000244140625
+     "price": 1631.9
     },
     {
      "key": "EXIT_SL",
@@ -947,11 +1082,11 @@
      "price": 1641.5
     }
    ],
-   "cls_trader": "BREAKOUT",
    "setups": [
     "S1",
     "S2"
-   ]
+   ],
+   "cls_trader": "BREAKOUT"
   },
   "GRASIM": {
    "symbol": "GRASIM",
@@ -970,8 +1105,8 @@
    "qty_full": 16,
    "qty_capped": false,
    "capital": 49330.0,
-   "tp1": 1309.03,
-   "tp2": 1309.03,
+   "tp1": 1309.02,
+   "tp2": 1309.02,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
@@ -991,12 +1126,270 @@
     {
      "key": "ENTRY",
      "time": "11:15",
-     "price": 3083.10009765625
+     "price": 3083.1
     },
     {
      "key": "EXIT_SL",
      "time": "12:55",
      "price": 3101.0199823242187
+    }
+   ],
+   "setups": [
+    "S1",
+    "S2"
+   ],
+   "cls_trader": "BREAKOUT"
+  },
+  "JSWSTEEL": {
+   "symbol": "JSWSTEEL",
+   "side": "SELL",
+   "time": "11:10",
+   "signal": "SELL-EX1",
+   "setup": "S1",
+   "sl_mode": "structure",
+   "entry": 1258.8,
+   "sl": 1271.55,
+   "sl_anchor": "pivot",
+   "risk_pts": 12.75,
+   "risk_pct": 1.013,
+   "risk_rs": 497.0,
+   "qty": 39,
+   "qty_full": 39,
+   "qty_capped": false,
+   "capital": 49093.0,
+   "tp1": -3.87,
+   "tp2": -3.87,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "SL 12:50",
+     39,
+     1271.5543088378906,
+     "12:50"
+    ]
+   ],
+   "exit_text": "100% SL 12:50",
+   "leg2_time": "12:50",
+   "pnl": -497.0,
+   "r_total": -1.0,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "11:10",
+     "price": 1258.800048828125
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "12:50",
+     "price": 1271.5543088378906
+    }
+   ],
+   "cls_trader": "BREAKOUT",
+   "setups": [
+    "S1"
+   ]
+  },
+  "KPITTECH": {
+   "symbol": "KPITTECH",
+   "side": "SELL",
+   "time": "11:05",
+   "signal": "SELL-EX1",
+   "setup": "S1",
+   "sl_mode": "structure",
+   "entry": 510.65,
+   "sl": 517.6,
+   "sl_anchor": "pivot",
+   "risk_pts": 6.95,
+   "risk_pct": 1.362,
+   "risk_rs": 674.0,
+   "qty": 97,
+   "qty_full": 97,
+   "qty_capped": false,
+   "capital": 49533.0,
+   "tp1": -177.75,
+   "tp2": -177.75,
+   "trail_armed": true,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "trail 14:50",
+     97,
+     505.30105220947263,
+     "14:50"
+    ]
+   ],
+   "exit_text": "100% trail 14:50",
+   "leg2_time": "14:50",
+   "pnl": 519.0,
+   "r_total": 0.77,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "11:05",
+     "price": 510.6499938964844
+    },
+    {
+     "key": "TRAIL_ON",
+     "time": "13:45",
+     "price": 503.5
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "14:50",
+     "price": 505.30105220947263
+    }
+   ],
+   "cls_trader": "BREAKOUT",
+   "setups": [
+    "S1"
+   ]
+  },
+  "LAURUSLABS": {
+   "symbol": "LAURUSLABS",
+   "side": "SELL",
+   "time": "10:35",
+   "signal": "SELL-EX2",
+   "setup": "S1+S2",
+   "sl_mode": "structure",
+   "entry": 1969.0,
+   "sl": 1987.9,
+   "sl_anchor": "pivot",
+   "risk_pts": 18.9,
+   "risk_pct": 0.96,
+   "risk_rs": 472.0,
+   "qty": 25,
+   "qty_full": 25,
+   "qty_capped": false,
+   "capital": 49225.0,
+   "tp1": 98.15,
+   "tp2": 98.15,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "SL 15:00",
+     25,
+     1987.8975,
+     "15:00"
+    ]
+   ],
+   "exit_text": "100% SL 15:00",
+   "leg2_time": "15:00",
+   "pnl": -472.0,
+   "r_total": -1.0,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "10:35",
+     "price": 1969.0
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "15:00",
+     "price": 1987.8975
+    }
+   ],
+   "cls_trader": "BREAKOUT",
+   "setups": [
+    "S1",
+    "S2"
+   ]
+  },
+  "LICHSGFIN": {
+   "symbol": "LICHSGFIN",
+   "side": "SELL",
+   "time": "10:20",
+   "signal": "NORMAL SELL",
+   "setup": "S1+S2",
+   "sl_mode": "structure",
+   "entry": 542.25,
+   "sl": 565.06,
+   "sl_anchor": "session-extreme*",
+   "risk_pts": 22.81,
+   "risk_pct": 4.207,
+   "risk_rs": 890.0,
+   "qty": 39,
+   "qty_full": 92,
+   "qty_capped": true,
+   "capital": 21148.0,
+   "tp1": -1716.24,
+   "tp2": -1716.24,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "OPEN 15:15",
+     39,
+     530.2000122070312,
+     "15:15"
+    ]
+   ],
+   "exit_text": "OPEN",
+   "leg2_time": "15:15",
+   "pnl": 470.0,
+   "r_total": 0.53,
+   "closed": false,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "10:20",
+     "price": 542.25
+    }
+   ],
+   "cls_trader": "BREAKOUT",
+   "setups": [
+    "S1",
+    "S2"
+   ]
+  },
+  "LODHA": {
+   "symbol": "LODHA",
+   "side": "SELL",
+   "time": "10:10",
+   "signal": "SELL-EX8",
+   "setup": "S1+S2",
+   "sl_mode": "structure",
+   "entry": 1096.8,
+   "sl": 1116.22,
+   "sl_anchor": "pivot",
+   "risk_pts": 19.42,
+   "risk_pct": 1.771,
+   "risk_rs": 874.0,
+   "qty": 45,
+   "qty_full": 45,
+   "qty_capped": false,
+   "capital": 49356.0,
+   "tp1": -826.09,
+   "tp2": -826.09,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "SL 13:15",
+     45,
+     1116.2232,
+     "13:15"
+    ]
+   ],
+   "exit_text": "100% SL 13:15",
+   "leg2_time": "13:15",
+   "pnl": -874.0,
+   "r_total": -1.0,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "10:10",
+     "price": 1096.800048828125
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "13:15",
+     "price": 1116.2232
     }
    ],
    "cls_trader": "BREAKOUT",
@@ -1029,7 +1422,21 @@
   "GLENMARK:ENTRY",
   "GMRAIRPORT:ENTRY",
   "GODREJPROP:ENTRY",
-  "GRASIM:ENTRY"
+  "GRASIM:ENTRY",
+  "DELHIVERY:TRAIL_ON",
+  "DELHIVERY:EXIT_SL",
+  "EICHERMOT:EXIT_SL",
+  "FORTIS:TRAIL_ON",
+  "FORTIS:EXIT_SL",
+  "GLENMARK:EXIT_SL",
+  "GMRAIRPORT:EXIT_SL",
+  "GODREJPROP:EXIT_SL",
+  "GRASIM:EXIT_SL",
+  "JSWSTEEL:ENTRY",
+  "KPITTECH:ENTRY",
+  "LAURUSLABS:ENTRY",
+  "LICHSGFIN:ENTRY",
+  "LODHA:ENTRY"
  ],
  "gate": {
   "status": "MASTER\u00d7VIDEO-4 (pure alignment, vote B)",
@@ -1058,7 +1465,18 @@
   "GLENMARK": 2415.5,
   "GMRAIRPORT": 93.9,
   "GODREJPROP": 1637.73,
-  "GRASIM": 3097.33
+  "GRASIM": 3097.33,
+  "HCLTECH": 1224.13,
+  "HDFCAMC": 2233.93,
+  "HINDUNILVR": 1865.47,
+  "IDFCFIRSTB": 79.71,
+  "INFY": 1006.23,
+  "JSWENERGY": 499.3,
+  "JSWSTEEL": 1268.23,
+  "KPITTECH": 514.83,
+  "LAURUSLABS": 1984.17,
+  "LICHSGFIN": 551.67,
+  "LODHA": 1113.23
  },
  "eod_done": false,
  "cycles": 0,
@@ -1638,6 +2056,297 @@
    "entry": 1656.5,
    "setups": [],
    "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "GVT&D",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 4223.4,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "HCLTECH",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 1247.4,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "HCLTECH",
+   "side": "BUY",
+   "signal": "BUY-EX7",
+   "time": "10:20",
+   "entry": 1256.0,
+   "setups": [
+    "S1"
+   ],
+   "why": "winner's-club gate: BUY-EX7 is mixed \u2014 needs \u22652 setups (has 1: S1)"
+  },
+  {
+   "symbol": "HDFCAMC",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "10:10",
+   "entry": 2287.6,
+   "setups": [
+    "S1"
+   ],
+   "why": "winner's-club gate: BUY-EX17 is mixed \u2014 needs \u22652 setups (has 1: S1)"
+  },
+  {
+   "symbol": "HDFCLIFE",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 516.5,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "HDFCLIFE",
+   "side": "SELL",
+   "signal": "SELL-EX12",
+   "time": "09:30",
+   "entry": 514.75,
+   "setups": [],
+   "why": "before 09:45 \u2014 morning base not verified yet (video pre-condition)"
+  },
+  {
+   "symbol": "HEROMOTOCO",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 5311.5,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "HINDALCO",
+   "side": "SELL",
+   "signal": "SELL-EX1",
+   "time": "09:30",
+   "entry": 945.2,
+   "setups": [],
+   "why": "before 09:45 \u2014 morning base not verified yet (video pre-condition)"
+  },
+  {
+   "symbol": "HINDPETRO",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 357.0,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "HINDUNILVR",
+   "side": "BUY",
+   "signal": "BUY-EX5",
+   "time": "10:20",
+   "entry": 1882.6,
+   "setups": [
+    "S1"
+   ],
+   "why": "winner's-club gate: BUY-EX5 dead variant blocked (0 big-winners day-1)"
+  },
+  {
+   "symbol": "ICICIBANK",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 1307.5,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "ICICIBANK",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:35",
+   "entry": 1308.9,
+   "setups": [],
+   "why": "before 09:45 \u2014 morning base not verified yet (video pre-condition)"
+  },
+  {
+   "symbol": "ICICIGI",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 1531.4,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "ICICIGI",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:40",
+   "entry": 1540.7,
+   "setups": [],
+   "why": "before 09:45 \u2014 morning base not verified yet (video pre-condition)"
+  },
+  {
+   "symbol": "IDEA",
+   "side": "SELL",
+   "signal": "SELL-EX5",
+   "time": "09:35",
+   "entry": 13.3,
+   "setups": [],
+   "why": "before 09:45 \u2014 morning base not verified yet (video pre-condition)"
+  },
+  {
+   "symbol": "IDFCFIRSTB",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "10:00",
+   "entry": 80.69,
+   "setups": [
+    "S1"
+   ],
+   "why": "winner's-club gate: BUY-EX is mixed \u2014 needs \u22652 setups (has 1: S1)"
+  },
+  {
+   "symbol": "IEX",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "09:40",
+   "entry": 108.29,
+   "setups": [],
+   "why": "before 09:45 \u2014 morning base not verified yet (video pre-condition)"
+  },
+  {
+   "symbol": "INDIGO",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 4966.0,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "INDUSTOWER",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:40",
+   "entry": 373.65,
+   "setups": [],
+   "why": "before 09:45 \u2014 morning base not verified yet (video pre-condition)"
+  },
+  {
+   "symbol": "INFY",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:50",
+   "entry": 1015.8,
+   "setups": [
+    "S1"
+   ],
+   "why": "winner's-club gate: BUY-EX is mixed \u2014 needs \u22652 setups (has 1: S1)"
+  },
+  {
+   "symbol": "ITC",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:40",
+   "entry": 264.55,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "JINDALSTEL",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 1126.4,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "JIOFIN",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 219.85,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "JSWENERGY",
+   "side": "SELL",
+   "signal": "SELL-EX6",
+   "time": "09:50",
+   "entry": 494.3,
+   "setups": [
+    "S1"
+   ],
+   "why": "winner's-club gate: SELL-EX6 is mixed \u2014 needs \u22652 setups (has 1: S1)"
+  },
+  {
+   "symbol": "JSWSTEEL",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 1259.7,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "JUBLFOOD",
+   "side": "SELL",
+   "signal": "SELL-EX1",
+   "time": "09:30",
+   "entry": 460.45,
+   "setups": [],
+   "why": "before 09:45 \u2014 morning base not verified yet (video pre-condition)"
+  },
+  {
+   "symbol": "KALYANKJIL",
+   "side": "SELL",
+   "signal": "SELL-EX1",
+   "time": "09:30",
+   "entry": 566.95,
+   "setups": [],
+   "why": "before 09:45 \u2014 morning base not verified yet (video pre-condition)"
+  },
+  {
+   "symbol": "KAYNES",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 3604.8,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "KEI",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 4533.0,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "KOTAKBANK",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 409.5,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "KOTAKBANK",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:40",
+   "entry": 409.85,
+   "setups": [],
+   "why": "before 09:45 \u2014 morning base not verified yet (video pre-condition)"
   }
  ]
 }
