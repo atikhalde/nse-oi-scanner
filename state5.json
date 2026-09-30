@@ -29,7 +29,7 @@
    "nbars": 73
   },
   "AMBER": {
-   "nbars": 72
+   "nbars": 73
   },
   "AMBUJACEM": {
    "nbars": 73
@@ -86,7 +86,7 @@
    "nbars": 73
   },
   "BEL": {
-   "nbars": 72
+   "nbars": 73
   },
   "BHARATFORG": {
    "nbars": 73
@@ -131,7 +131,76 @@
    "nbars": 72
   },
   "CIPLA": {
-   "nbars": 5
+   "nbars": 73
+  },
+  "COALINDIA": {
+   "nbars": 73
+  },
+  "COCHINSHIP": {
+   "nbars": 73
+  },
+  "COFORGE": {
+   "nbars": 73
+  },
+  "COLPAL": {
+   "nbars": 73
+  },
+  "CONCOR": {
+   "nbars": 73
+  },
+  "CROMPTON": {
+   "nbars": 73
+  },
+  "CUMMINSIND": {
+   "nbars": 73
+  },
+  "DABUR": {
+   "nbars": 72
+  },
+  "DALBHARAT": {
+   "nbars": 75
+  },
+  "DELHIVERY": {
+   "nbars": 72
+  },
+  "DIVISLAB": {
+   "nbars": 73
+  },
+  "DIXON": {
+   "nbars": 73
+  },
+  "DLF": {
+   "nbars": 73
+  },
+  "DMART": {
+   "nbars": 72
+  },
+  "DRREDDY": {
+   "nbars": 73
+  },
+  "EICHERMOT": {
+   "nbars": 73
+  },
+  "ETERNAL": {
+   "nbars": 73
+  },
+  "EXIDEIND": {
+   "nbars": 76
+  },
+  "FEDERALBNK": {
+   "nbars": 72
+  },
+  "FORCEMOT": {
+   "nbars": 73
+  },
+  "FORTIS": {
+   "nbars": 72
+  },
+  "GAIL": {
+   "nbars": 73
+  },
+  "GLENMARK": {
+   "nbars": 25
   }
  },
  "trades": {
@@ -229,8 +298,7 @@
      "price": 8109.6215999999995
     }
    ],
-   "spurt_rank": 1,
-   "movers20": true
+   "spurt_rank": 1
   },
   "CIPLA": {
    "symbol": "CIPLA",
@@ -249,8 +317,8 @@
    "qty_full": 36,
    "qty_capped": false,
    "capital": 49180.0,
-   "tp1": -344.29,
-   "tp2": -344.29,
+   "tp1": -344.28,
+   "tp2": -344.28,
    "trail_armed": true,
    "trail_style": "structure swings",
    "legs": [
@@ -270,7 +338,7 @@
     {
      "key": "ENTRY",
      "time": "09:40",
-     "price": 1366.0999755859375
+     "price": 1366.1
     },
     {
      "key": "TRAIL_ON",
@@ -278,14 +346,116 @@
      "price": 1346.0
     }
    ],
-   "spurt_rank": 114,
+   "spurt_rank": 114
+  },
+  "GAIL": {
+   "symbol": "GAIL",
+   "side": "BUY",
+   "time": "09:35",
+   "signal": "BUY-EX7",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 172.1,
+   "sl": 170.59,
+   "sl_anchor": "session-extreme*",
+   "risk_pts": 1.51,
+   "risk_pct": 0.88,
+   "risk_rs": 439.0,
+   "qty": 290,
+   "qty_full": 290,
+   "qty_capped": false,
+   "capital": 49909.0,
+   "tp1": 322.0,
+   "tp2": 322.0,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "SL 14:35",
+     290,
+     170.58587111816408,
+     "14:35"
+    ]
+   ],
+   "exit_text": "100% SL 14:35",
+   "leg2_time": "14:35",
+   "pnl": -439.0,
+   "r_total": -1.0,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "09:35",
+     "price": 172.10000610351562
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "14:35",
+     "price": 170.58587111816408
+    }
+   ],
+   "spurt_rank": 162,
+   "movers20": true
+  },
+  "GLENMARK": {
+   "symbol": "GLENMARK",
+   "side": "SELL",
+   "time": "11:20",
+   "signal": "SELL-EX1",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 2363.3,
+   "sl": 2379.18,
+   "sl_anchor": "pivot",
+   "risk_pts": 15.88,
+   "risk_pct": 0.672,
+   "risk_rs": 333.0,
+   "qty": 21,
+   "qty_full": 21,
+   "qty_capped": false,
+   "capital": 49629.0,
+   "tp1": 791.61,
+   "tp2": 791.61,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "SL 12:15",
+     21,
+     2379.175691162109,
+     "12:15"
+    ]
+   ],
+   "exit_text": "100% SL 12:15",
+   "leg2_time": "12:15",
+   "pnl": -333.0,
+   "r_total": -1.0,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "11:20",
+     "price": 2363.300048828125
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "12:15",
+     "price": 2379.175691162109
+    }
+   ],
+   "spurt_rank": 198,
    "movers20": true
   }
  },
  "alerts": [
   "APLAPOLLO:ENTRY",
   "APOLLOHOSP:ENTRY",
-  "CIPLA:ENTRY"
+  "CIPLA:ENTRY",
+  "APOLLOHOSP:TRAIL_ON",
+  "APOLLOHOSP:EXIT_SL",
+  "CIPLA:TRAIL_ON",
+  "GAIL:ENTRY",
+  "GLENMARK:ENTRY"
  ],
  "gate": {
   "spurts": {
@@ -782,6 +952,186 @@
    "rank": 114,
    "mv": true,
    "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "CIPLA",
+   "side": "SELL",
+   "signal": "SELL-EX8",
+   "time": "09:40",
+   "entry": 1366.1,
+   "rank": 114,
+   "mv": true,
+   "why": "open position already on stock (1-open-trade rule)"
+  },
+  {
+   "symbol": "COALINDIA",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 428.6,
+   "rank": 190,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "COALINDIA",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:40",
+   "entry": 428.95,
+   "rank": 190,
+   "mv": false,
+   "why": "EX1/EX2 at open blocked \u2014 razor class, allowed from 09:45"
+  },
+  {
+   "symbol": "CONCOR",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 452.3,
+   "rank": 183,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "DALBHARAT",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 1695.0,
+   "rank": null,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "DELHIVERY",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 412.4,
+   "rank": 32,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "DELHIVERY",
+   "side": "SELL",
+   "signal": "NORMAL SELL",
+   "time": "09:45",
+   "entry": 409.55,
+   "rank": 32,
+   "mv": false,
+   "why": "M5 gate: spurt 32 \u00b7 movers N \u2014 need both"
+  },
+  {
+   "symbol": "DIVISLAB",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 9363.0,
+   "rank": 110,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "DIVISLAB",
+   "side": "SELL",
+   "signal": "NORMAL SELL",
+   "time": "11:20",
+   "entry": 9315.0,
+   "rank": 110,
+   "mv": false,
+   "why": "M5 gate: spurt 110 \u00b7 movers N \u2014 need both"
+  },
+  {
+   "symbol": "DMART",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:50",
+   "entry": 3860.9,
+   "rank": 10,
+   "mv": false,
+   "why": "M5 gate: spurt 10 \u00b7 movers N \u2014 need both"
+  },
+  {
+   "symbol": "DRREDDY",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 1215.2,
+   "rank": 203,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "EICHERMOT",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "09:45",
+   "entry": 7218.5,
+   "rank": 115,
+   "mv": false,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 (GHOST-shadowed EOD)"
+  },
+  {
+   "symbol": "EICHERMOT",
+   "side": "SELL",
+   "signal": "SELL-EX1",
+   "time": "11:10",
+   "entry": 7163.5,
+   "rank": 115,
+   "mv": false,
+   "why": "M5 gate: spurt 115 \u00b7 movers N \u2014 need both"
+  },
+  {
+   "symbol": "ETERNAL",
+   "side": "SELL",
+   "signal": "SELL-EX1",
+   "time": "09:35",
+   "entry": 324.1,
+   "rank": 111,
+   "mv": false,
+   "why": "EX1/EX2 at open blocked \u2014 razor class, allowed from 09:45"
+  },
+  {
+   "symbol": "EXIDEIND",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 416.8,
+   "rank": null,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "FORCEMOT",
+   "side": "BUY",
+   "signal": "BUY-EX5",
+   "time": "10:15",
+   "entry": 17328.0,
+   "rank": 84,
+   "mv": false,
+   "why": "M5 gate: spurt 84 \u00b7 movers N \u2014 need both"
+  },
+  {
+   "symbol": "FORTIS",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 808.9,
+   "rank": 3,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "FORTIS",
+   "side": "SELL",
+   "signal": "SELL-EX19",
+   "time": "10:20",
+   "entry": 780.55,
+   "rank": 3,
+   "mv": false,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 (GHOST-shadowed EOD)"
   }
  ],
  "ghosts": [
@@ -837,6 +1187,28 @@
    "time": "09:35",
    "entry": 46720.0,
    "rank": 35,
+   "mv": false,
+   "grp": "R"
+  },
+  {
+   "symbol": "EICHERMOT",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "code": 102,
+   "time": "09:45",
+   "entry": 7218.5,
+   "rank": 115,
+   "mv": false,
+   "grp": "R"
+  },
+  {
+   "symbol": "FORTIS",
+   "side": "SELL",
+   "signal": "SELL-EX19",
+   "code": 220,
+   "time": "10:20",
+   "entry": 780.55,
+   "rank": 3,
    "mv": false,
    "grp": "R"
   }
