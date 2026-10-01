@@ -182,7 +182,7 @@
     {
      "key": "ENTRY",
      "time": "10:00",
-     "price": 1795.4000244140625
+     "price": 1795.4
     },
     {
      "key": "TRAIL_ON",
@@ -194,7 +194,8 @@
   }
  },
  "alerts": [
-  "COFORGE:ENTRY"
+  "COFORGE:ENTRY",
+  "COFORGE:TRAIL_ON"
  ],
  "gate": {
   "status": "OK",
@@ -203,7 +204,7 @@
  "eod_done": false,
  "cycles": 0,
  "sector_board": {
-  "time": "15:58",
+  "time": "16:23",
   "net_tilt": -25.7,
   "tilt": "STRONG BEARISH",
   "bull_q": [
