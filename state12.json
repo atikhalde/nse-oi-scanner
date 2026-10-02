@@ -10,11 +10,10 @@
  "eod_done": true,
  "cycles": 1,
  "prev_meta": {
-  "status": "OK",
-  "source": "m12_prev_close.json",
-  "date": "2026-10-01",
-  "age_days": 1,
-  "count": 210
+  "status": "INSUFFICIENT",
+  "source": "post-close reseed",
+  "date": "2026-10-02",
+  "count": 0
  },
  "feed": {
   "dhan_calls": 0,
