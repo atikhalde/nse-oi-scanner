@@ -1,30 +1,43 @@
 {
- "date": "2026-10-02",
+ "date": "2026-10-05",
  "signals": {},
  "trades": {},
  "alerts": [
-  "M14:2026-10-02:EOD_SUMMARY",
-  "M14:2026-10-02:EOD_DOCUMENT"
+  "M14:2026-10-05:EOD_SUMMARY",
+  "M14:2026-10-05:EOD_DOCUMENT"
  ],
  "decisions": [],
  "eod_done": true,
  "cycles": 1,
  "prev_meta": {
-  "status": "INSUFFICIENT",
-  "source": "post-close reseed",
-  "date": "2026-10-02",
-  "count": 0
+  "status": "STALE",
+  "source": "m14 cache/history",
+  "expected": "2026-10-02",
+  "count": 0,
+  "policy": "no entry; seed at EOD"
  },
  "vix": {
-  "date": "2026-10-02",
+  "date": "2026-10-05",
   "prior_return": 7.2238,
   "last_day": "2026-10-01"
+ },
+ "prev_repair_marker": "2026-10-05:16",
+ "prev_heal": {
+  "date": "2026-10-02",
+  "count": 0,
+  "last_bar_min": null,
+  "total_fed": 420,
+  "generated_utc": "2026-10-05T10:51:36.526735+00:00",
+  "source": "local+daily history seed (local:0)",
+  "status": "INSUFFICIENT",
+  "policy": "cache not written; existing cache left untouched",
+  "last_bar_min_observed": null
  },
  "feed": {
   "dhan_calls": 0,
   "yahoo_calls": 210,
   "fallback": null,
-  "fed": 0
+  "fed": 210
  },
- "eod_cache_count": 0
+ "eod_cache_count": 210
 }
