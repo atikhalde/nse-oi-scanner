@@ -318,7 +318,9 @@
  },
  "alerts": [
   "FORTIS:ENTRY",
-  "GRASIM:ENTRY"
+  "GRASIM:ENTRY",
+  "GRASIM:TRAIL_ON",
+  "GRASIM:EXIT_SL"
  ],
  "gate": {
   "status": "OK",
@@ -327,7 +329,7 @@
  "eod_done": false,
  "cycles": 0,
  "sector_board": {
-  "time": "16:43",
+  "time": "22:09",
   "net_tilt": 45.0,
   "tilt": "STRONG BULLISH",
   "bull_q": [
