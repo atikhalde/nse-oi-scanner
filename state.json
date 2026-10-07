@@ -128,7 +128,55 @@
    "nbars": 72
   },
   "CHOLAFIN": {
-   "nbars": 9
+   "nbars": 73
+  },
+  "CIPLA": {
+   "nbars": 72
+  },
+  "COALINDIA": {
+   "nbars": 73
+  },
+  "COCHINSHIP": {
+   "nbars": 73
+  },
+  "COFORGE": {
+   "nbars": 73
+  },
+  "COLPAL": {
+   "nbars": 72
+  },
+  "CONCOR": {
+   "nbars": 72
+  },
+  "CROMPTON": {
+   "nbars": 73
+  },
+  "CUMMINSIND": {
+   "nbars": 72
+  },
+  "DABUR": {
+   "nbars": 73
+  },
+  "DALBHARAT": {
+   "nbars": 76
+  },
+  "DELHIVERY": {
+   "nbars": 72
+  },
+  "DIVISLAB": {
+   "nbars": 73
+  },
+  "DIXON": {
+   "nbars": 73
+  },
+  "DLF": {
+   "nbars": 73
+  },
+  "DMART": {
+   "nbars": 73
+  },
+  "DRREDDY": {
+   "nbars": 29
   }
  },
  "trades": {
@@ -149,8 +197,8 @@
    "qty_full": 17,
    "qty_capped": false,
    "capital": 47943.0,
-   "tp1": 1793.96,
-   "tp2": 1793.96,
+   "tp1": 1793.97,
+   "tp2": 1793.97,
    "trail_armed": true,
    "trail_style": "structure swings",
    "legs": [
@@ -170,7 +218,7 @@
     {
      "key": "ENTRY",
      "time": "11:15",
-     "price": 2820.199951171875
+     "price": 2820.2
     },
     {
      "key": "TRAIL_ON",
@@ -266,7 +314,7 @@
     {
      "key": "ENTRY",
      "time": "09:30",
-     "price": 381.6000061035156
+     "price": 381.6
     }
    ],
    "gate_rank": 17
@@ -352,7 +400,7 @@
     {
      "key": "ENTRY",
      "time": "09:30",
-     "price": 363.45001220703125
+     "price": 363.45
     },
     {
      "key": "TRAIL_ON",
@@ -405,7 +453,7 @@
     {
      "key": "ENTRY",
      "time": "10:40",
-     "price": 703.1500244140625
+     "price": 703.15
     }
    ],
    "gate_rank": 18
@@ -462,6 +510,155 @@
     }
    ],
    "gate_rank": 19
+  },
+  "CHOLAFIN#2": {
+   "symbol": "CHOLAFIN",
+   "side": "SELL",
+   "time": "10:00",
+   "signal": "SELL-EX2",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 1591.5,
+   "sl": 1612.02,
+   "sl_anchor": "pivot",
+   "risk_pts": 20.52,
+   "risk_pct": 1.289,
+   "risk_rs": 636.0,
+   "qty": 31,
+   "qty_full": 31,
+   "qty_capped": false,
+   "capital": 49336.0,
+   "tp1": -440.21,
+   "tp2": -440.21,
+   "trail_armed": true,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "trail 14:20",
+     31,
+     1581.3162,
+     "14:20"
+    ]
+   ],
+   "exit_text": "100% trail 14:20",
+   "leg2_time": "14:20",
+   "pnl": 316.0,
+   "r_total": 0.5,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "10:00",
+     "price": 1591.5
+    },
+    {
+     "key": "TRAIL_ON",
+     "time": "10:40",
+     "price": 1569.0
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "14:20",
+     "price": 1581.3162
+    }
+   ],
+   "gate_rank": 19
+  },
+  "DABUR": {
+   "symbol": "DABUR",
+   "side": "SELL",
+   "time": "11:05",
+   "signal": "NORMAL SELL",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 383.05,
+   "sl": 387.78,
+   "sl_anchor": "pivot",
+   "risk_pts": 4.73,
+   "risk_pct": 1.234,
+   "risk_rs": 615.0,
+   "qty": 130,
+   "qty_full": 130,
+   "qty_capped": false,
+   "capital": 49796.0,
+   "tp1": -84.98,
+   "tp2": -84.98,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "OPEN 15:15",
+     130,
+     383.54998779296875,
+     "15:15"
+    ]
+   ],
+   "exit_text": "OPEN",
+   "leg2_time": "15:15",
+   "pnl": -65.0,
+   "r_total": -0.11,
+   "closed": false,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "11:05",
+     "price": 383.04998779296875
+    }
+   ],
+   "gate_rank": 27
+  },
+  "DRREDDY": {
+   "symbol": "DRREDDY",
+   "side": "SELL",
+   "time": "11:40",
+   "signal": "SELL-EX2",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 1207.4,
+   "sl": 1220.14,
+   "sl_anchor": "pivot",
+   "risk_pts": 12.74,
+   "risk_pct": 1.055,
+   "risk_rs": 523.0,
+   "qty": 41,
+   "qty_full": 41,
+   "qty_capped": false,
+   "capital": 49503.0,
+   "tp1": -54.25,
+   "tp2": -54.25,
+   "trail_armed": true,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "trail 15:05",
+     41,
+     1198.9396911621093,
+     "15:05"
+    ]
+   ],
+   "exit_text": "100% trail 15:05",
+   "leg2_time": "15:05",
+   "pnl": 347.0,
+   "r_total": 0.66,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "11:40",
+     "price": 1207.4000244140625
+    },
+    {
+     "key": "TRAIL_ON",
+     "time": "13:50",
+     "price": 1193.0
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "15:05",
+     "price": 1198.9396911621093
+    }
+   ],
+   "gate_rank": 14
   }
  },
  "alerts": [
@@ -471,7 +668,16 @@
   "BHARATFORG:ENTRY",
   "BIOCON:ENTRY",
   "CAMS:ENTRY",
-  "CHOLAFIN:ENTRY"
+  "CHOLAFIN:ENTRY",
+  "ADANIENT:TRAIL_ON",
+  "BAJAJ-AUTO:EXIT_SL",
+  "BIOCON:TRAIL_ON",
+  "BIOCON:EXIT_SL",
+  "CHOLAFIN:TRAIL_ON",
+  "CHOLAFIN:EXIT_SL",
+  "CHOLAFIN#2:ENTRY",
+  "DABUR:ENTRY",
+  "DRREDDY:ENTRY"
  ],
  "gate": {
   "status": "OK",
@@ -904,6 +1110,69 @@
    "time": "09:20",
    "entry": 901.85,
    "rank": 128,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "COALINDIA",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 414.95,
+   "rank": 172,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "COFORGE",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 1836.4,
+   "rank": 167,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "CONCOR",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 441.8,
+   "rank": 136,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "DALBHARAT",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:35",
+   "entry": 1687.3,
+   "rank": null,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "DELHIVERY",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 403.7,
+   "rank": 190,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "DLF",
+   "side": "SELL",
+   "signal": "SELL-EX1",
+   "time": "09:35",
+   "entry": 659.05,
+   "rank": 149,
+   "why": "EX1/EX2 before 09:45 blocked \u2014 razor-edge class (B2)"
+  },
+  {
+   "symbol": "DMART",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 3564.7,
+   "rank": 205,
    "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
   }
  ],
