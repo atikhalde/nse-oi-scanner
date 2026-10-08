@@ -811,10 +811,57 @@
      "price": 7638.5274
     }
    ],
-   "spurt_rank": 45,
-   "movers20": true
+   "spurt_rank": 45
   },
   "DABUR": {
+   "symbol": "DABUR",
+   "side": "BUY",
+   "time": "11:00",
+   "signal": "BUY-EX7",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 386.2,
+   "sl": 382.52,
+   "sl_anchor": "pivot",
+   "risk_pts": 3.68,
+   "risk_pct": 0.952,
+   "risk_rs": 474.0,
+   "qty": 129,
+   "qty_full": 129,
+   "qty_capped": false,
+   "capital": 49820.0,
+   "tp1": 750.17,
+   "tp2": 750.17,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "SL 11:25",
+     129,
+     382.52348610229495,
+     "11:25"
+    ]
+   ],
+   "exit_text": "100% SL 11:25",
+   "leg2_time": "11:25",
+   "pnl": -474.0,
+   "r_total": -1.0,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "11:00",
+     "price": 386.2
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "11:25",
+     "price": 382.52348610229495
+    }
+   ],
+   "spurt_rank": 128
+  },
+  "DABUR#2": {
    "symbol": "DABUR",
    "side": "BUY",
    "time": "11:00",
@@ -895,7 +942,11 @@
   "APOLLOHOSP:TRAIL_ON",
   "APOLLOHOSP:EXIT_SL",
   "APOLLOHOSP#2:ENTRY",
-  "DABUR:ENTRY"
+  "DABUR:ENTRY",
+  "APOLLOHOSP#2:TRAIL_ON",
+  "APOLLOHOSP#2:EXIT_SL",
+  "DABUR:EXIT_SL",
+  "DABUR#2:ENTRY"
  ],
  "gate": {
   "spurts": {
