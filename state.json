@@ -457,8 +457,8 @@
    "qty_full": 41,
    "qty_capped": true,
    "capital": 38938.0,
-   "tp1": 3992.55,
-   "tp2": 3992.55,
+   "tp1": 3992.54,
+   "tp2": 3992.54,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
@@ -478,7 +478,7 @@
     {
      "key": "ENTRY",
      "time": "10:30",
-     "price": 1216.800048828125
+     "price": 1216.8
     }
    ],
    "gate_rank": 19
@@ -564,7 +564,7 @@
     {
      "key": "ENTRY",
      "time": "09:55",
-     "price": 537.5499877929688
+     "price": 537.55
     },
     {
      "key": "TRAIL_ON",
@@ -617,7 +617,7 @@
     {
      "key": "ENTRY",
      "time": "11:10",
-     "price": 1927.4000244140625
+     "price": 1927.4
     },
     {
      "key": "TRAIL_ON",
@@ -644,8 +644,8 @@
    "qty_full": 10,
    "qty_capped": false,
    "capital": 48442.0,
-   "tp1": 7222.11,
-   "tp2": 7222.11,
+   "tp1": 7222.09,
+   "tp2": 7222.09,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
@@ -665,7 +665,7 @@
     {
      "key": "ENTRY",
      "time": "10:10",
-     "price": 4844.2001953125
+     "price": 4844.2
     },
     {
      "key": "EXIT_SL",
@@ -771,7 +771,11 @@
   "HYUNDAI:ENTRY",
   "INDIGO:ENTRY",
   "KOTAKBANK:ENTRY",
-  "LODHA:ENTRY"
+  "LODHA:ENTRY",
+  "HINDZINC:TRAIL_ON",
+  "HINDZINC:EXIT_SL",
+  "HYUNDAI:TRAIL_ON",
+  "INDIGO:EXIT_SL"
  ],
  "gate": {
   "status": "OK",
