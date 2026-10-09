@@ -89,7 +89,7 @@
     {
      "key": "ENTRY",
      "time": "09:30",
-     "price": 1278.5999755859375
+     "price": 1278.6
     },
     {
      "key": "EXIT_SL",
@@ -97,8 +97,7 @@
      "price": 1259.8479555908204
     }
    ],
-   "spurt_rank": 159,
-   "movers20": true
+   "spurt_rank": 159
   },
   "ADANIPORTS": {
    "symbol": "ADANIPORTS",
@@ -138,11 +137,10 @@
     {
      "key": "ENTRY",
      "time": "10:00",
-     "price": 1748.300048828125
+     "price": 1748.3
     }
    ],
-   "spurt_rank": 176,
-   "movers20": true
+   "spurt_rank": 176
   },
   "ADANIPOWER": {
    "symbol": "ADANIPOWER",
@@ -190,8 +188,7 @@
      "price": 189.11216389770507
     }
    ],
-   "spurt_rank": 74,
-   "movers20": true
+   "spurt_rank": 74
   },
   "APOLLOHOSP": {
    "symbol": "APOLLOHOSP",
@@ -234,8 +231,7 @@
      "price": 7952.0
     }
    ],
-   "spurt_rank": 188,
-   "movers20": true
+   "spurt_rank": 188
   },
   "ASHOKLEY": {
    "symbol": "ASHOKLEY",
@@ -275,11 +271,10 @@
     {
      "key": "ENTRY",
      "time": "10:25",
-     "price": 146.63999938964844
+     "price": 146.64
     }
    ],
-   "spurt_rank": 59,
-   "movers20": true
+   "spurt_rank": 59
   },
   "ASIANPAINT": {
    "symbol": "ASIANPAINT",
@@ -298,8 +293,8 @@
    "qty_full": 21,
    "qty_capped": false,
    "capital": 49165.0,
-   "tp1": 3713.88,
-   "tp2": 3713.88,
+   "tp1": 3713.89,
+   "tp2": 3713.89,
    "trail_armed": true,
    "trail_style": "structure swings",
    "legs": [
@@ -319,7 +314,7 @@
     {
      "key": "ENTRY",
      "time": "09:30",
-     "price": 2341.199951171875
+     "price": 2341.2
     },
     {
      "key": "TRAIL_ON",
@@ -332,8 +327,7 @@
      "price": 2351.629677636719
     }
    ],
-   "spurt_rank": 66,
-   "movers20": true
+   "spurt_rank": 66
   },
   "ASIANPAINT#2": {
    "symbol": "ASIANPAINT",
@@ -387,7 +381,11 @@
   "APOLLOHOSP:ENTRY",
   "ASHOKLEY:ENTRY",
   "ASIANPAINT:ENTRY",
-  "ASIANPAINT#2:ENTRY"
+  "ASIANPAINT#2:ENTRY",
+  "ADANIENSOL:EXIT_SL",
+  "ADANIPOWER:EXIT_SL",
+  "ASIANPAINT:TRAIL_ON",
+  "ASIANPAINT:EXIT_SL"
  ],
  "gate": {
   "spurts": {
