@@ -134,7 +134,13 @@
    "nbars": 73
   },
   "COALINDIA": {
-   "nbars": 14
+   "nbars": 73
+  },
+  "COCHINSHIP": {
+   "nbars": 73
+  },
+  "COFORGE": {
+   "nbars": 7
   }
  },
  "trades": {
@@ -179,8 +185,7 @@
      "price": 1060.0
     }
    ],
-   "spurt_rank": 59,
-   "movers20": true
+   "spurt_rank": 59
   },
   "ABB": {
    "symbol": "ABB",
@@ -223,8 +228,7 @@
      "price": 6905.5
     }
    ],
-   "spurt_rank": 183,
-   "movers20": true
+   "spurt_rank": 183
   },
   "ADANIPORTS": {
    "symbol": "ADANIPORTS",
@@ -264,11 +268,10 @@
     {
      "key": "ENTRY",
      "time": "10:25",
-     "price": 1755.9000244140625
+     "price": 1755.9
     }
    ],
-   "spurt_rank": 77,
-   "movers20": true
+   "spurt_rank": 77
   },
   "ADANIPOWER": {
    "symbol": "ADANIPOWER",
@@ -321,8 +324,7 @@
      "price": 187.78754999999998
     }
    ],
-   "spurt_rank": 111,
-   "movers20": true
+   "spurt_rank": 111
   },
   "ALKEM": {
    "symbol": "ALKEM",
@@ -370,8 +372,7 @@
      "price": 5201.0
     }
    ],
-   "spurt_rank": 134,
-   "movers20": true
+   "spurt_rank": 134
   },
   "AMBER": {
    "symbol": "AMBER",
@@ -414,8 +415,7 @@
      "price": 6532.0
     }
    ],
-   "spurt_rank": 203,
-   "movers20": true
+   "spurt_rank": 203
   },
   "AMBUJACEM": {
    "symbol": "AMBUJACEM",
@@ -468,8 +468,7 @@
      "price": 348.0
     }
    ],
-   "spurt_rank": 190,
-   "movers20": true
+   "spurt_rank": 190
   },
   "APOLLOHOSP": {
    "symbol": "APOLLOHOSP",
@@ -517,8 +516,7 @@
      "price": 8065.6128
     }
    ],
-   "spurt_rank": 13,
-   "movers20": true
+   "spurt_rank": 13
   },
   "ASHOKLEY": {
    "symbol": "ASHOKLEY",
@@ -558,7 +556,7 @@
     {
      "key": "ENTRY",
      "time": "09:45",
-     "price": 148.11000061035156
+     "price": 148.11
     },
     {
      "key": "EXIT_SL",
@@ -566,8 +564,7 @@
      "price": 146.440707220459
     }
    ],
-   "spurt_rank": 22,
-   "movers20": true
+   "spurt_rank": 22
   },
   "BANKBARODA": {
    "symbol": "BANKBARODA",
@@ -607,13 +604,65 @@
     {
      "key": "ENTRY",
      "time": "09:30",
-     "price": 235.2899932861328
+     "price": 235.29
     }
    ],
-   "spurt_rank": 121,
-   "movers20": true
+   "spurt_rank": 121
   },
   "COALINDIA": {
+   "symbol": "COALINDIA",
+   "side": "SELL",
+   "time": "10:25",
+   "signal": "NORMAL SELL",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 409.95,
+   "sl": 411.53,
+   "sl_anchor": "pivot",
+   "risk_pts": 1.58,
+   "risk_pct": 0.386,
+   "risk_rs": 191.0,
+   "qty": 121,
+   "qty_full": 121,
+   "qty_capped": false,
+   "capital": 49604.0,
+   "tp1": 253.3,
+   "tp2": 253.3,
+   "trail_armed": true,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "trail 13:05",
+     121,
+     404.1808261047363,
+     "13:05"
+    ]
+   ],
+   "exit_text": "100% trail 13:05",
+   "leg2_time": "13:05",
+   "pnl": 698.0,
+   "r_total": 3.65,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "10:25",
+     "price": 409.95
+    },
+    {
+     "key": "TRAIL_ON",
+     "time": "11:15",
+     "price": 404.0
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "13:05",
+     "price": 404.1808261047363
+    }
+   ],
+   "spurt_rank": 65
+  },
+  "COALINDIA#2": {
    "symbol": "COALINDIA",
    "side": "SELL",
    "time": "10:25",
@@ -666,6 +715,55 @@
    ],
    "spurt_rank": 65,
    "movers20": true
+  },
+  "COFORGE": {
+   "symbol": "COFORGE",
+   "side": "SELL",
+   "time": "09:50",
+   "signal": "SELL-EX8",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 1841.3,
+   "sl": 1861.77,
+   "sl_anchor": "pivot",
+   "risk_pts": 20.47,
+   "risk_pct": 1.112,
+   "risk_rs": 553.0,
+   "qty": 27,
+   "qty_full": 27,
+   "qty_capped": false,
+   "capital": 49715.0,
+   "tp1": -185.45,
+   "tp2": -185.45,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "SL 11:45",
+     27,
+     1861.7723044189452,
+     "11:45"
+    ]
+   ],
+   "exit_text": "100% SL 11:45",
+   "leg2_time": "11:45",
+   "pnl": -553.0,
+   "r_total": -1.0,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "09:50",
+     "price": 1841.300048828125
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "11:45",
+     "price": 1861.7723044189452
+    }
+   ],
+   "spurt_rank": 115,
+   "movers20": true
   }
  },
  "alerts": [
@@ -679,7 +777,18 @@
   "APOLLOHOSP:ENTRY",
   "ASHOKLEY:ENTRY",
   "BANKBARODA:ENTRY",
-  "COALINDIA:ENTRY"
+  "COALINDIA:ENTRY",
+  "ADANIPOWER:TRAIL_ON",
+  "ADANIPOWER:EXIT_SL",
+  "ALKEM:TRAIL_ON",
+  "AMBUJACEM:TRAIL_ON",
+  "AMBUJACEM:EXIT_SL",
+  "APOLLOHOSP:EXIT_SL",
+  "ASHOKLEY:EXIT_SL",
+  "COALINDIA:TRAIL_ON",
+  "COALINDIA:EXIT_SL",
+  "COALINDIA#2:ENTRY",
+  "COFORGE:ENTRY"
  ],
  "gate": {
   "spurts": {
@@ -1196,6 +1305,26 @@
    "rank": 127,
    "mv": false,
    "why": "M5 gate: spurt 127 \u00b7 movers N \u2014 need both"
+  },
+  {
+   "symbol": "COCHINSHIP",
+   "side": "BUY",
+   "signal": "BUY-EX5",
+   "time": "10:00",
+   "entry": 1252.8,
+   "rank": 166,
+   "mv": false,
+   "why": "M5 gate: spurt 166 \u00b7 movers N \u2014 need both"
+  },
+  {
+   "symbol": "COFORGE",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 1848.7,
+   "rank": 115,
+   "mv": true,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
   }
  ],
  "ghosts": [
