@@ -164,8 +164,7 @@
      "price": 1294.0
     }
    ],
-   "spurt_rank": 156,
-   "movers20": true
+   "spurt_rank": 156
   },
   "ADANIENT": {
    "symbol": "ADANIENT",
@@ -184,8 +183,8 @@
    "qty_full": 18,
    "qty_capped": true,
    "capital": 34815.0,
-   "tp1": 9164.84,
-   "tp2": 9164.84,
+   "tp1": 9164.83,
+   "tp2": 9164.83,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
@@ -205,11 +204,10 @@
     {
      "key": "ENTRY",
      "time": "09:50",
-     "price": 2678.10009765625
+     "price": 2678.1
     }
    ],
-   "spurt_rank": 206,
-   "movers20": true
+   "spurt_rank": 206
   },
   "CANBK": {
    "symbol": "CANBK",
@@ -249,7 +247,7 @@
     {
      "key": "ENTRY",
      "time": "09:40",
-     "price": 119.05000305175781
+     "price": 119.05
     },
     {
      "key": "TRAIL_ON",
@@ -257,14 +255,14 @@
      "price": 120.25
     }
    ],
-   "spurt_rank": 102,
-   "movers20": true
+   "spurt_rank": 102
   }
  },
  "alerts": [
   "ADANIENSOL:ENTRY",
   "ADANIENT:ENTRY",
-  "CANBK:ENTRY"
+  "CANBK:ENTRY",
+  "CANBK:TRAIL_ON"
  ],
  "gate": {
   "spurts": {
