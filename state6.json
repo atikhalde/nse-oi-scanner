@@ -849,7 +849,7 @@
     {
      "key": "ENTRY",
      "time": "11:00",
-     "price": 1046.8499755859375
+     "price": 1046.85
     }
    ],
    "sector": "CAPMKTS"
@@ -892,7 +892,7 @@
     {
      "key": "ENTRY",
      "time": "09:35",
-     "price": 1777.4000244140625
+     "price": 1777.4
     },
     {
      "key": "TRAIL_ON",
@@ -923,7 +923,11 @@
   "JSWENERGY:EXIT_SL",
   "MCX:ENTRY",
   "MOTILALOFS:ENTRY",
-  "NUVAMA:ENTRY"
+  "NUVAMA:ENTRY",
+  "MCX:TRAIL_ON",
+  "MCX:EXIT_SL",
+  "NUVAMA:TRAIL_ON",
+  "NUVAMA:EXIT_EOD"
  ],
  "gate": {
   "status": "OK",
@@ -932,7 +936,7 @@
  "eod_done": false,
  "cycles": 0,
  "sector_board": {
-  "time": "20:08",
+  "time": "20:33",
   "net_tilt": 5.6,
   "tilt": "BULLISH",
   "bull_q": [
