@@ -482,7 +482,112 @@
    "nbars": 74
   },
   "POLICYBZR": {
-   "nbars": 29
+   "nbars": 74
+  },
+  "POLYCAB": {
+   "nbars": 73
+  },
+  "POWERGRID": {
+   "nbars": 73
+  },
+  "POWERINDIA": {
+   "nbars": 73
+  },
+  "PREMIERENE": {
+   "nbars": 74
+  },
+  "PRESTIGE": {
+   "nbars": 74
+  },
+  "RADICO": {
+   "nbars": 74
+  },
+  "RBLBANK": {
+   "nbars": 74
+  },
+  "RECLTD": {
+   "nbars": 74
+  },
+  "RELIANCE": {
+   "nbars": 74
+  },
+  "RVNL": {
+   "nbars": 74
+  },
+  "SAIL": {
+   "nbars": 74
+  },
+  "SBICARD": {
+   "nbars": 74
+  },
+  "SBILIFE": {
+   "nbars": 74
+  },
+  "SBIN": {
+   "nbars": 73
+  },
+  "SHREECEM": {
+   "nbars": 73
+  },
+  "SHRIRAMFIN": {
+   "nbars": 74
+  },
+  "SIEMENS": {
+   "nbars": 73
+  },
+  "SOLARINDS": {
+   "nbars": 74
+  },
+  "SONACOMS": {
+   "nbars": 74
+  },
+  "SRF": {
+   "nbars": 74
+  },
+  "SUNPHARMA": {
+   "nbars": 73
+  },
+  "SUPREMEIND": {
+   "nbars": 74
+  },
+  "SUZLON": {
+   "nbars": 73
+  },
+  "SWIGGY": {
+   "nbars": 73
+  },
+  "TATACONSUM": {
+   "nbars": 73
+  },
+  "TATAELXSI": {
+   "nbars": 73
+  },
+  "TATAPOWER": {
+   "nbars": 74
+  },
+  "TATASTEEL": {
+   "nbars": 73
+  },
+  "TCS": {
+   "nbars": 73
+  },
+  "TECHM": {
+   "nbars": 73
+  },
+  "TIINDIA": {
+   "nbars": 74
+  },
+  "TITAN": {
+   "nbars": 74
+  },
+  "TMPV": {
+   "nbars": 74
+  },
+  "TORNTPHARM": {
+   "nbars": 74
+  },
+  "TRENT": {
+   "nbars": 26
   }
  },
  "trades": {
@@ -945,8 +1050,8 @@
    "qty_full": 17,
    "qty_capped": false,
    "capital": 48302.0,
-   "tp1": -680.65,
-   "tp2": -680.65,
+   "tp1": -680.66,
+   "tp2": -680.66,
    "trail_armed": true,
    "trail_style": "structure swings",
    "legs": [
@@ -966,7 +1071,7 @@
     {
      "key": "ENTRY",
      "time": "09:35",
-     "price": 2841.300048828125
+     "price": 2841.3
     },
     {
      "key": "TRAIL_ON",
@@ -979,8 +1084,7 @@
      "price": 2812.462282324219
     }
    ],
-   "spurt_rank": 28,
-   "movers20": true
+   "spurt_rank": 28
   },
   "MFSL": {
    "symbol": "MFSL",
@@ -1020,7 +1124,7 @@
     {
      "key": "ENTRY",
      "time": "10:55",
-     "price": 1311.699951171875
+     "price": 1311.7
     },
     {
      "key": "TRAIL_ON",
@@ -1033,8 +1137,7 @@
      "price": 1290.8580955810546
     }
    ],
-   "spurt_rank": 47,
-   "movers20": true
+   "spurt_rank": 47
   },
   "NESTLEIND": {
    "symbol": "NESTLEIND",
@@ -1074,7 +1177,7 @@
     {
      "key": "ENTRY",
      "time": "09:45",
-     "price": 1361.4000244140625
+     "price": 1361.4
     },
     {
      "key": "TRAIL_ON",
@@ -1087,8 +1190,7 @@
      "price": 1368.7262
     }
    ],
-   "spurt_rank": 20,
-   "movers20": true
+   "spurt_rank": 20
   },
   "ONGC": {
    "symbol": "ONGC",
@@ -1128,11 +1230,10 @@
     {
      "key": "ENTRY",
      "time": "09:50",
-     "price": 224.44000244140625
+     "price": 224.44
     }
    ],
-   "spurt_rank": 195,
-   "movers20": true
+   "spurt_rank": 195
   },
   "PHOENIXLTD": {
    "symbol": "PHOENIXLTD",
@@ -1172,7 +1273,7 @@
     {
      "key": "ENTRY",
      "time": "09:45",
-     "price": 1916.9000244140625
+     "price": 1916.9
     },
     {
      "key": "EXIT_SL",
@@ -1180,10 +1281,57 @@
      "price": 1893.3212111816406
     }
    ],
-   "spurt_rank": 181,
-   "movers20": true
+   "spurt_rank": 181
   },
   "POLICYBZR": {
+   "symbol": "POLICYBZR",
+   "side": "SELL",
+   "time": "11:40",
+   "signal": "SELL-EX1",
+   "setup": "PULLBACK",
+   "sl_mode": "structure",
+   "entry": 1049.8,
+   "sl": 1054.85,
+   "sl_anchor": "pullback-high/low",
+   "risk_pts": 5.05,
+   "risk_pct": 0.481,
+   "risk_rs": 237.0,
+   "qty": 47,
+   "qty_full": 47,
+   "qty_capped": false,
+   "capital": 49341.0,
+   "tp1": 550.34,
+   "tp2": 550.34,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "SL 11:45",
+     47,
+     1054.845058169582,
+     "11:45"
+    ]
+   ],
+   "exit_text": "100% SL 11:45",
+   "leg2_time": "11:45",
+   "pnl": -237.0,
+   "r_total": -1.0,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "11:40",
+     "price": 1049.8
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "11:45",
+     "price": 1054.845058169582
+    }
+   ],
+   "spurt_rank": 157
+  },
+  "POLICYBZR#2": {
    "symbol": "POLICYBZR",
    "side": "SELL",
    "time": "11:40",
@@ -1231,6 +1379,148 @@
    ],
    "spurt_rank": 157,
    "movers20": true
+  },
+  "SIEMENS": {
+   "symbol": "SIEMENS",
+   "side": "BUY",
+   "time": "09:50",
+   "signal": "BUY-EX",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 3748.0,
+   "sl": 3701.26,
+   "sl_anchor": "session-extreme*",
+   "risk_pts": 46.74,
+   "risk_pct": 1.247,
+   "risk_rs": 608.0,
+   "qty": 13,
+   "qty_full": 13,
+   "qty_capped": false,
+   "capital": 48724.0,
+   "tp1": 8375.3,
+   "tp2": 8375.3,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "OPEN 15:30",
+     13,
+     3764.89990234375,
+     "15:30"
+    ]
+   ],
+   "exit_text": "OPEN",
+   "leg2_time": "15:30",
+   "pnl": 220.0,
+   "r_total": 0.36,
+   "closed": false,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "09:50",
+     "price": 3748.0
+    }
+   ],
+   "spurt_rank": 152,
+   "movers20": true
+  },
+  "SUPREMEIND": {
+   "symbol": "SUPREMEIND",
+   "side": "BUY",
+   "time": "10:15",
+   "signal": "BUY-EX",
+   "setup": "PULLBACK",
+   "sl_mode": "structure",
+   "entry": 3555.0,
+   "sl": 3533.11,
+   "sl_anchor": "pullback-high/low",
+   "risk_pts": 21.89,
+   "risk_pct": 0.616,
+   "risk_rs": 306.0,
+   "qty": 14,
+   "qty_full": 14,
+   "qty_capped": false,
+   "capital": 49770.0,
+   "tp1": 5722.26,
+   "tp2": 5722.26,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "SL 10:35",
+     14,
+     3533.108497774474,
+     "10:35"
+    ]
+   ],
+   "exit_text": "100% SL 10:35",
+   "leg2_time": "10:35",
+   "pnl": -306.0,
+   "r_total": -1.0,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "10:15",
+     "price": 3555.0
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "10:35",
+     "price": 3533.108497774474
+    }
+   ],
+   "spurt_rank": 171,
+   "movers20": true
+  },
+  "TRENT": {
+   "symbol": "TRENT",
+   "side": "SELL",
+   "time": "11:25",
+   "signal": "NORMAL SELL",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 2964.4,
+   "sl": 2982.6,
+   "sl_anchor": "pivot",
+   "risk_pts": 18.2,
+   "risk_pct": 0.614,
+   "risk_rs": 291.0,
+   "qty": 16,
+   "qty_full": 16,
+   "qty_capped": false,
+   "capital": 47430.0,
+   "tp1": 1162.95,
+   "tp2": 1162.95,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "SL 12:15",
+     16,
+     2982.5964,
+     "12:15"
+    ]
+   ],
+   "exit_text": "100% SL 12:15",
+   "leg2_time": "12:15",
+   "pnl": -291.0,
+   "r_total": -1.0,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "11:25",
+     "price": 2964.39990234375
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "12:15",
+     "price": 2982.5964
+    }
+   ],
+   "spurt_rank": 173,
+   "movers20": true
   }
  },
  "alerts": [
@@ -1259,7 +1549,19 @@
   "NESTLEIND:ENTRY",
   "ONGC:ENTRY",
   "PHOENIXLTD:ENTRY",
-  "POLICYBZR:ENTRY"
+  "POLICYBZR:ENTRY",
+  "M&M:TRAIL_ON",
+  "M&M:EXIT_SL",
+  "MFSL:TRAIL_ON",
+  "MFSL:EXIT_SL",
+  "NESTLEIND:TRAIL_ON",
+  "NESTLEIND:EXIT_SL",
+  "PHOENIXLTD:EXIT_SL",
+  "POLICYBZR:EXIT_SL",
+  "POLICYBZR#2:ENTRY",
+  "SIEMENS:ENTRY",
+  "SUPREMEIND:ENTRY",
+  "TRENT:ENTRY"
  ],
  "gate": {
   "spurts": {
@@ -2274,6 +2576,204 @@
    "entry": 1044.8,
    "rank": 157,
    "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "POLYCAB",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 7987.0,
+   "rank": 50,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "POWERINDIA",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 30215.0,
+   "rank": 172,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "POWERINDIA",
+   "side": "BUY",
+   "signal": "BUY-EX12",
+   "time": "10:40",
+   "entry": 30390.0,
+   "rank": 172,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 quality filter"
+  },
+  {
+   "symbol": "PREMIERENE",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:35",
+   "entry": 917.7,
+   "rank": 125,
+   "why": "EX1/EX2 before 09:45 blocked \u2014 razor-edge class (B2)"
+  },
+  {
+   "symbol": "PRESTIGE",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:35",
+   "entry": 1492.5,
+   "rank": 107,
+   "why": "EX1/EX2 before 09:45 blocked \u2014 razor-edge class (B2)"
+  },
+  {
+   "symbol": "RELIANCE",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:35",
+   "entry": 1167.8,
+   "rank": 74,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "RELIANCE",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:40",
+   "entry": 1170.7,
+   "rank": 74,
+   "why": "EX1/EX2 before 09:45 blocked \u2014 razor-edge class (B2)"
+  },
+  {
+   "symbol": "RVNL",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:40",
+   "entry": 197.53,
+   "rank": 118,
+   "why": "EX1/EX2 before 09:45 blocked \u2014 razor-edge class (B2)"
+  },
+  {
+   "symbol": "SBILIFE",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 1670.2,
+   "rank": 15,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "SOLARINDS",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 20091.0,
+   "rank": 120,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "SONACOMS",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:35",
+   "entry": 806.55,
+   "rank": 30,
+   "why": "EX1/EX2 before 09:45 blocked \u2014 razor-edge class (B2)"
+  },
+  {
+   "symbol": "SRF",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 2499.4,
+   "rank": 94,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "SUNPHARMA",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 1755.4,
+   "rank": 57,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "SUNPHARMA",
+   "side": "SELL",
+   "signal": "SELL-EX12",
+   "time": "09:30",
+   "entry": 1748.8,
+   "rank": 57,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 quality filter"
+  },
+  {
+   "symbol": "SUPREMEIND",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 3562.4,
+   "rank": 171,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "TATACONSUM",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "09:30",
+   "entry": 970.0,
+   "rank": 122,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 quality filter"
+  },
+  {
+   "symbol": "TATAPOWER",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 344.8,
+   "rank": 180,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "TATAPOWER",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:35",
+   "entry": 346.65,
+   "rank": 180,
+   "why": "EX1/EX2 before 09:45 blocked \u2014 razor-edge class (B2)"
+  },
+  {
+   "symbol": "TATASTEEL",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 175.12,
+   "rank": 166,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "TIINDIA",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "09:35",
+   "entry": 2198.0,
+   "rank": 128,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 quality filter"
+  },
+  {
+   "symbol": "TORNTPHARM",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 4593.5,
+   "rank": 116,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "TORNTPHARM",
+   "side": "SELL",
+   "signal": "SELL-EX12",
+   "time": "09:30",
+   "entry": 4574.2,
+   "rank": 116,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 quality filter"
   }
  ],
  "ghosts": [
@@ -2538,6 +3038,61 @@
    "time": "09:50",
    "entry": 343.15,
    "rank": 88,
+   "mv": false,
+   "grp": "R"
+  },
+  {
+   "symbol": "POWERINDIA",
+   "side": "BUY",
+   "signal": "BUY-EX12",
+   "code": 111,
+   "time": "10:40",
+   "entry": 30390.0,
+   "rank": 172,
+   "mv": false,
+   "grp": "R"
+  },
+  {
+   "symbol": "SUNPHARMA",
+   "side": "SELL",
+   "signal": "SELL-EX12",
+   "code": 213,
+   "time": "09:30",
+   "entry": 1748.8,
+   "rank": 57,
+   "mv": true,
+   "grp": "R"
+  },
+  {
+   "symbol": "TATACONSUM",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "code": 102,
+   "time": "09:30",
+   "entry": 970.0,
+   "rank": 122,
+   "mv": true,
+   "grp": "R"
+  },
+  {
+   "symbol": "TIINDIA",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "code": 102,
+   "time": "09:35",
+   "entry": 2198.0,
+   "rank": 128,
+   "mv": false,
+   "grp": "R"
+  },
+  {
+   "symbol": "TORNTPHARM",
+   "side": "SELL",
+   "signal": "SELL-EX12",
+   "code": 213,
+   "time": "09:30",
+   "entry": 4574.2,
+   "rank": 116,
    "mv": false,
    "grp": "R"
   }
