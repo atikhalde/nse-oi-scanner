@@ -497,7 +497,139 @@
    "nbars": 71
   },
   "PRESTIGE": {
-   "nbars": 11
+   "nbars": 71
+  },
+  "RADICO": {
+   "nbars": 72
+  },
+  "RBLBANK": {
+   "nbars": 72
+  },
+  "RECLTD": {
+   "nbars": 72
+  },
+  "RELIANCE": {
+   "nbars": 72
+  },
+  "RVNL": {
+   "nbars": 71
+  },
+  "SAIL": {
+   "nbars": 72
+  },
+  "SBICARD": {
+   "nbars": 71
+  },
+  "SBILIFE": {
+   "nbars": 72
+  },
+  "SBIN": {
+   "nbars": 72
+  },
+  "SHREECEM": {
+   "nbars": 71
+  },
+  "SHRIRAMFIN": {
+   "nbars": 71
+  },
+  "SIEMENS": {
+   "nbars": 71
+  },
+  "SOLARINDS": {
+   "nbars": 72
+  },
+  "SONACOMS": {
+   "nbars": 71
+  },
+  "SRF": {
+   "nbars": 72
+  },
+  "SUNPHARMA": {
+   "nbars": 72
+  },
+  "SUPREMEIND": {
+   "nbars": 72
+  },
+  "SUZLON": {
+   "nbars": 72
+  },
+  "SWIGGY": {
+   "nbars": 72
+  },
+  "TATACONSUM": {
+   "nbars": 72
+  },
+  "TATAELXSI": {
+   "nbars": 72
+  },
+  "TATAPOWER": {
+   "nbars": 72
+  },
+  "TATASTEEL": {
+   "nbars": 71
+  },
+  "TCS": {
+   "nbars": 71
+  },
+  "TECHM": {
+   "nbars": 72
+  },
+  "TIINDIA": {
+   "nbars": 72
+  },
+  "TITAN": {
+   "nbars": 72
+  },
+  "TMPV": {
+   "nbars": 72
+  },
+  "TORNTPHARM": {
+   "nbars": 72
+  },
+  "TRENT": {
+   "nbars": 72
+  },
+  "TVSMOTOR": {
+   "nbars": 72
+  },
+  "ULTRACEMCO": {
+   "nbars": 71
+  },
+  "UNIONBANK": {
+   "nbars": 72
+  },
+  "UNITDSPR": {
+   "nbars": 72
+  },
+  "UNOMINDA": {
+   "nbars": 72
+  },
+  "UPL": {
+   "nbars": 71
+  },
+  "VBL": {
+   "nbars": 71
+  },
+  "VEDL": {
+   "nbars": 72
+  },
+  "VMM": {
+   "nbars": 72
+  },
+  "VOLTAS": {
+   "nbars": 72
+  },
+  "WAAREEENER": {
+   "nbars": 72
+  },
+  "WIPRO": {
+   "nbars": 72
+  },
+  "YESBANK": {
+   "nbars": 72
+  },
+  "ZYDUSLIFE": {
+   "nbars": 71
   }
  },
  "trades": {
@@ -1710,11 +1842,11 @@
      "price": 2853.029377636719
     }
    ],
-   "cls_trader": "BREAKOUT",
    "setups": [
     "S1",
     "S4"
-   ]
+   ],
+   "cls_trader": "BREAKOUT"
   },
   "MARUTI": {
    "symbol": "MARUTI",
@@ -1767,10 +1899,10 @@
      "price": 11421.7152
     }
    ],
-   "cls_trader": "BREAKOUT",
    "setups": [
     "S1"
-   ]
+   ],
+   "cls_trader": "BREAKOUT"
   },
   "MOTHERSON": {
    "symbol": "MOTHERSON",
@@ -1810,7 +1942,7 @@
     {
      "key": "ENTRY",
      "time": "09:55",
-     "price": 160.49000549316406
+     "price": 160.49
     },
     {
      "key": "TRAIL_ON",
@@ -1823,11 +1955,11 @@
      "price": 161.78764332275392
     }
    ],
-   "cls_trader": "PULLBACK",
    "setups": [
     "S1",
     "S2"
-   ]
+   ],
+   "cls_trader": "PULLBACK"
   },
   "MOTILALOFS": {
    "symbol": "MOTILALOFS",
@@ -1880,11 +2012,11 @@
      "price": 1062.8374388183595
     }
    ],
-   "cls_trader": "BREAKOUT",
    "setups": [
     "S1",
     "S4"
-   ]
+   ],
+   "cls_trader": "BREAKOUT"
   },
   "MUTHOOTFIN": {
    "symbol": "MUTHOOTFIN",
@@ -1903,8 +2035,8 @@
    "qty_full": 19,
    "qty_capped": false,
    "capital": 49202.0,
-   "tp1": 5570.7,
-   "tp2": 5570.7,
+   "tp1": 5570.69,
+   "tp2": 5570.69,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
@@ -1924,15 +2056,15 @@
     {
      "key": "ENTRY",
      "time": "10:05",
-     "price": 2589.60009765625
+     "price": 2589.6
     }
    ],
-   "cls_trader": "BREAKOUT",
    "setups": [
     "S1",
     "S2",
     "S4"
-   ]
+   ],
+   "cls_trader": "BREAKOUT"
   },
   "NAM-INDIA": {
    "symbol": "NAM-INDIA",
@@ -1972,7 +2104,7 @@
     {
      "key": "ENTRY",
      "time": "09:45",
-     "price": 1071.800048828125
+     "price": 1071.8
     },
     {
      "key": "TRAIL_ON",
@@ -1980,10 +2112,10 @@
      "price": 1092.0
     }
    ],
-   "cls_trader": "BREAKOUT",
    "setups": [
     "S1"
-   ]
+   ],
+   "cls_trader": "BREAKOUT"
   },
   "NESTLEIND": {
    "symbol": "NESTLEIND",
@@ -2023,7 +2155,7 @@
     {
      "key": "ENTRY",
      "time": "11:05",
-     "price": 1370.4000244140625
+     "price": 1370.4
     },
     {
      "key": "TRAIL_ON",
@@ -2031,11 +2163,11 @@
      "price": 1262.199951171875
     }
    ],
-   "cls_trader": "BREAKOUT",
    "setups": [
     "S1",
     "S2"
-   ]
+   ],
+   "cls_trader": "BREAKOUT"
   },
   "NMDC": {
    "symbol": "NMDC",
@@ -2075,14 +2207,14 @@
     {
      "key": "ENTRY",
      "time": "11:30",
-     "price": 70.62999725341797
+     "price": 70.63
     }
    ],
-   "cls_trader": "BREAKOUT",
    "setups": [
     "S1",
     "S2"
-   ]
+   ],
+   "cls_trader": "BREAKOUT"
   },
   "NYKAA": {
    "symbol": "NYKAA",
@@ -2101,8 +2233,8 @@
    "qty_full": 148,
    "qty_capped": false,
    "capital": 49920.0,
-   "tp1": 650.81,
-   "tp2": 650.81,
+   "tp1": 650.82,
+   "tp2": 650.82,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
@@ -2122,14 +2254,14 @@
     {
      "key": "ENTRY",
      "time": "10:05",
-     "price": 337.29998779296875
+     "price": 337.3
     }
    ],
-   "cls_trader": "BREAKOUT",
    "setups": [
     "S1",
     "S4"
-   ]
+   ],
+   "cls_trader": "BREAKOUT"
   },
   "OFSS": {
    "symbol": "OFSS",
@@ -2172,11 +2304,11 @@
      "price": 10176.0
     }
    ],
-   "cls_trader": "BREAKOUT",
    "setups": [
     "S1",
     "S4"
-   ]
+   ],
+   "cls_trader": "BREAKOUT"
   },
   "PAGEIND": {
    "symbol": "PAGEIND",
@@ -2229,10 +2361,10 @@
      "price": 36212.241
     }
    ],
-   "cls_trader": "BREAKOUT",
    "setups": [
     "S1"
-   ]
+   ],
+   "cls_trader": "BREAKOUT"
   },
   "PATANJALI": {
    "symbol": "PATANJALI",
@@ -2275,11 +2407,11 @@
      "price": 366.25
     }
    ],
-   "cls_trader": "BREAKOUT",
    "setups": [
     "S1",
     "S2"
-   ]
+   ],
+   "cls_trader": "BREAKOUT"
   },
   "PFC": {
    "symbol": "PFC",
@@ -2319,13 +2451,13 @@
     {
      "key": "ENTRY",
      "time": "12:00",
-     "price": 343.6000061035156
+     "price": 343.6
     }
    ],
-   "cls_trader": "BREAKOUT",
    "setups": [
     "S2"
-   ]
+   ],
+   "cls_trader": "BREAKOUT"
   },
   "PGEL": {
    "symbol": "PGEL",
@@ -2365,13 +2497,13 @@
     {
      "key": "ENTRY",
      "time": "11:15",
-     "price": 522.7000122070312
+     "price": 522.7
     }
    ],
-   "cls_trader": "BREAKOUT",
    "setups": [
     "S1"
-   ]
+   ],
+   "cls_trader": "BREAKOUT"
   },
   "POWERINDIA": {
    "symbol": "POWERINDIA",
@@ -2414,10 +2546,10 @@
      "price": 29000.0
     }
    ],
-   "cls_trader": "BREAKOUT",
    "setups": [
     "S1"
-   ]
+   ],
+   "cls_trader": "BREAKOUT"
   },
   "PRESTIGE": {
    "symbol": "PRESTIGE",
@@ -2457,14 +2589,466 @@
     {
      "key": "ENTRY",
      "time": "10:05",
-     "price": 1475.300048828125
+     "price": 1475.3
+    }
+   ],
+   "setups": [
+    "S1",
+    "S2",
+    "S4"
+   ],
+   "cls_trader": "BREAKOUT"
+  },
+  "SHRIRAMFIN": {
+   "symbol": "SHRIRAMFIN",
+   "side": "BUY",
+   "time": "10:15",
+   "signal": "BUY-EX9",
+   "setup": "S1",
+   "sl_mode": "structure",
+   "entry": 950.65,
+   "sl": 940.31,
+   "sl_anchor": "pivot",
+   "risk_pts": 10.34,
+   "risk_pct": 1.087,
+   "risk_rs": 538.0,
+   "qty": 52,
+   "qty_full": 52,
+   "qty_capped": false,
+   "capital": 49434.0,
+   "tp1": 1974.12,
+   "tp2": 1974.12,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "OPEN 15:25",
+     52,
+     943.7999877929688,
+     "15:25"
+    ]
+   ],
+   "exit_text": "OPEN",
+   "leg2_time": "15:25",
+   "pnl": -356.0,
+   "r_total": -0.66,
+   "closed": false,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "10:15",
+     "price": 950.6500244140625
+    }
+   ],
+   "cls_trader": "BREAKOUT",
+   "setups": [
+    "S1"
+   ]
+  },
+  "SOLARINDS": {
+   "symbol": "SOLARINDS",
+   "side": "SELL",
+   "time": "11:30",
+   "signal": "SELL-EX15",
+   "setup": "S2+S4",
+   "sl_mode": "structure",
+   "entry": 20040.0,
+   "sl": 20269.05,
+   "sl_anchor": "pivot",
+   "risk_pts": 229.05,
+   "risk_pct": 1.143,
+   "risk_rs": 458.0,
+   "qty": 2,
+   "qty_full": 2,
+   "qty_capped": false,
+   "capital": 40080.0,
+   "tp1": -2636.25,
+   "tp2": -2636.25,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "OPEN 15:25",
+     2,
+     19866.0,
+     "15:25"
+    ]
+   ],
+   "exit_text": "OPEN",
+   "leg2_time": "15:25",
+   "pnl": 348.0,
+   "r_total": 0.76,
+   "closed": false,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "11:30",
+     "price": 20040.0
+    }
+   ],
+   "cls_trader": "BREAKOUT",
+   "setups": [
+    "S2",
+    "S4"
+   ]
+  },
+  "SONACOMS": {
+   "symbol": "SONACOMS",
+   "side": "SELL",
+   "time": "12:00",
+   "signal": "SELL-EX1",
+   "setup": "S3",
+   "sl_mode": "structure",
+   "entry": 799.3,
+   "sl": 811.81,
+   "sl_anchor": "pivot",
+   "risk_pts": 12.51,
+   "risk_pct": 1.565,
+   "risk_rs": 776.0,
+   "qty": 62,
+   "qty_full": 62,
+   "qty_capped": false,
+   "capital": 49557.0,
+   "tp1": -439.42,
+   "tp2": -439.42,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "OPEN 15:25",
+     62,
+     801.0,
+     "15:25"
+    ]
+   ],
+   "exit_text": "OPEN",
+   "leg2_time": "15:25",
+   "pnl": -105.0,
+   "r_total": -0.14,
+   "closed": false,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "12:00",
+     "price": 799.2999877929688
+    }
+   ],
+   "cls_trader": "BREAKOUT",
+   "setups": [
+    "S3"
+   ]
+  },
+  "TATASTEEL": {
+   "symbol": "TATASTEEL",
+   "side": "BUY",
+   "time": "10:00",
+   "signal": "BUY-EX17",
+   "setup": "S1+S2",
+   "sl_mode": "structure",
+   "entry": 175.26,
+   "sl": 173.7,
+   "sl_anchor": "pivot",
+   "risk_pts": 1.56,
+   "risk_pct": 0.893,
+   "risk_rs": 446.0,
+   "qty": 285,
+   "qty_full": 285,
+   "qty_capped": false,
+   "capital": 49949.0,
+   "tp1": 330.17,
+   "tp2": 330.17,
+   "trail_armed": true,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "trail 14:20",
+     285,
+     176.26474305114746,
+     "14:20"
+    ]
+   ],
+   "exit_text": "100% trail 14:20",
+   "leg2_time": "14:20",
+   "pnl": 286.0,
+   "r_total": 0.64,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "10:00",
+     "price": 175.25999450683594
+    },
+    {
+     "key": "TRAIL_ON",
+     "time": "13:50",
+     "price": 176.85000610351562
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "14:20",
+     "price": 176.26474305114746
     }
    ],
    "cls_trader": "BREAKOUT",
    "setups": [
     "S1",
-    "S2",
-    "S4"
+    "S2"
+   ]
+  },
+  "TIINDIA": {
+   "symbol": "TIINDIA",
+   "side": "SELL",
+   "time": "09:45",
+   "signal": "NORMAL SELL",
+   "setup": "S1",
+   "sl_mode": "structure",
+   "entry": 2170.0,
+   "sl": 2220.24,
+   "sl_anchor": "session-extreme*",
+   "risk_pts": 50.24,
+   "risk_pct": 2.315,
+   "risk_rs": 854.0,
+   "qty": 17,
+   "qty_full": 23,
+   "qty_capped": true,
+   "capital": 36890.0,
+   "tp1": -2804.16,
+   "tp2": -2804.16,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "SL 12:40",
+     17,
+     2220.2440088378908,
+     "12:40"
+    ]
+   ],
+   "exit_text": "100% SL 12:40",
+   "leg2_time": "12:40",
+   "pnl": -854.0,
+   "r_total": -1.0,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "09:45",
+     "price": 2170.0
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "12:40",
+     "price": 2220.2440088378908
+    }
+   ],
+   "cls_trader": "BREAKOUT",
+   "setups": [
+    "S1"
+   ]
+  },
+  "TVSMOTOR": {
+   "symbol": "TVSMOTOR",
+   "side": "BUY",
+   "time": "09:45",
+   "signal": "BUY-EX12",
+   "setup": "S1",
+   "sl_mode": "structure",
+   "entry": 3980.9,
+   "sl": 3943.31,
+   "sl_anchor": "session-extreme*",
+   "risk_pts": 37.59,
+   "risk_pct": 0.944,
+   "risk_rs": 451.0,
+   "qty": 12,
+   "qty_full": 12,
+   "qty_capped": false,
+   "capital": 47771.0,
+   "tp1": 7702.17,
+   "tp2": 7702.17,
+   "trail_armed": true,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "trail 11:15",
+     12,
+     4031.0935223632814,
+     "11:15"
+    ]
+   ],
+   "exit_text": "100% trail 11:15",
+   "leg2_time": "11:15",
+   "pnl": 602.0,
+   "r_total": 1.34,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "09:45",
+     "price": 3980.89990234375
+    },
+    {
+     "key": "TRAIL_ON",
+     "time": "10:05",
+     "price": 4021.10009765625
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "11:15",
+     "price": 4031.0935223632814
+    }
+   ],
+   "cls_trader": "BREAKOUT",
+   "setups": [
+    "S1"
+   ]
+  },
+  "ULTRACEMCO": {
+   "symbol": "ULTRACEMCO",
+   "side": "BUY",
+   "time": "10:25",
+   "signal": "BUY-EX7",
+   "setup": "S1+S2",
+   "sl_mode": "structure",
+   "entry": 10820.0,
+   "sl": 10758.85,
+   "sl_anchor": "pivot",
+   "risk_pts": 61.15,
+   "risk_pct": 0.565,
+   "risk_rs": 245.0,
+   "qty": 4,
+   "qty_full": 4,
+   "qty_capped": false,
+   "capital": 43280.0,
+   "tp1": 16874.07,
+   "tp2": 16874.07,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "SL 11:15",
+     4,
+     10758.8478,
+     "11:15"
+    ]
+   ],
+   "exit_text": "100% SL 11:15",
+   "leg2_time": "11:15",
+   "pnl": -245.0,
+   "r_total": -1.0,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "10:25",
+     "price": 10820.0
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "11:15",
+     "price": 10758.8478
+    }
+   ],
+   "cls_trader": "BREAKOUT",
+   "setups": [
+    "S1",
+    "S2"
+   ]
+  },
+  "ULTRACEMCO#2": {
+   "symbol": "ULTRACEMCO",
+   "side": "SELL",
+   "time": "11:15",
+   "signal": "SELL-EX1",
+   "setup": "S2",
+   "sl_mode": "structure",
+   "entry": 10747.0,
+   "sl": 10812.16,
+   "sl_anchor": "pivot",
+   "risk_pts": 65.16,
+   "risk_pct": 0.606,
+   "risk_rs": 261.0,
+   "qty": 4,
+   "qty_full": 4,
+   "qty_capped": false,
+   "capital": 42988.0,
+   "tp1": 4295.96,
+   "tp2": 4295.96,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "SL 11:30",
+     4,
+     10812.162,
+     "11:30"
+    ]
+   ],
+   "exit_text": "100% SL 11:30",
+   "leg2_time": "11:30",
+   "pnl": -261.0,
+   "r_total": -1.0,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "11:15",
+     "price": 10747.0
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "11:30",
+     "price": 10812.162
+    }
+   ],
+   "cls_trader": "BREAKOUT",
+   "setups": [
+    "S2"
+   ]
+  },
+  "WAAREEENER": {
+   "symbol": "WAAREEENER",
+   "side": "SELL",
+   "time": "09:45",
+   "signal": "NORMAL SELL",
+   "setup": "S1",
+   "sl_mode": "structure",
+   "entry": 2503.2,
+   "sl": 2537.41,
+   "sl_anchor": "session-extreme*",
+   "risk_pts": 34.21,
+   "risk_pct": 1.367,
+   "risk_rs": 650.0,
+   "qty": 19,
+   "qty_full": 19,
+   "qty_capped": false,
+   "capital": 47561.0,
+   "tp1": -883.33,
+   "tp2": -883.33,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "OPEN 15:25",
+     19,
+     2494.0,
+     "15:25"
+    ]
+   ],
+   "exit_text": "OPEN",
+   "leg2_time": "15:25",
+   "pnl": 175.0,
+   "r_total": 0.27,
+   "closed": false,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "09:45",
+     "price": 2503.199951171875
+    }
+   ],
+   "cls_trader": "BREAKOUT",
+   "setups": [
+    "S1"
    ]
   }
  },
@@ -2532,7 +3116,28 @@
   "PFC:ENTRY",
   "PGEL:ENTRY",
   "POWERINDIA:ENTRY",
-  "PRESTIGE:ENTRY"
+  "PRESTIGE:ENTRY",
+  "M&M:TRAIL_ON",
+  "M&M:EXIT_SL",
+  "MARUTI:TRAIL_ON",
+  "MARUTI:EXIT_SL",
+  "MOTHERSON:TRAIL_ON",
+  "MOTHERSON:EXIT_SL",
+  "MOTILALOFS:TRAIL_ON",
+  "MOTILALOFS:EXIT_SL",
+  "NAM-INDIA:TRAIL_ON",
+  "NESTLEIND:TRAIL_ON",
+  "PAGEIND:TRAIL_ON",
+  "PAGEIND:EXIT_SL",
+  "SHRIRAMFIN:ENTRY",
+  "SOLARINDS:ENTRY",
+  "SONACOMS:ENTRY",
+  "TATASTEEL:ENTRY",
+  "TIINDIA:ENTRY",
+  "TVSMOTOR:ENTRY",
+  "ULTRACEMCO:ENTRY",
+  "ULTRACEMCO#2:ENTRY",
+  "WAAREEENER:ENTRY"
  ],
  "gate": {
   "status": "MASTER\u00d7VIDEO-4 (pure alignment, vote B)",
@@ -2629,10 +3234,33 @@
   "POWERGRID": 248.95,
   "POWERINDIA": 30390.0,
   "PREMIERENE": 923.0,
-  "PRESTIGE": 1463.0
+  "PRESTIGE": 1463.0,
+  "RBLBANK": 386.0,
+  "RECLTD": 311.8,
+  "RELIANCE": 1174.6,
+  "SBILIFE": 1650.0,
+  "SHREECEM": 22076.67,
+  "SHRIRAMFIN": 950.0,
+  "SOLARINDS": 20170.0,
+  "SONACOMS": 807.0,
+  "SRF": 2499.7,
+  "SUNPHARMA": 1746.4,
+  "SUZLON": 40.8,
+  "SWIGGY": 230.95,
+  "TATASTEEL": 174.49,
+  "TCS": 2304.9,
+  "TIINDIA": 2220.5,
+  "TITAN": 4444.0,
+  "TMPV": 283.8,
+  "TVSMOTOR": 3969.7,
+  "ULTRACEMCO": 10795.0,
+  "UNITDSPR": 1381.6,
+  "VMM": 96.0,
+  "VOLTAS": 1039.8,
+  "WAAREEENER": 2516.0
  },
- "eod_done": false,
- "cycles": 0,
+ "eod_done": true,
+ "cycles": 1,
  "skipped": [
   {
    "symbol": "360ONE",
@@ -4435,6 +5063,503 @@
    "signal": "ENTRY SELL",
    "time": "09:40",
    "entry": 1461.2,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "RADICO",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 4550.0,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "RADICO",
+   "side": "SELL",
+   "signal": "SELL-EX12",
+   "time": "09:30",
+   "entry": 4540.0,
+   "setups": [],
+   "why": "before 09:45 \u2014 morning base not verified yet (video pre-condition)"
+  },
+  {
+   "symbol": "RBLBANK",
+   "side": "SELL",
+   "signal": "SELL-EX12",
+   "time": "09:40",
+   "entry": 384.15,
+   "setups": [],
+   "why": "before 09:45 \u2014 morning base not verified yet (video pre-condition)"
+  },
+  {
+   "symbol": "RBLBANK",
+   "side": "BUY",
+   "signal": "BUY-EX4",
+   "time": "09:55",
+   "entry": 387.85,
+   "setups": [
+    "S1",
+    "S2"
+   ],
+   "why": "winner's-club gate: BUY-EX4 dead variant blocked (0 big-winners day-1)"
+  },
+  {
+   "symbol": "RECLTD",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 309.5,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "RECLTD",
+   "side": "BUY",
+   "signal": "BUY-EX6",
+   "time": "10:10",
+   "entry": 312.5,
+   "setups": [
+    "S1",
+    "S4"
+   ],
+   "why": "winner's-club gate: BUY-EX6 dead variant blocked (0 big-winners day-1)"
+  },
+  {
+   "symbol": "RELIANCE",
+   "side": "BUY",
+   "signal": "BUY-EX4",
+   "time": "09:50",
+   "entry": 1186.1,
+   "setups": [
+    "S1"
+   ],
+   "why": "winner's-club gate: BUY-EX4 dead variant blocked (0 big-winners day-1)"
+  },
+  {
+   "symbol": "SAIL",
+   "side": "SELL",
+   "signal": "SELL-EX1",
+   "time": "09:40",
+   "entry": 168.88,
+   "setups": [],
+   "why": "before 09:45 \u2014 morning base not verified yet (video pre-condition)"
+  },
+  {
+   "symbol": "SBICARD",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 572.7,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "SBICARD",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:40",
+   "entry": 574.0,
+   "setups": [],
+   "why": "before 09:45 \u2014 morning base not verified yet (video pre-condition)"
+  },
+  {
+   "symbol": "SBILIFE",
+   "side": "BUY",
+   "signal": "BUY-EX7",
+   "time": "09:55",
+   "entry": 1666.4,
+   "setups": [
+    "S1"
+   ],
+   "why": "winner's-club gate: BUY-EX7 is mixed \u2014 needs \u22652 setups (has 1: S1)"
+  },
+  {
+   "symbol": "SBIN",
+   "side": "SELL",
+   "signal": "SELL-EX12",
+   "time": "09:30",
+   "entry": 949.0,
+   "setups": [],
+   "why": "before 09:45 \u2014 morning base not verified yet (video pre-condition)"
+  },
+  {
+   "symbol": "SHREECEM",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 22275.0,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "SHREECEM",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "10:05",
+   "entry": 22330.0,
+   "setups": [
+    "S1"
+   ],
+   "why": "winner's-club gate: BUY-EX is mixed \u2014 needs \u22652 setups (has 1: S1)"
+  },
+  {
+   "symbol": "SIEMENS",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 3660.2,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "SOLARINDS",
+   "side": "BUY",
+   "signal": "BUY-EX5",
+   "time": "10:15",
+   "entry": 20214.0,
+   "setups": [
+    "S1"
+   ],
+   "why": "winner's-club gate: BUY-EX5 dead variant blocked (0 big-winners day-1)"
+  },
+  {
+   "symbol": "SONACOMS",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 805.35,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "SONACOMS",
+   "side": "BUY",
+   "signal": "BUY-EX6",
+   "time": "10:10",
+   "entry": 812.0,
+   "setups": [
+    "S1"
+   ],
+   "why": "winner's-club gate: BUY-EX6 dead variant blocked (0 big-winners day-1)"
+  },
+  {
+   "symbol": "SRF",
+   "side": "SELL",
+   "signal": "SELL-EX1",
+   "time": "09:40",
+   "entry": 2469.0,
+   "setups": [],
+   "why": "before 09:45 \u2014 morning base not verified yet (video pre-condition)"
+  },
+  {
+   "symbol": "SRF",
+   "side": "BUY",
+   "signal": "BUY-EX4",
+   "time": "10:40",
+   "entry": 2505.3,
+   "setups": [
+    "S1"
+   ],
+   "why": "winner's-club gate: BUY-EX4 dead variant blocked (0 big-winners day-1)"
+  },
+  {
+   "symbol": "SUNPHARMA",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "09:45",
+   "entry": 1755.0,
+   "setups": [
+    "S1"
+   ],
+   "why": "winner's-club gate: BUY-EX17 is mixed \u2014 needs \u22652 setups (has 1: S1)"
+  },
+  {
+   "symbol": "SUZLON",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "10:05",
+   "entry": 40.98,
+   "setups": [
+    "S1"
+   ],
+   "why": "winner's-club gate: BUY-EX is mixed \u2014 needs \u22652 setups (has 1: S1)"
+  },
+  {
+   "symbol": "SWIGGY",
+   "side": "SELL",
+   "signal": "SELL-EX2",
+   "time": "09:35",
+   "entry": 230.6,
+   "setups": [],
+   "why": "before 09:45 \u2014 morning base not verified yet (video pre-condition)"
+  },
+  {
+   "symbol": "SWIGGY",
+   "side": "BUY",
+   "signal": "BUY-EX6",
+   "time": "10:05",
+   "entry": 232.5,
+   "setups": [
+    "S1",
+    "S2",
+    "S4"
+   ],
+   "why": "winner's-club gate: BUY-EX6 dead variant blocked (0 big-winners day-1)"
+  },
+  {
+   "symbol": "TATAELXSI",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 3706.0,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "TATAPOWER",
+   "side": "SELL",
+   "signal": "SELL-EX1",
+   "time": "09:35",
+   "entry": 348.75,
+   "setups": [],
+   "why": "before 09:45 \u2014 morning base not verified yet (video pre-condition)"
+  },
+  {
+   "symbol": "TCS",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "09:45",
+   "entry": 2366.3,
+   "setups": [
+    "S1"
+   ],
+   "why": "winner's-club gate: BUY-EX17 is mixed \u2014 needs \u22652 setups (has 1: S1)"
+  },
+  {
+   "symbol": "TECHM",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 1626.0,
+   "setups": [],
+   "why": "before 09:45 \u2014 morning base not verified yet (video pre-condition)"
+  },
+  {
+   "symbol": "TIINDIA",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 2180.9,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "TITAN",
+   "side": "BUY",
+   "signal": "BUY-EX5",
+   "time": "10:45",
+   "entry": 4450.8,
+   "setups": [
+    "S1"
+   ],
+   "why": "winner's-club gate: BUY-EX5 dead variant blocked (0 big-winners day-1)"
+  },
+  {
+   "symbol": "TMPV",
+   "side": "BUY",
+   "signal": "BUY-EX5",
+   "time": "09:50",
+   "entry": 284.2,
+   "setups": [
+    "S1"
+   ],
+   "why": "winner's-club gate: BUY-EX5 dead variant blocked (0 big-winners day-1)"
+  },
+  {
+   "symbol": "TORNTPHARM",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 4599.3,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "TRENT",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 2941.6,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "TRENT",
+   "side": "SELL",
+   "signal": "SELL-EX3",
+   "time": "09:35",
+   "entry": 2940.2,
+   "setups": [],
+   "why": "before 09:45 \u2014 morning base not verified yet (video pre-condition)"
+  },
+  {
+   "symbol": "TVSMOTOR",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 3950.0,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "TVSMOTOR",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 3973.7,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "ULTRACEMCO",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 10814.0,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "ULTRACEMCO",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 10782.0,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "UNIONBANK",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 171.34,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "UNIONBANK",
+   "side": "SELL",
+   "signal": "SELL-EX3",
+   "time": "09:30",
+   "entry": 168.4,
+   "setups": [],
+   "why": "before 09:45 \u2014 morning base not verified yet (video pre-condition)"
+  },
+  {
+   "symbol": "UNITDSPR",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 1398.4,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "UNITDSPR",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "10:25",
+   "entry": 1401.8,
+   "setups": [
+    "S1"
+   ],
+   "why": "winner's-club gate: BUY-EX is mixed \u2014 needs \u22652 setups (has 1: S1)"
+  },
+  {
+   "symbol": "UNOMINDA",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 1113.6,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "UNOMINDA",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 1114.3,
+   "setups": [],
+   "why": "before 09:45 \u2014 morning base not verified yet (video pre-condition)"
+  },
+  {
+   "symbol": "VBL",
+   "side": "SELL",
+   "signal": "SELL-EX5",
+   "time": "09:30",
+   "entry": 440.4,
+   "setups": [],
+   "why": "before 09:45 \u2014 morning base not verified yet (video pre-condition)"
+  },
+  {
+   "symbol": "VEDL",
+   "side": "SELL",
+   "signal": "SELL-EX1",
+   "time": "09:30",
+   "entry": 243.7,
+   "setups": [],
+   "why": "before 09:45 \u2014 morning base not verified yet (video pre-condition)"
+  },
+  {
+   "symbol": "VMM",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "09:45",
+   "entry": 96.14,
+   "setups": [
+    "S1"
+   ],
+   "why": "winner's-club gate: BUY-EX17 is mixed \u2014 needs \u22652 setups (has 1: S1)"
+  },
+  {
+   "symbol": "VOLTAS",
+   "side": "SELL",
+   "signal": "SELL-EX1",
+   "time": "09:35",
+   "entry": 1038.1,
+   "setups": [],
+   "why": "before 09:45 \u2014 morning base not verified yet (video pre-condition)"
+  },
+  {
+   "symbol": "VOLTAS",
+   "side": "BUY",
+   "signal": "BUY-EX7",
+   "time": "09:50",
+   "entry": 1046.5,
+   "setups": [
+    "S1"
+   ],
+   "why": "winner's-club gate: BUY-EX7 is mixed \u2014 needs \u22652 setups (has 1: S1)"
+  },
+  {
+   "symbol": "WAAREEENER",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 2513.4,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "YESBANK",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 21.02,
    "setups": [],
    "why": "scanner-table preview (90/290) \u2014 no chart label"
   }
