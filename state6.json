@@ -241,26 +241,31 @@
    "capital": 49805.0,
    "tp1": -53.17,
    "tp2": -53.17,
-   "trail_armed": false,
+   "trail_armed": true,
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 14:33",
+     "OPEN 15:25",
      113,
-     438.95001220703125,
-     "14:33"
+     434.25,
+     "15:25"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "14:33",
-   "pnl": 203.0,
-   "r_total": 0.36,
+   "leg2_time": "15:25",
+   "pnl": 734.0,
+   "r_total": 1.3,
    "closed": false,
    "events": [
     {
      "key": "ENTRY",
      "time": "10:30",
      "price": 440.75
+    },
+    {
+     "key": "TRAIL_ON",
+     "time": "15:00",
+     "price": 434.95001220703125
     }
    ],
    "sector": "CAPGOODS"
@@ -288,16 +293,16 @@
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 14:33",
+     "OPEN 15:25",
      48,
-     817.7000122070312,
-     "14:33"
+     818.0,
+     "15:25"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "14:33",
-   "pnl": 425.0,
-   "r_total": 0.48,
+   "leg2_time": "15:25",
+   "pnl": 410.0,
+   "r_total": 0.46,
    "closed": false,
    "events": [
     {
@@ -327,26 +332,31 @@
    "capital": 48092.0,
    "tp1": -2587.16,
    "tp2": -2587.16,
-   "trail_armed": false,
+   "trail_armed": true,
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 14:33",
+     "OPEN 15:25",
      12,
-     3979.5,
-     "14:33"
+     3949.0,
+     "15:25"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "14:33",
-   "pnl": 338.0,
-   "r_total": 0.42,
+   "leg2_time": "15:25",
+   "pnl": 704.0,
+   "r_total": 0.88,
    "closed": false,
    "events": [
     {
      "key": "ENTRY",
      "time": "11:15",
-     "price": 4007.699951171875
+     "price": 4007.7
+    },
+    {
+     "key": "TRAIL_ON",
+     "time": "15:10",
+     "price": 3935.199951171875
     }
    ],
    "sector": "CAPGOODS"
@@ -355,7 +365,9 @@
  "alerts": [
   "BHEL:ENTRY",
   "CGPOWER:ENTRY",
-  "GVT&D:ENTRY"
+  "GVT&D:ENTRY",
+  "BHEL:TRAIL_ON",
+  "GVT&D:TRAIL_ON"
  ],
  "gate": {
   "status": "OK",
@@ -364,57 +376,63 @@
  "eod_done": false,
  "cycles": 0,
  "sector_board": {
-  "time": "14:33",
-  "net_tilt": -11.4,
+  "time": "19:42",
+  "net_tilt": -22.5,
   "tilt": "STRONG BEARISH",
   "bull_q": [],
   "bear_q": [
    [
-    "MEDIA",
-    85.53
+    "CAPGOODS",
+    85.19
    ],
    [
-    "CAPGOODS",
-    81.84
+    "MEDIA",
+    82.61
    ]
   ],
   "persist_bull": [
    [
     "TRAVEL",
-    81.66
-   ],
-   [
-    "TELECOM",
-    68.26
+    66.57
    ],
    [
     "CAPMKTS",
-    64.56
+    65.33
+   ],
+   [
+    "FIN",
+    62.53
    ]
   ],
   "persist_bear": [
    [
-    "MEDIA",
-    94.81
+    "CAPGOODS",
+    94.82
    ],
    [
-    "CAPGOODS",
-    91.87
+    "MEDIA",
+    91.53
    ],
    [
     "PSUBK",
-    80.66
+    87.15
    ]
   ],
   "hold": "timed",
   "held_bull": [
-   "TRAVEL"
+   "CAPMKTS"
   ],
   "held_bear": [
    "CAPGOODS",
+   "CDUR",
+   "CHEMICALS",
+   "DEF",
+   "ENE",
    "FMCG",
    "GREEN",
-   "MEDIA"
+   "MEDIA",
+   "PSUBK",
+   "RAILWAYS"
   ]
  },
  "skipped": [
