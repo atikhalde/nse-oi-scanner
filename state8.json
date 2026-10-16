@@ -1,171 +1,102 @@
 {
- "date": "2026-10-15",
+ "date": "2026-10-16",
  "signals": {
   "360ONE": {
-   "nbars": 72
+   "nbars": 57
   },
   "ABB": {
-   "nbars": 71
+   "nbars": 57
   },
   "ABCAPITAL": {
-   "nbars": 72
+   "nbars": 57
   },
   "ADANIENSOL": {
-   "nbars": 72
+   "nbars": 57
   },
   "ADANIENT": {
-   "nbars": 71
+   "nbars": 57
   },
   "ADANIGREEN": {
-   "nbars": 72
+   "nbars": 57
   },
   "ADANIPORTS": {
-   "nbars": 71
+   "nbars": 57
   },
   "ADANIPOWER": {
-   "nbars": 72
+   "nbars": 57
   },
   "ALKEM": {
-   "nbars": 72
+   "nbars": 57
   },
   "AMBER": {
-   "nbars": 71
+   "nbars": 57
   },
   "AMBUJACEM": {
-   "nbars": 72
+   "nbars": 57
   },
   "ANGELONE": {
-   "nbars": 72
+   "nbars": 57
   },
   "APLAPOLLO": {
-   "nbars": 72
+   "nbars": 57
   },
   "APOLLOHOSP": {
-   "nbars": 72
+   "nbars": 57
   },
   "ASHOKLEY": {
-   "nbars": 72
+   "nbars": 57
   },
   "ASIANPAINT": {
-   "nbars": 71
-  },
-  "ASTRAL": {
-   "nbars": 72
-  },
-  "AUBANK": {
-   "nbars": 72
-  },
-  "AUROPHARMA": {
-   "nbars": 72
-  },
-  "AXISBANK": {
-   "nbars": 71
-  },
-  "BAJAJ-AUTO": {
-   "nbars": 72
-  },
-  "BAJAJFINSV": {
-   "nbars": 72
-  },
-  "BAJAJHLDNG": {
-   "nbars": 71
-  },
-  "BAJFINANCE": {
-   "nbars": 72
-  },
-  "BANDHANBNK": {
-   "nbars": 72
-  },
-  "BANKBARODA": {
-   "nbars": 72
-  },
-  "BANKINDIA": {
-   "nbars": 72
-  },
-  "BDL": {
-   "nbars": 71
-  },
-  "BEL": {
-   "nbars": 72
-  },
-  "BHARATFORG": {
-   "nbars": 71
-  },
-  "BHARTIARTL": {
-   "nbars": 72
-  },
-  "BHEL": {
-   "nbars": 72
-  },
-  "BIOCON": {
-   "nbars": 72
-  },
-  "BLUESTARCO": {
-   "nbars": 72
-  },
-  "BOSCHLTD": {
-   "nbars": 72
-  },
-  "BPCL": {
-   "nbars": 72
-  },
-  "BRITANNIA": {
-   "nbars": 71
-  },
-  "BSE": {
-   "nbars": 72
-  },
-  "CAMS": {
    "nbars": 4
   }
  },
  "trades": {
-  "CAMS": {
-   "symbol": "CAMS",
-   "side": "BUY",
+  "ASIANPAINT": {
+   "symbol": "ASIANPAINT",
+   "side": "SELL",
    "time": "09:30",
-   "signal": "BUY-EX",
+   "signal": "SELL-EX3",
    "setup": "BREAKOUT",
    "sl_mode": "structure",
-   "entry": 707.4,
-   "sl": 696.81,
+   "entry": 2329.7,
+   "sl": 2362.57,
    "sl_anchor": "session-extreme*",
-   "risk_pts": 10.59,
-   "risk_pct": 1.497,
-   "risk_rs": 741.0,
-   "qty": 70,
-   "qty_full": 70,
+   "risk_pts": 32.87,
+   "risk_pct": 1.411,
+   "risk_rs": 690.0,
+   "qty": 21,
+   "qty_full": 21,
    "qty_capped": false,
-   "capital": 49518.0,
-   "tp1": 1755.75,
-   "tp2": 1755.75,
+   "capital": 48924.0,
+   "tp1": -924.68,
+   "tp2": -924.68,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 15:25",
-     70,
-     704.8499755859375,
-     "15:25"
+     "OPEN 14:01",
+     21,
+     2335.199951171875,
+     "14:01"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": -179.0,
-   "r_total": -0.24,
+   "leg2_time": "14:01",
+   "pnl": -116.0,
+   "r_total": -0.17,
    "closed": false,
    "events": [
     {
      "key": "ENTRY",
      "time": "09:30",
-     "price": 707.4000244140625
+     "price": 2329.699951171875
     }
    ],
-   "sector": "CAPMKTS"
+   "sector": "CHEMICALS"
   }
  },
  "alerts": [
-  "CAMS:ENTRY"
+  "ASIANPAINT:ENTRY"
  ],
  "gate": {
   "status": "OK",
@@ -174,117 +105,164 @@
  "eod_done": false,
  "cycles": 0,
  "sector_board": {
-  "time": "19:25",
-  "net_tilt": -22.5,
-  "tilt": "STRONG BEARISH",
-  "bull_q": [],
-  "bear_q": [
+  "time": "14:01",
+  "net_tilt": 24.5,
+  "tilt": "STRONG BULLISH",
+  "bull_q": [
    [
-    "CAPGOODS",
+    "CEMENT",
     85.19
    ],
    [
-    "MEDIA",
-    82.61
-   ]
-  ],
-  "persist_bull": [
+    "NEWAGE",
+    81.19
+   ],
+   [
+    "IT",
+    74.77
+   ],
    [
     "TRAVEL",
-    66.57
+    67.97
+   ]
+  ],
+  "bear_q": [],
+  "persist_bull": [
+   [
+    "CEMENT",
+    96.36
    ],
    [
-    "CAPMKTS",
-    65.33
+    "MEDIA",
+    93.94
    ],
    [
-    "FIN",
-    62.53
+    "IT",
+    93.24
    ]
   ],
   "persist_bear": [
    [
-    "CAPGOODS",
-    94.82
+    "HOSPITALS",
+    79.83
    ],
    [
-    "MEDIA",
-    91.53
+    "CHEMICALS",
+    77.14
    ],
    [
-    "PSUBK",
-    87.15
+    "CAPMKTS",
+    63.95
    ]
   ],
   "hold": "timed",
   "held_bull": [
-   "CAPMKTS"
+   "AUTO",
+   "CAPGOODS",
+   "CEMENT",
+   "INFRA",
+   "IT",
+   "MEDIA",
+   "MET",
+   "NEWAGE",
+   "PSUBK",
+   "RAILWAYS",
+   "TELECOM",
+   "TRAVEL"
   ],
   "held_bear": [
-   "CAPGOODS",
-   "CDUR",
    "CHEMICALS",
-   "DEF",
-   "ENE",
-   "FMCG",
-   "GREEN",
-   "MEDIA",
-   "PSUBK",
-   "RAILWAYS"
+   "HOSPITALS"
   ]
  },
  "skipped": [
   {
-   "symbol": "360ONE",
-   "side": "BUY",
-   "signal": "ENTRY BUY",
-   "time": "09:40",
-   "entry": 1071.1,
-   "sector": "CAPMKTS",
+   "symbol": "ABB",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 6733.5,
+   "sector": "CAPGOODS",
    "why": "scanner-table preview (90/290) \u2014 no chart label"
   },
   {
    "symbol": "ABB",
    "side": "SELL",
-   "signal": "SELL-EX15",
-   "time": "10:00",
-   "entry": 6829.0,
+   "signal": "SELL-EX3",
+   "time": "09:30",
+   "entry": 6717.0,
    "sector": "CAPGOODS",
-   "why": "chase-guard: CAPGOODS already moved -3.34% (<-2.5%)"
+   "why": "sector CAPGOODS not bear-qualified (bull 68/bear 2)"
+  },
+  {
+   "symbol": "ABB",
+   "side": "BUY",
+   "signal": "BUY-EX9",
+   "time": "10:20",
+   "entry": 6814.5,
+   "sector": "CAPGOODS",
+   "why": "sector CAPGOODS bull-qualified but outside top-2 (board CEMENT 85, NEWAGE 81)"
+  },
+  {
+   "symbol": "ABCAPITAL",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 376.9,
+   "sector": "FIN",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "ABCAPITAL",
+   "side": "SELL",
+   "signal": "SELL-EX5",
+   "time": "09:50",
+   "entry": 375.5,
+   "sector": "FIN",
+   "why": "sector FIN not bear-qualified (bull 40/bear 17)"
   },
   {
    "symbol": "ADANIENSOL",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 1343.7,
+   "side": "BUY",
+   "signal": "BUY-EX4",
+   "time": "10:05",
+   "entry": 1376.0,
    "sector": "ENE",
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
+   "why": "sector ENE not bull-qualified (bull 59/bear 5)"
   },
   {
    "symbol": "ADANIENT",
    "side": "SELL",
    "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 2694.5,
+   "time": "09:25",
+   "entry": 2691.7,
    "sector": "INFRA",
    "why": "scanner-table preview (90/290) \u2014 no chart label"
   },
   {
    "symbol": "ADANIENT",
    "side": "SELL",
-   "signal": "SELL-EX3",
-   "time": "09:40",
-   "entry": 2674.0,
+   "signal": "SELL-EX8",
+   "time": "09:35",
+   "entry": 2685.4,
    "sector": "INFRA",
-   "why": "sector INFRA not bear-qualified (bull 16/bear 38)"
+   "why": "sector INFRA not bear-qualified (bull 60/bear 5)"
+  },
+  {
+   "symbol": "ADANIENT",
+   "side": "BUY",
+   "signal": "BUY-EX4",
+   "time": "10:15",
+   "entry": 2713.1,
+   "sector": "INFRA",
+   "why": "sector INFRA not bull-qualified (bull 60/bear 5)"
   },
   {
    "symbol": "ADANIGREEN",
    "side": "SELL",
    "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 1305.8,
+   "time": "09:30",
+   "entry": 1303.0,
    "sector": "GREEN",
    "why": "scanner-table preview (90/290) \u2014 no chart label"
   },
@@ -292,441 +270,144 @@
    "symbol": "ADANIPORTS",
    "side": "SELL",
    "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 1729.8,
+   "time": "09:25",
+   "entry": 1744.9,
    "sector": "LOGISTICS",
    "why": "scanner-table preview (90/290) \u2014 no chart label"
   },
   {
    "symbol": "ADANIPORTS",
+   "side": "SELL",
+   "signal": "SELL-EX8",
+   "time": "09:30",
+   "entry": 1740.2,
+   "sector": "LOGISTICS",
+   "why": "sector LOGISTICS not bear-qualified (bull 5/bear 63)"
+  },
+  {
+   "symbol": "ADANIPOWER",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 194.92,
+   "sector": "ENE",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "ADANIPOWER",
+   "side": "SELL",
+   "signal": "SELL-EX8",
+   "time": "09:30",
+   "entry": 194.27,
+   "sector": "ENE",
+   "why": "sector ENE not bear-qualified (bull 59/bear 5)"
+  },
+  {
+   "symbol": "ADANIPOWER",
    "side": "BUY",
    "signal": "BUY-EX4",
-   "time": "10:05",
-   "entry": 1744.0,
-   "sector": "LOGISTICS",
-   "why": "sector LOGISTICS not bull-qualified (bull 6/bear 63)"
+   "time": "10:15",
+   "entry": 196.96,
+   "sector": "ENE",
+   "why": "sector ENE not bull-qualified (bull 59/bear 5)"
+  },
+  {
+   "symbol": "ALKEM",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 5081.0,
+   "sector": "PHA",
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "ALKEM",
+   "side": "SELL",
+   "signal": "SELL-EX3",
+   "time": "09:45",
+   "entry": 5069.0,
+   "sector": "PHA",
+   "why": "sector PHA not bear-qualified (bull 40/bear 14)"
+  },
+  {
+   "symbol": "AMBER",
+   "side": "SELL",
+   "signal": "SELL-EX8",
+   "time": "09:40",
+   "entry": 6637.0,
+   "sector": "CDUR",
+   "why": "sector CDUR not bear-qualified (bull 11/bear 50)"
   },
   {
    "symbol": "AMBUJACEM",
    "side": "BUY",
-   "signal": "BUY-EX6",
-   "time": "09:30",
-   "entry": 349.6,
+   "signal": "BUY-EX7",
+   "time": "09:55",
+   "entry": 352.15,
    "sector": "CEMENT",
-   "why": "sector CEMENT not bull-qualified (bull 6/bear 61)"
-  },
-  {
-   "symbol": "AMBUJACEM",
-   "side": "BUY",
-   "signal": "BUY-EX",
-   "time": "09:50",
-   "entry": 351.5,
-   "sector": "CEMENT",
-   "why": "sector CEMENT not bull-qualified (bull 6/bear 61)"
+   "why": "lags own sector (stock +0.36% vs CEMENT +1.97%)"
   },
   {
    "symbol": "ANGELONE",
-   "side": "BUY",
-   "signal": "ENTRY BUY",
-   "time": "09:40",
-   "entry": 311.95,
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 311.05,
    "sector": "CAPMKTS",
    "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "ANGELONE",
+   "side": "SELL",
+   "signal": "SELL-EX19",
+   "time": "10:25",
+   "entry": 305.15,
+   "sector": "CAPMKTS",
+   "why": "sector CAPMKTS not bear-qualified (bull 40/bear 21)"
   },
   {
    "symbol": "APLAPOLLO",
    "side": "SELL",
    "signal": "ENTRY SELL",
    "time": "09:25",
-   "entry": 2147.7,
+   "entry": 2130.8,
    "sector": "MET",
    "why": "scanner-table preview (90/290) \u2014 no chart label"
   },
   {
-   "symbol": "APOLLOHOSP",
+   "symbol": "APLAPOLLO",
    "side": "BUY",
-   "signal": "ENTRY BUY",
-   "time": "09:20",
-   "entry": 7839.0,
-   "sector": "HOSPITALS",
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
+   "signal": "BUY-EX17",
+   "time": "10:00",
+   "entry": 2147.2,
+   "sector": "MET",
+   "why": "sector MET not bull-qualified (bull 73/bear 5)"
   },
   {
    "symbol": "APOLLOHOSP",
-   "side": "BUY",
-   "signal": "BUY-EX",
-   "time": "09:35",
-   "entry": 7896.0,
+   "side": "SELL",
+   "signal": "SELL-EX1",
+   "time": "09:30",
+   "entry": 7836.5,
    "sector": "HOSPITALS",
-   "why": "sector HOSPITALS not bull-qualified (bull 13/bear 50)"
-  },
-  {
-   "symbol": "ASHOKLEY",
-   "side": "BUY",
-   "signal": "BUY-EX9",
-   "time": "09:45",
-   "entry": 145.34,
-   "sector": "AUTO",
-   "why": "sector AUTO not bull-qualified (bull 31/bear 24)"
+   "why": "lags own sector (stock -0.67% vs HOSPITALS -0.97%)"
   },
   {
    "symbol": "ASHOKLEY",
    "side": "BUY",
    "signal": "BUY-EX17",
-   "time": "10:05",
-   "entry": 146.79,
+   "time": "10:00",
+   "entry": 149.47,
    "sector": "AUTO",
-   "why": "sector AUTO not bull-qualified (bull 31/bear 24)"
+   "why": "sector AUTO not bull-qualified (bull 68/bear 3)"
   },
   {
    "symbol": "ASIANPAINT",
-   "side": "BUY",
-   "signal": "BUY-EX7",
-   "time": "10:45",
-   "entry": 2374.4,
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 2333.6,
    "sector": "CHEMICALS",
-   "why": "sector CHEMICALS not bull-qualified (bull 5/bear 68)"
-  },
-  {
-   "symbol": "ASTRAL",
-   "side": "BUY",
-   "signal": "BUY-EX",
-   "time": "09:30",
-   "entry": 1459.6,
-   "sector": "BUILDMAT",
-   "why": "sector BUILDMAT not bull-qualified (bull 6/bear 58)"
-  },
-  {
-   "symbol": "AUBANK",
-   "side": "BUY",
-   "signal": "ENTRY BUY",
-   "time": "09:25",
-   "entry": 999.6,
-   "sector": "BANK",
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "AUBANK",
-   "side": "BUY",
-   "signal": "BUY-EX12",
-   "time": "10:45",
-   "entry": 1014.4,
-   "sector": "BANK",
-   "why": "sector BANK not bull-qualified (bull 20/bear 37)"
-  },
-  {
-   "symbol": "AUROPHARMA",
-   "side": "BUY",
-   "signal": "BUY-EX17",
-   "time": "09:40",
-   "entry": 1673.1,
-   "sector": "PHA",
-   "why": "sector PHA not bull-qualified (bull 10/bear 51)"
-  },
-  {
-   "symbol": "AXISBANK",
-   "side": "BUY",
-   "signal": "ENTRY BUY",
-   "time": "09:20",
-   "entry": 1278.5,
-   "sector": "BANK",
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "AXISBANK",
-   "side": "BUY",
-   "signal": "BUY-EX",
-   "time": "09:35",
-   "entry": 1281.4,
-   "sector": "BANK",
-   "why": "sector BANK not bull-qualified (bull 20/bear 37)"
-  },
-  {
-   "symbol": "BAJAJ-AUTO",
-   "side": "BUY",
-   "signal": "ENTRY BUY",
-   "time": "09:25",
-   "entry": 10300.0,
-   "sector": "AUTO",
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "BAJAJ-AUTO",
-   "side": "BUY",
-   "signal": "BUY-EX12",
-   "time": "09:50",
-   "entry": 10317.0,
-   "sector": "AUTO",
-   "why": "sector AUTO not bull-qualified (bull 31/bear 24)"
-  },
-  {
-   "symbol": "BAJAJFINSV",
-   "side": "BUY",
-   "signal": "BUY-EX17",
-   "time": "10:20",
-   "entry": 1727.1,
-   "sector": "FIN",
-   "why": "sector FIN not bull-qualified (bull 31/bear 26)"
-  },
-  {
-   "symbol": "BAJAJHLDNG",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:25",
-   "entry": 10813.0,
-   "sector": "FIN",
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "BAJAJHLDNG",
-   "side": "BUY",
-   "signal": "BUY-EX17",
-   "time": "09:50",
-   "entry": 10911.0,
-   "sector": "FIN",
-   "why": "sector FIN not bull-qualified (bull 31/bear 26)"
-  },
-  {
-   "symbol": "BAJFINANCE",
-   "side": "BUY",
-   "signal": "ENTRY BUY",
-   "time": "09:25",
-   "entry": 963.75,
-   "sector": "FIN",
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "BANDHANBNK",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 168.69,
-   "sector": "BANK",
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "BANDHANBNK",
-   "side": "BUY",
-   "signal": "BUY-EX4",
-   "time": "09:50",
-   "entry": 170.81,
-   "sector": "BANK",
-   "why": "sector BANK not bull-qualified (bull 20/bear 37)"
-  },
-  {
-   "symbol": "BANKBARODA",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 226.93,
-   "sector": "PSUBK",
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "BANKBARODA",
-   "side": "SELL",
-   "signal": "SELL-EX8",
-   "time": "09:35",
-   "entry": 226.0,
-   "sector": "PSUBK",
-   "why": "sector PSUBK not bear-qualified (bull 5/bear 79)"
-  },
-  {
-   "symbol": "BANKBARODA",
-   "side": "BUY",
-   "signal": "BUY-EX5",
-   "time": "10:25",
-   "entry": 229.86,
-   "sector": "PSUBK",
-   "why": "sector PSUBK not bull-qualified (bull 5/bear 79)"
-  },
-  {
-   "symbol": "BANKINDIA",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 131.65,
-   "sector": "PSUBK",
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "BANKINDIA",
-   "side": "SELL",
-   "signal": "SELL-EX8",
-   "time": "09:30",
-   "entry": 129.87,
-   "sector": "PSUBK",
-   "why": "sector PSUBK not bear-qualified (bull 5/bear 79)"
-  },
-  {
-   "symbol": "BDL",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 1120.2,
-   "sector": "DEF",
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "BDL",
-   "side": "BUY",
-   "signal": "BUY-EX17",
-   "time": "10:10",
-   "entry": 1132.0,
-   "sector": "DEF",
-   "why": "sector DEF not bull-qualified (bull 5/bear 76)"
-  },
-  {
-   "symbol": "BEL",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 378.75,
-   "sector": "DEF",
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "BEL",
-   "side": "BUY",
-   "signal": "BUY-EX4",
-   "time": "10:20",
-   "entry": 381.75,
-   "sector": "DEF",
-   "why": "sector DEF not bull-qualified (bull 5/bear 76)"
-  },
-  {
-   "symbol": "BHARATFORG",
-   "side": "SELL",
-   "signal": "SELL-EX1",
-   "time": "09:40",
-   "entry": 1835.6,
-   "sector": "AUTO",
-   "why": "sector AUTO not bear-qualified (bull 31/bear 24)"
-  },
-  {
-   "symbol": "BHARATFORG",
-   "side": "BUY",
-   "signal": "BUY-EX7",
-   "time": "09:55",
-   "entry": 1847.6,
-   "sector": "AUTO",
-   "why": "sector AUTO not bull-qualified (bull 31/bear 24)"
-  },
-  {
-   "symbol": "BHARTIARTL",
-   "side": "BUY",
-   "signal": "ENTRY BUY",
-   "time": "09:20",
-   "entry": 1817.7,
-   "sector": "TELECOM",
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "BHARTIARTL",
-   "side": "BUY",
-   "signal": "BUY-EX",
-   "time": "09:40",
-   "entry": 1832.6,
-   "sector": "TELECOM",
-   "why": "sector TELECOM not bull-qualified (bull 9/bear 54)"
-  },
-  {
-   "symbol": "BHEL",
-   "side": "SELL",
-   "signal": "SELL-EX2",
-   "time": "10:30",
-   "entry": 440.75,
-   "sector": "CAPGOODS",
-   "why": "chase-guard: CAPGOODS already moved -3.34% (<-2.5%)"
-  },
-  {
-   "symbol": "BIOCON",
-   "side": "BUY",
-   "signal": "BUY-EX",
-   "time": "09:35",
-   "entry": 353.6,
-   "sector": "PHA",
-   "why": "sector PHA not bull-qualified (bull 10/bear 51)"
-  },
-  {
-   "symbol": "BLUESTARCO",
-   "side": "SELL",
-   "signal": "SELL-EX1",
-   "time": "09:40",
-   "entry": 1597.1,
-   "sector": "CDUR",
-   "why": "sector CDUR not bear-qualified (bull 6/bear 60)"
-  },
-  {
-   "symbol": "BLUESTARCO",
-   "side": "BUY",
-   "signal": "BUY-EX4",
-   "time": "11:05",
-   "entry": 1615.0,
-   "sector": "CDUR",
-   "why": "sector CDUR not bull-qualified (bull 6/bear 60)"
-  },
-  {
-   "symbol": "BOSCHLTD",
-   "side": "SELL",
-   "signal": "SELL-EX19",
-   "time": "09:35",
-   "entry": 44850.0,
-   "sector": "AUTO",
-   "why": "sector AUTO not bear-qualified (bull 31/bear 24)"
-  },
-  {
-   "symbol": "BPCL",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:25",
-   "entry": 287.55,
-   "sector": "OIL",
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "BPCL",
-   "side": "SELL",
-   "signal": "SELL-EX8",
-   "time": "09:30",
-   "entry": 287.4,
-   "sector": "OIL",
-   "why": "sector OIL not bear-qualified (bull 27/bear 30)"
-  },
-  {
-   "symbol": "BPCL",
-   "side": "BUY",
-   "signal": "BUY-EX",
-   "time": "10:00",
-   "entry": 289.8,
-   "sector": "OIL",
-   "why": "sector OIL not bull-qualified (bull 27/bear 30)"
-  },
-  {
-   "symbol": "BRITANNIA",
-   "side": "SELL",
-   "signal": "SELL-EX1",
-   "time": "10:55",
-   "entry": 4893.8,
-   "sector": "FMCG",
-   "why": "sector FMCG not bear-qualified (bull 3/bear 80)"
-  },
-  {
-   "symbol": "BSE",
-   "side": "BUY",
-   "signal": "BUY-EX17",
-   "time": "09:30",
-   "entry": 3344.1,
-   "sector": "CAPMKTS",
-   "why": "lags own sector (stock +0.18% vs CAPMKTS +1.49%)"
-  },
-  {
-   "symbol": "CAMS",
-   "side": "BUY",
-   "signal": "ENTRY BUY",
-   "time": "09:20",
-   "entry": 704.15,
-   "sector": "CAPMKTS",
    "why": "scanner-table preview (90/290) \u2014 no chart label"
   }
  ]
