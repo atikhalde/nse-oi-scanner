@@ -1,5 +1,5 @@
 {
- "date": "2026-10-19",
+ "date": "2026-10-20",
  "signals": {
   "360ONE": {
    "nbars": 74
@@ -633,26 +633,21 @@
   }
  },
  "trades": {},
- "alerts": [
-  "M12:2026-10-19:EOD_SUMMARY",
-  "M12:2026-10-19:EOD_DOCUMENT"
- ],
+ "alerts": [],
  "decisions": [],
- "eod_done": true,
- "cycles": 3,
+ "eod_done": false,
+ "cycles": 1,
  "prev_meta": {
   "status": "OK",
-  "source": "data/history bootstrap",
-  "date": "2026-10-16",
-  "age_days": 3,
-  "count": 210,
-  "expected_previous_weekday": "2026-10-16"
+  "source": "m12_prev_close.json",
+  "date": "2026-10-19",
+  "age_days": 1,
+  "count": 210
  },
  "feed": {
   "dhan_calls": 0,
   "yahoo_calls": 210,
   "fallback": null,
   "fed": 210
- },
- "eod_cache_count": 210
+ }
 }
