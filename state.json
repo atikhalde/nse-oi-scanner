@@ -542,7 +542,94 @@
    "nbars": 74
   },
   "SRF": {
-   "nbars": 6
+   "nbars": 74
+  },
+  "SUNPHARMA": {
+   "nbars": 73
+  },
+  "SUPREMEIND": {
+   "nbars": 74
+  },
+  "SUZLON": {
+   "nbars": 73
+  },
+  "SWIGGY": {
+   "nbars": 73
+  },
+  "TATACONSUM": {
+   "nbars": 73
+  },
+  "TATAELXSI": {
+   "nbars": 74
+  },
+  "TATAPOWER": {
+   "nbars": 73
+  },
+  "TATASTEEL": {
+   "nbars": 74
+  },
+  "TCS": {
+   "nbars": 74
+  },
+  "TECHM": {
+   "nbars": 74
+  },
+  "TIINDIA": {
+   "nbars": 74
+  },
+  "TITAN": {
+   "nbars": 74
+  },
+  "TMPV": {
+   "nbars": 74
+  },
+  "TORNTPHARM": {
+   "nbars": 74
+  },
+  "TRENT": {
+   "nbars": 74
+  },
+  "TVSMOTOR": {
+   "nbars": 74
+  },
+  "ULTRACEMCO": {
+   "nbars": 73
+  },
+  "UNIONBANK": {
+   "nbars": 74
+  },
+  "UNITDSPR": {
+   "nbars": 74
+  },
+  "UNOMINDA": {
+   "nbars": 73
+  },
+  "UPL": {
+   "nbars": 73
+  },
+  "VBL": {
+   "nbars": 74
+  },
+  "VEDL": {
+   "nbars": 74
+  },
+  "VMM": {
+   "nbars": 74
+  },
+  "VOLTAS": {
+   "nbars": 73
+  },
+  "WAAREEENER": {
+   "nbars": 74
+  },
+  "WIPRO": {
+   "nbars": 74
+  },
+  "YESBANK": {
+   "nbars": 73
+  },
+  "ZYDUSLIFE": {
+   "nbars": 74
   }
  },
  "trades": {
@@ -1338,8 +1425,8 @@
    "qty_full": 48,
    "qty_capped": false,
    "capital": 49277.0,
-   "tp1": 45.77,
-   "tp2": 45.77,
+   "tp1": 45.78,
+   "tp2": 45.78,
    "trail_armed": true,
    "trail_style": "structure swings",
    "legs": [
@@ -1359,7 +1446,7 @@
     {
      "key": "ENTRY",
      "time": "10:55",
-     "price": 1026.5999755859375
+     "price": 1026.6
     },
     {
      "key": "TRAIL_ON",
@@ -1412,7 +1499,7 @@
     {
      "key": "ENTRY",
      "time": "09:40",
-     "price": 308.20001220703125
+     "price": 308.2
     },
     {
      "key": "TRAIL_ON",
@@ -1465,7 +1552,7 @@
     {
      "key": "ENTRY",
      "time": "09:45",
-     "price": 830.0499877929688
+     "price": 830.05
     },
     {
      "key": "TRAIL_ON",
@@ -1518,7 +1605,7 @@
     {
      "key": "ENTRY",
      "time": "09:50",
-     "price": 2486.39990234375
+     "price": 2486.4
     },
     {
      "key": "TRAIL_ON",
@@ -1550,8 +1637,8 @@
    "qty_full": 11,
    "qty_capped": false,
    "capital": 48347.0,
-   "tp1": -1207.2,
-   "tp2": -1207.2,
+   "tp1": -1207.22,
+   "tp2": -1207.22,
    "trail_armed": true,
    "trail_style": "structure swings",
    "legs": [
@@ -1571,7 +1658,7 @@
     {
      "key": "ENTRY",
      "time": "09:35",
-     "price": 4395.2001953125
+     "price": 4395.2
     },
     {
      "key": "TRAIL_ON",
@@ -1603,8 +1690,8 @@
    "qty_full": 14,
    "qty_capped": false,
    "capital": 49860.0,
-   "tp1": -816.48,
-   "tp2": -816.48,
+   "tp1": -816.47,
+   "tp2": -816.47,
    "trail_armed": true,
    "trail_style": "structure swings",
    "legs": [
@@ -1624,7 +1711,7 @@
     {
      "key": "ENTRY",
      "time": "09:45",
-     "price": 3561.39990234375
+     "price": 3561.4
     },
     {
      "key": "TRAIL_ON",
@@ -1640,6 +1727,59 @@
    "gate_rank": 14
   },
   "SRF": {
+   "symbol": "SRF",
+   "side": "SELL",
+   "time": "09:45",
+   "signal": "SELL-EX1",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 2419.7,
+   "sl": 2443.09,
+   "sl_anchor": "session-extreme*",
+   "risk_pts": 23.39,
+   "risk_pct": 0.967,
+   "risk_rs": 468.0,
+   "qty": 20,
+   "qty_full": 20,
+   "qty_capped": false,
+   "capital": 48394.0,
+   "tp1": 104.23,
+   "tp2": 104.23,
+   "trail_armed": true,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "trail 12:50",
+     20,
+     2391.5783176757814,
+     "12:50"
+    ]
+   ],
+   "exit_text": "100% trail 12:50",
+   "leg2_time": "12:50",
+   "pnl": 562.0,
+   "r_total": 1.2,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "09:45",
+     "price": 2419.7
+    },
+    {
+     "key": "TRAIL_ON",
+     "time": "11:20",
+     "price": 2372.39990234375
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "12:50",
+     "price": 2391.5783176757814
+    }
+   ],
+   "gate_rank": 2
+  },
+  "SRF#2": {
    "symbol": "SRF",
    "side": "SELL",
    "time": "09:45",
@@ -1691,6 +1831,112 @@
     }
    ],
    "gate_rank": 2
+  },
+  "VMM": {
+   "symbol": "VMM",
+   "side": "SELL",
+   "time": "09:50",
+   "signal": "SELL-EX8",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 94.16,
+   "sl": 95.41,
+   "sl_anchor": "session-extreme*",
+   "risk_pts": 1.25,
+   "risk_pct": 1.327,
+   "risk_rs": 663.0,
+   "qty": 531,
+   "qty_full": 531,
+   "qty_capped": false,
+   "capital": 49999.0,
+   "tp1": -29.5,
+   "tp2": -29.5,
+   "trail_armed": true,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "trail 14:30",
+     531,
+     90.47809108428955,
+     "14:30"
+    ]
+   ],
+   "exit_text": "100% trail 14:30",
+   "leg2_time": "14:30",
+   "pnl": 1955.0,
+   "r_total": 2.95,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "09:50",
+     "price": 94.16000366210938
+    },
+    {
+     "key": "TRAIL_ON",
+     "time": "12:05",
+     "price": 92.8499984741211
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "14:30",
+     "price": 90.47809108428955
+    }
+   ],
+   "gate_rank": 3
+  },
+  "YESBANK": {
+   "symbol": "YESBANK",
+   "side": "SELL",
+   "time": "11:30",
+   "signal": "SELL-EX5",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 16.29,
+   "sl": 16.43,
+   "sl_anchor": "pivot",
+   "risk_pts": 0.14,
+   "risk_pct": 0.88,
+   "risk_rs": 440.0,
+   "qty": 3069,
+   "qty_full": 3069,
+   "qty_capped": false,
+   "capital": 49994.0,
+   "tp1": 2.1,
+   "tp2": 2.1,
+   "trail_armed": true,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "trail 13:20",
+     3069,
+     16.333265923690796,
+     "13:20"
+    ]
+   ],
+   "exit_text": "100% trail 13:20",
+   "leg2_time": "13:20",
+   "pnl": -133.0,
+   "r_total": -0.3,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "11:30",
+     "price": 16.290000915527344
+    },
+    {
+     "key": "TRAIL_ON",
+     "time": "12:10",
+     "price": 16.100000381469727
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "13:20",
+     "price": 16.333265923690796
+    }
+   ],
+   "gate_rank": 30
   }
  },
  "alerts": [
@@ -1741,7 +1987,24 @@
   "MUTHOOTFIN:ENTRY",
   "RADICO:ENTRY",
   "SIEMENS:ENTRY",
-  "SRF:ENTRY"
+  "SRF:ENTRY",
+  "LODHA#2:TRAIL_ON",
+  "LODHA#2:EXIT_SL",
+  "MANAPPURAM:TRAIL_ON",
+  "MANAPPURAM:EXIT_SL",
+  "MAXHEALTH:TRAIL_ON",
+  "MAXHEALTH:EXIT_SL",
+  "MUTHOOTFIN:TRAIL_ON",
+  "MUTHOOTFIN:EXIT_SL",
+  "RADICO:TRAIL_ON",
+  "RADICO:EXIT_SL",
+  "SIEMENS:TRAIL_ON",
+  "SIEMENS:EXIT_SL",
+  "SRF:TRAIL_ON",
+  "SRF:EXIT_SL",
+  "SRF#2:ENTRY",
+  "VMM:ENTRY",
+  "YESBANK:ENTRY"
  ],
  "gate": {
   "status": "OK",
@@ -1957,8 +2220,8 @@
   "NESTLEIND": 206,
   "ULTRACEMCO": 207
  },
- "eod_done": false,
- "cycles": 0,
+ "eod_done": true,
+ "cycles": 1,
  "skipped": [
   {
    "symbol": "360ONE",
@@ -3111,6 +3374,141 @@
    "entry": 788.1,
    "rank": 8,
    "why": "EX1/EX2 before 09:45 blocked \u2014 razor-edge class (B2)"
+  },
+  {
+   "symbol": "SUNPHARMA",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 1751.3,
+   "rank": 149,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "TATACONSUM",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 970.65,
+   "rank": 32,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "TATAPOWER",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 352.55,
+   "rank": 169,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "TCS",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 2525.7,
+   "rank": 167,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "TECHM",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 1807.8,
+   "rank": 33,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "TECHM",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "09:45",
+   "entry": 1814.5,
+   "rank": 33,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 quality filter"
+  },
+  {
+   "symbol": "TMPV",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 279.65,
+   "rank": 50,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "TVSMOTOR",
+   "side": "SELL",
+   "signal": "SELL-EX12",
+   "time": "09:50",
+   "entry": 4046.0,
+   "rank": 137,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 quality filter"
+  },
+  {
+   "symbol": "UNIONBANK",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 184.76,
+   "rank": 187,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "UNITDSPR",
+   "side": "SELL",
+   "signal": "SELL-EX1",
+   "time": "09:30",
+   "entry": 1330.5,
+   "rank": 23,
+   "why": "EX1/EX2 before 09:45 blocked \u2014 razor-edge class (B2)"
+  },
+  {
+   "symbol": "VMM",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 95.26,
+   "rank": 3,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "WAAREEENER",
+   "side": "SELL",
+   "signal": "SELL-EX1",
+   "time": "09:35",
+   "entry": 2458.2,
+   "rank": 61,
+   "why": "EX1/EX2 before 09:45 blocked \u2014 razor-edge class (B2)"
+  },
+  {
+   "symbol": "WIPRO",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 189.0,
+   "rank": 21,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "WIPRO",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "10:30",
+   "entry": 189.5,
+   "rank": 21,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 quality filter"
+  },
+  {
+   "symbol": "ZYDUSLIFE",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 1122.9,
+   "rank": 47,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
   }
  ],
  "ghosts": [
@@ -3372,6 +3770,36 @@
    "time": "09:50",
    "entry": 563.35,
    "rank": 121,
+   "grp": "R"
+  },
+  {
+   "symbol": "TECHM",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "code": 102,
+   "time": "09:45",
+   "entry": 1814.5,
+   "rank": 33,
+   "grp": "R"
+  },
+  {
+   "symbol": "TVSMOTOR",
+   "side": "SELL",
+   "signal": "SELL-EX12",
+   "code": 213,
+   "time": "09:50",
+   "entry": 4046.0,
+   "rank": 137,
+   "grp": "R"
+  },
+  {
+   "symbol": "WIPRO",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "code": 102,
+   "time": "10:30",
+   "entry": 189.5,
+   "rank": 21,
    "grp": "R"
   }
  ]
