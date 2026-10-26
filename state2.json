@@ -2,115 +2,127 @@
  "date": "2026-10-26",
  "signals": {
   "360ONE": {
-   "nbars": 67
+   "nbars": 72
   },
   "ABB": {
-   "nbars": 67
+   "nbars": 72
   },
   "ABCAPITAL": {
-   "nbars": 67
+   "nbars": 72
   },
   "ADANIENSOL": {
-   "nbars": 67
+   "nbars": 72
   },
   "ADANIENT": {
-   "nbars": 67
+   "nbars": 72
   },
   "ADANIGREEN": {
-   "nbars": 67
+   "nbars": 72
   },
   "ADANIPORTS": {
-   "nbars": 67
+   "nbars": 72
   },
   "ADANIPOWER": {
-   "nbars": 67
+   "nbars": 72
   },
   "ALKEM": {
-   "nbars": 67
+   "nbars": 72
   },
   "AMBER": {
-   "nbars": 67
+   "nbars": 72
   },
   "AMBUJACEM": {
-   "nbars": 67
+   "nbars": 72
   },
   "ANGELONE": {
-   "nbars": 67
+   "nbars": 72
   },
   "APLAPOLLO": {
-   "nbars": 67
+   "nbars": 72
   },
   "APOLLOHOSP": {
-   "nbars": 67
+   "nbars": 72
   },
   "ASHOKLEY": {
-   "nbars": 67
+   "nbars": 72
   },
   "ASIANPAINT": {
-   "nbars": 67
+   "nbars": 72
   },
   "ASTRAL": {
-   "nbars": 67
+   "nbars": 72
   },
   "AUBANK": {
-   "nbars": 67
+   "nbars": 72
   },
   "AUROPHARMA": {
-   "nbars": 67
+   "nbars": 72
   },
   "AXISBANK": {
-   "nbars": 67
+   "nbars": 72
   },
   "BAJAJ-AUTO": {
-   "nbars": 67
+   "nbars": 72
   },
   "BAJAJFINSV": {
-   "nbars": 67
+   "nbars": 72
   },
   "BAJAJHLDNG": {
-   "nbars": 67
+   "nbars": 72
   },
   "BAJFINANCE": {
-   "nbars": 67
+   "nbars": 72
   },
   "BANDHANBNK": {
-   "nbars": 67
+   "nbars": 72
   },
   "BANKBARODA": {
-   "nbars": 67
+   "nbars": 72
   },
   "BANKINDIA": {
-   "nbars": 67
+   "nbars": 72
   },
   "BDL": {
-   "nbars": 67
+   "nbars": 72
   },
   "BEL": {
-   "nbars": 67
+   "nbars": 72
   },
   "BHARATFORG": {
-   "nbars": 67
+   "nbars": 72
   },
   "BHARTIARTL": {
-   "nbars": 67
+   "nbars": 72
   },
   "BHEL": {
-   "nbars": 67
+   "nbars": 72
   },
   "BIOCON": {
-   "nbars": 67
+   "nbars": 72
   },
   "BLUESTARCO": {
-   "nbars": 67
+   "nbars": 72
   },
   "BOSCHLTD": {
-   "nbars": 67
+   "nbars": 72
   },
   "BPCL": {
-   "nbars": 67
+   "nbars": 72
   },
   "BRITANNIA": {
-   "nbars": 13
+   "nbars": 72
+  },
+  "BSE": {
+   "nbars": 72
+  },
+  "CAMS": {
+   "nbars": 72
+  },
+  "CANBK": {
+   "nbars": 72
+  },
+  "CDSL": {
+   "nbars": 10
   }
  },
  "trades": {
@@ -152,7 +164,7 @@
     {
      "key": "ENTRY",
      "time": "09:55",
-     "price": 1201.5999755859375
+     "price": 1201.6
     },
     {
      "key": "TRAIL_ON",
@@ -165,8 +177,7 @@
      "price": 1220.7558000000001
     }
    ],
-   "spurt_rank": 156,
-   "movers20": true
+   "spurt_rank": 156
   },
   "ALKEM": {
    "symbol": "ALKEM",
@@ -214,8 +225,7 @@
      "price": 4978.9956
     }
    ],
-   "spurt_rank": 11,
-   "movers20": true
+   "spurt_rank": 11
   },
   "BDL": {
    "symbol": "BDL",
@@ -234,8 +244,8 @@
    "qty_full": 49,
    "qty_capped": false,
    "capital": 49407.0,
-   "tp1": -734.61,
-   "tp2": -734.61,
+   "tp1": -734.6,
+   "tp2": -734.6,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
@@ -255,7 +265,7 @@
     {
      "key": "ENTRY",
      "time": "11:30",
-     "price": 1008.2999877929688
+     "price": 1008.3
     },
     {
      "key": "EXIT_SL",
@@ -263,8 +273,7 @@
      "price": 1025.9050911621093
     }
    ],
-   "spurt_rank": 159,
-   "movers20": true
+   "spurt_rank": 159
   },
   "BHARTIARTL": {
    "symbol": "BHARTIARTL",
@@ -285,30 +294,34 @@
    "capital": 49280.0,
    "tp1": 3952.13,
    "tp2": 3952.13,
-   "trail_armed": false,
+   "trail_armed": true,
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 14:53",
+     "OPEN 15:14",
      26,
-     1912.199951171875,
-     "14:53"
+     1910.0999755859375,
+     "15:14"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "14:53",
-   "pnl": 437.0,
-   "r_total": 0.81,
+   "leg2_time": "15:14",
+   "pnl": 382.0,
+   "r_total": 0.71,
    "closed": false,
    "events": [
     {
      "key": "ENTRY",
      "time": "09:55",
-     "price": 1895.4000244140625
+     "price": 1895.4
+    },
+    {
+     "key": "TRAIL_ON",
+     "time": "14:55",
+     "price": 1916.5999755859375
     }
    ],
-   "spurt_rank": 132,
-   "movers20": true
+   "spurt_rank": 132
   },
   "BRITANNIA": {
    "symbol": "BRITANNIA",
@@ -356,7 +369,50 @@
      "price": 4540.191877636719
     }
    ],
-   "spurt_rank": 60,
+   "spurt_rank": 60
+  },
+  "CDSL": {
+   "symbol": "CDSL",
+   "side": "BUY",
+   "time": "10:05",
+   "signal": "BUY-EX6",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 1196.5,
+   "sl": 1158.97,
+   "sl_anchor": "pivot",
+   "risk_pts": 37.53,
+   "risk_pct": 3.137,
+   "risk_rs": 863.0,
+   "qty": 23,
+   "qty_full": 41,
+   "qty_capped": true,
+   "capital": 27520.0,
+   "tp1": 4912.16,
+   "tp2": 4912.16,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "OPEN 15:15",
+     23,
+     1204.0,
+     "15:15"
+    ]
+   ],
+   "exit_text": "OPEN",
+   "leg2_time": "15:15",
+   "pnl": 172.0,
+   "r_total": 0.2,
+   "closed": false,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "10:05",
+     "price": 1196.5
+    }
+   ],
+   "spurt_rank": 174,
    "movers20": true
   }
  },
@@ -365,7 +421,14 @@
   "ALKEM:ENTRY",
   "BDL:ENTRY",
   "BHARTIARTL:ENTRY",
-  "BRITANNIA:ENTRY"
+  "BRITANNIA:ENTRY",
+  "ADANIGREEN:TRAIL_ON",
+  "ADANIGREEN:EXIT_SL",
+  "ALKEM:EXIT_SL",
+  "BDL:EXIT_SL",
+  "BHARTIARTL:TRAIL_ON",
+  "BRITANNIA:EXIT_SL",
+  "CDSL:ENTRY"
  ],
  "gate": {
   "spurts": {
@@ -375,8 +438,8 @@
   },
   "movers": {
    "count": 209,
-   "top20_cut": 0.29,
-   "bot20_cut": -0.3
+   "top20_cut": 0.69,
+   "bot20_cut": -0.44
   }
  },
  "eod_done": false,
@@ -687,6 +750,33 @@
    "entry": 4517.1,
    "rank": 60,
    "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "BSE",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "09:35",
+   "entry": 3273.6,
+   "rank": 100,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 quality filter"
+  },
+  {
+   "symbol": "CAMS",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 644.85,
+   "rank": 162,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "CDSL",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 1163.9,
+   "rank": 174,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
   }
  ],
  "ghosts": [
@@ -842,6 +932,17 @@
    "entry": 44375.0,
    "rank": 193,
    "mv": true,
+   "grp": "R"
+  },
+  {
+   "symbol": "BSE",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "code": 102,
+   "time": "09:35",
+   "entry": 3273.6,
+   "rank": 100,
+   "mv": false,
    "grp": "R"
   }
  ]
