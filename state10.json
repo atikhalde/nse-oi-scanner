@@ -1,4659 +1,903 @@
 {
- "date": "2026-10-26",
+ "date": "2026-10-27",
  "signals": {
   "360ONE": {
-   "nbars": 74
+   "nbars": 67
   },
   "ABB": {
-   "nbars": 74
+   "nbars": 67
   },
   "ABCAPITAL": {
-   "nbars": 73
+   "nbars": 67
   },
   "ADANIENSOL": {
-   "nbars": 73
+   "nbars": 67
   },
   "ADANIENT": {
-   "nbars": 73
+   "nbars": 67
   },
   "ADANIGREEN": {
-   "nbars": 74
+   "nbars": 67
   },
   "ADANIPORTS": {
-   "nbars": 74
+   "nbars": 67
   },
   "ADANIPOWER": {
-   "nbars": 73
+   "nbars": 67
   },
   "ALKEM": {
-   "nbars": 73
+   "nbars": 67
   },
   "AMBER": {
-   "nbars": 74
+   "nbars": 67
   },
   "AMBUJACEM": {
-   "nbars": 74
+   "nbars": 67
   },
   "ANGELONE": {
-   "nbars": 73
+   "nbars": 67
   },
   "APLAPOLLO": {
-   "nbars": 74
+   "nbars": 67
   },
   "APOLLOHOSP": {
-   "nbars": 73
+   "nbars": 67
   },
   "ASHOKLEY": {
-   "nbars": 73
+   "nbars": 67
   },
   "ASIANPAINT": {
-   "nbars": 73
+   "nbars": 67
   },
   "ASTRAL": {
-   "nbars": 74
+   "nbars": 67
   },
   "AUBANK": {
-   "nbars": 74
+   "nbars": 67
   },
   "AUROPHARMA": {
-   "nbars": 74
+   "nbars": 67
   },
   "AXISBANK": {
-   "nbars": 74
+   "nbars": 67
   },
   "BAJAJ-AUTO": {
-   "nbars": 74
+   "nbars": 67
   },
   "BAJAJFINSV": {
-   "nbars": 73
+   "nbars": 67
   },
   "BAJAJHLDNG": {
-   "nbars": 73
+   "nbars": 67
   },
   "BAJFINANCE": {
-   "nbars": 74
+   "nbars": 67
   },
   "BANDHANBNK": {
-   "nbars": 73
+   "nbars": 67
   },
   "BANKBARODA": {
-   "nbars": 74
+   "nbars": 67
   },
   "BANKINDIA": {
-   "nbars": 74
+   "nbars": 67
   },
   "BDL": {
-   "nbars": 73
+   "nbars": 67
   },
   "BEL": {
-   "nbars": 74
+   "nbars": 67
   },
   "BHARATFORG": {
-   "nbars": 74
+   "nbars": 67
   },
   "BHARTIARTL": {
-   "nbars": 73
+   "nbars": 67
   },
   "BHEL": {
-   "nbars": 74
+   "nbars": 67
   },
   "BIOCON": {
-   "nbars": 74
+   "nbars": 67
   },
   "BLUESTARCO": {
-   "nbars": 73
+   "nbars": 67
   },
   "BOSCHLTD": {
-   "nbars": 73
+   "nbars": 67
   },
   "BPCL": {
-   "nbars": 74
+   "nbars": 67
   },
   "BRITANNIA": {
-   "nbars": 73
+   "nbars": 67
   },
   "BSE": {
-   "nbars": 74
+   "nbars": 67
   },
   "CAMS": {
-   "nbars": 74
+   "nbars": 67
   },
   "CANBK": {
-   "nbars": 74
+   "nbars": 67
   },
   "CDSL": {
-   "nbars": 74
+   "nbars": 67
   },
   "CGPOWER": {
-   "nbars": 74
+   "nbars": 67
   },
   "CHOLAFIN": {
-   "nbars": 74
+   "nbars": 67
   },
   "CIPLA": {
-   "nbars": 74
+   "nbars": 67
   },
   "COALINDIA": {
-   "nbars": 74
+   "nbars": 67
   },
   "COCHINSHIP": {
-   "nbars": 73
+   "nbars": 67
   },
   "COFORGE": {
-   "nbars": 74
+   "nbars": 67
   },
   "COLPAL": {
-   "nbars": 74
-  },
-  "CONCOR": {
-   "nbars": 73
-  },
-  "CROMPTON": {
-   "nbars": 73
-  },
-  "CUMMINSIND": {
-   "nbars": 74
-  },
-  "DABUR": {
-   "nbars": 74
-  },
-  "DALBHARAT": {
-   "nbars": 75
-  },
-  "DELHIVERY": {
-   "nbars": 74
-  },
-  "DIVISLAB": {
-   "nbars": 74
-  },
-  "DIXON": {
-   "nbars": 74
-  },
-  "DLF": {
-   "nbars": 73
-  },
-  "DMART": {
-   "nbars": 74
-  },
-  "DRREDDY": {
-   "nbars": 74
-  },
-  "EICHERMOT": {
-   "nbars": 74
-  },
-  "ETERNAL": {
-   "nbars": 74
-  },
-  "EXIDEIND": {
-   "nbars": 76
-  },
-  "FEDERALBNK": {
-   "nbars": 74
-  },
-  "FORCEMOT": {
-   "nbars": 74
-  },
-  "FORTIS": {
-   "nbars": 73
-  },
-  "GAIL": {
-   "nbars": 74
-  },
-  "GLENMARK": {
-   "nbars": 74
-  },
-  "GMRAIRPORT": {
-   "nbars": 74
-  },
-  "GODFRYPHLP": {
-   "nbars": 74
-  },
-  "GODREJCP": {
-   "nbars": 74
-  },
-  "GODREJPROP": {
-   "nbars": 74
-  },
-  "GRASIM": {
-   "nbars": 74
-  },
-  "GVT&D": {
-   "nbars": 74
-  },
-  "HAL": {
-   "nbars": 74
-  },
-  "HAVELLS": {
-   "nbars": 74
-  },
-  "HCLTECH": {
-   "nbars": 74
-  },
-  "HDFCAMC": {
-   "nbars": 74
-  },
-  "HDFCBANK": {
-   "nbars": 73
-  },
-  "HDFCLIFE": {
-   "nbars": 74
-  },
-  "HEROMOTOCO": {
-   "nbars": 74
-  },
-  "HINDALCO": {
-   "nbars": 74
-  },
-  "HINDPETRO": {
-   "nbars": 74
-  },
-  "HINDUNILVR": {
-   "nbars": 74
-  },
-  "HINDZINC": {
-   "nbars": 74
-  },
-  "HYUNDAI": {
-   "nbars": 74
-  },
-  "ICICIBANK": {
-   "nbars": 74
-  },
-  "ICICIGI": {
-   "nbars": 74
-  },
-  "IDEA": {
-   "nbars": 74
-  },
-  "IDFCFIRSTB": {
-   "nbars": 74
-  },
-  "IEX": {
-   "nbars": 73
-  },
-  "INDHOTEL": {
-   "nbars": 74
-  },
-  "INDIANB": {
-   "nbars": 74
-  },
-  "INDIGO": {
-   "nbars": 74
-  },
-  "INDUSINDBK": {
-   "nbars": 74
-  },
-  "INDUSTOWER": {
-   "nbars": 74
-  },
-  "INFY": {
-   "nbars": 74
-  },
-  "INOXWIND": {
-   "nbars": 74
-  },
-  "IOC": {
-   "nbars": 74
-  },
-  "IREDA": {
-   "nbars": 74
-  },
-  "IRFC": {
-   "nbars": 74
-  },
-  "ITC": {
-   "nbars": 74
-  },
-  "JINDALSTEL": {
-   "nbars": 74
-  },
-  "JIOFIN": {
-   "nbars": 74
-  },
-  "JSWENERGY": {
-   "nbars": 74
-  },
-  "JSWSTEEL": {
-   "nbars": 74
-  },
-  "JUBLFOOD": {
-   "nbars": 74
-  },
-  "KALYANKJIL": {
-   "nbars": 74
-  },
-  "KAYNES": {
-   "nbars": 74
-  },
-  "KEI": {
-   "nbars": 73
-  },
-  "KFINTECH": {
-   "nbars": 74
-  },
-  "KOTAKBANK": {
-   "nbars": 74
-  },
-  "KPITTECH": {
-   "nbars": 73
-  },
-  "LAURUSLABS": {
-   "nbars": 74
-  },
-  "LICHSGFIN": {
-   "nbars": 73
-  },
-  "LICI": {
-   "nbars": 74
-  },
-  "LODHA": {
-   "nbars": 73
-  },
-  "LT": {
-   "nbars": 73
-  },
-  "LTF": {
-   "nbars": 73
-  },
-  "LTM": {
-   "nbars": 73
-  },
-  "LUPIN": {
-   "nbars": 74
-  },
-  "M&M": {
-   "nbars": 74
-  },
-  "MANAPPURAM": {
-   "nbars": 73
-  },
-  "MANKIND": {
-   "nbars": 74
-  },
-  "MARICO": {
-   "nbars": 74
-  },
-  "MARUTI": {
-   "nbars": 73
-  },
-  "MAXHEALTH": {
-   "nbars": 74
-  },
-  "MAZDOCK": {
-   "nbars": 73
-  },
-  "MCX": {
-   "nbars": 74
-  },
-  "MFSL": {
-   "nbars": 74
-  },
-  "MOTHERSON": {
-   "nbars": 73
-  },
-  "MOTILALOFS": {
-   "nbars": 73
-  },
-  "MPHASIS": {
-   "nbars": 73
-  },
-  "MUTHOOTFIN": {
-   "nbars": 73
-  },
-  "NAM-INDIA": {
-   "nbars": 73
-  },
-  "NATIONALUM": {
-   "nbars": 74
-  },
-  "NAUKRI": {
-   "nbars": 73
-  },
-  "NBCC": {
-   "nbars": 73
-  },
-  "NESTLEIND": {
-   "nbars": 73
-  },
-  "NHPC": {
-   "nbars": 73
-  },
-  "NMDC": {
-   "nbars": 74
-  },
-  "NTPC": {
-   "nbars": 74
-  },
-  "NUVAMA": {
-   "nbars": 75
-  },
-  "NYKAA": {
-   "nbars": 74
-  },
-  "OBEROIRLTY": {
-   "nbars": 74
-  },
-  "OFSS": {
-   "nbars": 74
-  },
-  "OIL": {
-   "nbars": 73
-  },
-  "ONGC": {
-   "nbars": 74
-  },
-  "PAGEIND": {
-   "nbars": 73
-  },
-  "PATANJALI": {
-   "nbars": 74
-  },
-  "PAYTM": {
-   "nbars": 74
-  },
-  "PERSISTENT": {
-   "nbars": 73
-  },
-  "PETRONET": {
-   "nbars": 74
-  },
-  "PFC": {
-   "nbars": 73
-  },
-  "PGEL": {
-   "nbars": 73
-  },
-  "PHOENIXLTD": {
-   "nbars": 73
-  },
-  "PIDILITIND": {
-   "nbars": 73
-  },
-  "PIIND": {
-   "nbars": 74
-  },
-  "PNB": {
-   "nbars": 74
-  },
-  "PNBHOUSING": {
-   "nbars": 73
-  },
-  "POLICYBZR": {
-   "nbars": 74
-  },
-  "POLYCAB": {
-   "nbars": 73
-  },
-  "POWERGRID": {
-   "nbars": 74
-  },
-  "POWERINDIA": {
-   "nbars": 73
-  },
-  "PREMIERENE": {
-   "nbars": 73
-  },
-  "PRESTIGE": {
-   "nbars": 74
-  },
-  "RADICO": {
-   "nbars": 73
-  },
-  "RBLBANK": {
-   "nbars": 73
-  },
-  "RECLTD": {
-   "nbars": 73
-  },
-  "RELIANCE": {
-   "nbars": 74
-  },
-  "RVNL": {
-   "nbars": 73
-  },
-  "SAIL": {
-   "nbars": 74
-  },
-  "SBICARD": {
-   "nbars": 73
-  },
-  "SBILIFE": {
-   "nbars": 73
-  },
-  "SBIN": {
-   "nbars": 73
-  },
-  "SHREECEM": {
-   "nbars": 74
-  },
-  "SHRIRAMFIN": {
-   "nbars": 74
-  },
-  "SIEMENS": {
-   "nbars": 73
-  },
-  "SOLARINDS": {
-   "nbars": 74
-  },
-  "SONACOMS": {
-   "nbars": 73
-  },
-  "SRF": {
-   "nbars": 74
-  },
-  "SUNPHARMA": {
-   "nbars": 74
-  },
-  "SUPREMEIND": {
-   "nbars": 74
-  },
-  "SUZLON": {
-   "nbars": 74
-  },
-  "SWIGGY": {
-   "nbars": 74
-  },
-  "TATACONSUM": {
-   "nbars": 74
-  },
-  "TATAELXSI": {
-   "nbars": 73
-  },
-  "TATAPOWER": {
-   "nbars": 73
-  },
-  "TATASTEEL": {
-   "nbars": 74
-  },
-  "TCS": {
-   "nbars": 74
-  },
-  "TECHM": {
-   "nbars": 74
-  },
-  "TIINDIA": {
-   "nbars": 73
-  },
-  "TITAN": {
-   "nbars": 74
-  },
-  "TMPV": {
-   "nbars": 73
-  },
-  "TORNTPHARM": {
-   "nbars": 73
-  },
-  "TRENT": {
-   "nbars": 73
-  },
-  "TVSMOTOR": {
-   "nbars": 73
-  },
-  "ULTRACEMCO": {
-   "nbars": 73
-  },
-  "UNIONBANK": {
-   "nbars": 74
-  },
-  "UNITDSPR": {
-   "nbars": 73
-  },
-  "UNOMINDA": {
-   "nbars": 73
-  },
-  "UPL": {
-   "nbars": 73
-  },
-  "VBL": {
-   "nbars": 73
-  },
-  "VEDL": {
-   "nbars": 74
-  },
-  "VMM": {
-   "nbars": 73
-  },
-  "VOLTAS": {
-   "nbars": 73
-  },
-  "WAAREEENER": {
-   "nbars": 74
-  },
-  "WIPRO": {
-   "nbars": 74
-  },
-  "YESBANK": {
-   "nbars": 74
-  },
-  "ZYDUSLIFE": {
-   "nbars": 73
+   "nbars": 10
   }
  },
  "trades": {
-  "ABB": {
-   "symbol": "ABB",
-   "side": "BUY",
-   "time": "10:00",
-   "signal": "BUY-EX17",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 6191.0,
-   "sl": 6063.79,
-   "sl_anchor": "pivot",
-   "risk_pts": 127.21,
-   "risk_pct": 2.055,
-   "risk_rs": 890.0,
-   "qty": 7,
-   "qty_full": 8,
-   "qty_capped": true,
-   "capital": 43337.0,
-   "tp1": 18785.09,
-   "tp2": 18785.09,
-   "trail_armed": true,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     7,
-     6357.5,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": 1166.0,
-   "r_total": 1.31,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "10:00",
-     "price": 6191.0
-    },
-    {
-     "key": "TRAIL_ON",
-     "time": "13:45",
-     "price": 6329.5
-    }
-   ]
-  },
-  "ADANIENSOL": {
-   "symbol": "ADANIENSOL",
-   "side": "BUY",
-   "time": "10:00",
-   "signal": "BUY-EX5",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 1237.0,
-   "sl": 1212.86,
-   "sl_anchor": "pivot",
-   "risk_pts": 24.14,
-   "risk_pct": 1.952,
-   "risk_rs": 893.0,
-   "qty": 37,
-   "qty_full": 40,
-   "qty_capped": true,
-   "capital": 45769.0,
-   "tp1": 3627.12,
-   "tp2": 3627.12,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     37,
-     1258.0,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": 777.0,
-   "r_total": 0.87,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "10:00",
-     "price": 1237.0
-    }
-   ]
-  },
-  "ADANIENT": {
-   "symbol": "ADANIENT",
-   "side": "BUY",
-   "time": "10:10",
-   "signal": "BUY-EX6",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 2496.4,
-   "sl": 2447.31,
-   "sl_anchor": "pivot",
-   "risk_pts": 49.09,
-   "risk_pct": 1.966,
-   "risk_rs": 884.0,
-   "qty": 18,
-   "qty_full": 20,
-   "qty_capped": true,
-   "capital": 44935.0,
-   "tp1": 7356.26,
-   "tp2": 7356.26,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     18,
-     2508.0,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": 209.0,
-   "r_total": 0.24,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "10:10",
-     "price": 2496.4
-    }
-   ]
-  },
-  "ADANIPORTS": {
-   "symbol": "ADANIPORTS",
-   "side": "BUY",
-   "time": "09:50",
-   "signal": "BUY-EX17",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 1723.3,
-   "sl": 1697.36,
-   "sl_anchor": "session-extreme*",
-   "risk_pts": 25.94,
-   "risk_pct": 1.505,
-   "risk_rs": 752.0,
-   "qty": 29,
-   "qty_full": 29,
-   "qty_capped": false,
-   "capital": 49976.0,
-   "tp1": 4291.32,
-   "tp2": 4291.32,
-   "trail_armed": true,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     29,
-     1752.5,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": 847.0,
-   "r_total": 1.13,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "09:50",
-     "price": 1723.3
-    },
-    {
-     "key": "TRAIL_ON",
-     "time": "15:25",
-     "price": 1752.5
-    }
-   ]
-  },
-  "ADANIPOWER": {
-   "symbol": "ADANIPOWER",
-   "side": "BUY",
-   "time": "09:50",
-   "signal": "BUY-EX6",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 182.3,
-   "sl": 177.82,
-   "sl_anchor": "session-extreme*",
-   "risk_pts": 4.48,
-   "risk_pct": 2.455,
-   "risk_rs": 900.0,
-   "qty": 201,
-   "qty_full": 274,
-   "qty_capped": true,
-   "capital": 36642.0,
-   "tp1": 625.38,
-   "tp2": 625.38,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     201,
-     186.5500030517578,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": 854.0,
-   "r_total": 0.95,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "09:50",
-     "price": 182.3
-    }
-   ]
-  },
-  "ASTRAL": {
-   "symbol": "ASTRAL",
-   "side": "BUY",
-   "time": "09:45",
-   "signal": "BUY-EX17",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 1373.5,
-   "sl": 1341.43,
-   "sl_anchor": "pivot",
-   "risk_pts": 32.07,
-   "risk_pct": 2.335,
-   "risk_rs": 898.0,
-   "qty": 28,
-   "qty_full": 36,
-   "qty_capped": true,
-   "capital": 38458.0,
-   "tp1": 4548.27,
-   "tp2": 4548.27,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "SL 13:55",
-     28,
-     1341.4316111816406,
-     "13:55"
-    ]
-   ],
-   "exit_text": "100% SL 13:55",
-   "leg2_time": "13:55",
-   "pnl": -898.0,
-   "r_total": -1.0,
-   "closed": true,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "09:45",
-     "price": 1373.5
-    },
-    {
-     "key": "EXIT_SL",
-     "time": "13:55",
-     "price": 1341.4316111816406
-    }
-   ]
-  },
-  "AXISBANK": {
-   "symbol": "AXISBANK",
-   "side": "BUY",
-   "time": "09:45",
-   "signal": "BUY-EX17",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 1220.4,
-   "sl": 1210.26,
-   "sl_anchor": "session-extreme*",
-   "risk_pts": 10.14,
-   "risk_pct": 0.831,
-   "risk_rs": 406.0,
-   "qty": 40,
-   "qty_full": 40,
-   "qty_capped": false,
-   "capital": 48816.0,
-   "tp1": 2224.47,
-   "tp2": 2224.47,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     40,
-     1220.0,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": -16.0,
-   "r_total": -0.04,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "09:45",
-     "price": 1220.4
-    }
-   ]
-  },
-  "BAJAJ-AUTO": {
-   "symbol": "BAJAJ-AUTO",
-   "side": "BUY",
-   "time": "10:00",
-   "signal": "BUY-EX6",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 10083.0,
-   "sl": 9941.01,
-   "sl_anchor": "session-extreme*",
-   "risk_pts": 141.99,
-   "risk_pct": 1.408,
-   "risk_rs": 568.0,
-   "qty": 4,
-   "qty_full": 4,
-   "qty_capped": false,
-   "capital": 40332.0,
-   "tp1": 24139.87,
-   "tp2": 24139.87,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     4,
-     10071.0,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": -48.0,
-   "r_total": -0.08,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "10:00",
-     "price": 10083.0
-    }
-   ]
-  },
-  "BAJAJHLDNG": {
-   "symbol": "BAJAJHLDNG",
-   "side": "BUY",
-   "time": "10:25",
-   "signal": "BUY-EX17",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 11193.0,
-   "sl": 10947.81,
-   "sl_anchor": "session-extreme*",
-   "risk_pts": 245.19,
-   "risk_pct": 2.191,
-   "risk_rs": 736.0,
-   "qty": 3,
-   "qty_full": 4,
-   "qty_capped": true,
-   "capital": 33579.0,
-   "tp1": 35466.81,
-   "tp2": 35466.81,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     3,
-     11050.0,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": -429.0,
-   "r_total": -0.58,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "10:25",
-     "price": 11193.0
-    }
-   ]
-  },
-  "BDL": {
-   "symbol": "BDL",
-   "side": "BUY",
-   "time": "09:55",
-   "signal": "BUY-EX17",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 1019.0,
-   "sl": 1003.5,
-   "sl_anchor": "session-extreme*",
-   "risk_pts": 15.5,
-   "risk_pct": 1.521,
-   "risk_rs": 760.0,
-   "qty": 49,
-   "qty_full": 49,
-   "qty_capped": false,
-   "capital": 49931.0,
-   "tp1": 2553.57,
-   "tp2": 2553.57,
-   "trail_armed": true,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "trail 12:40",
-     49,
-     1018.9961722045898,
-     "12:40"
-    ]
-   ],
-   "exit_text": "100% trail 12:40",
-   "leg2_time": "12:40",
-   "pnl": -0.0,
-   "r_total": -0.0,
-   "closed": true,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "09:55",
-     "price": 1019.0
-    },
-    {
-     "key": "TRAIL_ON",
-     "time": "12:10",
-     "price": 1035.0
-    },
-    {
-     "key": "EXIT_SL",
-     "time": "12:40",
-     "price": 1018.9961722045898
-    }
-   ]
-  },
-  "BHARATFORG": {
-   "symbol": "BHARATFORG",
-   "side": "BUY",
-   "time": "09:55",
-   "signal": "BUY-EX5",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 1712.2,
-   "sl": 1691.66,
-   "sl_anchor": "session-extreme*",
-   "risk_pts": 20.54,
-   "risk_pct": 1.2,
-   "risk_rs": 596.0,
-   "qty": 29,
-   "qty_full": 29,
-   "qty_capped": false,
-   "capital": 49654.0,
-   "tp1": 3745.5,
-   "tp2": 3745.5,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     29,
-     1730.4000244140625,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": 528.0,
-   "r_total": 0.89,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "09:55",
-     "price": 1712.2
-    }
-   ]
-  },
-  "BHEL": {
-   "symbol": "BHEL",
-   "side": "BUY",
-   "time": "09:55",
-   "signal": "BUY-EX17",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 389.0,
-   "sl": 379.42,
-   "sl_anchor": "pivot",
-   "risk_pts": 9.58,
-   "risk_pct": 2.462,
-   "risk_rs": 891.0,
-   "qty": 93,
-   "qty_full": 128,
-   "qty_capped": true,
-   "capital": 36177.0,
-   "tp1": 1337.01,
-   "tp2": 1337.01,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     93,
-     394.54998779296875,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": 516.0,
-   "r_total": 0.58,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "09:55",
-     "price": 389.0
-    }
-   ]
-  },
-  "BIOCON": {
-   "symbol": "BIOCON",
-   "side": "BUY",
-   "time": "09:30",
-   "signal": "BUY-EX17",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 325.25,
-   "sl": 321.34,
-   "sl_anchor": "session-extreme*",
-   "risk_pts": 3.91,
-   "risk_pct": 1.203,
-   "risk_rs": 599.0,
-   "qty": 153,
-   "qty_full": 153,
-   "qty_capped": false,
-   "capital": 49763.0,
-   "tp1": 712.76,
-   "tp2": 712.76,
-   "trail_armed": true,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "trail 14:50",
-     153,
-     328.48427779541015,
-     "14:50"
-    ]
-   ],
-   "exit_text": "100% trail 14:50",
-   "leg2_time": "14:50",
-   "pnl": 495.0,
-   "r_total": 0.83,
-   "closed": true,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "09:30",
-     "price": 325.25
-    },
-    {
-     "key": "TRAIL_ON",
-     "time": "13:45",
-     "price": 329.20001220703125
-    },
-    {
-     "key": "EXIT_SL",
-     "time": "14:50",
-     "price": 328.48427779541015
-    }
-   ]
-  },
-  "BOSCHLTD": {
-   "symbol": "BOSCHLTD",
-   "side": "BUY",
-   "time": "10:05",
-   "signal": "BUY-EX17",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 44375.0,
-   "sl": 43701.26,
-   "sl_anchor": "pivot",
-   "risk_pts": 673.74,
-   "risk_pct": 1.518,
-   "risk_rs": 674.0,
-   "qty": 1,
-   "qty_full": 1,
-   "qty_capped": false,
-   "capital": 44375.0,
-   "tp1": 111075.46,
-   "tp2": 111075.46,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     1,
-     44900.0,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": 525.0,
-   "r_total": 0.78,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "10:05",
-     "price": 44375.0
-    }
-   ]
-  },
-  "BRITANNIA": {
-   "symbol": "BRITANNIA",
-   "side": "BUY",
-   "time": "10:20",
-   "signal": "BUY-EX6",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 4576.0,
-   "sl": 4540.19,
-   "sl_anchor": "pivot",
-   "risk_pts": 35.81,
-   "risk_pct": 0.783,
-   "risk_rs": 358.0,
-   "qty": 10,
-   "qty_full": 10,
-   "qty_capped": false,
-   "capital": 45760.0,
-   "tp1": 8121.0,
-   "tp2": 8121.0,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "SL 11:00",
-     10,
-     4540.191877636719,
-     "11:00"
-    ]
-   ],
-   "exit_text": "100% SL 11:00",
-   "leg2_time": "11:00",
-   "pnl": -358.0,
-   "r_total": -1.0,
-   "closed": true,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "10:20",
-     "price": 4576.0
-    },
-    {
-     "key": "EXIT_SL",
-     "time": "11:00",
-     "price": 4540.191877636719
-    }
-   ]
-  },
-  "BSE": {
-   "symbol": "BSE",
-   "side": "BUY",
-   "time": "09:35",
-   "signal": "BUY-EX17",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 3273.6,
-   "sl": 3215.16,
-   "sl_anchor": "session-extreme*",
-   "risk_pts": 58.44,
-   "risk_pct": 1.785,
-   "risk_rs": 877.0,
-   "qty": 15,
-   "qty_full": 15,
-   "qty_capped": false,
-   "capital": 49104.0,
-   "tp1": 9059.47,
-   "tp2": 9059.47,
-   "trail_armed": true,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "trail 11:15",
-     15,
-     3349.5299111816407,
-     "11:15"
-    ]
-   ],
-   "exit_text": "100% trail 11:15",
-   "leg2_time": "11:15",
-   "pnl": 1139.0,
-   "r_total": 1.3,
-   "closed": true,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "09:35",
-     "price": 3273.6
-    },
-    {
-     "key": "TRAIL_ON",
-     "time": "09:50",
-     "price": 3357.199951171875
-    },
-    {
-     "key": "EXIT_SL",
-     "time": "11:15",
-     "price": 3349.5299111816407
-    }
-   ]
-  },
-  "CANBK": {
-   "symbol": "CANBK",
-   "side": "BUY",
-   "time": "09:55",
-   "signal": "BUY-EX7",
-   "setup": "PULLBACK",
-   "sl_mode": "structure",
-   "entry": 116.46,
-   "sl": 115.86,
-   "sl_anchor": "pullback-high/low",
-   "risk_pts": 0.6,
-   "risk_pct": 0.511,
-   "risk_rs": 256.0,
-   "qty": 429,
-   "qty_full": 429,
-   "qty_capped": false,
-   "capital": 49961.0,
-   "tp1": 175.43,
-   "tp2": 175.43,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "SL 10:35",
-     429,
-     115.86439352595644,
-     "10:35"
-    ]
-   ],
-   "exit_text": "100% SL 10:35",
-   "leg2_time": "10:35",
-   "pnl": -256.0,
-   "r_total": -1.0,
-   "closed": true,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "09:55",
-     "price": 116.46
-    },
-    {
-     "key": "EXIT_SL",
-     "time": "10:35",
-     "price": 115.86439352595644
-    }
-   ]
-  },
-  "CDSL": {
-   "symbol": "CDSL",
-   "side": "BUY",
-   "time": "10:05",
-   "signal": "BUY-EX6",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 1196.5,
-   "sl": 1158.97,
-   "sl_anchor": "pivot",
-   "risk_pts": 37.53,
-   "risk_pct": 3.137,
-   "risk_rs": 863.0,
-   "qty": 23,
-   "qty_full": 41,
-   "qty_capped": true,
-   "capital": 27520.0,
-   "tp1": 4912.16,
-   "tp2": 4912.16,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     23,
-     1196.0,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": -12.0,
-   "r_total": -0.01,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "10:05",
-     "price": 1196.5
-    }
-   ]
-  },
-  "COCHINSHIP": {
-   "symbol": "COCHINSHIP",
-   "side": "BUY",
-   "time": "09:50",
-   "signal": "BUY-EX17",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 1146.8,
-   "sl": 1123.58,
-   "sl_anchor": "session-extreme*",
-   "risk_pts": 23.22,
-   "risk_pct": 2.025,
-   "risk_rs": 883.0,
-   "qty": 38,
-   "qty_full": 43,
-   "qty_capped": true,
-   "capital": 43578.0,
-   "tp1": 3446.05,
-   "tp2": 3446.05,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     38,
-     1133.9000244140625,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": -490.0,
-   "r_total": -0.56,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "09:50",
-     "price": 1146.8
-    }
-   ]
-  },
-  "COLPAL": {
-   "symbol": "COLPAL",
-   "side": "BUY",
-   "time": "09:30",
-   "signal": "BUY-EX17",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 1615.6,
-   "sl": 1595.38,
-   "sl_anchor": "session-extreme*",
-   "risk_pts": 20.22,
-   "risk_pct": 1.251,
-   "risk_rs": 607.0,
-   "qty": 30,
-   "qty_full": 30,
-   "qty_capped": false,
-   "capital": 48468.0,
-   "tp1": 3617.3,
-   "tp2": 3617.3,
-   "trail_armed": true,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "trail 10:30",
-     30,
-     1607.7783555908204,
-     "10:30"
-    ]
-   ],
-   "exit_text": "100% trail 10:30",
-   "leg2_time": "10:30",
-   "pnl": -235.0,
-   "r_total": -0.39,
-   "closed": true,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "09:30",
-     "price": 1615.6
-    },
-    {
-     "key": "TRAIL_ON",
-     "time": "09:55",
-     "price": 1638.199951171875
-    },
-    {
-     "key": "EXIT_SL",
-     "time": "10:30",
-     "price": 1607.7783555908204
-    }
-   ]
-  },
-  "CROMPTON": {
-   "symbol": "CROMPTON",
-   "side": "BUY",
-   "time": "09:50",
-   "signal": "BUY-EX5",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 195.82,
-   "sl": 192.62,
-   "sl_anchor": "pivot",
-   "risk_pts": 3.2,
-   "risk_pct": 1.633,
-   "risk_rs": 816.0,
-   "qty": 255,
-   "qty_full": 255,
-   "qty_capped": false,
-   "capital": 49934.0,
-   "tp1": 512.47,
-   "tp2": 512.47,
-   "trail_armed": true,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "trail 11:05",
-     255,
-     195.63086416931154,
-     "11:05"
-    ]
-   ],
-   "exit_text": "100% trail 11:05",
-   "leg2_time": "11:05",
-   "pnl": -48.0,
-   "r_total": -0.06,
-   "closed": true,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "09:50",
-     "price": 195.82
-    },
-    {
-     "key": "TRAIL_ON",
-     "time": "10:05",
-     "price": 199.11000061035156
-    },
-    {
-     "key": "EXIT_SL",
-     "time": "11:05",
-     "price": 195.63086416931154
-    }
-   ]
-  },
-  "DELHIVERY": {
-   "symbol": "DELHIVERY",
-   "side": "BUY",
-   "time": "09:55",
-   "signal": "BUY-EX5",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 372.55,
-   "sl": 364.88,
-   "sl_anchor": "pivot",
-   "risk_pts": 7.67,
-   "risk_pct": 2.06,
-   "risk_rs": 898.0,
-   "qty": 117,
-   "qty_full": 134,
-   "qty_capped": true,
-   "capital": 43588.0,
-   "tp1": 1132.17,
-   "tp2": 1132.17,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     117,
-     375.0,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": 287.0,
-   "r_total": 0.32,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "09:55",
-     "price": 372.55
-    }
-   ]
-  },
-  "DIXON": {
-   "symbol": "DIXON",
-   "side": "BUY",
-   "time": "10:05",
-   "signal": "BUY-EX17",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 11254.0,
-   "sl": 11099.78,
-   "sl_anchor": "pivot",
-   "risk_pts": 154.22,
-   "risk_pct": 1.37,
-   "risk_rs": 617.0,
-   "qty": 4,
-   "qty_full": 4,
-   "qty_capped": false,
-   "capital": 45016.0,
-   "tp1": 26521.82,
-   "tp2": 26521.82,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     4,
-     11161.0,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": -372.0,
-   "r_total": -0.6,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "10:05",
-     "price": 11254.0
-    }
-   ]
-  },
-  "EXIDEIND": {
-   "symbol": "EXIDEIND",
-   "side": "BUY",
-   "time": "09:50",
-   "signal": "BUY-EX17",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 336.75,
-   "sl": 329.48,
-   "sl_anchor": "session-extreme*",
-   "risk_pts": 7.27,
-   "risk_pct": 2.158,
-   "risk_rs": 894.0,
-   "qty": 123,
-   "qty_full": 148,
-   "qty_capped": true,
-   "capital": 41420.0,
-   "tp1": 1056.08,
-   "tp2": 1056.08,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "EOD 15:20",
-     123,
-     336.6499938964844,
-     "15:20"
-    ]
-   ],
-   "exit_text": "100% EOD 15:20",
-   "leg2_time": "15:20",
-   "pnl": -12.0,
-   "r_total": -0.01,
-   "closed": true,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "09:50",
-     "price": 336.75
-    },
-    {
-     "key": "EXIT_EOD",
-     "time": "15:20",
-     "price": 336.6499938964844
-    }
-   ]
-  },
-  "FORCEMOT": {
-   "symbol": "FORCEMOT",
-   "side": "BUY",
-   "time": "09:55",
-   "signal": "BUY-EX7",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 16523.0,
-   "sl": 16275.74,
-   "sl_anchor": "pivot",
-   "risk_pts": 247.26,
-   "risk_pct": 1.496,
-   "risk_rs": 742.0,
-   "qty": 3,
-   "qty_full": 3,
-   "qty_capped": false,
-   "capital": 49569.0,
-   "tp1": 41001.32,
-   "tp2": 41001.32,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     3,
-     16588.0,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": 195.0,
-   "r_total": 0.26,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "09:55",
-     "price": 16523.0
-    }
-   ]
-  },
-  "FORTIS": {
-   "symbol": "FORTIS",
-   "side": "BUY",
-   "time": "09:50",
-   "signal": "BUY-EX17",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 717.15,
-   "sl": 705.51,
-   "sl_anchor": "pivot",
-   "risk_pts": 11.64,
-   "risk_pct": 1.623,
-   "risk_rs": 803.0,
-   "qty": 69,
-   "qty_full": 69,
-   "qty_capped": false,
-   "capital": 49483.0,
-   "tp1": 1869.62,
-   "tp2": 1869.62,
-   "trail_armed": true,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "trail 13:55",
-     69,
-     727.4044777954101,
-     "13:55"
-    ]
-   ],
-   "exit_text": "100% trail 13:55",
-   "leg2_time": "13:55",
-   "pnl": 708.0,
-   "r_total": 0.88,
-   "closed": true,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "09:50",
-     "price": 717.15
-    },
-    {
-     "key": "TRAIL_ON",
-     "time": "13:05",
-     "price": 729.4000244140625
-    },
-    {
-     "key": "EXIT_SL",
-     "time": "13:55",
-     "price": 727.4044777954101
-    }
-   ]
-  },
-  "GAIL": {
-   "symbol": "GAIL",
-   "side": "BUY",
-   "time": "09:50",
-   "signal": "BUY-EX12",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 164.56,
-   "sl": 162.41,
-   "sl_anchor": "session-extreme*",
-   "risk_pts": 2.15,
-   "risk_pct": 1.308,
-   "risk_rs": 652.0,
-   "qty": 303,
-   "qty_full": 303,
-   "qty_capped": false,
-   "capital": 49862.0,
-   "tp1": 377.66,
-   "tp2": 377.66,
-   "trail_armed": true,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     303,
-     168.27999877929688,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": 1127.0,
-   "r_total": 1.73,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "09:50",
-     "price": 164.56
-    },
-    {
-     "key": "TRAIL_ON",
-     "time": "13:05",
-     "price": 166.8000030517578
-    }
-   ]
-  },
-  "HAL": {
-   "symbol": "HAL",
-   "side": "BUY",
-   "time": "10:40",
-   "signal": "BUY-EX7",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 4758.0,
-   "sl": 4718.66,
-   "sl_anchor": "pivot",
-   "risk_pts": 39.34,
-   "risk_pct": 0.827,
-   "risk_rs": 393.0,
-   "qty": 10,
-   "qty_full": 10,
-   "qty_capped": false,
-   "capital": 47580.0,
-   "tp1": 8653.04,
-   "tp2": 8653.04,
-   "trail_armed": true,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "trail 13:50",
-     10,
-     4786.742655273438,
-     "13:50"
-    ]
-   ],
-   "exit_text": "100% trail 13:50",
-   "leg2_time": "13:50",
-   "pnl": 287.0,
-   "r_total": 0.73,
-   "closed": true,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "10:40",
-     "price": 4758.0
-    },
-    {
-     "key": "TRAIL_ON",
-     "time": "12:00",
-     "price": 4799.89990234375
-    },
-    {
-     "key": "EXIT_SL",
-     "time": "13:50",
-     "price": 4786.742655273438
-    }
-   ]
-  },
-  "HAVELLS": {
-   "symbol": "HAVELLS",
-   "side": "BUY",
-   "time": "10:15",
-   "signal": "BUY-EX17",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 1036.8,
-   "sl": 1011.9,
-   "sl_anchor": "session-extreme*",
-   "risk_pts": 24.9,
-   "risk_pct": 2.402,
-   "risk_rs": 896.0,
-   "qty": 36,
-   "qty_full": 48,
-   "qty_capped": true,
-   "capital": 37325.0,
-   "tp1": 3502.14,
-   "tp2": 3502.14,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "SL 12:15",
-     36,
-     1011.8975555908204,
-     "12:15"
-    ]
-   ],
-   "exit_text": "100% SL 12:15",
-   "leg2_time": "12:15",
-   "pnl": -896.0,
-   "r_total": -1.0,
-   "closed": true,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "10:15",
-     "price": 1036.8
-    },
-    {
-     "key": "EXIT_SL",
-     "time": "12:15",
-     "price": 1011.8975555908204
-    }
-   ]
-  },
-  "HINDALCO": {
-   "symbol": "HINDALCO",
-   "side": "BUY",
-   "time": "09:45",
-   "signal": "BUY-EX17",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 872.45,
-   "sl": 851.18,
-   "sl_anchor": "pivot",
-   "risk_pts": 21.27,
-   "risk_pct": 2.438,
-   "risk_rs": 893.0,
-   "qty": 42,
-   "qty_full": 57,
-   "qty_capped": true,
-   "capital": 36643.0,
-   "tp1": 2978.21,
-   "tp2": 2978.21,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     42,
-     885.6500244140625,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": 554.0,
-   "r_total": 0.62,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "09:45",
-     "price": 872.45
-    }
-   ]
-  },
-  "HINDPETRO": {
-   "symbol": "HINDPETRO",
-   "side": "BUY",
-   "time": "10:00",
-   "signal": "BUY-EX5",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 339.0,
-   "sl": 334.48,
-   "sl_anchor": "pivot",
-   "risk_pts": 4.52,
-   "risk_pct": 1.332,
-   "risk_rs": 664.0,
-   "qty": 147,
-   "qty_full": 147,
-   "qty_capped": false,
-   "capital": 49833.0,
-   "tp1": 786.18,
-   "tp2": 786.18,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     147,
-     343.45001220703125,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": 654.0,
-   "r_total": 0.99,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "10:00",
-     "price": 339.0
-    }
-   ]
-  },
-  "HYUNDAI": {
-   "symbol": "HYUNDAI",
-   "side": "BUY",
-   "time": "10:05",
-   "signal": "BUY-EX5",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 1865.5,
-   "sl": 1827.63,
-   "sl_anchor": "pivot",
-   "risk_pts": 37.87,
-   "risk_pct": 2.03,
-   "risk_rs": 871.0,
-   "qty": 23,
-   "qty_full": 26,
-   "qty_capped": true,
-   "capital": 42906.0,
-   "tp1": 5614.19,
-   "tp2": 5614.19,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     23,
-     1868.0,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": 58.0,
-   "r_total": 0.07,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "10:05",
-     "price": 1865.5
-    }
-   ]
-  },
-  "ICICIGI": {
-   "symbol": "ICICIGI",
-   "side": "BUY",
-   "time": "10:10",
-   "signal": "BUY-EX6",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 1600.2,
-   "sl": 1570.19,
-   "sl_anchor": "pivot",
-   "risk_pts": 30.01,
-   "risk_pct": 1.876,
-   "risk_rs": 870.0,
-   "qty": 29,
-   "qty_full": 31,
-   "qty_capped": true,
-   "capital": 46406.0,
-   "tp1": 4571.6,
-   "tp2": 4571.6,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     29,
-     1580.0,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": -586.0,
-   "r_total": -0.67,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "10:10",
-     "price": 1600.2
-    }
-   ]
-  },
-  "INOXWIND": {
-   "symbol": "INOXWIND",
-   "side": "BUY",
-   "time": "10:05",
-   "signal": "BUY-EX5",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 59.45,
-   "sl": 57.83,
-   "sl_anchor": "pivot",
-   "risk_pts": 1.62,
-   "risk_pct": 2.728,
-   "risk_rs": 900.0,
-   "qty": 555,
-   "qty_full": 841,
-   "qty_capped": true,
-   "capital": 32995.0,
-   "tp1": 219.99,
-   "tp2": 219.99,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     555,
-     58.400001525878906,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": -583.0,
-   "r_total": -0.65,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "10:05",
-     "price": 59.45
-    }
-   ]
-  },
-  "IOC": {
-   "symbol": "IOC",
-   "side": "BUY",
-   "time": "10:00",
-   "signal": "BUY-EX5",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 129.27,
-   "sl": 127.94,
-   "sl_anchor": "pivot",
-   "risk_pts": 1.33,
-   "risk_pct": 1.025,
-   "risk_rs": 512.0,
-   "qty": 386,
-   "qty_full": 386,
-   "qty_capped": false,
-   "capital": 49898.0,
-   "tp1": 260.5,
-   "tp2": 260.5,
-   "trail_armed": true,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     386,
-     130.85000610351562,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": 610.0,
-   "r_total": 1.19,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "10:00",
-     "price": 129.27
-    },
-    {
-     "key": "TRAIL_ON",
-     "time": "15:25",
-     "price": 130.85000610351562
-    }
-   ]
-  },
-  "IRFC": {
-   "symbol": "IRFC",
-   "side": "BUY",
-   "time": "09:55",
-   "signal": "BUY-EX7",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 74.99,
-   "sl": 73.64,
-   "sl_anchor": "pivot",
-   "risk_pts": 1.35,
-   "risk_pct": 1.807,
-   "risk_rs": 900.0,
-   "qty": 664,
-   "qty_full": 666,
-   "qty_capped": true,
-   "capital": 49793.0,
-   "tp1": 209.11,
-   "tp2": 209.11,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     664,
-     74.4000015258789,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": -392.0,
-   "r_total": -0.44,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "09:55",
-     "price": 74.99
-    }
-   ]
-  },
-  "JIOFIN": {
-   "symbol": "JIOFIN",
-   "side": "BUY",
-   "time": "09:55",
-   "signal": "BUY-EX5",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 205.48,
-   "sl": 202.56,
-   "sl_anchor": "pivot",
-   "risk_pts": 2.92,
-   "risk_pct": 1.421,
-   "risk_rs": 710.0,
-   "qty": 243,
-   "qty_full": 243,
-   "qty_capped": false,
-   "capital": 49932.0,
-   "tp1": 494.61,
-   "tp2": 494.61,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     243,
-     205.22999572753906,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": -61.0,
-   "r_total": -0.09,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "09:55",
-     "price": 205.48
-    }
-   ]
-  },
-  "JUBLFOOD": {
-   "symbol": "JUBLFOOD",
-   "side": "BUY",
-   "time": "09:35",
-   "signal": "BUY-EX17",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 406.15,
-   "sl": 399.92,
-   "sl_anchor": "session-extreme*",
-   "risk_pts": 6.23,
-   "risk_pct": 1.534,
-   "risk_rs": 766.0,
-   "qty": 123,
-   "qty_full": 123,
-   "qty_capped": false,
-   "capital": 49956.0,
-   "tp1": 1022.92,
-   "tp2": 1022.92,
-   "trail_armed": true,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "trail 10:40",
-     123,
-     411.3500061035156,
-     "10:40"
-    ]
-   ],
-   "exit_text": "100% trail 10:40",
-   "leg2_time": "10:40",
-   "pnl": 640.0,
-   "r_total": 0.83,
-   "closed": true,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "09:35",
-     "price": 406.15
-    },
-    {
-     "key": "TRAIL_ON",
-     "time": "10:00",
-     "price": 415.1499938964844
-    },
-    {
-     "key": "EXIT_SL",
-     "time": "10:40",
-     "price": 411.3500061035156
-    }
-   ]
-  },
-  "KEI": {
-   "symbol": "KEI",
-   "side": "BUY",
-   "time": "10:00",
-   "signal": "BUY-EX5",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 3779.1,
-   "sl": 3721.06,
-   "sl_anchor": "pivot",
-   "risk_pts": 58.04,
-   "risk_pct": 1.536,
-   "risk_rs": 755.0,
-   "qty": 13,
-   "qty_full": 13,
-   "qty_capped": false,
-   "capital": 49128.0,
-   "tp1": 9525.49,
-   "tp2": 9525.49,
-   "trail_armed": true,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "trail 14:40",
-     13,
-     3865.6266223632815,
-     "14:40"
-    ]
-   ],
-   "exit_text": "100% trail 14:40",
-   "leg2_time": "14:40",
-   "pnl": 1125.0,
-   "r_total": 1.49,
-   "closed": true,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "10:00",
-     "price": 3779.1
-    },
-    {
-     "key": "TRAIL_ON",
-     "time": "11:20",
-     "price": 3837.60009765625
-    },
-    {
-     "key": "EXIT_SL",
-     "time": "14:40",
-     "price": 3865.6266223632815
-    }
-   ]
-  },
-  "KFINTECH": {
-   "symbol": "KFINTECH",
-   "side": "BUY",
-   "time": "10:05",
-   "signal": "BUY-EX6",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 815.5,
-   "sl": 789.89,
-   "sl_anchor": "pivot",
-   "risk_pts": 25.61,
-   "risk_pct": 3.14,
-   "risk_rs": 896.0,
-   "qty": 35,
-   "qty_full": 61,
-   "qty_capped": true,
-   "capital": 28542.0,
-   "tp1": 3350.69,
-   "tp2": 3350.69,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     35,
-     829.0,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": 472.0,
-   "r_total": 0.53,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "10:05",
-     "price": 815.5
-    }
-   ]
-  },
-  "LAURUSLABS": {
-   "symbol": "LAURUSLABS",
-   "side": "BUY",
-   "time": "10:00",
-   "signal": "BUY-EX17",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 2003.0,
-   "sl": 1972.01,
-   "sl_anchor": "pivot",
-   "risk_pts": 30.99,
-   "risk_pct": 1.547,
-   "risk_rs": 744.0,
-   "qty": 24,
-   "qty_full": 24,
-   "qty_capped": false,
-   "capital": 48072.0,
-   "tp1": 5071.45,
-   "tp2": 5071.45,
-   "trail_armed": true,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     24,
-     2058.89990234375,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": 1342.0,
-   "r_total": 1.8,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "10:00",
-     "price": 2003.0
-    },
-    {
-     "key": "TRAIL_ON",
-     "time": "12:20",
-     "price": 2035.0
-    }
-   ]
-  },
-  "LICHSGFIN": {
-   "symbol": "LICHSGFIN",
-   "side": "BUY",
-   "time": "09:35",
-   "signal": "BUY-EX6",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 494.1,
-   "sl": 485.15,
-   "sl_anchor": "session-extreme*",
-   "risk_pts": 8.95,
-   "risk_pct": 1.811,
-   "risk_rs": 895.0,
-   "qty": 100,
-   "qty_full": 101,
-   "qty_capped": true,
-   "capital": 49410.0,
-   "tp1": 1379.86,
-   "tp2": 1379.86,
-   "trail_armed": true,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "trail 11:25",
-     100,
-     495.40090000000004,
-     "11:25"
-    ]
-   ],
-   "exit_text": "100% trail 11:25",
-   "leg2_time": "11:25",
-   "pnl": 130.0,
-   "r_total": 0.15,
-   "closed": true,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "09:35",
-     "price": 494.1
-    },
-    {
-     "key": "TRAIL_ON",
-     "time": "09:55",
-     "price": 503.1000061035156
-    },
-    {
-     "key": "EXIT_SL",
-     "time": "11:25",
-     "price": 495.40090000000004
-    }
-   ]
-  },
-  "LICI": {
-   "symbol": "LICI",
-   "side": "BUY",
-   "time": "09:50",
-   "signal": "BUY-EX5",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 381.8,
-   "sl": 377.32,
-   "sl_anchor": "session-extreme*",
-   "risk_pts": 4.48,
-   "risk_pct": 1.172,
-   "risk_rs": 582.0,
-   "qty": 130,
-   "qty_full": 130,
-   "qty_capped": false,
-   "capital": 49634.0,
-   "tp1": 824.87,
-   "tp2": 824.87,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     130,
-     380.95001220703125,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": -110.0,
-   "r_total": -0.19,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "09:50",
-     "price": 381.8
-    }
-   ]
-  },
-  "LT": {
-   "symbol": "LT",
-   "side": "BUY",
-   "time": "09:50",
-   "signal": "BUY-EX6",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 3649.0,
-   "sl": 3614.38,
-   "sl_anchor": "pivot",
-   "risk_pts": 34.62,
-   "risk_pct": 0.949,
-   "risk_rs": 450.0,
-   "qty": 13,
-   "qty_full": 13,
-   "qty_capped": false,
-   "capital": 47437.0,
-   "tp1": 7076.67,
-   "tp2": 7076.67,
-   "trail_armed": true,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "trail 11:15",
-     13,
-     3646.170522363281,
-     "11:15"
-    ]
-   ],
-   "exit_text": "100% trail 11:15",
-   "leg2_time": "11:15",
-   "pnl": -37.0,
-   "r_total": -0.08,
-   "closed": true,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "09:50",
-     "price": 3649.0
-    },
-    {
-     "key": "TRAIL_ON",
-     "time": "10:05",
-     "price": 3684.0
-    },
-    {
-     "key": "EXIT_SL",
-     "time": "11:15",
-     "price": 3646.170522363281
-    }
-   ]
-  },
-  "MANAPPURAM": {
-   "symbol": "MANAPPURAM",
-   "side": "BUY",
-   "time": "11:05",
-   "signal": "BUY-EX12",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 286.9,
-   "sl": 283.84,
-   "sl_anchor": "pivot",
-   "risk_pts": 3.06,
-   "risk_pct": 1.065,
-   "risk_rs": 532.0,
-   "qty": 174,
-   "qty_full": 174,
-   "qty_capped": false,
-   "capital": 49921.0,
-   "tp1": 589.52,
-   "tp2": 589.52,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "SL 11:35",
-     174,
-     283.8432138977051,
-     "11:35"
-    ]
-   ],
-   "exit_text": "100% SL 11:35",
-   "leg2_time": "11:35",
-   "pnl": -532.0,
-   "r_total": -1.0,
-   "closed": true,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "11:05",
-     "price": 286.9
-    },
-    {
-     "key": "EXIT_SL",
-     "time": "11:35",
-     "price": 283.8432138977051
-    }
-   ]
-  },
-  "MANKIND": {
-   "symbol": "MANKIND",
-   "side": "BUY",
-   "time": "10:15",
-   "signal": "BUY-EX17",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 2265.1,
-   "sl": 2240.15,
-   "sl_anchor": "pivot",
-   "risk_pts": 24.95,
-   "risk_pct": 1.101,
-   "risk_rs": 549.0,
-   "qty": 22,
-   "qty_full": 22,
-   "qty_capped": false,
-   "capital": 49832.0,
-   "tp1": 4734.95,
-   "tp2": 4734.95,
-   "trail_armed": true,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     22,
-     2312.0,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": 1032.0,
-   "r_total": 1.88,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "10:15",
-     "price": 2265.1
-    },
-    {
-     "key": "TRAIL_ON",
-     "time": "14:20",
-     "price": 2293.89990234375
-    }
-   ]
-  },
-  "MCX": {
-   "symbol": "MCX",
+  "APLAPOLLO": {
+   "symbol": "APLAPOLLO",
    "side": "BUY",
    "time": "09:40",
    "signal": "BUY-EX17",
-   "setup": "BREAKOUT",
+   "setup": "M10-CoachV2.1",
    "sl_mode": "structure",
-   "entry": 3038.5,
-   "sl": 2987.3,
+   "entry": 2163.9,
+   "sl": 2099.58,
    "sl_anchor": "session-extreme*",
-   "risk_pts": 51.2,
-   "risk_pct": 1.685,
-   "risk_rs": 819.0,
-   "qty": 16,
-   "qty_full": 16,
-   "qty_capped": false,
-   "capital": 48616.0,
-   "tp1": 8107.07,
-   "tp2": 8107.07,
-   "trail_armed": true,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "trail 10:40",
-     16,
-     3091.481677636719,
-     "10:40"
-    ]
-   ],
-   "exit_text": "100% trail 10:40",
-   "leg2_time": "10:40",
-   "pnl": 848.0,
-   "r_total": 1.03,
-   "closed": true,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "09:40",
-     "price": 3038.5
-    },
-    {
-     "key": "TRAIL_ON",
-     "time": "09:55",
-     "price": 3090.0
-    },
-    {
-     "key": "EXIT_SL",
-     "time": "10:40",
-     "price": 3091.481677636719
-    }
-   ]
-  },
-  "MFSL": {
-   "symbol": "MFSL",
-   "side": "BUY",
-   "time": "09:40",
-   "signal": "BUY-EX17",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 1214.3,
-   "sl": 1193.26,
-   "sl_anchor": "pivot",
-   "risk_pts": 21.04,
-   "risk_pct": 1.733,
-   "risk_rs": 863.0,
-   "qty": 41,
-   "qty_full": 41,
-   "qty_capped": false,
-   "capital": 49786.0,
-   "tp1": 3297.13,
-   "tp2": 3297.13,
-   "trail_armed": true,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "trail 10:50",
-     41,
-     1234.2531000000001,
-     "10:50"
-    ]
-   ],
-   "exit_text": "100% trail 10:50",
-   "leg2_time": "10:50",
-   "pnl": 818.0,
-   "r_total": 0.95,
-   "closed": true,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "09:40",
-     "price": 1214.3
-    },
-    {
-     "key": "TRAIL_ON",
-     "time": "09:55",
-     "price": 1239.0999755859375
-    },
-    {
-     "key": "EXIT_SL",
-     "time": "10:50",
-     "price": 1234.2531000000001
-    }
-   ]
-  },
-  "MPHASIS": {
-   "symbol": "MPHASIS",
-   "side": "BUY",
-   "time": "09:55",
-   "signal": "BUY-EX17",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 2500.4,
-   "sl": 2435.31,
-   "sl_anchor": "session-extreme*",
-   "risk_pts": 65.09,
-   "risk_pct": 2.603,
-   "risk_rs": 846.0,
+   "risk_pts": 64.32,
+   "risk_pct": 2.972,
+   "risk_rs": 836.0,
    "qty": 13,
-   "qty_full": 19,
+   "qty_full": 23,
    "qty_capped": true,
-   "capital": 32505.0,
-   "tp1": 8944.02,
-   "tp2": 8944.02,
+   "capital": 28131.0,
+   "tp1": 8531.57,
+   "tp2": 8531.57,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 15:25",
+     "OPEN 14:51",
      13,
-     2557.60009765625,
-     "15:25"
+     2203.39990234375,
+     "14:51"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": 744.0,
-   "r_total": 0.88,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "09:55",
-     "price": 2500.4
-    }
-   ]
-  },
-  "NAUKRI": {
-   "symbol": "NAUKRI",
-   "side": "BUY",
-   "time": "09:30",
-   "signal": "BUY-EX17",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 1189.2,
-   "sl": 1169.57,
-   "sl_anchor": "session-extreme*",
-   "risk_pts": 19.63,
-   "risk_pct": 1.651,
-   "risk_rs": 825.0,
-   "qty": 42,
-   "qty_full": 42,
-   "qty_capped": false,
-   "capital": 49946.0,
-   "tp1": 3132.96,
-   "tp2": 3132.96,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     42,
-     1196.5999755859375,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": 311.0,
-   "r_total": 0.38,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "09:30",
-     "price": 1189.2
-    }
-   ]
-  },
-  "NBCC": {
-   "symbol": "NBCC",
-   "side": "BUY",
-   "time": "09:50",
-   "signal": "BUY-EX17",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 68.6,
-   "sl": 67.01,
-   "sl_anchor": "session-extreme*",
-   "risk_pts": 1.59,
-   "risk_pct": 2.323,
-   "risk_rs": 899.0,
-   "qty": 564,
-   "qty_full": 728,
-   "qty_capped": true,
-   "capital": 38690.0,
-   "tp1": 226.35,
-   "tp2": 226.35,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     564,
-     68.6500015258789,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": 28.0,
-   "r_total": 0.03,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "09:50",
-     "price": 68.6
-    }
-   ]
-  },
-  "NHPC": {
-   "symbol": "NHPC",
-   "side": "BUY",
-   "time": "09:40",
-   "signal": "BUY-EX17",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 69.9,
-   "sl": 68.83,
-   "sl_anchor": "session-extreme*",
-   "risk_pts": 1.07,
-   "risk_pct": 1.536,
-   "risk_rs": 768.0,
-   "qty": 715,
-   "qty_full": 715,
-   "qty_capped": false,
-   "capital": 49979.0,
-   "tp1": 176.2,
-   "tp2": 176.2,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     715,
-     70.55999755859375,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": 472.0,
+   "leg2_time": "14:51",
+   "pnl": 514.0,
    "r_total": 0.61,
    "closed": false,
    "events": [
     {
      "key": "ENTRY",
      "time": "09:40",
-     "price": 69.9
+     "price": 2163.89990234375
     }
-   ]
-  },
-  "NMDC": {
-   "symbol": "NMDC",
-   "side": "BUY",
-   "time": "09:55",
-   "signal": "BUY-EX5",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 66.45,
-   "sl": 65.79,
-   "sl_anchor": "pivot",
-   "risk_pts": 0.66,
-   "risk_pct": 0.998,
-   "risk_rs": 499.0,
-   "qty": 752,
-   "qty_full": 752,
-   "qty_capped": false,
-   "capital": 49970.0,
-   "tp1": 132.1,
-   "tp2": 132.1,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     752,
-     66.48999786376953,
-     "15:25"
-    ]
    ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": 30.0,
-   "r_total": 0.06,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "09:55",
-     "price": 66.45
-    }
-   ]
+   "coach_via": "buy-102",
+   "pc": 2077.9,
+   "daypct": 4.14,
+   "regime": "NEUTRAL",
+   "adv": 56.0,
+   "sec": "MET",
+   "sec_adv": 40.0
   },
-  "NTPC": {
-   "symbol": "NTPC",
+  "ASHOKLEY": {
+   "symbol": "ASHOKLEY",
    "side": "BUY",
-   "time": "09:50",
+   "time": "10:00",
    "signal": "BUY-EX17",
-   "setup": "BREAKOUT",
+   "setup": "M10-CoachV2.1",
    "sl_mode": "structure",
-   "entry": 298.15,
-   "sl": 294.29,
+   "entry": 144.34,
+   "sl": 142.19,
    "sl_anchor": "session-extreme*",
-   "risk_pts": 3.86,
-   "risk_pct": 1.294,
-   "risk_rs": 644.0,
-   "qty": 167,
-   "qty_full": 167,
+   "risk_pts": 2.15,
+   "risk_pct": 1.488,
+   "risk_rs": 743.0,
+   "qty": 346,
+   "qty_full": 346,
    "qty_capped": false,
-   "capital": 49791.0,
-   "tp1": 680.18,
-   "tp2": 680.18,
+   "capital": 49942.0,
+   "tp1": 357.04,
+   "tp2": 357.04,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 15:25",
-     167,
-     300.0,
-     "15:25"
+     "SL 14:00",
+     346,
+     142.19155722045898,
+     "14:00"
     ]
    ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": 309.0,
-   "r_total": 0.48,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "09:50",
-     "price": 298.15
-    }
-   ]
-  },
-  "OIL": {
-   "symbol": "OIL",
-   "side": "BUY",
-   "time": "09:40",
-   "signal": "BUY-EX17",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 449.1,
-   "sl": 441.61,
-   "sl_anchor": "session-extreme*",
-   "risk_pts": 7.49,
-   "risk_pct": 1.667,
-   "risk_rs": 831.0,
-   "qty": 111,
-   "qty_full": 111,
-   "qty_capped": false,
-   "capital": 49850.0,
-   "tp1": 1190.44,
-   "tp2": 1190.44,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     111,
-     454.8999938964844,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": 644.0,
-   "r_total": 0.77,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "09:40",
-     "price": 449.1
-    }
-   ]
-  },
-  "PERSISTENT": {
-   "symbol": "PERSISTENT",
-   "side": "BUY",
-   "time": "10:05",
-   "signal": "BUY-EX17",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 5765.0,
-   "sl": 5609.38,
-   "sl_anchor": "session-extreme*",
-   "risk_pts": 155.62,
-   "risk_pct": 2.699,
-   "risk_rs": 778.0,
-   "qty": 5,
-   "qty_full": 8,
-   "qty_capped": true,
-   "capital": 28825.0,
-   "tp1": 21171.59,
-   "tp2": 21171.59,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     5,
-     5850.0,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": 425.0,
-   "r_total": 0.55,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "10:05",
-     "price": 5765.0
-    }
-   ]
-  },
-  "PETRONET": {
-   "symbol": "PETRONET",
-   "side": "BUY",
-   "time": "10:20",
-   "signal": "BUY-EX12",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 286.95,
-   "sl": 283.29,
-   "sl_anchor": "session-extreme*",
-   "risk_pts": 3.66,
-   "risk_pct": 1.274,
-   "risk_rs": 636.0,
-   "qty": 174,
-   "qty_full": 174,
-   "qty_capped": false,
-   "capital": 49929.0,
-   "tp1": 648.96,
-   "tp2": 648.96,
-   "trail_armed": true,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     174,
-     291.75,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": 835.0,
-   "r_total": 1.31,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "10:20",
-     "price": 286.95
-    },
-    {
-     "key": "TRAIL_ON",
-     "time": "14:10",
-     "price": 290.70001220703125
-    }
-   ]
-  },
-  "PFC": {
-   "symbol": "PFC",
-   "side": "BUY",
-   "time": "09:55",
-   "signal": "BUY-EX5",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 317.7,
-   "sl": 312.04,
-   "sl_anchor": "pivot",
-   "risk_pts": 5.66,
-   "risk_pct": 1.782,
-   "risk_rs": 889.0,
-   "qty": 157,
-   "qty_full": 157,
-   "qty_capped": false,
-   "capital": 49879.0,
-   "tp1": 878.28,
-   "tp2": 878.28,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     157,
-     318.29998779296875,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": 94.0,
-   "r_total": 0.11,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "09:55",
-     "price": 317.7
-    }
-   ]
-  },
-  "PHOENIXLTD": {
-   "symbol": "PHOENIXLTD",
-   "side": "BUY",
-   "time": "10:05",
-   "signal": "BUY-EX5",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 1888.5,
-   "sl": 1851.73,
-   "sl_anchor": "pivot",
-   "risk_pts": 36.77,
-   "risk_pct": 1.947,
-   "risk_rs": 882.0,
-   "qty": 24,
-   "qty_full": 26,
-   "qty_capped": true,
-   "capital": 45324.0,
-   "tp1": 5528.77,
-   "tp2": 5528.77,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     24,
-     1894.0,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": 132.0,
-   "r_total": 0.15,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "10:05",
-     "price": 1888.5
-    }
-   ]
-  },
-  "PNBHOUSING": {
-   "symbol": "PNBHOUSING",
-   "side": "BUY",
-   "time": "10:05",
-   "signal": "BUY-EX6",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 1102.0,
-   "sl": 1056.59,
-   "sl_anchor": "pivot",
-   "risk_pts": 45.41,
-   "risk_pct": 4.121,
-   "risk_rs": 863.0,
-   "qty": 19,
-   "qty_full": 45,
-   "qty_capped": true,
-   "capital": 20938.0,
-   "tp1": 5597.72,
-   "tp2": 5597.72,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     19,
-     1086.0,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": -304.0,
-   "r_total": -0.35,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "10:05",
-     "price": 1102.0
-    }
-   ]
-  },
-  "POLICYBZR": {
-   "symbol": "POLICYBZR",
-   "side": "BUY",
-   "time": "09:35",
-   "signal": "BUY-EX6",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 1020.0,
-   "sl": 1008.3,
-   "sl_anchor": "session-extreme*",
-   "risk_pts": 11.7,
-   "risk_pct": 1.147,
-   "risk_rs": 573.0,
-   "qty": 49,
-   "qty_full": 49,
-   "qty_capped": false,
-   "capital": 49980.0,
-   "tp1": 2178.47,
-   "tp2": 2178.47,
-   "trail_armed": true,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "trail 11:25",
-     49,
-     1017.3964555908203,
-     "11:25"
-    ]
-   ],
-   "exit_text": "100% trail 11:25",
-   "leg2_time": "11:25",
-   "pnl": -128.0,
-   "r_total": -0.22,
+   "exit_text": "100% SL 14:00",
+   "leg2_time": "14:00",
+   "pnl": -743.0,
+   "r_total": -1.0,
    "closed": true,
    "events": [
     {
      "key": "ENTRY",
-     "time": "09:35",
-     "price": 1020.0
-    },
-    {
-     "key": "TRAIL_ON",
-     "time": "09:50",
-     "price": 1031.9000244140625
+     "time": "10:00",
+     "price": 144.33999633789062
     },
     {
      "key": "EXIT_SL",
-     "time": "11:25",
-     "price": 1017.3964555908203
+     "time": "14:00",
+     "price": 142.19155722045898
     }
-   ]
-  },
-  "POWERINDIA": {
-   "symbol": "POWERINDIA",
-   "side": "BUY",
-   "time": "09:50",
-   "signal": "BUY-EX6",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 26410.0,
-   "sl": 25784.84,
-   "sl_anchor": "session-extreme*",
-   "risk_pts": 625.16,
-   "risk_pct": 2.367,
-   "risk_rs": 625.0,
-   "qty": 1,
-   "qty_full": 1,
-   "qty_capped": false,
-   "capital": 26410.0,
-   "tp1": 88300.64,
-   "tp2": 88300.64,
-   "trail_armed": true,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "trail 13:05",
-     1,
-     26984.602,
-     "13:05"
-    ]
    ],
-   "exit_text": "100% trail 13:05",
-   "leg2_time": "13:05",
-   "pnl": 575.0,
-   "r_total": 0.92,
-   "closed": true,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "09:50",
-     "price": 26410.0
-    },
-    {
-     "key": "TRAIL_ON",
-     "time": "11:15",
-     "price": 27120.0
-    },
-    {
-     "key": "EXIT_SL",
-     "time": "13:05",
-     "price": 26984.602
-    }
-   ]
+   "coach_via": "buy-102",
+   "pc": 141.9,
+   "daypct": 1.72,
+   "regime": "NEUTRAL",
+   "adv": 56.0,
+   "sec": "AUTO",
+   "sec_adv": 88.2
   },
-  "PREMIERENE": {
-   "symbol": "PREMIERENE",
+  "AXISBANK": {
+   "symbol": "AXISBANK",
    "side": "BUY",
    "time": "09:50",
-   "signal": "BUY-EX6",
-   "setup": "BREAKOUT",
+   "signal": "BUY-EX17",
+   "setup": "M10-CoachV2.1",
    "sl_mode": "structure",
-   "entry": 863.75,
-   "sl": 843.88,
+   "entry": 1227.5,
+   "sl": 1216.36,
    "sl_anchor": "session-extreme*",
-   "risk_pts": 19.87,
-   "risk_pct": 2.3,
-   "risk_rs": 894.0,
-   "qty": 45,
-   "qty_full": 57,
-   "qty_capped": true,
-   "capital": 38869.0,
-   "tp1": 2830.76,
-   "tp2": 2830.76,
+   "risk_pts": 11.14,
+   "risk_pct": 0.908,
+   "risk_rs": 446.0,
+   "qty": 40,
+   "qty_full": 40,
+   "qty_capped": false,
+   "capital": 49100.0,
+   "tp1": 2330.69,
+   "tp2": 2330.69,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
     [
-     "SL 13:10",
-     45,
-     843.8811777954102,
-     "13:10"
+     "SL 14:10",
+     40,
+     1216.3566555908203,
+     "14:10"
     ]
    ],
-   "exit_text": "100% SL 13:10",
-   "leg2_time": "13:10",
-   "pnl": -894.0,
+   "exit_text": "100% SL 14:10",
+   "leg2_time": "14:10",
+   "pnl": -446.0,
    "r_total": -1.0,
    "closed": true,
    "events": [
     {
      "key": "ENTRY",
      "time": "09:50",
-     "price": 863.75
+     "price": 1227.5
     },
     {
      "key": "EXIT_SL",
-     "time": "13:10",
-     "price": 843.8811777954102
+     "time": "14:10",
+     "price": 1216.3566555908203
     }
-   ]
+   ],
+   "coach_via": "buy-102",
+   "pc": 1220.0,
+   "daypct": 0.61,
+   "regime": "NEUTRAL",
+   "adv": 56.0,
+   "sec": "BANK",
+   "sec_adv": 36.4
   },
-  "PRESTIGE": {
-   "symbol": "PRESTIGE",
+  "BAJFINANCE": {
+   "symbol": "BAJFINANCE",
    "side": "BUY",
-   "time": "09:55",
-   "signal": "BUY-EX5",
-   "setup": "BREAKOUT",
+   "time": "10:00",
+   "signal": "BUY-EX17",
+   "setup": "M10-CoachV2.1",
    "sl_mode": "structure",
-   "entry": 1405.6,
-   "sl": 1374.23,
+   "entry": 922.1,
+   "sl": 915.02,
    "sl_anchor": "session-extreme*",
-   "risk_pts": 31.37,
-   "risk_pct": 2.232,
-   "risk_rs": 878.0,
-   "qty": 28,
-   "qty_full": 35,
-   "qty_capped": true,
-   "capital": 39357.0,
-   "tp1": 4511.72,
-   "tp2": 4511.72,
+   "risk_pts": 7.08,
+   "risk_pct": 0.768,
+   "risk_rs": 382.0,
+   "qty": 54,
+   "qty_full": 54,
+   "qty_capped": false,
+   "capital": 49793.0,
+   "tp1": 1623.32,
+   "tp2": 1623.32,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "SL 12:10",
+     54,
+     915.0169722045898,
+     "12:10"
+    ]
+   ],
+   "exit_text": "100% SL 12:10",
+   "leg2_time": "12:10",
+   "pnl": -382.0,
+   "r_total": -1.0,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "10:00",
+     "price": 922.0999755859375
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "12:10",
+     "price": 915.0169722045898
+    }
+   ],
+   "coach_via": "buy-102",
+   "pc": 918.7,
+   "daypct": 0.37,
+   "regime": "NEUTRAL",
+   "adv": 56.0,
+   "sec": "FIN",
+   "sec_adv": 31.2
+  },
+  "BEL": {
+   "symbol": "BEL",
+   "side": "BUY",
+   "time": "09:30",
+   "signal": "BUY-EX17",
+   "setup": "M10-CoachV2.1",
+   "sl_mode": "structure",
+   "entry": 372.55,
+   "sl": 365.98,
+   "sl_anchor": "session-extreme*",
+   "risk_pts": 6.57,
+   "risk_pct": 1.764,
+   "risk_rs": 881.0,
+   "qty": 134,
+   "qty_full": 134,
+   "qty_capped": false,
+   "capital": 49922.0,
+   "tp1": 1023.3,
+   "tp2": 1023.3,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "OPEN 14:51",
+     134,
+     368.5,
+     "14:51"
+    ]
+   ],
+   "exit_text": "OPEN",
+   "leg2_time": "14:51",
+   "pnl": -543.0,
+   "r_total": -0.62,
+   "closed": false,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "09:30",
+     "price": 372.54998779296875
+    }
+   ],
+   "coach_via": "buy-102",
+   "pc": 363.0,
+   "daypct": 2.63,
+   "regime": "NEUTRAL",
+   "adv": 56.0,
+   "sec": "DEF",
+   "sec_adv": 50.0
+  },
+  "CIPLA": {
+   "symbol": "CIPLA",
+   "side": "BUY",
+   "time": "09:35",
+   "signal": "BUY-EX17",
+   "setup": "M10-CoachV2.1",
+   "sl_mode": "structure",
+   "entry": 1357.8,
+   "sl": 1342.23,
+   "sl_anchor": "session-extreme*",
+   "risk_pts": 15.57,
+   "risk_pct": 1.147,
+   "risk_rs": 560.0,
+   "qty": 36,
+   "qty_full": 36,
+   "qty_capped": false,
+   "capital": 48881.0,
+   "tp1": 2899.09,
+   "tp2": 2899.09,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
     [
      "SL 11:40",
-     28,
-     1374.2251,
+     36,
+     1342.2315,
      "11:40"
     ]
    ],
    "exit_text": "100% SL 11:40",
    "leg2_time": "11:40",
-   "pnl": -878.0,
+   "pnl": -560.0,
    "r_total": -1.0,
    "closed": true,
    "events": [
     {
      "key": "ENTRY",
-     "time": "09:55",
-     "price": 1405.6
+     "time": "09:35",
+     "price": 1357.800048828125
     },
     {
      "key": "EXIT_SL",
      "time": "11:40",
-     "price": 1374.2251
-    }
-   ]
-  },
-  "RADICO": {
-   "symbol": "RADICO",
-   "side": "BUY",
-   "time": "09:55",
-   "signal": "BUY-EX12",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 4181.6,
-   "sl": 4107.28,
-   "sl_anchor": "pivot",
-   "risk_pts": 74.32,
-   "risk_pct": 1.777,
-   "risk_rs": 818.0,
-   "qty": 11,
-   "qty_full": 11,
-   "qty_capped": false,
-   "capital": 45998.0,
-   "tp1": 11539.43,
-   "tp2": 11539.43,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     11,
-     4200.0,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": 202.0,
-   "r_total": 0.25,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "09:55",
-     "price": 4181.6
-    }
-   ]
-  },
-  "RBLBANK": {
-   "symbol": "RBLBANK",
-   "side": "BUY",
-   "time": "09:35",
-   "signal": "BUY-EX17",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 347.55,
-   "sl": 338.78,
-   "sl_anchor": "session-extreme*",
-   "risk_pts": 8.77,
-   "risk_pct": 2.523,
-   "risk_rs": 894.0,
-   "qty": 102,
-   "qty_full": 143,
-   "qty_capped": true,
-   "capital": 35450.0,
-   "tp1": 1215.56,
-   "tp2": 1215.56,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     102,
-     348.5,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": 97.0,
-   "r_total": 0.11,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "09:35",
-     "price": 347.55
-    }
-   ]
-  },
-  "RECLTD": {
-   "symbol": "RECLTD",
-   "side": "BUY",
-   "time": "09:50",
-   "signal": "BUY-EX17",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 295.1,
-   "sl": 289.44,
-   "sl_anchor": "session-extreme*",
-   "risk_pts": 5.66,
-   "risk_pct": 1.917,
-   "risk_rs": 900.0,
-   "qty": 159,
-   "qty_full": 169,
-   "qty_capped": true,
-   "capital": 46921.0,
-   "tp1": 855.23,
-   "tp2": 855.23,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     159,
-     298.20001220703125,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": 493.0,
-   "r_total": 0.55,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "09:50",
-     "price": 295.1
-    }
-   ]
-  },
-  "RELIANCE": {
-   "symbol": "RELIANCE",
-   "side": "BUY",
-   "time": "09:55",
-   "signal": "BUY-EX6",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 1193.6,
-   "sl": 1175.06,
-   "sl_anchor": "pivot",
-   "risk_pts": 18.54,
-   "risk_pct": 1.553,
-   "risk_rs": 760.0,
-   "qty": 41,
-   "qty_full": 41,
-   "qty_capped": false,
-   "capital": 48938.0,
-   "tp1": 3028.57,
-   "tp2": 3028.57,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     41,
-     1201.800048828125,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": 336.0,
-   "r_total": 0.44,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "09:55",
-     "price": 1193.6
-    }
-   ]
-  },
-  "RVNL": {
-   "symbol": "RVNL",
-   "side": "BUY",
-   "time": "09:40",
-   "signal": "BUY-EX17",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 182.67,
-   "sl": 178.05,
-   "sl_anchor": "session-extreme*",
-   "risk_pts": 4.62,
-   "risk_pct": 2.527,
-   "risk_rs": 895.0,
-   "qty": 194,
-   "qty_full": 273,
-   "qty_capped": true,
-   "capital": 35438.0,
-   "tp1": 639.62,
-   "tp2": 639.62,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     194,
-     182.64999389648438,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": -4.0,
-   "r_total": -0.0,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "09:40",
-     "price": 182.67
-    }
-   ]
-  },
-  "SHREECEM": {
-   "symbol": "SHREECEM",
-   "side": "BUY",
-   "time": "09:35",
-   "signal": "BUY-EX6",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 22790.0,
-   "sl": 22560.49,
-   "sl_anchor": "session-extreme*",
-   "risk_pts": 229.51,
-   "risk_pct": 1.007,
-   "risk_rs": 459.0,
-   "qty": 2,
-   "qty_full": 2,
-   "qty_capped": false,
-   "capital": 45580.0,
-   "tp1": 45511.79,
-   "tp2": 45511.79,
-   "trail_armed": true,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     2,
-     23540.0,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": 1500.0,
-   "r_total": 3.27,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "09:35",
-     "price": 22790.0
-    },
-    {
-     "key": "TRAIL_ON",
-     "time": "12:00",
-     "price": 23020.0
-    }
-   ]
-  },
-  "SIEMENS": {
-   "symbol": "SIEMENS",
-   "side": "BUY",
-   "time": "09:50",
-   "signal": "BUY-EX6",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 3267.7,
-   "sl": 3194.36,
-   "sl_anchor": "pivot",
-   "risk_pts": 73.34,
-   "risk_pct": 2.244,
-   "risk_rs": 880.0,
-   "qty": 12,
-   "qty_full": 15,
-   "qty_capped": true,
-   "capital": 39212.0,
-   "tp1": 10528.26,
-   "tp2": 10528.26,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     12,
-     3278.800048828125,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": 133.0,
-   "r_total": 0.15,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "09:50",
-     "price": 3267.7
-    }
-   ]
-  },
-  "SOLARINDS": {
-   "symbol": "SOLARINDS",
-   "side": "BUY",
-   "time": "10:05",
-   "signal": "BUY-EX5",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 18412.0,
-   "sl": 18136.37,
-   "sl_anchor": "pivot",
-   "risk_pts": 275.63,
-   "risk_pct": 1.497,
-   "risk_rs": 551.0,
-   "qty": 2,
-   "qty_full": 2,
-   "qty_capped": false,
-   "capital": 36824.0,
-   "tp1": 45699.17,
-   "tp2": 45699.17,
-   "trail_armed": true,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "trail 12:50",
-     2,
-     18680.2632,
-     "12:50"
-    ]
-   ],
-   "exit_text": "100% trail 12:50",
-   "leg2_time": "12:50",
-   "pnl": 537.0,
-   "r_total": 0.97,
-   "closed": true,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "10:05",
-     "price": 18412.0
-    },
-    {
-     "key": "TRAIL_ON",
-     "time": "11:40",
-     "price": 18707.0
-    },
-    {
-     "key": "EXIT_SL",
-     "time": "12:50",
-     "price": 18680.2632
-    }
-   ]
-  },
-  "TATAELXSI": {
-   "symbol": "TATAELXSI",
-   "side": "BUY",
-   "time": "10:00",
-   "signal": "BUY-EX5",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 3734.4,
-   "sl": 3664.27,
-   "sl_anchor": "pivot",
-   "risk_pts": 70.13,
-   "risk_pct": 1.878,
-   "risk_rs": 842.0,
-   "qty": 12,
-   "qty_full": 13,
-   "qty_capped": true,
-   "capital": 44813.0,
-   "tp1": 10677.57,
-   "tp2": 10677.57,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     12,
-     3724.0,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": -125.0,
-   "r_total": -0.15,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "10:00",
-     "price": 3734.4
-    }
-   ]
-  },
-  "TATASTEEL": {
-   "symbol": "TATASTEEL",
-   "side": "BUY",
-   "time": "09:50",
-   "signal": "BUY-EX17",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 167.95,
-   "sl": 165.77,
-   "sl_anchor": "session-extreme*",
-   "risk_pts": 2.18,
-   "risk_pct": 1.3,
-   "risk_rs": 648.0,
-   "qty": 297,
-   "qty_full": 297,
-   "qty_capped": false,
-   "capital": 49881.0,
-   "tp1": 384.08,
-   "tp2": 384.08,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     297,
-     169.94000244140625,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": 591.0,
-   "r_total": 0.91,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "09:50",
-     "price": 167.95
-    }
-   ]
-  },
-  "TCS": {
-   "symbol": "TCS",
-   "side": "BUY",
-   "time": "09:55",
-   "signal": "BUY-EX7",
-   "setup": "BREAKOUT",
-   "sl_mode": "structure",
-   "entry": 2540.0,
-   "sl": 2512.6,
-   "sl_anchor": "pivot",
-   "risk_pts": 27.4,
-   "risk_pct": 1.079,
-   "risk_rs": 521.0,
-   "qty": 19,
-   "qty_full": 19,
-   "qty_capped": false,
-   "capital": 48260.0,
-   "tp1": 5252.85,
-   "tp2": 5252.85,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "SL 12:40",
-     19,
-     2512.597477636719,
-     "12:40"
-    ]
-   ],
-   "exit_text": "100% SL 12:40",
-   "leg2_time": "12:40",
-   "pnl": -521.0,
-   "r_total": -1.0,
-   "closed": true,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "09:55",
-     "price": 2540.0
-    },
-    {
-     "key": "EXIT_SL",
-     "time": "12:40",
-     "price": 2512.597477636719
-    }
-   ]
-  },
-  "VBL": {
-   "symbol": "VBL",
-   "side": "BUY",
-   "time": "10:00",
-   "signal": "BUY-EX7",
-   "setup": "M10-CoachV2.1",
-   "sl_mode": "structure",
-   "entry": 396.4,
-   "sl": 388.27,
-   "sl_anchor": "session-extreme*",
-   "risk_pts": 8.13,
-   "risk_pct": 2.05,
-   "risk_rs": 894.0,
-   "qty": 110,
-   "qty_full": 126,
-   "qty_capped": true,
-   "capital": 43604.0,
-   "tp1": 1201.04,
-   "tp2": 1201.04,
-   "trail_armed": true,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "trail 12:45",
-     110,
-     405.91880000000003,
-     "12:45"
-    ]
-   ],
-   "exit_text": "100% trail 12:45",
-   "leg2_time": "12:45",
-   "pnl": 1047.0,
-   "r_total": 1.17,
-   "closed": true,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "10:00",
-     "price": 396.3999938964844
-    },
-    {
-     "key": "TRAIL_ON",
-     "time": "11:20",
-     "price": 405.29998779296875
-    },
-    {
-     "key": "EXIT_SL",
-     "time": "12:45",
-     "price": 405.91880000000003
-    }
-   ],
-   "coach_via": "buy-106",
-   "pc": 395.1,
-   "daypct": 0.33,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": "FMCG",
-   "sec_adv": 50.0
-  },
-  "VEDL": {
-   "symbol": "VEDL",
-   "side": "BUY",
-   "time": "09:55",
-   "signal": "BUY-EX17",
-   "setup": "M10-CoachV2.1",
-   "sl_mode": "structure",
-   "entry": 227.6,
-   "sl": 221.76,
-   "sl_anchor": "session-extreme*",
-   "risk_pts": 5.84,
-   "risk_pct": 2.568,
-   "risk_rs": 894.0,
-   "qty": 153,
-   "qty_full": 219,
-   "qty_capped": true,
-   "capital": 34823.0,
-   "tp1": 806.19,
-   "tp2": 806.19,
-   "trail_armed": false,
-   "trail_style": "structure swings",
-   "legs": [
-    [
-     "OPEN 15:25",
-     153,
-     227.5,
-     "15:25"
-    ]
-   ],
-   "exit_text": "OPEN",
-   "leg2_time": "15:25",
-   "pnl": -15.0,
-   "r_total": -0.02,
-   "closed": false,
-   "events": [
-    {
-     "key": "ENTRY",
-     "time": "09:55",
-     "price": 227.60000610351562
+     "price": 1342.2315
     }
    ],
    "coach_via": "buy-102",
-   "pc": 226.5,
-   "daypct": 0.49,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": "MET",
-   "sec_adv": 100.0
+   "pc": 1355.0,
+   "daypct": 0.21,
+   "regime": "NEUTRAL",
+   "adv": 56.0,
+   "sec": "PHA",
+   "sec_adv": 84.6
   },
-  "WAAREEENER": {
-   "symbol": "WAAREEENER",
+  "COLPAL": {
+   "symbol": "COLPAL",
    "side": "BUY",
-   "time": "09:50",
-   "signal": "BUY-EX6",
+   "time": "10:00",
+   "signal": "BUY-EX17",
    "setup": "M10-CoachV2.1",
    "sl_mode": "structure",
-   "entry": 2360.7,
-   "sl": 2314.54,
-   "sl_anchor": "pivot",
-   "risk_pts": 46.16,
-   "risk_pct": 1.955,
-   "risk_rs": 877.0,
-   "qty": 19,
-   "qty_full": 21,
-   "qty_capped": true,
-   "capital": 44853.0,
-   "tp1": 6930.83,
-   "tp2": 6930.83,
+   "entry": 1622.1,
+   "sl": 1604.68,
+   "sl_anchor": "session-extreme*",
+   "risk_pts": 17.42,
+   "risk_pct": 1.074,
+   "risk_rs": 523.0,
+   "qty": 30,
+   "qty_full": 30,
+   "qty_capped": false,
+   "capital": 48663.0,
+   "tp1": 3346.78,
+   "tp2": 3346.78,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
     [
-     "SL 12:30",
-     19,
-     2314.5370000000003,
-     "12:30"
+     "SL 14:05",
+     30,
+     1604.679,
+     "14:05"
     ]
    ],
-   "exit_text": "100% SL 12:30",
-   "leg2_time": "12:30",
-   "pnl": -877.0,
+   "exit_text": "100% SL 14:05",
+   "leg2_time": "14:05",
+   "pnl": -523.0,
    "r_total": -1.0,
    "closed": true,
    "events": [
     {
      "key": "ENTRY",
-     "time": "09:50",
-     "price": 2360.699951171875
+     "time": "10:00",
+     "price": 1622.0999755859375
     },
     {
      "key": "EXIT_SL",
-     "time": "12:30",
-     "price": 2314.5370000000003
+     "time": "14:05",
+     "price": 1604.679
     }
    ],
-   "coach_via": "buy-105",
-   "pc": 2354.9,
-   "daypct": 0.25,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": "GREEN",
-   "sec_adv": 20.0
+   "coach_via": "buy-102",
+   "pc": 1615.5,
+   "daypct": 0.41,
+   "regime": "NEUTRAL",
+   "adv": 56.0,
+   "sec": "FMCG",
+   "sec_adv": 42.9
   }
  },
  "alerts": [
-  "ABB:ENTRY",
-  "ADANIENSOL:ENTRY",
-  "ADANIENT:ENTRY",
-  "ADANIPORTS:ENTRY",
-  "ADANIPOWER:ENTRY",
-  "ASTRAL:ENTRY",
+  "APLAPOLLO:ENTRY",
+  "ASHOKLEY:ENTRY",
   "AXISBANK:ENTRY",
-  "BAJAJ-AUTO:ENTRY",
-  "BAJAJHLDNG:ENTRY",
-  "BDL:ENTRY",
-  "BHARATFORG:ENTRY",
-  "BHEL:ENTRY",
-  "BIOCON:ENTRY",
-  "BOSCHLTD:ENTRY",
-  "BRITANNIA:ENTRY",
-  "BSE:ENTRY",
-  "CANBK:ENTRY",
-  "CDSL:ENTRY",
-  "COCHINSHIP:ENTRY",
-  "COLPAL:ENTRY",
-  "CROMPTON:ENTRY",
-  "DELHIVERY:ENTRY",
-  "DIXON:ENTRY",
-  "EXIDEIND:ENTRY",
-  "FORCEMOT:ENTRY",
-  "FORTIS:ENTRY",
-  "GAIL:ENTRY",
-  "HAL:ENTRY",
-  "HAVELLS:ENTRY",
-  "HINDALCO:ENTRY",
-  "HINDPETRO:ENTRY",
-  "HYUNDAI:ENTRY",
-  "ICICIGI:ENTRY",
-  "ABB:TRAIL_ON",
-  "ASTRAL:EXIT_SL",
-  "BDL:TRAIL_ON",
-  "BDL:EXIT_SL",
-  "BIOCON:TRAIL_ON",
-  "BIOCON:EXIT_SL",
-  "BRITANNIA:EXIT_SL",
-  "BSE:TRAIL_ON",
-  "BSE:EXIT_SL",
-  "CANBK:EXIT_SL",
-  "COLPAL:TRAIL_ON",
-  "COLPAL:EXIT_SL",
-  "CROMPTON:TRAIL_ON",
-  "CROMPTON:EXIT_SL",
-  "FORTIS:TRAIL_ON",
-  "FORTIS:EXIT_SL",
-  "GAIL:TRAIL_ON",
-  "HAL:TRAIL_ON",
-  "HAL:EXIT_SL",
-  "HAVELLS:EXIT_SL",
-  "INOXWIND:ENTRY",
-  "IOC:ENTRY",
-  "IRFC:ENTRY",
-  "JIOFIN:ENTRY",
-  "JUBLFOOD:ENTRY",
-  "KEI:ENTRY",
-  "KFINTECH:ENTRY",
-  "LAURUSLABS:ENTRY",
-  "LICHSGFIN:ENTRY",
-  "LICI:ENTRY",
-  "LT:ENTRY",
-  "MANAPPURAM:ENTRY",
-  "MANKIND:ENTRY",
-  "MCX:ENTRY",
-  "MFSL:ENTRY",
-  "MPHASIS:ENTRY",
-  "NAUKRI:ENTRY",
-  "NBCC:ENTRY",
-  "NHPC:ENTRY",
-  "NMDC:ENTRY",
-  "NTPC:ENTRY",
-  "OIL:ENTRY",
-  "PERSISTENT:ENTRY",
-  "PETRONET:ENTRY",
-  "PFC:ENTRY",
-  "PHOENIXLTD:ENTRY",
-  "ADANIPORTS:TRAIL_ON",
-  "EXIDEIND:EXIT_EOD",
-  "IOC:TRAIL_ON",
-  "JUBLFOOD:TRAIL_ON",
-  "JUBLFOOD:EXIT_SL",
-  "KEI:TRAIL_ON",
-  "KEI:EXIT_SL",
-  "LAURUSLABS:TRAIL_ON",
-  "LICHSGFIN:TRAIL_ON",
-  "LICHSGFIN:EXIT_SL",
-  "LT:TRAIL_ON",
-  "LT:EXIT_SL",
-  "MANAPPURAM:EXIT_SL",
-  "MANKIND:TRAIL_ON",
-  "MCX:TRAIL_ON",
-  "MCX:EXIT_SL",
-  "MFSL:TRAIL_ON",
-  "MFSL:EXIT_SL",
-  "PETRONET:TRAIL_ON",
-  "PNBHOUSING:ENTRY",
-  "POLICYBZR:ENTRY",
-  "POWERINDIA:ENTRY",
-  "PREMIERENE:ENTRY",
-  "PRESTIGE:ENTRY",
-  "RADICO:ENTRY",
-  "RBLBANK:ENTRY",
-  "RECLTD:ENTRY",
-  "RELIANCE:ENTRY",
-  "RVNL:ENTRY",
-  "SHREECEM:ENTRY",
-  "SIEMENS:ENTRY",
-  "SOLARINDS:ENTRY",
-  "TATAELXSI:ENTRY",
-  "TATASTEEL:ENTRY",
-  "TCS:ENTRY",
-  "POLICYBZR:TRAIL_ON",
-  "POLICYBZR:EXIT_SL",
-  "POWERINDIA:TRAIL_ON",
-  "POWERINDIA:EXIT_SL",
-  "PREMIERENE:EXIT_SL",
-  "PRESTIGE:EXIT_SL",
-  "SHREECEM:TRAIL_ON",
-  "SOLARINDS:TRAIL_ON",
-  "SOLARINDS:EXIT_SL",
-  "TCS:EXIT_SL",
-  "VBL:ENTRY",
-  "VEDL:ENTRY",
-  "WAAREEENER:ENTRY"
+  "BAJFINANCE:ENTRY",
+  "BEL:ENTRY",
+  "CIPLA:ENTRY",
+  "COLPAL:ENTRY"
  ],
  "gate": {
-  "status": "COACH-V2.1 \u00b7 tape BULL (adv 74.2% \u00b7 155\u2191/54\u2193 of 209)",
+  "status": "COACH-V2.1 \u00b7 tape NEUTRAL (adv 56.0% \u00b7 117\u2191/92\u2193 of 209)",
   "source": "BOTH sides \u00b7 whitelist BUY{EX17,5,6,7,12}+SELL{EX8,12,19} \u00b7 side-gate BULL\u226555%\u2192BUY-only / BEAR\u226445%\u2192SELL-only (2-cycle anti-flap; NEUTRAL = both) \u00b7 green-day confirm (BEAR-tape SELLs exempt) \u00b7 sector breadth LOGGED only (veto parked: w1 n=7) \u00b7 no time gate \u00b7 90/290 + <09:26 blocked \u00b7 exits = M1 spec (paper lab)"
  },
  "pcmap": {
-  "360ONE": 997.1,
-  "ABB": 6140.0,
-  "ABCAPITAL": 347.25,
-  "ADANIENSOL": 1220.0,
-  "ADANIENT": 2477.0,
-  "ADANIGREEN": 1185.1,
-  "ADANIPORTS": 1702.7,
-  "ADANIPOWER": 182.04,
-  "ALKEM": 4947.0,
-  "AMBER": 6004.5,
-  "AMBUJACEM": 358.9,
-  "ANGELONE": 279.0,
-  "APLAPOLLO": 2033.7,
-  "APOLLOHOSP": 7730.0,
-  "ASHOKLEY": 144.95,
-  "ASIANPAINT": 2307.0,
-  "ASTRAL": 1357.0,
-  "AUBANK": 932.9,
-  "AUROPHARMA": 1571.7,
-  "AXISBANK": 1217.5,
-  "BAJAJ-AUTO": 10072.0,
-  "BAJAJFINSV": 1655.0,
-  "BAJAJHLDNG": 11175.0,
-  "BAJFINANCE": 928.95,
-  "BANDHANBNK": 149.89,
-  "BANKBARODA": 230.9,
-  "BANKINDIA": 131.0,
-  "BDL": 1017.5,
-  "BEL": 362.0,
-  "BHARATFORG": 1711.2,
-  "BHARTIARTL": 1892.1,
-  "BHEL": 387.5,
-  "BIOCON": 323.5,
-  "BLUESTARCO": 1499.0,
-  "BOSCHLTD": 44085.0,
-  "BPCL": 281.95,
-  "BRITANNIA": 4537.9,
-  "BSE": 3230.8,
-  "CAMS": 650.0,
-  "CANBK": 116.16,
-  "CDSL": 1188.5,
-  "CGPOWER": 813.35,
-  "CHOLAFIN": 1463.8,
-  "CIPLA": 1338.0,
-  "COALINDIA": 397.45,
-  "COCHINSHIP": 1139.9,
-  "COFORGE": 1900.5,
-  "COLPAL": 1605.0,
-  "CONCOR": 410.15,
-  "CROMPTON": 195.18,
-  "CUMMINSIND": 4344.2,
-  "DABUR": 363.0,
-  "DALBHARAT": 1591.3,
-  "DELHIVERY": 370.0,
-  "DIVISLAB": 8950.0,
-  "DIXON": 11191.0,
-  "DLF": 657.0,
-  "DMART": 3157.7,
-  "DRREDDY": 1229.5,
-  "EICHERMOT": 7066.0,
-  "ETERNAL": 317.4,
-  "EXIDEIND": 331.95,
-  "FEDERALBNK": 340.9,
-  "FORCEMOT": 16400.0,
-  "FORTIS": 712.9,
-  "GAIL": 163.96,
-  "GLENMARK": 2166.6,
-  "GMRAIRPORT": 86.38,
-  "GODFRYPHLP": 1669.0,
-  "GODREJCP": 856.35,
-  "GODREJPROP": 1496.5,
-  "GRASIM": 2894.0,
-  "GVT&D": 3700.0,
-  "HAL": 4725.0,
-  "HAVELLS": 1031.0,
-  "HCLTECH": 1422.2,
-  "HDFCAMC": 2250.0,
-  "HDFCBANK": 692.8,
-  "HDFCLIFE": 523.75,
-  "HEROMOTOCO": 5047.0,
-  "HINDALCO": 869.85,
-  "HINDPETRO": 338.3,
-  "HINDUNILVR": 1814.7,
-  "HINDZINC": 496.0,
-  "HYUNDAI": 1850.0,
-  "ICICIBANK": 1394.2,
-  "ICICIGI": 1592.0,
-  "IDEA": 11.36,
-  "IDFCFIRSTB": 72.3,
-  "IEX": 101.2,
-  "INDHOTEL": 781.75,
-  "INDIANB": 837.15,
-  "INDIGO": 4549.0,
-  "INDUSINDBK": 835.0,
-  "INDUSTOWER": 380.0,
-  "INFY": 1153.8,
-  "INOXWIND": 58.93,
-  "IOC": 129.09,
-  "IREDA": 100.27,
-  "IRFC": 74.45,
-  "ITC": 257.9,
-  "JINDALSTEL": 1015.9,
-  "JIOFIN": 205.03,
-  "JSWENERGY": 448.55,
-  "JSWSTEEL": 1185.5,
-  "JUBLFOOD": 404.0,
-  "KALYANKJIL": 512.0,
-  "KAYNES": 3187.9,
-  "KEI": 3725.0,
-  "KFINTECH": 799.0,
-  "KOTAKBANK": 430.5,
-  "KPITTECH": 532.65,
-  "LAURUSLABS": 1970.0,
-  "LICHSGFIN": 490.0,
-  "LICI": 381.5,
-  "LODHA": 963.0,
-  "LT": 3647.0,
-  "LTF": 237.5,
-  "LTM": 4134.0,
-  "LUPIN": 1928.9,
-  "M&M": 2861.2,
-  "MANAPPURAM": 286.1,
-  "MANKIND": 2212.6,
-  "MARICO": 766.5,
-  "MARUTI": 11230.0,
-  "MAXHEALTH": 815.0,
-  "MAZDOCK": 1860.0,
-  "MCX": 3020.3,
-  "MFSL": 1211.3,
-  "MOTHERSON": 151.67,
-  "MOTILALOFS": 925.8,
-  "MPHASIS": 2480.0,
-  "MUTHOOTFIN": 2373.0,
-  "NAM-INDIA": 922.6,
-  "NATIONALUM": 301.75,
-  "NAUKRI": 1186.5,
-  "NBCC": 67.9,
-  "NESTLEIND": 1175.0,
-  "NHPC": 69.84,
-  "NMDC": 66.35,
-  "NTPC": 298.0,
-  "NUVAMA": 1670.5,
-  "NYKAA": 319.3,
-  "OBEROIRLTY": 1612.7,
-  "OFSS": 9677.0,
-  "OIL": 447.85,
-  "ONGC": 227.5,
-  "PAGEIND": 33830.0,
-  "PATANJALI": 349.75,
-  "PAYTM": 1616.1,
-  "PERSISTENT": 5727.5,
-  "PETRONET": 286.3,
-  "PFC": 316.0,
-  "PGEL": 470.05,
-  "PHOENIXLTD": 1872.3,
-  "PIDILITIND": 1487.7,
-  "PIIND": 2051.0,
-  "PNB": 120.37,
-  "PNBHOUSING": 1089.1,
-  "POLICYBZR": 1015.0,
-  "POLYCAB": 7440.0,
-  "POWERGRID": 247.4,
-  "POWERINDIA": 26300.0,
-  "PREMIERENE": 853.3,
-  "PRESTIGE": 1392.5,
-  "RADICO": 4157.3,
-  "RBLBANK": 345.65,
-  "RECLTD": 293.95,
-  "RELIANCE": 1190.0,
-  "RVNL": 181.31,
-  "SAIL": 164.34,
-  "SBICARD": 545.55,
-  "SBILIFE": 1640.0,
-  "SBIN": 958.6,
-  "SHREECEM": 22735.0,
-  "SHRIRAMFIN": 865.0,
-  "SIEMENS": 3245.2,
-  "SOLARINDS": 18365.0,
-  "SONACOMS": 752.85,
-  "SRF": 2310.0,
-  "SUNPHARMA": 1748.0,
-  "SUPREMEIND": 3390.0,
-  "SUZLON": 37.4,
-  "SWIGGY": 176.0,
-  "TATACONSUM": 963.9,
-  "TATAELXSI": 3700.0,
-  "TATAPOWER": 348.1,
-  "TATASTEEL": 167.67,
-  "TCS": 2530.0,
-  "TECHM": 1790.0,
-  "TIINDIA": 2080.0,
-  "TITAN": 4299.7,
-  "TMPV": 264.6,
-  "TORNTPHARM": 4524.4,
-  "TRENT": 2727.5,
-  "TVSMOTOR": 3980.2,
-  "ULTRACEMCO": 11050.0,
-  "UNIONBANK": 178.9,
-  "UNITDSPR": 1252.0,
-  "UNOMINDA": 1057.0,
-  "UPL": 508.65,
-  "VBL": 395.1,
-  "VEDL": 226.5,
-  "VMM": 87.35,
-  "VOLTAS": 950.0,
-  "WAAREEENER": 2354.9,
-  "WIPRO": 189.84,
-  "YESBANK": 15.8,
-  "ZYDUSLIFE": 1129.4
+  "360ONE": 975.0,
+  "ABB": 6357.5,
+  "ABCAPITAL": 353.05,
+  "ADANIENSOL": 1258.0,
+  "ADANIENT": 2508.0,
+  "ADANIGREEN": 1250.0,
+  "ADANIPORTS": 1752.5,
+  "ADANIPOWER": 186.55,
+  "ALKEM": 5030.0,
+  "AMBER": 5908.0,
+  "AMBUJACEM": 368.0,
+  "ANGELONE": 282.6,
+  "APLAPOLLO": 2077.9,
+  "APOLLOHOSP": 7844.0,
+  "ASHOKLEY": 141.9,
+  "ASIANPAINT": 2322.0,
+  "ASTRAL": 1349.0,
+  "AUBANK": 869.0,
+  "AUROPHARMA": 1590.0,
+  "AXISBANK": 1220.0,
+  "BAJAJ-AUTO": 10071.0,
+  "BAJAJFINSV": 1670.9,
+  "BAJAJHLDNG": 11050.0,
+  "BAJFINANCE": 918.7,
+  "BANDHANBNK": 150.86,
+  "BANKBARODA": 232.0,
+  "BANKINDIA": 126.32,
+  "BDL": 1029.0,
+  "BEL": 363.0,
+  "BHARATFORG": 1730.4,
+  "BHARTIARTL": 1917.5,
+  "BHEL": 394.55,
+  "BIOCON": 328.8,
+  "BLUESTARCO": 1504.5,
+  "BOSCHLTD": 44900.0,
+  "BPCL": 290.4,
+  "BRITANNIA": 4580.0,
+  "BSE": 3359.0,
+  "CAMS": 661.5,
+  "CANBK": 116.71,
+  "CDSL": 1196.0,
+  "CGPOWER": 833.25,
+  "CHOLAFIN": 1447.9,
+  "CIPLA": 1355.0,
+  "COALINDIA": 405.0,
+  "COCHINSHIP": 1133.9,
+  "COFORGE": 1993.0,
+  "COLPAL": 1615.5,
+  "CONCOR": 411.6,
+  "CROMPTON": 193.95,
+  "CUMMINSIND": 4385.5,
+  "DABUR": 359.3,
+  "DALBHARAT": 1625.8,
+  "DELHIVERY": 375.0,
+  "DIVISLAB": 9050.0,
+  "DIXON": 11161.0,
+  "DLF": 662.3,
+  "DMART": 3150.0,
+  "DRREDDY": 1310.9,
+  "EICHERMOT": 7099.5,
+  "ETERNAL": 325.55,
+  "EXIDEIND": 336.05,
+  "FEDERALBNK": 344.4,
+  "FORCEMOT": 16588.0,
+  "FORTIS": 734.7,
+  "GAIL": 168.28,
+  "GLENMARK": 2225.8,
+  "GMRAIRPORT": 89.88,
+  "GODFRYPHLP": 1664.0,
+  "GODREJCP": 833.15,
+  "GODREJPROP": 1525.2,
+  "GRASIM": 2950.0,
+  "GVT&D": 3790.0,
+  "HAL": 4775.0,
+  "HAVELLS": 1009.9,
+  "HCLTECH": 1417.0,
+  "HDFCAMC": 2258.4,
+  "HDFCBANK": 688.05,
+  "HDFCLIFE": 519.0,
+  "HEROMOTOCO": 5199.0,
+  "HINDALCO": 885.65,
+  "HINDPETRO": 343.45,
+  "HINDUNILVR": 1818.6,
+  "HINDZINC": 497.0,
+  "HYUNDAI": 1868.0,
+  "ICICIBANK": 1403.0,
+  "ICICIGI": 1580.0,
+  "IDEA": 11.95,
+  "IDFCFIRSTB": 71.74,
+  "IEX": 103.5,
+  "INDHOTEL": 795.5,
+  "INDIANB": 830.0,
+  "INDIGO": 4608.0,
+  "INDUSINDBK": 844.5,
+  "INDUSTOWER": 389.0,
+  "INFY": 1166.0,
+  "INOXWIND": 58.4,
+  "IOC": 130.85,
+  "IREDA": 101.87,
+  "IRFC": 74.4,
+  "ITC": 260.5,
+  "JINDALSTEL": 1039.9,
+  "JIOFIN": 205.23,
+  "JSWENERGY": 449.65,
+  "JSWSTEEL": 1260.0,
+  "JUBLFOOD": 422.9,
+  "KALYANKJIL": 504.8,
+  "KAYNES": 3306.8,
+  "KEI": 3899.5,
+  "KFINTECH": 829.0,
+  "KOTAKBANK": 440.75,
+  "KPITTECH": 536.55,
+  "LAURUSLABS": 2058.9,
+  "LICHSGFIN": 497.4,
+  "LICI": 380.95,
+  "LODHA": 980.0,
+  "LT": 3680.0,
+  "LTF": 241.1,
+  "LTM": 4074.9,
+  "LUPIN": 1959.9,
+  "M&M": 2853.1,
+  "MANAPPURAM": 287.5,
+  "MANKIND": 2312.0,
+  "MARICO": 775.15,
+  "MARUTI": 11220.0,
+  "MAXHEALTH": 835.0,
+  "MAZDOCK": 1875.0,
+  "MCX": 3111.8,
+  "MFSL": 1240.1,
+  "MOTHERSON": 153.75,
+  "MOTILALOFS": 933.35,
+  "MPHASIS": 2557.6,
+  "MUTHOOTFIN": 2395.8,
+  "NAM-INDIA": 919.1,
+  "NATIONALUM": 312.4,
+  "NAUKRI": 1196.6,
+  "NBCC": 68.65,
+  "NESTLEIND": 1173.5,
+  "NHPC": 70.56,
+  "NMDC": 66.49,
+  "NTPC": 300.0,
+  "NUVAMA": 1659.0,
+  "NYKAA": 329.85,
+  "OBEROIRLTY": 1582.0,
+  "OFSS": 9913.0,
+  "OIL": 454.9,
+  "ONGC": 228.44,
+  "PAGEIND": 33910.0,
+  "PATANJALI": 347.45,
+  "PAYTM": 1654.7,
+  "PERSISTENT": 5850.0,
+  "PETRONET": 291.75,
+  "PFC": 318.3,
+  "PGEL": 475.0,
+  "PHOENIXLTD": 1894.0,
+  "PIDILITIND": 1478.0,
+  "PIIND": 2020.0,
+  "PNB": 120.89,
+  "PNBHOUSING": 1086.0,
+  "POLICYBZR": 1023.0,
+  "POLYCAB": 7739.0,
+  "POWERGRID": 247.0,
+  "POWERINDIA": 26850.0,
+  "PREMIERENE": 840.6,
+  "PRESTIGE": 1396.6,
+  "RADICO": 4200.0,
+  "RBLBANK": 348.5,
+  "RECLTD": 298.2,
+  "RELIANCE": 1201.8,
+  "RVNL": 182.65,
+  "SAIL": 169.8,
+  "SBICARD": 538.3,
+  "SBILIFE": 1643.7,
+  "SBIN": 960.8,
+  "SHREECEM": 23540.0,
+  "SHRIRAMFIN": 825.0,
+  "SIEMENS": 3278.8,
+  "SOLARINDS": 18683.0,
+  "SONACOMS": 781.9,
+  "SRF": 2340.0,
+  "SUNPHARMA": 1740.0,
+  "SUPREMEIND": 3250.0,
+  "SUZLON": 37.12,
+  "SWIGGY": 185.75,
+  "TATACONSUM": 936.5,
+  "TATAELXSI": 3724.0,
+  "TATAPOWER": 338.5,
+  "TATASTEEL": 169.94,
+  "TCS": 2535.0,
+  "TECHM": 1795.0,
+  "TIINDIA": 2085.2,
+  "TITAN": 4323.0,
+  "TMPV": 263.7,
+  "TORNTPHARM": 4550.0,
+  "TRENT": 2754.0,
+  "TVSMOTOR": 3996.0,
+  "ULTRACEMCO": 11180.0,
+  "UNIONBANK": 181.2,
+  "UNITDSPR": 1239.0,
+  "UNOMINDA": 1069.3,
+  "UPL": 497.7,
+  "VBL": 408.0,
+  "VEDL": 227.5,
+  "VMM": 88.7,
+  "VOLTAS": 947.6,
+  "WAAREEENER": 2319.0,
+  "WIPRO": 189.2,
+  "YESBANK": 15.86,
+  "ZYDUSLIFE": 1160.4
  },
- "regime": "BULL",
- "regime_raw": null,
- "regime_cnt": 0,
- "eod_done": true,
- "cycles": 1,
+ "regime": "NEUTRAL",
+ "regime_raw": "BULL",
+ "regime_cnt": 1,
+ "eod_done": false,
+ "cycles": 0,
  "skipped": [
   {
-   "symbol": "360ONE",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 980.3,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "360ONE",
+   "symbol": "ABB",
    "side": "BUY",
-   "signal": "BUY-EX9",
-   "time": "10:45",
-   "entry": 997.2,
+   "signal": "BUY-EX",
+   "time": "10:00",
+   "entry": 6474.0,
    "regime": "NEUTRAL",
-   "adv": 69.9,
+   "adv": 56.0,
    "sec": null,
    "sec_adv": null,
    "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
   },
   {
-   "symbol": "ABB",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
+   "symbol": "ABCAPITAL",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
    "time": "09:20",
-   "entry": 6096.0,
+   "entry": 353.45,
    "regime": "NEUTRAL",
-   "adv": 69.9,
+   "adv": 56.0,
    "sec": null,
    "sec_adv": null,
    "why": "scanner-table preview (90/290) \u2014 no chart label"
   },
   {
-   "symbol": "ABB",
+   "symbol": "ABCAPITAL",
    "side": "BUY",
-   "signal": "ENTRY BUY",
-   "time": "09:25",
-   "entry": 6138.0,
+   "signal": "BUY-EX",
+   "time": "10:45",
+   "entry": 354.85,
    "regime": "NEUTRAL",
-   "adv": 69.9,
+   "adv": 56.0,
    "sec": null,
    "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
+   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
   },
   {
    "symbol": "ADANIENT",
    "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 2458.6,
+   "signal": "SELL-EX1",
+   "time": "10:15",
+   "entry": 2492.9,
    "regime": "NEUTRAL",
-   "adv": 69.9,
+   "adv": 56.0,
+   "sec": null,
+   "sec_adv": null,
+   "why": "not a whitelisted SELL setup \u2014 Coach-v2 (w1: EX1/EX2/EX3/EX15/NORMAL \u2212R)"
+  },
+  {
+   "symbol": "ADANIGREEN",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:55",
+   "entry": 1268.0,
+   "regime": "NEUTRAL",
+   "adv": 56.0,
+   "sec": null,
+   "sec_adv": null,
+   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
+  },
+  {
+   "symbol": "ADANIPORTS",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 1753.6,
+   "regime": "NEUTRAL",
+   "adv": 56.0,
    "sec": null,
    "sec_adv": null,
    "why": "scanner-table preview (90/290) \u2014 no chart label"
   },
   {
-   "symbol": "ADANIGREEN",
+   "symbol": "ADANIPORTS",
    "side": "BUY",
-   "signal": "BUY-EX4",
-   "time": "09:55",
-   "entry": 1201.6,
+   "signal": "BUY-EX",
+   "time": "09:35",
+   "entry": 1756.6,
    "regime": "NEUTRAL",
-   "adv": 69.9,
+   "adv": 56.0,
+   "sec": null,
+   "sec_adv": null,
+   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
+  },
+  {
+   "symbol": "ADANIPOWER",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 187.94,
+   "regime": "NEUTRAL",
+   "adv": 56.0,
+   "sec": null,
+   "sec_adv": null,
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "ADANIPOWER",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:35",
+   "entry": 188.28,
+   "regime": "NEUTRAL",
+   "adv": 56.0,
    "sec": null,
    "sec_adv": null,
    "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
   },
   {
    "symbol": "ALKEM",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:25",
-   "entry": 4914.5,
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:30",
+   "entry": 5016.5,
    "regime": "NEUTRAL",
-   "adv": 69.9,
+   "adv": 56.0,
    "sec": null,
    "sec_adv": null,
    "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "ALKEM",
-   "side": "SELL",
-   "signal": "SELL-EX8",
-   "time": "09:35",
-   "entry": 4890.5,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted SELL setup \u2014 Coach-v2 (w1: EX1/EX2/EX3/EX15/NORMAL \u2212R)"
   },
   {
    "symbol": "AMBER",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
    "time": "09:20",
-   "entry": 5903.0,
+   "entry": 5996.5,
    "regime": "NEUTRAL",
-   "adv": 69.9,
+   "adv": 56.0,
    "sec": null,
    "sec_adv": null,
    "why": "scanner-table preview (90/290) \u2014 no chart label"
   },
   {
+   "symbol": "AMBER",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "10:00",
+   "entry": 6040.0,
+   "regime": "NEUTRAL",
+   "adv": 56.0,
+   "sec": null,
+   "sec_adv": null,
+   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
+  },
+  {
    "symbol": "AMBUJACEM",
    "side": "SELL",
    "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 354.0,
+   "time": "09:30",
+   "entry": 362.0,
    "regime": "NEUTRAL",
-   "adv": 69.9,
+   "adv": 56.0,
    "sec": null,
    "sec_adv": null,
    "why": "scanner-table preview (90/290) \u2014 no chart label"
@@ -4662,22 +906,22 @@
    "symbol": "AMBUJACEM",
    "side": "SELL",
    "signal": "SELL-EX8",
-   "time": "09:30",
-   "entry": 350.25,
+   "time": "09:50",
+   "entry": 358.85,
    "regime": "NEUTRAL",
-   "adv": 69.9,
+   "adv": 56.0,
    "sec": null,
    "sec_adv": null,
    "why": "not a whitelisted SELL setup \u2014 Coach-v2 (w1: EX1/EX2/EX3/EX15/NORMAL \u2212R)"
   },
   {
    "symbol": "ANGELONE",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
    "time": "09:20",
-   "entry": 274.6,
+   "entry": 286.1,
    "regime": "NEUTRAL",
-   "adv": 69.9,
+   "adv": 56.0,
    "sec": null,
    "sec_adv": null,
    "why": "scanner-table preview (90/290) \u2014 no chart label"
@@ -4685,11 +929,11 @@
   {
    "symbol": "ANGELONE",
    "side": "BUY",
-   "signal": "BUY-EX9",
-   "time": "09:45",
-   "entry": 277.85,
+   "signal": "BUY-EX",
+   "time": "10:30",
+   "entry": 289.15,
    "regime": "NEUTRAL",
-   "adv": 69.9,
+   "adv": 56.0,
    "sec": null,
    "sec_adv": null,
    "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
@@ -4699,141 +943,93 @@
    "side": "BUY",
    "signal": "ENTRY BUY",
    "time": "09:20",
-   "entry": 2056.4,
+   "entry": 2141.9,
    "regime": "NEUTRAL",
-   "adv": 69.9,
+   "adv": 56.0,
    "sec": null,
    "sec_adv": null,
    "why": "scanner-table preview (90/290) \u2014 no chart label"
   },
   {
-   "symbol": "APLAPOLLO",
+   "symbol": "APOLLOHOSP",
    "side": "BUY",
    "signal": "BUY-EX",
-   "time": "09:30",
-   "entry": 2060.8,
+   "time": "09:35",
+   "entry": 7869.5,
    "regime": "NEUTRAL",
-   "adv": 69.9,
+   "adv": 56.0,
    "sec": null,
    "sec_adv": null,
    "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
   },
   {
    "symbol": "ASHOKLEY",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
    "time": "09:20",
-   "entry": 142.24,
+   "entry": 143.31,
    "regime": "NEUTRAL",
-   "adv": 69.9,
+   "adv": 56.0,
    "sec": null,
    "sec_adv": null,
    "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "ASHOKLEY",
-   "side": "SELL",
-   "signal": "SELL-EX1",
-   "time": "11:10",
-   "entry": 141.7,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted SELL setup \u2014 Coach-v2 (w1: EX1/EX2/EX3/EX15/NORMAL \u2212R)"
-  },
-  {
-   "symbol": "ASIANPAINT",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 2254.7,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "ASIANPAINT",
-   "side": "SELL",
-   "signal": "SELL-EX3",
-   "time": "09:30",
-   "entry": 2249.4,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted SELL setup \u2014 Coach-v2 (w1: EX1/EX2/EX3/EX15/NORMAL \u2212R)"
   },
   {
    "symbol": "ASTRAL",
    "side": "SELL",
    "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 1348.9,
+   "time": "09:35",
+   "entry": 1343.4,
    "regime": "NEUTRAL",
-   "adv": 69.9,
+   "adv": 56.0,
    "sec": null,
    "sec_adv": null,
    "why": "scanner-table preview (90/290) \u2014 no chart label"
   },
   {
    "symbol": "AUROPHARMA",
-   "side": "SELL",
-   "signal": "SELL-EX8",
-   "time": "10:35",
-   "entry": 1560.6,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted SELL setup \u2014 Coach-v2 (w1: EX1/EX2/EX3/EX15/NORMAL \u2212R)"
-  },
-  {
-   "symbol": "BAJAJ-AUTO",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 9970.0,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "BAJAJ-AUTO",
-   "side": "SELL",
-   "signal": "SELL-EX1",
-   "time": "11:45",
-   "entry": 10002.0,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "open position already on stock (1-open-trade rule)"
-  },
-  {
-   "symbol": "BAJAJFINSV",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 1640.5,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "BAJAJFINSV",
    "side": "BUY",
-   "signal": "BUY-EX4",
-   "time": "09:55",
-   "entry": 1658.8,
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 1606.5,
    "regime": "NEUTRAL",
-   "adv": 69.9,
+   "adv": 56.0,
+   "sec": null,
+   "sec_adv": null,
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "AUROPHARMA",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 1618.2,
+   "regime": "NEUTRAL",
+   "adv": 56.0,
+   "sec": null,
+   "sec_adv": null,
+   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
+  },
+  {
+   "symbol": "BAJAJ-AUTO",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 10204.0,
+   "regime": "NEUTRAL",
+   "adv": 56.0,
+   "sec": null,
+   "sec_adv": null,
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "BAJAJ-AUTO",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "10:00",
+   "entry": 10265.0,
+   "regime": "NEUTRAL",
+   "adv": 56.0,
    "sec": null,
    "sec_adv": null,
    "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
@@ -4843,33 +1039,69 @@
    "side": "SELL",
    "signal": "ENTRY SELL",
    "time": "09:20",
-   "entry": 10962.0,
+   "entry": 10971.0,
    "regime": "NEUTRAL",
-   "adv": 69.9,
+   "adv": 56.0,
    "sec": null,
    "sec_adv": null,
    "why": "scanner-table preview (90/290) \u2014 no chart label"
   },
   {
+   "symbol": "BAJAJHLDNG",
+   "side": "SELL",
+   "signal": "SELL-EX3",
+   "time": "09:40",
+   "entry": 10925.0,
+   "regime": "NEUTRAL",
+   "adv": 56.0,
+   "sec": null,
+   "sec_adv": null,
+   "why": "not a whitelisted SELL setup \u2014 Coach-v2 (w1: EX1/EX2/EX3/EX15/NORMAL \u2212R)"
+  },
+  {
    "symbol": "BAJFINANCE",
    "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 907.95,
+   "signal": "SELL-EX1",
+   "time": "11:15",
+   "entry": 916.25,
    "regime": "NEUTRAL",
-   "adv": 69.9,
+   "adv": 56.0,
+   "sec": null,
+   "sec_adv": null,
+   "why": "not a whitelisted SELL setup \u2014 Coach-v2 (w1: EX1/EX2/EX3/EX15/NORMAL \u2212R)"
+  },
+  {
+   "symbol": "BANDHANBNK",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 151.6,
+   "regime": "NEUTRAL",
+   "adv": 56.0,
    "sec": null,
    "sec_adv": null,
    "why": "scanner-table preview (90/290) \u2014 no chart label"
   },
   {
    "symbol": "BANDHANBNK",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 144.31,
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "11:00",
+   "entry": 154.52,
    "regime": "NEUTRAL",
-   "adv": 69.9,
+   "adv": 56.0,
+   "sec": null,
+   "sec_adv": null,
+   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
+  },
+  {
+   "symbol": "BANKBARODA",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 232.89,
+   "regime": "NEUTRAL",
+   "adv": 56.0,
    "sec": null,
    "sec_adv": null,
    "why": "scanner-table preview (90/290) \u2014 no chart label"
@@ -4877,71 +1109,179 @@
   {
    "symbol": "BANKBARODA",
    "side": "BUY",
-   "signal": "BUY-EX9",
-   "time": "10:00",
-   "entry": 230.8,
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 234.02,
    "regime": "NEUTRAL",
-   "adv": 69.9,
+   "adv": 56.0,
    "sec": null,
    "sec_adv": null,
    "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
   },
   {
-   "symbol": "BANKBARODA",
-   "side": "SELL",
-   "signal": "SELL-EX15",
-   "time": "11:40",
-   "entry": 227.98,
+   "symbol": "BANKINDIA",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 130.3,
    "regime": "NEUTRAL",
-   "adv": 69.9,
+   "adv": 56.0,
    "sec": null,
    "sec_adv": null,
-   "why": "not a whitelisted SELL setup \u2014 Coach-v2 (w1: EX1/EX2/EX3/EX15/NORMAL \u2212R)"
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "BANKINDIA",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:40",
+   "entry": 130.98,
+   "regime": "NEUTRAL",
+   "adv": 56.0,
+   "sec": null,
+   "sec_adv": null,
+   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
   },
   {
    "symbol": "BDL",
    "side": "SELL",
    "signal": "SELL-EX1",
-   "time": "11:30",
-   "entry": 1008.3,
+   "time": "11:15",
+   "entry": 1026.6,
    "regime": "NEUTRAL",
-   "adv": 69.9,
+   "adv": 56.0,
    "sec": null,
    "sec_adv": null,
    "why": "not a whitelisted SELL setup \u2014 Coach-v2 (w1: EX1/EX2/EX3/EX15/NORMAL \u2212R)"
   },
   {
+   "symbol": "BEL",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 368.7,
+   "regime": "NEUTRAL",
+   "adv": 56.0,
+   "sec": null,
+   "sec_adv": null,
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "BHARATFORG",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 1753.0,
+   "regime": "NEUTRAL",
+   "adv": 56.0,
+   "sec": null,
+   "sec_adv": null,
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "BHARATFORG",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:40",
+   "entry": 1764.3,
+   "regime": "NEUTRAL",
+   "adv": 56.0,
+   "sec": null,
+   "sec_adv": null,
+   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
+  },
+  {
    "symbol": "BHARTIARTL",
    "side": "BUY",
-   "signal": "BUY-EX4",
-   "time": "09:55",
-   "entry": 1895.4,
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 1926.0,
    "regime": "NEUTRAL",
-   "adv": 69.9,
+   "adv": 56.0,
+   "sec": null,
+   "sec_adv": null,
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "BHARTIARTL",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:35",
+   "entry": 1930.7,
+   "regime": "NEUTRAL",
+   "adv": 56.0,
    "sec": null,
    "sec_adv": null,
    "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
   },
   {
    "symbol": "BHEL",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 381.85,
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "11:15",
+   "entry": 398.7,
    "regime": "NEUTRAL",
-   "adv": 69.9,
+   "adv": 56.0,
+   "sec": null,
+   "sec_adv": null,
+   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
+  },
+  {
+   "symbol": "BIOCON",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 330.35,
+   "regime": "NEUTRAL",
+   "adv": 56.0,
    "sec": null,
    "sec_adv": null,
    "why": "scanner-table preview (90/290) \u2014 no chart label"
   },
   {
+   "symbol": "BIOCON",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 330.95,
+   "regime": "NEUTRAL",
+   "adv": 56.0,
+   "sec": null,
+   "sec_adv": null,
+   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
+  },
+  {
    "symbol": "BLUESTARCO",
    "side": "BUY",
-   "signal": "BUY-EX9",
-   "time": "10:05",
-   "entry": 1514.1,
+   "signal": "BUY-EX",
+   "time": "10:25",
+   "entry": 1523.2,
    "regime": "NEUTRAL",
-   "adv": 69.9,
+   "adv": 56.0,
+   "sec": null,
+   "sec_adv": null,
+   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
+  },
+  {
+   "symbol": "BOSCHLTD",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 45085.0,
+   "regime": "NEUTRAL",
+   "adv": 56.0,
+   "sec": null,
+   "sec_adv": null,
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "BPCL",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "10:00",
+   "entry": 291.45,
+   "regime": "NEUTRAL",
+   "adv": 56.0,
    "sec": null,
    "sec_adv": null,
    "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
@@ -4949,23 +1289,47 @@
   {
    "symbol": "BRITANNIA",
    "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 4517.1,
+   "signal": "NORMAL SELL",
+   "time": "10:20",
+   "entry": 4553.0,
    "regime": "NEUTRAL",
-   "adv": 69.9,
+   "adv": 56.0,
+   "sec": null,
+   "sec_adv": null,
+   "why": "not a whitelisted SELL setup \u2014 Coach-v2 (w1: EX1/EX2/EX3/EX15/NORMAL \u2212R)"
+  },
+  {
+   "symbol": "BSE",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 3404.1,
+   "regime": "NEUTRAL",
+   "adv": 56.0,
    "sec": null,
    "sec_adv": null,
    "why": "scanner-table preview (90/290) \u2014 no chart label"
   },
   {
-   "symbol": "CAMS",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 644.85,
+   "symbol": "BSE",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:40",
+   "entry": 3409.2,
    "regime": "NEUTRAL",
-   "adv": 69.9,
+   "adv": 56.0,
+   "sec": null,
+   "sec_adv": null,
+   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
+  },
+  {
+   "symbol": "CAMS",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 667.0,
+   "regime": "NEUTRAL",
+   "adv": 56.0,
    "sec": null,
    "sec_adv": null,
    "why": "scanner-table preview (90/290) \u2014 no chart label"
@@ -4973,2102 +1337,158 @@
   {
    "symbol": "CAMS",
    "side": "BUY",
-   "signal": "BUY-EX4",
-   "time": "09:55",
-   "entry": 654.95,
+   "signal": "BUY-EX",
+   "time": "09:35",
+   "entry": 674.65,
    "regime": "NEUTRAL",
-   "adv": 69.9,
+   "adv": 56.0,
+   "sec": null,
+   "sec_adv": null,
+   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
+  },
+  {
+   "symbol": "CANBK",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 118.63,
+   "regime": "NEUTRAL",
+   "adv": 56.0,
+   "sec": null,
+   "sec_adv": null,
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "CANBK",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 118.89,
+   "regime": "NEUTRAL",
+   "adv": 56.0,
    "sec": null,
    "sec_adv": null,
    "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
   },
   {
    "symbol": "CDSL",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
    "time": "09:20",
-   "entry": 1163.9,
+   "entry": 1202.4,
    "regime": "NEUTRAL",
-   "adv": 69.9,
+   "adv": 56.0,
    "sec": null,
    "sec_adv": null,
    "why": "scanner-table preview (90/290) \u2014 no chart label"
   },
   {
-   "symbol": "CGPOWER",
+   "symbol": "CDSL",
    "side": "BUY",
    "signal": "BUY-EX",
-   "time": "10:00",
-   "entry": 823.05,
+   "time": "09:30",
+   "entry": 1210.8,
    "regime": "NEUTRAL",
-   "adv": 69.9,
+   "adv": 56.0,
+   "sec": null,
+   "sec_adv": null,
+   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
+  },
+  {
+   "symbol": "CGPOWER",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 845.0,
+   "regime": "NEUTRAL",
+   "adv": 56.0,
+   "sec": null,
+   "sec_adv": null,
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "CHOLAFIN",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 1461.0,
+   "regime": "NEUTRAL",
+   "adv": 56.0,
+   "sec": null,
+   "sec_adv": null,
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "CHOLAFIN",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "10:45",
+   "entry": 1469.8,
+   "regime": "NEUTRAL",
+   "adv": 56.0,
    "sec": null,
    "sec_adv": null,
    "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
   },
   {
    "symbol": "CIPLA",
-   "side": "BUY",
-   "signal": "BUY-EX",
-   "time": "10:05",
-   "entry": 1356.3,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
-  },
-  {
-   "symbol": "COALINDIA",
-   "side": "BUY",
-   "signal": "BUY-EX",
-   "time": "09:55",
-   "entry": 401.95,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
-  },
-  {
-   "symbol": "CONCOR",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:25",
-   "entry": 409.3,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "CONCOR",
-   "side": "BUY",
-   "signal": "BUY-EX9",
-   "time": "09:55",
-   "entry": 412.8,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
-  },
-  {
-   "symbol": "CONCOR",
-   "side": "SELL",
-   "signal": "SELL-EX3",
-   "time": "11:30",
-   "entry": 405.85,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted SELL setup \u2014 Coach-v2 (w1: EX1/EX2/EX3/EX15/NORMAL \u2212R)"
-  },
-  {
-   "symbol": "CROMPTON",
    "side": "SELL",
    "signal": "ENTRY SELL",
    "time": "09:20",
-   "entry": 193.63,
+   "entry": 1343.9,
    "regime": "NEUTRAL",
-   "adv": 69.9,
+   "adv": 56.0,
    "sec": null,
    "sec_adv": null,
    "why": "scanner-table preview (90/290) \u2014 no chart label"
   },
   {
-   "symbol": "CUMMINSIND",
+   "symbol": "CIPLA",
+   "side": "SELL",
+   "signal": "SELL-EX1",
+   "time": "11:35",
+   "entry": 1354.1,
+   "regime": "NEUTRAL",
+   "adv": 56.0,
+   "sec": null,
+   "sec_adv": null,
+   "why": "not a whitelisted SELL setup \u2014 Coach-v2 (w1: EX1/EX2/EX3/EX15/NORMAL \u2212R)"
+  },
+  {
+   "symbol": "COFORGE",
    "side": "SELL",
    "signal": "ENTRY SELL",
    "time": "09:20",
-   "entry": 4301.1,
+   "entry": 1981.0,
    "regime": "NEUTRAL",
-   "adv": 69.9,
+   "adv": 56.0,
    "sec": null,
    "sec_adv": null,
    "why": "scanner-table preview (90/290) \u2014 no chart label"
   },
   {
-   "symbol": "CUMMINSIND",
-   "side": "SELL",
-   "signal": "SELL-EX1",
-   "time": "11:30",
-   "entry": 4317.2,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted SELL setup \u2014 Coach-v2 (w1: EX1/EX2/EX3/EX15/NORMAL \u2212R)"
-  },
-  {
-   "symbol": "DABUR",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:25",
-   "entry": 358.05,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "DELHIVERY",
-   "side": "SELL",
-   "signal": "SELL-EX1",
-   "time": "09:30",
-   "entry": 365.35,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted SELL setup \u2014 Coach-v2 (w1: EX1/EX2/EX3/EX15/NORMAL \u2212R)"
-  },
-  {
-   "symbol": "DIVISLAB",
-   "side": "BUY",
-   "signal": "BUY-EX9",
-   "time": "09:30",
-   "entry": 8949.5,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
-  },
-  {
-   "symbol": "DIVISLAB",
-   "side": "SELL",
-   "signal": "SELL-EX1",
-   "time": "11:10",
-   "entry": 8876.0,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted SELL setup \u2014 Coach-v2 (w1: EX1/EX2/EX3/EX15/NORMAL \u2212R)"
-  },
-  {
-   "symbol": "DLF",
-   "side": "BUY",
-   "signal": "ENTRY BUY",
-   "time": "09:25",
-   "entry": 657.45,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "DLF",
+   "symbol": "COFORGE",
    "side": "BUY",
    "signal": "BUY-EX",
-   "time": "10:00",
-   "entry": 664.0,
+   "time": "09:30",
+   "entry": 2003.0,
    "regime": "NEUTRAL",
-   "adv": 69.9,
+   "adv": 56.0,
    "sec": null,
    "sec_adv": null,
    "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
   },
   {
-   "symbol": "DLF",
-   "side": "SELL",
-   "signal": "SELL-EX1",
-   "time": "11:30",
-   "entry": 656.7,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted SELL setup \u2014 Coach-v2 (w1: EX1/EX2/EX3/EX15/NORMAL \u2212R)"
-  },
-  {
-   "symbol": "DMART",
-   "side": "BUY",
-   "signal": "BUY-EX",
-   "time": "09:55",
-   "entry": 3179.0,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
-  },
-  {
-   "symbol": "DMART",
+   "symbol": "COFORGE",
    "side": "SELL",
    "signal": "SELL-EX8",
-   "time": "11:10",
-   "entry": 3134.6,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted SELL setup \u2014 Coach-v2 (w1: EX1/EX2/EX3/EX15/NORMAL \u2212R)"
-  },
-  {
-   "symbol": "DRREDDY",
-   "side": "BUY",
-   "signal": "BUY-EX",
-   "time": "10:25",
-   "entry": 1273.5,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
-  },
-  {
-   "symbol": "EICHERMOT",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 6952.5,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "EICHERMOT",
-   "side": "SELL",
-   "signal": "SELL-EX8",
-   "time": "09:35",
-   "entry": 6942.0,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted SELL setup \u2014 Coach-v2 (w1: EX1/EX2/EX3/EX15/NORMAL \u2212R)"
-  },
-  {
-   "symbol": "ETERNAL",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 314.6,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "FEDERALBNK",
-   "side": "SELL",
-   "signal": "SELL-EX1",
-   "time": "10:25",
-   "entry": 338.75,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted SELL setup \u2014 Coach-v2 (w1: EX1/EX2/EX3/EX15/NORMAL \u2212R)"
-  },
-  {
-   "symbol": "FORTIS",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:25",
-   "entry": 709.1,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "GAIL",
-   "side": "BUY",
-   "signal": "ENTRY BUY",
-   "time": "09:30",
-   "entry": 163.51,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "GLENMARK",
-   "side": "BUY",
-   "signal": "ENTRY BUY",
-   "time": "09:30",
-   "entry": 2166.2,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "GODFRYPHLP",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 1653.0,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "GODFRYPHLP",
-   "side": "BUY",
-   "signal": "BUY-EX9",
-   "time": "09:55",
-   "entry": 1673.1,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
-  },
-  {
-   "symbol": "GODREJCP",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 843.4,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "GODREJCP",
-   "side": "SELL",
-   "signal": "NORMAL SELL",
    "time": "10:35",
-   "entry": 839.45,
+   "entry": 1959.0,
    "regime": "NEUTRAL",
-   "adv": 69.9,
+   "adv": 56.0,
    "sec": null,
    "sec_adv": null,
    "why": "not a whitelisted SELL setup \u2014 Coach-v2 (w1: EX1/EX2/EX3/EX15/NORMAL \u2212R)"
-  },
-  {
-   "symbol": "GRASIM",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 2864.2,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "GRASIM",
-   "side": "BUY",
-   "signal": "BUY-EX4",
-   "time": "09:55",
-   "entry": 2899.0,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
-  },
-  {
-   "symbol": "GVT&D",
-   "side": "BUY",
-   "signal": "BUY-EX",
-   "time": "10:00",
-   "entry": 3716.0,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
-  },
-  {
-   "symbol": "HAL",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 4647.3,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "HAVELLS",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 1019.2,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "HCLTECH",
-   "side": "BUY",
-   "signal": "BUY-EX9",
-   "time": "11:10",
-   "entry": 1419.9,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
-  },
-  {
-   "symbol": "HDFCAMC",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 2226.7,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "HDFCBANK",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:30",
-   "entry": 687.95,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "HDFCBANK",
-   "side": "SELL",
-   "signal": "SELL-EX3",
-   "time": "11:30",
-   "entry": 686.9,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted SELL setup \u2014 Coach-v2 (w1: EX1/EX2/EX3/EX15/NORMAL \u2212R)"
-  },
-  {
-   "symbol": "HDFCLIFE",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 514.7,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "HEROMOTOCO",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 4997.5,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "HEROMOTOCO",
-   "side": "BUY",
-   "signal": "BUY-EX4",
-   "time": "09:55",
-   "entry": 5078.0,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
-  },
-  {
-   "symbol": "HINDALCO",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 853.9,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "HINDUNILVR",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 1786.7,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "HINDZINC",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 492.4,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "HINDZINC",
-   "side": "BUY",
-   "signal": "BUY-EX9",
-   "time": "10:05",
-   "entry": 497.65,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
-  },
-  {
-   "symbol": "HINDZINC",
-   "side": "SELL",
-   "signal": "SELL-EX1",
-   "time": "11:10",
-   "entry": 491.5,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted SELL setup \u2014 Coach-v2 (w1: EX1/EX2/EX3/EX15/NORMAL \u2212R)"
-  },
-  {
-   "symbol": "HYUNDAI",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 1831.2,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "ICICIBANK",
-   "side": "SELL",
-   "signal": "SELL-EX19",
-   "time": "09:30",
-   "entry": 1381.6,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": "BANK",
-   "sec_adv": 63.6,
-   "why": "below prev close \u20b91,394.20 \u2014 not green (v2.1: red BUY \u22120.31R \u00b7 chop-tape red SELL cost-flat)"
-  },
-  {
-   "symbol": "ICICIBANK",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:35",
-   "entry": 1381.4,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "ICICIGI",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 1580.6,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "ICICIGI",
-   "side": "SELL",
-   "signal": "SELL-EX8",
-   "time": "09:30",
-   "entry": 1571.3,
-   "regime": "NEUTRAL",
-   "adv": 69.9,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted SELL setup \u2014 Coach-v2 (w1: EX1/EX2/EX3/EX15/NORMAL \u2212R)"
-  },
-  {
-   "symbol": "IDEA",
-   "side": "BUY",
-   "signal": "ENTRY BUY",
-   "time": "09:40",
-   "entry": 11.39,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "IDEA",
-   "side": "BUY",
-   "signal": "BUY-EX",
-   "time": "10:30",
-   "entry": 11.79,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
-  },
-  {
-   "symbol": "IDFCFIRSTB",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 70.9,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "IDFCFIRSTB",
-   "side": "SELL",
-   "signal": "SELL-EX3",
-   "time": "09:35",
-   "entry": 69.78,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "BULL tape (adv \u226555%) \u2014 SELL side blocked (v2.1 alignment)"
-  },
-  {
-   "symbol": "INDHOTEL",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 768.25,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "INDIANB",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 822.7,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "INDUSINDBK",
-   "side": "BUY",
-   "signal": "BUY-EX",
-   "time": "09:55",
-   "entry": 852.9,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
-  },
-  {
-   "symbol": "INDUSTOWER",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 377.9,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "INDUSTOWER",
-   "side": "BUY",
-   "signal": "BUY-EX4",
-   "time": "09:50",
-   "entry": 381.5,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
-  },
-  {
-   "symbol": "INOXWIND",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:25",
-   "entry": 58.34,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "IREDA",
-   "side": "BUY",
-   "signal": "ENTRY BUY",
-   "time": "09:20",
-   "entry": 101.79,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "IREDA",
-   "side": "BUY",
-   "signal": "BUY-EX",
-   "time": "09:50",
-   "entry": 103.7,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
-  },
-  {
-   "symbol": "IRFC",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:30",
-   "entry": 73.96,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "ITC",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 255.0,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "ITC",
-   "side": "BUY",
-   "signal": "BUY-EX4",
-   "time": "09:55",
-   "entry": 258.9,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
-  },
-  {
-   "symbol": "JINDALSTEL",
-   "side": "BUY",
-   "signal": "ENTRY BUY",
-   "time": "09:20",
-   "entry": 1024.0,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "JINDALSTEL",
-   "side": "BUY",
-   "signal": "BUY-EX",
-   "time": "09:50",
-   "entry": 1034.0,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
-  },
-  {
-   "symbol": "JIOFIN",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 203.1,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "JSWSTEEL",
-   "side": "BUY",
-   "signal": "ENTRY BUY",
-   "time": "09:30",
-   "entry": 1207.0,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "JSWSTEEL",
-   "side": "BUY",
-   "signal": "BUY-EX",
-   "time": "09:55",
-   "entry": 1223.6,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
-  },
-  {
-   "symbol": "KALYANKJIL",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 501.3,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "KALYANKJIL",
-   "side": "BUY",
-   "signal": "BUY-EX4",
-   "time": "09:55",
-   "entry": 514.7,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
-  },
-  {
-   "symbol": "KAYNES",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 3145.8,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "KAYNES",
-   "side": "BUY",
-   "signal": "BUY-EX4",
-   "time": "09:55",
-   "entry": 3210.1,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
-  },
-  {
-   "symbol": "KEI",
-   "side": "BUY",
-   "signal": "ENTRY BUY",
-   "time": "09:25",
-   "entry": 3750.0,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "KFINTECH",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 787.45,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "LAURUSLABS",
-   "side": "BUY",
-   "signal": "ENTRY BUY",
-   "time": "09:20",
-   "entry": 1974.0,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "LICHSGFIN",
-   "side": "BUY",
-   "signal": "ENTRY BUY",
-   "time": "09:40",
-   "entry": 497.0,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "LICI",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 377.6,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "LUPIN",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:35",
-   "entry": 1921.5,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "LUPIN",
-   "side": "BUY",
-   "signal": "BUY-EX",
-   "time": "09:55",
-   "entry": 1935.0,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
-  },
-  {
-   "symbol": "MANKIND",
-   "side": "BUY",
-   "signal": "ENTRY BUY",
-   "time": "09:20",
-   "entry": 2253.7,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "MARICO",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 758.95,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "MARICO",
-   "side": "SELL",
-   "signal": "SELL-EX1",
-   "time": "11:20",
-   "entry": 761.1,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "BULL tape (adv \u226555%) \u2014 SELL side blocked (v2.1 alignment)"
-  },
-  {
-   "symbol": "MARUTI",
-   "side": "SELL",
-   "signal": "SELL-EX1",
-   "time": "09:35",
-   "entry": 11108.0,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "BULL tape (adv \u226555%) \u2014 SELL side blocked (v2.1 alignment)"
-  },
-  {
-   "symbol": "MARUTI",
-   "side": "BUY",
-   "signal": "BUY-EX",
-   "time": "10:10",
-   "entry": 11259.0,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
-  },
-  {
-   "symbol": "MAZDOCK",
-   "side": "BUY",
-   "signal": "ENTRY BUY",
-   "time": "09:25",
-   "entry": 1859.0,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "MAZDOCK",
-   "side": "SELL",
-   "signal": "SELL-EX1",
-   "time": "09:45",
-   "entry": 1840.7,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "BULL tape (adv \u226555%) \u2014 SELL side blocked (v2.1 alignment)"
-  },
-  {
-   "symbol": "MFSL",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 1195.6,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "MOTHERSON",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 147.73,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "MOTILALOFS",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 890.1,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "MUTHOOTFIN",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 2344.2,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "NAM-INDIA",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 904.5,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "NAM-INDIA",
-   "side": "BUY",
-   "signal": "BUY-EX4",
-   "time": "10:10",
-   "entry": 925.0,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
-  },
-  {
-   "symbol": "NATIONALUM",
-   "side": "BUY",
-   "signal": "ENTRY BUY",
-   "time": "09:20",
-   "entry": 301.05,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "NATIONALUM",
-   "side": "BUY",
-   "signal": "BUY-EX",
-   "time": "09:35",
-   "entry": 303.7,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
-  },
-  {
-   "symbol": "NESTLEIND",
-   "side": "BUY",
-   "signal": "BUY-EX4",
-   "time": "10:05",
-   "entry": 1177.4,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
-  },
-  {
-   "symbol": "NMDC",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:25",
-   "entry": 65.86,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "NMDC",
-   "side": "SELL",
-   "signal": "SELL-EX1",
-   "time": "11:45",
-   "entry": 65.92,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "open position already on stock (1-open-trade rule)"
-  },
-  {
-   "symbol": "NYKAA",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 314.0,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "OFSS",
-   "side": "BUY",
-   "signal": "ENTRY BUY",
-   "time": "09:20",
-   "entry": 9814.0,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "ONGC",
-   "side": "BUY",
-   "signal": "BUY-EX5",
-   "time": "10:05",
-   "entry": 227.47,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": "OIL",
-   "sec_adv": 100.0,
-   "why": "below prev close \u20b9227.50 \u2014 not green (v2.1: red BUY \u22120.31R \u00b7 chop-tape red SELL cost-flat)"
-  },
-  {
-   "symbol": "PAGEIND",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 33595.0,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "PAGEIND",
-   "side": "BUY",
-   "signal": "BUY-EX4",
-   "time": "09:55",
-   "entry": 33940.0,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
-  },
-  {
-   "symbol": "PATANJALI",
-   "side": "SELL",
-   "signal": "SELL-EX1",
-   "time": "11:25",
-   "entry": 346.4,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "BULL tape (adv \u226555%) \u2014 SELL side blocked (v2.1 alignment)"
-  },
-  {
-   "symbol": "PAYTM",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 1591.7,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "PAYTM",
-   "side": "BUY",
-   "signal": "BUY-EX4",
-   "time": "09:55",
-   "entry": 1625.5,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
-  },
-  {
-   "symbol": "PFC",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 310.85,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "PGEL",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 459.2,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "PGEL",
-   "side": "SELL",
-   "signal": "SELL-EX3",
-   "time": "09:30",
-   "entry": 456.0,
-   "regime": "BULL",
-   "adv": 70.8,
-   "sec": null,
-   "sec_adv": null,
-   "why": "BULL tape (adv \u226555%) \u2014 SELL side blocked (v2.1 alignment)"
-  },
-  {
-   "symbol": "PIDILITIND",
-   "side": "SELL",
-   "signal": "SELL-EX1",
-   "time": "10:55",
-   "entry": 1466.6,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "BULL tape (adv \u226555%) \u2014 SELL side blocked (v2.1 alignment)"
-  },
-  {
-   "symbol": "PIIND",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 2034.2,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "PNB",
-   "side": "SELL",
-   "signal": "SELL-EX1",
-   "time": "11:30",
-   "entry": 118.68,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "BULL tape (adv \u226555%) \u2014 SELL side blocked (v2.1 alignment)"
-  },
-  {
-   "symbol": "PNBHOUSING",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 1059.4,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "POLICYBZR",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 1009.3,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "POLICYBZR",
-   "side": "BUY",
-   "signal": "ENTRY BUY",
-   "time": "09:40",
-   "entry": 1023.3,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "POLYCAB",
-   "side": "BUY",
-   "signal": "ENTRY BUY",
-   "time": "09:25",
-   "entry": 7447.0,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "POLYCAB",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:30",
-   "entry": 7430.0,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "POLYCAB",
-   "side": "BUY",
-   "signal": "BUY-EX",
-   "time": "10:45",
-   "entry": 7633.0,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
-  },
-  {
-   "symbol": "POWERGRID",
-   "side": "BUY",
-   "signal": "BUY-EX4",
-   "time": "09:50",
-   "entry": 247.5,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
-  },
-  {
-   "symbol": "POWERINDIA",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 25940.0,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "PREMIERENE",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 846.9,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "RBLBANK",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 340.25,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "RBLBANK",
-   "side": "SELL",
-   "signal": "SELL-EX15",
-   "time": "11:25",
-   "entry": 345.7,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "open position already on stock (1-open-trade rule)"
-  },
-  {
-   "symbol": "RECLTD",
-   "side": "SELL",
-   "signal": "SELL-EX1",
-   "time": "11:40",
-   "entry": 293.2,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "open position already on stock (1-open-trade rule)"
-  },
-  {
-   "symbol": "RELIANCE",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 1177.4,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "RELIANCE",
-   "side": "BUY",
-   "signal": "ENTRY BUY",
-   "time": "09:25",
-   "entry": 1184.5,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "SAIL",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 162.78,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "SBILIFE",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 1615.6,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "SBIN",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 946.9,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "SBIN",
-   "side": "SELL",
-   "signal": "SELL-EX3",
-   "time": "09:35",
-   "entry": 944.65,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "BULL tape (adv \u226555%) \u2014 SELL side blocked (v2.1 alignment)"
-  },
-  {
-   "symbol": "SHREECEM",
-   "side": "BUY",
-   "signal": "ENTRY BUY",
-   "time": "09:25",
-   "entry": 22730.0,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "SIEMENS",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 3208.0,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "SIEMENS",
-   "side": "SELL",
-   "signal": "SELL-EX1",
-   "time": "11:30",
-   "entry": 3241.2,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "open position already on stock (1-open-trade rule)"
-  },
-  {
-   "symbol": "SOLARINDS",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 18176.0,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "SONACOMS",
-   "side": "BUY",
-   "signal": "ENTRY BUY",
-   "time": "09:30",
-   "entry": 756.1,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "SONACOMS",
-   "side": "BUY",
-   "signal": "BUY-EX",
-   "time": "09:50",
-   "entry": 770.55,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
-  },
-  {
-   "symbol": "SRF",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 2293.5,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "SRF",
-   "side": "SELL",
-   "signal": "SELL-EX3",
-   "time": "09:40",
-   "entry": 2285.6,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "BULL tape (adv \u226555%) \u2014 SELL side blocked (v2.1 alignment)"
-  },
-  {
-   "symbol": "SUNPHARMA",
-   "side": "BUY",
-   "signal": "BUY-EX4",
-   "time": "10:05",
-   "entry": 1765.4,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
-  },
-  {
-   "symbol": "SUNPHARMA",
-   "side": "SELL",
-   "signal": "SELL-EX15",
-   "time": "11:45",
-   "entry": 1748.0,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "BULL tape (adv \u226555%) \u2014 SELL side blocked (v2.1 alignment)"
-  },
-  {
-   "symbol": "SUPREMEIND",
-   "side": "BUY",
-   "signal": "ENTRY BUY",
-   "time": "09:25",
-   "entry": 3445.1,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "SUPREMEIND",
-   "side": "BUY",
-   "signal": "BUY-EX",
-   "time": "09:50",
-   "entry": 3489.1,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
-  },
-  {
-   "symbol": "SUZLON",
-   "side": "BUY",
-   "signal": "ENTRY BUY",
-   "time": "09:25",
-   "entry": 37.22,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "SWIGGY",
-   "side": "BUY",
-   "signal": "BUY-EX9",
-   "time": "10:00",
-   "entry": 182.8,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
-  },
-  {
-   "symbol": "TATAPOWER",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 342.8,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "TATAPOWER",
-   "side": "SELL",
-   "signal": "SELL-EX2",
-   "time": "11:20",
-   "entry": 342.1,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "BULL tape (adv \u226555%) \u2014 SELL side blocked (v2.1 alignment)"
-  },
-  {
-   "symbol": "TECHM",
-   "side": "BUY",
-   "signal": "BUY-EX9",
-   "time": "10:05",
-   "entry": 1800.5,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
-  },
-  {
-   "symbol": "TIINDIA",
-   "side": "BUY",
-   "signal": "BUY-EX",
-   "time": "09:50",
-   "entry": 2089.0,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
-  },
-  {
-   "symbol": "TMPV",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 260.6,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "TMPV",
-   "side": "BUY",
-   "signal": "BUY-EX9",
-   "time": "10:15",
-   "entry": 264.2,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
-  },
-  {
-   "symbol": "TORNTPHARM",
-   "side": "SELL",
-   "signal": "SELL-EX2",
-   "time": "09:40",
-   "entry": 4495.9,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "BULL tape (adv \u226555%) \u2014 SELL side blocked (v2.1 alignment)"
-  },
-  {
-   "symbol": "TRENT",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:25",
-   "entry": 2702.0,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "TRENT",
-   "side": "SELL",
-   "signal": "SELL-EX8",
-   "time": "09:30",
-   "entry": 2692.8,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "BULL tape (adv \u226555%) \u2014 SELL side blocked (v2.1 alignment)"
-  },
-  {
-   "symbol": "TRENT",
-   "side": "BUY",
-   "signal": "BUY-EX4",
-   "time": "10:00",
-   "entry": 2731.3,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
-  },
-  {
-   "symbol": "TVSMOTOR",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 3884.2,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "UNIONBANK",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 177.61,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "UNIONBANK",
-   "side": "BUY",
-   "signal": "BUY-EX4",
-   "time": "09:55",
-   "entry": 180.11,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
-  },
-  {
-   "symbol": "UNITDSPR",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 1228.9,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "UNOMINDA",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 1042.0,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "UPL",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 500.9,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "UPL",
-   "side": "SELL",
-   "signal": "SELL-EX1",
-   "time": "10:50",
-   "entry": 498.75,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "BULL tape (adv \u226555%) \u2014 SELL side blocked (v2.1 alignment)"
-  },
-  {
-   "symbol": "VBL",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 389.0,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "VEDL",
-   "side": "SELL",
-   "signal": "SELL-EX1",
-   "time": "11:30",
-   "entry": 224.7,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "open position already on stock (1-open-trade rule)"
-  },
-  {
-   "symbol": "VMM",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 85.09,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "VOLTAS",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 936.5,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "WAAREEENER",
-   "side": "SELL",
-   "signal": "ENTRY SELL",
-   "time": "09:20",
-   "entry": 2326.5,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "WAAREEENER",
-   "side": "BUY",
-   "signal": "ENTRY BUY",
-   "time": "09:25",
-   "entry": 2336.1,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "ZYDUSLIFE",
-   "side": "BUY",
-   "signal": "ENTRY BUY",
-   "time": "09:20",
-   "entry": 1144.9,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "scanner-table preview (90/290) \u2014 no chart label"
-  },
-  {
-   "symbol": "ZYDUSLIFE",
-   "side": "BUY",
-   "signal": "BUY-EX",
-   "time": "09:30",
-   "entry": 1146.0,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "not a whitelisted BUY setup \u2014 Coach-v2 (w1: plain BUY-EX/EX9/EX4 churn \u2212R)"
-  },
-  {
-   "symbol": "ZYDUSLIFE",
-   "side": "SELL",
-   "signal": "SELL-EX1",
-   "time": "10:55",
-   "entry": 1128.4,
-   "regime": "BULL",
-   "adv": 74.2,
-   "sec": null,
-   "sec_adv": null,
-   "why": "BULL tape (adv \u226555%) \u2014 SELL side blocked (v2.1 alignment)"
   }
  ]
 }
