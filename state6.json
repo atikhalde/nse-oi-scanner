@@ -365,16 +365,16 @@
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 15:15",
+     "OPEN 15:25",
      4,
-     9453.0,
-     "15:15"
+     9505.5,
+     "15:25"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "15:15",
-   "pnl": 630.0,
-   "r_total": 0.71,
+   "leg2_time": "15:25",
+   "pnl": 840.0,
+   "r_total": 0.94,
    "closed": false,
    "events": [
     {
@@ -408,14 +408,14 @@
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 15:15",
+     "OPEN 15:25",
      36,
      1386.9000244140625,
-     "15:15"
+     "15:25"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "15:15",
+   "leg2_time": "15:25",
    "pnl": 58.0,
    "r_total": 0.13,
    "closed": false,
@@ -445,8 +445,8 @@
    "qty_full": 23,
    "qty_capped": false,
    "capital": 48187.0,
-   "tp1": 4878.35,
-   "tp2": 4878.35,
+   "tp1": 4878.34,
+   "tp2": 4878.34,
    "trail_armed": true,
    "trail_style": "structure swings",
    "legs": [
@@ -466,7 +466,7 @@
     {
      "key": "ENTRY",
      "time": "09:30",
-     "price": 2095.10009765625
+     "price": 2095.1
     },
     {
      "key": "TRAIL_ON",
@@ -485,7 +485,9 @@
  "alerts": [
   "DIVISLAB:ENTRY",
   "ICICIBANK:ENTRY",
-  "LAURUSLABS:ENTRY"
+  "LAURUSLABS:ENTRY",
+  "LAURUSLABS:TRAIL_ON",
+  "LAURUSLABS:EXIT_SL"
  ],
  "gate": {
   "status": "OK",
@@ -494,74 +496,78 @@
  "eod_done": false,
  "cycles": 0,
  "sector_board": {
-  "time": "15:17",
-  "net_tilt": 30.6,
+  "time": "21:04",
+  "net_tilt": 43.0,
   "tilt": "STRONG BULLISH",
   "bull_q": [
    [
-    "MEDIA",
-    83.0
+    "CONSUMPTION",
+    76.35
    ],
    [
-    "INFRA",
-    68.15
+    "AUTO",
+    73.33
    ],
    [
-    "CDUR",
-    67.09
+    "TELECOM",
+    73.19
    ],
    [
     "CHEMICALS",
-    64.12
+    67.82
    ]
   ],
   "bear_q": [],
   "persist_bull": [
    [
     "MEDIA",
-    96.23
-   ],
-   [
-    "PHA",
-    90.6
+    94.74
    ],
    [
     "REALTY",
-    90.17
+    92.65
+   ],
+   [
+    "LOGISTICS",
+    92.64
    ]
   ],
   "persist_bear": [
    [
     "CEMENT",
-    82.23
+    86.73
    ],
    [
-    "RAILWAYS",
-    81.69
+    "BANK",
+    68.06
    ],
    [
-    "BUILDMAT",
-    56.05
+    "FIN",
+    55.02
    ]
   ],
   "hold": "timed",
   "held_bull": [
+   "AUTO",
    "CAPMKTS",
    "CDUR",
    "CHEMICALS",
    "CONSUMPTION",
    "ENE",
-   "HOSPITALS",
+   "FMCG",
    "INFRA",
    "LOGISTICS",
    "MEDIA",
+   "MET",
    "NEWAGE",
    "PHA",
+   "PSE",
+   "REALTY",
    "TELECOM",
    "TRAVEL"
   ],
   "held_bear": [
-   "BANK",
+   "CEMENT",
    "RAILWAYS"
   ]
  },
