@@ -401,7 +401,7 @@
     {
      "key": "ENTRY",
      "time": "10:00",
-     "price": 340.8999938964844
+     "price": 340.9
     },
     {
      "key": "EXIT_SL",
@@ -476,8 +476,8 @@
    "qty_full": 107,
    "qty_capped": false,
    "capital": 49605.0,
-   "tp1": -283.27,
-   "tp2": -283.27,
+   "tp1": -283.28,
+   "tp2": -283.28,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
@@ -497,7 +497,7 @@
     {
      "key": "ENTRY",
      "time": "10:25",
-     "price": 463.6000061035156
+     "price": 463.6
     },
     {
      "key": "EXIT_SL",
@@ -513,7 +513,10 @@
   "EXIDEIND:EXIT_EOD",
   "HINDPETRO:ENTRY",
   "HYUNDAI:ENTRY",
-  "JSWENERGY:ENTRY"
+  "JSWENERGY:ENTRY",
+  "HINDPETRO:EXIT_SL",
+  "HYUNDAI:EXIT_SL",
+  "JSWENERGY:EXIT_SL"
  ],
  "gate": {
   "status": "OK",
@@ -522,15 +525,10 @@
  "eod_done": false,
  "cycles": 0,
  "sector_board": {
-  "time": "15:57",
-  "net_tilt": 8.3,
-  "tilt": "STRONG BULLISH",
-  "bull_q": [
-   [
-    "CAPMKTS",
-    65.43
-   ]
-  ],
+  "time": "22:03",
+  "net_tilt": 7.8,
+  "tilt": "BULLISH",
+  "bull_q": [],
   "bear_q": [
    [
     "TELECOM",
@@ -555,8 +553,8 @@
     88.38
    ],
    [
-    "CAPMKTS",
-    83.97
+    "MEDIA",
+    80.58
    ]
   ],
   "persist_bear": [
