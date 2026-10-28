@@ -65,7 +65,7 @@
     {
      "key": "ENTRY",
      "time": "10:15",
-     "price": 1283.300048828125
+     "price": 1283.3
     },
     {
      "key": "EXIT_SL",
@@ -113,7 +113,7 @@
     {
      "key": "ENTRY",
      "time": "09:55",
-     "price": 184.67999267578125
+     "price": 184.68
     },
     {
      "key": "TRAIL_ON",
@@ -131,7 +131,10 @@
  },
  "alerts": [
   "ADANIENSOL:ENTRY",
-  "ADANIPOWER:ENTRY"
+  "ADANIPOWER:ENTRY",
+  "ADANIENSOL:EXIT_SL",
+  "ADANIPOWER:TRAIL_ON",
+  "ADANIPOWER:EXIT_SL"
  ],
  "gate": {
   "status": "OK",
@@ -140,8 +143,8 @@
  "eod_done": false,
  "cycles": 0,
  "sector_board": {
-  "time": "15:58",
-  "net_tilt": 6.2,
+  "time": "22:02",
+  "net_tilt": 7.8,
   "tilt": "BULLISH",
   "bull_q": [],
   "bear_q": [
