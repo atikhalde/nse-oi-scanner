@@ -209,7 +209,58 @@
    "nbars": 73
   },
   "GODREJCP": {
-   "nbars": 10
+   "nbars": 74
+  },
+  "GODREJPROP": {
+   "nbars": 74
+  },
+  "GRASIM": {
+   "nbars": 73
+  },
+  "GVT&D": {
+   "nbars": 73
+  },
+  "HAL": {
+   "nbars": 74
+  },
+  "HAVELLS": {
+   "nbars": 73
+  },
+  "HCLTECH": {
+   "nbars": 74
+  },
+  "HDFCAMC": {
+   "nbars": 74
+  },
+  "HDFCBANK": {
+   "nbars": 73
+  },
+  "HDFCLIFE": {
+   "nbars": 74
+  },
+  "HEROMOTOCO": {
+   "nbars": 74
+  },
+  "HINDALCO": {
+   "nbars": 74
+  },
+  "HINDPETRO": {
+   "nbars": 74
+  },
+  "HINDUNILVR": {
+   "nbars": 74
+  },
+  "HINDZINC": {
+   "nbars": 74
+  },
+  "HYUNDAI": {
+   "nbars": 74
+  },
+  "ICICIBANK": {
+   "nbars": 74
+  },
+  "ICICIGI": {
+   "nbars": 6
   }
  },
  "trades": {
@@ -408,8 +459,7 @@
      "price": 1759.7519044189453
     }
    ],
-   "spurt_rank": 20,
-   "movers20": true
+   "spurt_rank": 20
   },
   "GLENMARK": {
    "symbol": "GLENMARK",
@@ -449,7 +499,7 @@
     {
      "key": "ENTRY",
      "time": "09:35",
-     "price": 2308.699951171875
+     "price": 2308.7
     },
     {
      "key": "TRAIL_ON",
@@ -457,8 +507,7 @@
      "price": 2322.60009765625
     }
    ],
-   "spurt_rank": 116,
-   "movers20": true
+   "spurt_rank": 116
   },
   "GMRAIRPORT": {
    "symbol": "GMRAIRPORT",
@@ -498,7 +547,7 @@
     {
      "key": "ENTRY",
      "time": "10:50",
-     "price": 88.2699966430664
+     "price": 88.27
     },
     {
      "key": "TRAIL_ON",
@@ -506,8 +555,7 @@
      "price": 87.33000183105469
     }
    ],
-   "spurt_rank": 40,
-   "movers20": true
+   "spurt_rank": 40
   },
   "GODFRYPHLP": {
    "symbol": "GODFRYPHLP",
@@ -526,8 +574,8 @@
    "qty_full": 28,
    "qty_capped": false,
    "capital": 48350.0,
-   "tp1": 3314.99,
-   "tp2": 3314.99,
+   "tp1": 3314.98,
+   "tp2": 3314.98,
    "trail_armed": true,
    "trail_style": "structure swings",
    "legs": [
@@ -547,7 +595,7 @@
     {
      "key": "ENTRY",
      "time": "09:45",
-     "price": 1726.800048828125
+     "price": 1726.8
     },
     {
      "key": "TRAIL_ON",
@@ -560,8 +608,7 @@
      "price": 1744.651
     }
    ],
-   "spurt_rank": 128,
-   "movers20": true
+   "spurt_rank": 128
   },
   "GODREJCP": {
    "symbol": "GODREJCP",
@@ -601,7 +648,7 @@
     {
      "key": "ENTRY",
      "time": "10:05",
-     "price": 823.0999755859375
+     "price": 823.1
     },
     {
      "key": "TRAIL_ON",
@@ -609,7 +656,197 @@
      "price": 836.4000244140625
     }
    ],
-   "spurt_rank": 11,
+   "spurt_rank": 11
+  },
+  "HDFCLIFE": {
+   "symbol": "HDFCLIFE",
+   "side": "SELL",
+   "time": "09:40",
+   "signal": "SELL-EX8",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 512.0,
+   "sl": 515.9,
+   "sl_anchor": "session-extreme*",
+   "risk_pts": 3.9,
+   "risk_pct": 0.762,
+   "risk_rs": 379.0,
+   "qty": 97,
+   "qty_full": 97,
+   "qty_capped": false,
+   "capital": 49664.0,
+   "tp1": 125.59,
+   "tp2": 125.59,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "SL 10:15",
+     97,
+     515.9031477905273,
+     "10:15"
+    ]
+   ],
+   "exit_text": "100% SL 10:15",
+   "leg2_time": "10:15",
+   "pnl": -379.0,
+   "r_total": -1.0,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "09:40",
+     "price": 512.0
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "10:15",
+     "price": 515.9031477905273
+    }
+   ],
+   "spurt_rank": 113,
+   "movers20": true
+  },
+  "HDFCLIFE#2": {
+   "symbol": "HDFCLIFE",
+   "side": "BUY",
+   "time": "10:25",
+   "signal": "BUY-EX4",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 516.8,
+   "sl": 511.15,
+   "sl_anchor": "pivot",
+   "risk_pts": 5.65,
+   "risk_pct": 1.094,
+   "risk_rs": 543.0,
+   "qty": 96,
+   "qty_full": 96,
+   "qty_capped": false,
+   "capital": 49613.0,
+   "tp1": 1076.37,
+   "tp2": 1076.37,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "OPEN 15:25",
+     96,
+     517.0,
+     "15:25"
+    ]
+   ],
+   "exit_text": "OPEN",
+   "leg2_time": "15:25",
+   "pnl": 19.0,
+   "r_total": 0.04,
+   "closed": false,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "10:25",
+     "price": 516.7999877929688
+    }
+   ],
+   "spurt_rank": 113,
+   "movers20": true
+  },
+  "HINDPETRO": {
+   "symbol": "HINDPETRO",
+   "side": "SELL",
+   "time": "11:00",
+   "signal": "SELL-EX1",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 344.0,
+   "sl": 346.02,
+   "sl_anchor": "pivot",
+   "risk_pts": 2.02,
+   "risk_pct": 0.587,
+   "risk_rs": 293.0,
+   "qty": 145,
+   "qty_full": 145,
+   "qty_capped": false,
+   "capital": 49880.0,
+   "tp1": 144.1,
+   "tp2": 144.1,
+   "trail_armed": true,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "trail 12:15",
+     145,
+     342.16842610473634,
+     "12:15"
+    ]
+   ],
+   "exit_text": "100% trail 12:15",
+   "leg2_time": "12:15",
+   "pnl": 266.0,
+   "r_total": 0.91,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "11:00",
+     "price": 344.0
+    },
+    {
+     "key": "TRAIL_ON",
+     "time": "11:40",
+     "price": 341.5
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "12:15",
+     "price": 342.16842610473634
+    }
+   ],
+   "spurt_rank": 25,
+   "movers20": true
+  },
+  "ICICIGI": {
+   "symbol": "ICICIGI",
+   "side": "SELL",
+   "time": "09:45",
+   "signal": "NORMAL SELL",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 1568.9,
+   "sl": 1580.62,
+   "sl_anchor": "session-extreme*",
+   "risk_pts": 11.72,
+   "risk_pct": 0.747,
+   "risk_rs": 363.0,
+   "qty": 31,
+   "qty_full": 31,
+   "qty_capped": false,
+   "capital": 48636.0,
+   "tp1": 409.01,
+   "tp2": 409.01,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "OPEN 15:25",
+     31,
+     1572.9000244140625,
+     "15:25"
+    ]
+   ],
+   "exit_text": "OPEN",
+   "leg2_time": "15:25",
+   "pnl": -124.0,
+   "r_total": -0.34,
+   "closed": false,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "09:45",
+     "price": 1568.9000244140625
+    }
+   ],
+   "spurt_rank": 117,
    "movers20": true
   }
  },
@@ -625,7 +862,17 @@
   "GLENMARK:ENTRY",
   "GMRAIRPORT:ENTRY",
   "GODFRYPHLP:ENTRY",
-  "GODREJCP:ENTRY"
+  "GODREJCP:ENTRY",
+  "BHARATFORG#2:EXIT_SL",
+  "GLENMARK:TRAIL_ON",
+  "GMRAIRPORT:TRAIL_ON",
+  "GODFRYPHLP:TRAIL_ON",
+  "GODFRYPHLP:EXIT_SL",
+  "GODREJCP:TRAIL_ON",
+  "HDFCLIFE:ENTRY",
+  "HDFCLIFE#2:ENTRY",
+  "HINDPETRO:ENTRY",
+  "ICICIGI:ENTRY"
  ],
  "gate": {
   "spurts": {
@@ -1652,6 +1899,166 @@
    "rank": 11,
    "mv": true,
    "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "GODREJCP",
+   "side": "BUY",
+   "signal": "BUY-EX5",
+   "time": "10:05",
+   "entry": 823.1,
+   "rank": 9,
+   "mv": true,
+   "why": "open position already on stock (1-open-trade rule)"
+  },
+  {
+   "symbol": "GODREJPROP",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 1572.8,
+   "rank": 53,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "GODREJPROP",
+   "side": "BUY",
+   "signal": "BUY-EX4",
+   "time": "10:45",
+   "entry": 1590.0,
+   "rank": 53,
+   "mv": false,
+   "why": "M5 gate: spurt 53 \u00b7 movers N \u2014 need both"
+  },
+  {
+   "symbol": "GRASIM",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 2889.9,
+   "rank": 143,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "GVT&D",
+   "side": "BUY",
+   "signal": "BUY-EX12",
+   "time": "10:50",
+   "entry": 4100.1,
+   "rank": 196,
+   "mv": false,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 (GHOST-shadowed EOD)"
+  },
+  {
+   "symbol": "HAL",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 4794.7,
+   "rank": 99,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "HAL",
+   "side": "SELL",
+   "signal": "SELL-EX1",
+   "time": "10:00",
+   "entry": 4782.4,
+   "rank": 99,
+   "mv": false,
+   "why": "M5 gate: spurt 99 \u00b7 movers N \u2014 need both"
+  },
+  {
+   "symbol": "HAVELLS",
+   "side": "SELL",
+   "signal": "NORMAL SELL",
+   "time": "11:25",
+   "entry": 1017.0,
+   "rank": 63,
+   "mv": false,
+   "why": "M5 gate: spurt 63 \u00b7 movers N \u2014 need both"
+  },
+  {
+   "symbol": "HDFCAMC",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 2333.2,
+   "rank": 166,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "HDFCBANK",
+   "side": "BUY",
+   "signal": "BUY-EX12",
+   "time": "10:25",
+   "entry": 685.75,
+   "rank": 101,
+   "mv": false,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 (GHOST-shadowed EOD)"
+  },
+  {
+   "symbol": "HDFCLIFE",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 512.6,
+   "rank": 113,
+   "mv": true,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "HINDALCO",
+   "side": "SELL",
+   "signal": "NORMAL SELL",
+   "time": "11:50",
+   "entry": 882.5,
+   "rank": 65,
+   "mv": false,
+   "why": "M5 gate: spurt 65 \u00b7 movers N \u2014 need both"
+  },
+  {
+   "symbol": "HINDUNILVR",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 1822.1,
+   "rank": 193,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "HINDUNILVR",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "10:00",
+   "entry": 1841.3,
+   "rank": 193,
+   "mv": false,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 (GHOST-shadowed EOD)"
+  },
+  {
+   "symbol": "HINDZINC",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "09:35",
+   "entry": 510.95,
+   "rank": 182,
+   "mv": false,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 (GHOST-shadowed EOD)"
+  },
+  {
+   "symbol": "ICICIBANK",
+   "side": "BUY",
+   "signal": "BUY-EX12",
+   "time": "10:05",
+   "entry": 1378.9,
+   "rank": 171,
+   "mv": false,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 (GHOST-shadowed EOD)"
   }
  ],
  "ghosts": [
@@ -1774,6 +2181,61 @@
    "entry": 2313.0,
    "rank": 116,
    "mv": true,
+   "grp": "R"
+  },
+  {
+   "symbol": "GVT&D",
+   "side": "BUY",
+   "signal": "BUY-EX12",
+   "code": 111,
+   "time": "10:50",
+   "entry": 4100.1,
+   "rank": 196,
+   "mv": false,
+   "grp": "R"
+  },
+  {
+   "symbol": "HDFCBANK",
+   "side": "BUY",
+   "signal": "BUY-EX12",
+   "code": 111,
+   "time": "10:25",
+   "entry": 685.75,
+   "rank": 101,
+   "mv": false,
+   "grp": "R"
+  },
+  {
+   "symbol": "HINDUNILVR",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "code": 102,
+   "time": "10:00",
+   "entry": 1841.3,
+   "rank": 193,
+   "mv": false,
+   "grp": "R"
+  },
+  {
+   "symbol": "HINDZINC",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "code": 102,
+   "time": "09:35",
+   "entry": 510.95,
+   "rank": 182,
+   "mv": false,
+   "grp": "R"
+  },
+  {
+   "symbol": "ICICIBANK",
+   "side": "BUY",
+   "signal": "BUY-EX12",
+   "code": 111,
+   "time": "10:05",
+   "entry": 1378.9,
+   "rank": 171,
+   "mv": false,
    "grp": "R"
   }
  ]
