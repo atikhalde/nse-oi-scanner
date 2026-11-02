@@ -167,8 +167,8 @@
    "qty_full": 135,
    "qty_capped": false,
    "capital": 49930.0,
-   "tp1": 738.19,
-   "tp2": 738.19,
+   "tp1": 738.18,
+   "tp2": 738.18,
    "trail_armed": true,
    "trail_style": "structure swings",
    "legs": [
@@ -188,7 +188,7 @@
     {
      "key": "ENTRY",
      "time": "10:15",
-     "price": 369.8500061035156
+     "price": 369.85
     },
     {
      "key": "TRAIL_ON",
@@ -293,7 +293,9 @@
  "alerts": [
   "ABCAPITAL:ENTRY",
   "COFORGE:ENTRY",
-  "CONCOR:ENTRY"
+  "CONCOR:ENTRY",
+  "ABCAPITAL:TRAIL_ON",
+  "ABCAPITAL:EXIT_SL"
  ],
  "gate": {
   "status": "OK",
