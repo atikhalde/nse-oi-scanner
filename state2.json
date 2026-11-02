@@ -287,8 +287,7 @@
      "price": 6496.0
     }
    ],
-   "spurt_rank": 120,
-   "movers20": true
+   "spurt_rank": 120
   },
   "ABCAPITAL": {
    "symbol": "ABCAPITAL",
@@ -307,8 +306,8 @@
    "qty_full": 135,
    "qty_capped": false,
    "capital": 49930.0,
-   "tp1": 738.19,
-   "tp2": 738.19,
+   "tp1": 738.18,
+   "tp2": 738.18,
    "trail_armed": true,
    "trail_style": "structure swings",
    "legs": [
@@ -328,7 +327,7 @@
     {
      "key": "ENTRY",
      "time": "10:15",
-     "price": 369.8500061035156
+     "price": 369.85
     },
     {
      "key": "TRAIL_ON",
@@ -341,8 +340,7 @@
      "price": 378.5242861022949
     }
    ],
-   "spurt_rank": 18,
-   "movers20": true
+   "spurt_rank": 18
   },
   "ADANIPORTS": {
    "symbol": "ADANIPORTS",
@@ -385,8 +383,7 @@
      "price": 1837.0
     }
    ],
-   "spurt_rank": 101,
-   "movers20": true
+   "spurt_rank": 101
   },
   "ALKEM": {
    "symbol": "ALKEM",
@@ -434,8 +431,7 @@
      "price": 5059.9878
     }
    ],
-   "spurt_rank": 33,
-   "movers20": true
+   "spurt_rank": 33
   },
   "APLAPOLLO": {
    "symbol": "APLAPOLLO",
@@ -454,8 +450,8 @@
    "qty_full": 22,
    "qty_capped": false,
    "capital": 48176.0,
-   "tp1": 2955.87,
-   "tp2": 2955.87,
+   "tp1": 2955.86,
+   "tp2": 2955.86,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
@@ -475,7 +471,7 @@
     {
      "key": "ENTRY",
      "time": "10:45",
-     "price": 2189.800048828125
+     "price": 2189.8
     },
     {
      "key": "EXIT_SL",
@@ -483,8 +479,7 @@
      "price": 2182.0620077313865
     }
    ],
-   "spurt_rank": 157,
-   "movers20": true
+   "spurt_rank": 157
   },
   "BAJFINANCE": {
    "symbol": "BAJFINANCE",
@@ -537,8 +532,7 @@
      "price": 954.1591055908203
     }
    ],
-   "spurt_rank": 127,
-   "movers20": true
+   "spurt_rank": 127
   },
   "BHEL": {
    "symbol": "BHEL",
@@ -637,7 +631,13 @@
   "APLAPOLLO:ENTRY",
   "BAJFINANCE:ENTRY",
   "BHEL:ENTRY",
-  "HINDALCO:ENTRY"
+  "HINDALCO:ENTRY",
+  "ABCAPITAL:TRAIL_ON",
+  "ABCAPITAL:EXIT_SL",
+  "ALKEM:EXIT_SL",
+  "APLAPOLLO:EXIT_SL",
+  "BAJFINANCE:TRAIL_ON",
+  "BAJFINANCE:EXIT_SL"
  ],
  "gate": {
   "spurts": {
