@@ -1,10 +1,1195 @@
 {
  "date": "2026-11-03",
- "signals": {},
- "trades": {},
- "alerts": [],
- "gate": {},
- "pvmap": {},
+ "signals": {
+  "360ONE": {
+   "nbars": 73
+  },
+  "ABB": {
+   "nbars": 74
+  },
+  "ABCAPITAL": {
+   "nbars": 74
+  },
+  "ADANIENSOL": {
+   "nbars": 74
+  },
+  "ADANIENT": {
+   "nbars": 74
+  },
+  "ADANIGREEN": {
+   "nbars": 74
+  },
+  "ADANIPORTS": {
+   "nbars": 74
+  },
+  "ADANIPOWER": {
+   "nbars": 74
+  },
+  "ALKEM": {
+   "nbars": 74
+  },
+  "AMBER": {
+   "nbars": 73
+  },
+  "AMBUJACEM": {
+   "nbars": 74
+  },
+  "ANGELONE": {
+   "nbars": 74
+  },
+  "APLAPOLLO": {
+   "nbars": 74
+  },
+  "APOLLOHOSP": {
+   "nbars": 74
+  },
+  "ASHOKLEY": {
+   "nbars": 73
+  },
+  "ASIANPAINT": {
+   "nbars": 74
+  },
+  "ASTRAL": {
+   "nbars": 74
+  },
+  "AUBANK": {
+   "nbars": 74
+  },
+  "AUROPHARMA": {
+   "nbars": 74
+  },
+  "AXISBANK": {
+   "nbars": 74
+  },
+  "BAJAJ-AUTO": {
+   "nbars": 73
+  },
+  "BAJAJFINSV": {
+   "nbars": 74
+  },
+  "BAJAJHLDNG": {
+   "nbars": 76
+  },
+  "BAJFINANCE": {
+   "nbars": 74
+  },
+  "BANDHANBNK": {
+   "nbars": 74
+  },
+  "BANKBARODA": {
+   "nbars": 73
+  },
+  "BANKINDIA": {
+   "nbars": 74
+  },
+  "BDL": {
+   "nbars": 74
+  },
+  "BEL": {
+   "nbars": 73
+  },
+  "BHARATFORG": {
+   "nbars": 74
+  },
+  "BHARTIARTL": {
+   "nbars": 74
+  },
+  "BHEL": {
+   "nbars": 73
+  },
+  "BIOCON": {
+   "nbars": 74
+  },
+  "BLUESTARCO": {
+   "nbars": 74
+  },
+  "BOSCHLTD": {
+   "nbars": 74
+  },
+  "BPCL": {
+   "nbars": 73
+  },
+  "BRITANNIA": {
+   "nbars": 74
+  },
+  "BSE": {
+   "nbars": 73
+  },
+  "CAMS": {
+   "nbars": 74
+  },
+  "CANBK": {
+   "nbars": 74
+  },
+  "CDSL": {
+   "nbars": 74
+  },
+  "CGPOWER": {
+   "nbars": 19
+  }
+ },
+ "trades": {
+  "ADANIENSOL": {
+   "symbol": "ADANIENSOL",
+   "side": "SELL",
+   "time": "11:00",
+   "signal": "SELL-EX1",
+   "setup": "S1",
+   "sl_mode": "structure",
+   "entry": 1367.9,
+   "sl": 1376.78,
+   "sl_anchor": "pivot",
+   "risk_pts": 8.88,
+   "risk_pct": 0.649,
+   "risk_rs": 320.0,
+   "qty": 36,
+   "qty_full": 36,
+   "qty_capped": false,
+   "capital": 49244.0,
+   "tp1": 489.25,
+   "tp2": 489.25,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "SL 11:45",
+     36,
+     1376.7753,
+     "11:45"
+    ]
+   ],
+   "exit_text": "100% SL 11:45",
+   "leg2_time": "11:45",
+   "pnl": -320.0,
+   "r_total": -1.0,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "11:00",
+     "price": 1367.9000244140625
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "11:45",
+     "price": 1376.7753
+    }
+   ],
+   "cls_trader": "BREAKOUT",
+   "setups": [
+    "S1"
+   ]
+  },
+  "ADANIPORTS": {
+   "symbol": "ADANIPORTS",
+   "side": "SELL",
+   "time": "10:20",
+   "signal": "NORMAL SELL",
+   "setup": "S1+S2+S3",
+   "sl_mode": "structure",
+   "entry": 1846.6,
+   "sl": 1861.47,
+   "sl_anchor": "pivot",
+   "risk_pts": 14.87,
+   "risk_pct": 0.805,
+   "risk_rs": 402.0,
+   "qty": 27,
+   "qty_full": 27,
+   "qty_capped": false,
+   "capital": 49858.0,
+   "tp1": 374.25,
+   "tp2": 374.25,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "SL 11:25",
+     27,
+     1861.4721955810546,
+     "11:25"
+    ]
+   ],
+   "exit_text": "100% SL 11:25",
+   "leg2_time": "11:25",
+   "pnl": -402.0,
+   "r_total": -1.0,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "10:20",
+     "price": 1846.5999755859375
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "11:25",
+     "price": 1861.4721955810546
+    }
+   ],
+   "cls_trader": "BREAKOUT",
+   "setups": [
+    "S1",
+    "S2",
+    "S3"
+   ]
+  },
+  "ADANIPOWER": {
+   "symbol": "ADANIPOWER",
+   "side": "SELL",
+   "time": "11:00",
+   "signal": "SELL-EX8",
+   "setup": "S1+S2",
+   "sl_mode": "structure",
+   "entry": 194.75,
+   "sl": 196.03,
+   "sl_anchor": "pivot",
+   "risk_pts": 1.28,
+   "risk_pct": 0.657,
+   "risk_rs": 327.0,
+   "qty": 256,
+   "qty_full": 256,
+   "qty_capped": false,
+   "capital": 49856.0,
+   "tp1": 68.11,
+   "tp2": 68.11,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "SL 13:05",
+     256,
+     196.0292034942627,
+     "13:05"
+    ]
+   ],
+   "exit_text": "100% SL 13:05",
+   "leg2_time": "13:05",
+   "pnl": -327.0,
+   "r_total": -1.0,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "11:00",
+     "price": 194.75
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "13:05",
+     "price": 196.0292034942627
+    }
+   ],
+   "cls_trader": "BREAKOUT",
+   "setups": [
+    "S1",
+    "S2"
+   ]
+  },
+  "APOLLOHOSP": {
+   "symbol": "APOLLOHOSP",
+   "side": "BUY",
+   "time": "11:00",
+   "signal": "BUY-EX9",
+   "setup": "S1",
+   "sl_mode": "structure",
+   "entry": 8381.0,
+   "sl": 8349.1,
+   "sl_anchor": "pullback-high/low",
+   "risk_pts": 31.9,
+   "risk_pct": 0.381,
+   "risk_rs": 159.0,
+   "qty": 5,
+   "qty_full": 5,
+   "qty_capped": false,
+   "capital": 41905.0,
+   "tp1": 11538.62,
+   "tp2": 11538.62,
+   "trail_armed": true,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "trail 13:25",
+     5,
+     8412.3172,
+     "13:25"
+    ]
+   ],
+   "exit_text": "100% trail 13:25",
+   "leg2_time": "13:25",
+   "pnl": 157.0,
+   "r_total": 0.98,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "11:00",
+     "price": 8381.0
+    },
+    {
+     "key": "TRAIL_ON",
+     "time": "11:25",
+     "price": 8418.5
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "13:25",
+     "price": 8412.3172
+    }
+   ],
+   "cls_trader": "PULLBACK",
+   "setups": [
+    "S1"
+   ]
+  },
+  "BANKINDIA": {
+   "symbol": "BANKINDIA",
+   "side": "SELL",
+   "time": "11:25",
+   "signal": "SELL-EX1",
+   "setup": "S2",
+   "sl_mode": "structure",
+   "entry": 134.08,
+   "sl": 135.24,
+   "sl_anchor": "pivot",
+   "risk_pts": 1.16,
+   "risk_pct": 0.863,
+   "risk_rs": 430.0,
+   "qty": 372,
+   "qty_full": 372,
+   "qty_capped": false,
+   "capital": 49878.0,
+   "tp1": 19.53,
+   "tp2": 19.53,
+   "trail_armed": true,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "OPEN 15:25",
+     372,
+     133.1699981689453,
+     "15:25"
+    ]
+   ],
+   "exit_text": "OPEN",
+   "leg2_time": "15:25",
+   "pnl": 339.0,
+   "r_total": 0.79,
+   "closed": false,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "11:25",
+     "price": 134.0800018310547
+    },
+    {
+     "key": "TRAIL_ON",
+     "time": "14:45",
+     "price": 132.6300048828125
+    }
+   ],
+   "cls_trader": "BREAKOUT",
+   "setups": [
+    "S2"
+   ]
+  },
+  "BDL": {
+   "symbol": "BDL",
+   "side": "BUY",
+   "time": "09:50",
+   "signal": "BUY-EX",
+   "setup": "S1+S4",
+   "sl_mode": "structure",
+   "entry": 1025.2,
+   "sl": 993.05,
+   "sl_anchor": "session-extreme*",
+   "risk_pts": 32.15,
+   "risk_pct": 3.136,
+   "risk_rs": 868.0,
+   "qty": 27,
+   "qty_full": 48,
+   "qty_capped": true,
+   "capital": 27680.0,
+   "tp1": 4207.91,
+   "tp2": 4207.91,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "OPEN 15:25",
+     27,
+     1017.0,
+     "15:25"
+    ]
+   ],
+   "exit_text": "OPEN",
+   "leg2_time": "15:25",
+   "pnl": -221.0,
+   "r_total": -0.26,
+   "closed": false,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "09:50",
+     "price": 1025.199951171875
+    }
+   ],
+   "cls_trader": "BREAKOUT",
+   "setups": [
+    "S1",
+    "S4"
+   ]
+  },
+  "BLUESTARCO": {
+   "symbol": "BLUESTARCO",
+   "side": "SELL",
+   "time": "10:05",
+   "signal": "NORMAL SELL",
+   "setup": "S1+S2",
+   "sl_mode": "structure",
+   "entry": 1580.0,
+   "sl": 1601.22,
+   "sl_anchor": "pivot",
+   "risk_pts": 21.22,
+   "risk_pct": 1.343,
+   "risk_rs": 658.0,
+   "qty": 31,
+   "qty_full": 31,
+   "qty_capped": false,
+   "capital": 48980.0,
+   "tp1": -520.8,
+   "tp2": -520.8,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "OPEN 15:25",
+     31,
+     1572.5,
+     "15:25"
+    ]
+   ],
+   "exit_text": "OPEN",
+   "leg2_time": "15:25",
+   "pnl": 232.0,
+   "r_total": 0.35,
+   "closed": false,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "10:05",
+     "price": 1580.0
+    }
+   ],
+   "cls_trader": "BREAKOUT",
+   "setups": [
+    "S1",
+    "S2"
+   ]
+  },
+  "CANBK": {
+   "symbol": "CANBK",
+   "side": "SELL",
+   "time": "11:00",
+   "signal": "NORMAL SELL",
+   "setup": "S1",
+   "sl_mode": "structure",
+   "entry": 118.3,
+   "sl": 119.37,
+   "sl_anchor": "pivot",
+   "risk_pts": 1.07,
+   "risk_pct": 0.908,
+   "risk_rs": 453.0,
+   "qty": 422,
+   "qty_full": 422,
+   "qty_capped": false,
+   "capital": 49923.0,
+   "tp1": 11.99,
+   "tp2": 11.99,
+   "trail_armed": true,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "OPEN 15:25",
+     422,
+     117.5,
+     "15:25"
+    ]
+   ],
+   "exit_text": "OPEN",
+   "leg2_time": "15:25",
+   "pnl": 338.0,
+   "r_total": 0.74,
+   "closed": false,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "11:00",
+     "price": 118.30000305175781
+    },
+    {
+     "key": "TRAIL_ON",
+     "time": "14:50",
+     "price": 117.19000244140625
+    }
+   ],
+   "cls_trader": "BREAKOUT",
+   "setups": [
+    "S1"
+   ]
+  },
+  "CGPOWER": {
+   "symbol": "CGPOWER",
+   "side": "BUY",
+   "time": "10:15",
+   "signal": "BUY-EX7",
+   "setup": "S1+S2",
+   "sl_mode": "structure",
+   "entry": 822.2,
+   "sl": 818.84,
+   "sl_anchor": "pivot",
+   "risk_pts": 3.36,
+   "risk_pct": 0.409,
+   "risk_rs": 202.0,
+   "qty": 60,
+   "qty_full": 60,
+   "qty_capped": false,
+   "capital": 49332.0,
+   "tp1": 1155.22,
+   "tp2": 1155.22,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "SL 10:30",
+     60,
+     818.25,
+     "10:30"
+    ]
+   ],
+   "exit_text": "100% SL 10:30",
+   "leg2_time": "10:30",
+   "pnl": -237.0,
+   "r_total": -1.17,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "10:15",
+     "price": 822.2000122070312
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "10:30",
+     "price": 818.25
+    }
+   ],
+   "cls_trader": "BREAKOUT",
+   "setups": [
+    "S1",
+    "S2"
+   ]
+  },
+  "CGPOWER#2": {
+   "symbol": "CGPOWER",
+   "side": "BUY",
+   "time": "10:45",
+   "signal": "BUY-EX",
+   "setup": "S1+S2",
+   "sl_mode": "structure",
+   "entry": 824.0,
+   "sl": 815.84,
+   "sl_anchor": "pivot",
+   "risk_pts": 8.16,
+   "risk_pct": 0.991,
+   "risk_rs": 490.0,
+   "qty": 60,
+   "qty_full": 60,
+   "qty_capped": false,
+   "capital": 49440.0,
+   "tp1": 1632.16,
+   "tp2": 1632.16,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "SL 11:35",
+     60,
+     815.8368,
+     "11:35"
+    ]
+   ],
+   "exit_text": "100% SL 11:35",
+   "leg2_time": "11:35",
+   "pnl": -490.0,
+   "r_total": -1.0,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "10:45",
+     "price": 824.0
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "11:35",
+     "price": 815.8368
+    }
+   ],
+   "cls_trader": "BREAKOUT",
+   "setups": [
+    "S1",
+    "S2"
+   ]
+  }
+ },
+ "alerts": [
+  "ADANIENSOL:ENTRY",
+  "ADANIPORTS:ENTRY",
+  "ADANIPOWER:ENTRY",
+  "APOLLOHOSP:ENTRY",
+  "BANKINDIA:ENTRY",
+  "BDL:ENTRY",
+  "BLUESTARCO:ENTRY",
+  "CANBK:ENTRY",
+  "CGPOWER:ENTRY",
+  "CGPOWER#2:ENTRY"
+ ],
+ "gate": {
+  "status": "MASTER\u00d7VIDEO-4 (pure alignment, vote B)",
+  "source": "any master signal, BOTH sides \u00b7 \u22651 of S1 morning-base / S2 pivot-pullback / S3 flag-breakout / S4 sandwich TRUE at signal bar \u00b7 entries \u226509:45 \u00b7 90/290 + <09:26 blocked \u00b7 winner's-club gate (vote a 03-Aug): dead 103/104/105/208 blocked \u00b7 mixed variants need \u22652 setups \u00b7 winners 108/111/201/280 free \u00b7 exits = EXACT M8 spec: structure SL \u22130.02% \u00b7 no fixed targets (+1R trail-arm) \u00b7 \u20b9900 max-loss \u00b7 15:20 sq-off (paper lab)"
+ },
+ "pvmap": {
+  "360ONE": 1011.0,
+  "ADANIENSOL": 1377.9,
+  "ADANIENT": 2615.4,
+  "ADANIPORTS": 1854.0,
+  "ADANIPOWER": 195.35,
+  "APOLLOHOSP": 8459.0,
+  "ASIANPAINT": 2344.3,
+  "ASTRAL": 1355.6,
+  "AUROPHARMA": 1683.8,
+  "AXISBANK": 1209.0,
+  "BAJAJ-AUTO": 10339.0,
+  "BANKINDIA": 134.4,
+  "BDL": 996.0,
+  "BEL": 376.5,
+  "BHARTIARTL": 1989.9,
+  "BHEL": 394.95,
+  "BLUESTARCO": 1594.0,
+  "CANBK": 119.14,
+  "CDSL": 1252.0,
+  "CGPOWER": 820.1
+ },
  "eod_done": false,
- "cycles": 0
+ "cycles": 0,
+ "skipped": [
+  {
+   "symbol": "360ONE",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 1049.2,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "360ONE",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "09:55",
+   "entry": 1062.5,
+   "setups": [
+    "S1"
+   ],
+   "why": "winner's-club gate: BUY-EX17 is mixed \u2014 needs \u22652 setups (has 1: S1)"
+  },
+  {
+   "symbol": "ABB",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 6617.5,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "ADANIENSOL",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 1382.5,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "ADANIENSOL",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 1395.2,
+   "setups": [],
+   "why": "before 09:45 \u2014 morning base not verified yet (video pre-condition)"
+  },
+  {
+   "symbol": "ADANIENT",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 2627.6,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "ADANIENT",
+   "side": "SELL",
+   "signal": "SELL-EX8",
+   "time": "11:00",
+   "entry": 2593.1,
+   "setups": [
+    "S1"
+   ],
+   "why": "winner's-club gate: SELL-EX8 is mixed \u2014 needs \u22652 setups (has 1: S1)"
+  },
+  {
+   "symbol": "ADANIGREEN",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 1350.0,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "ADANIGREEN",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 1357.0,
+   "setups": [],
+   "why": "before 09:45 \u2014 morning base not verified yet (video pre-condition)"
+  },
+  {
+   "symbol": "ADANIPOWER",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 196.9,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "ADANIPOWER",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 197.3,
+   "setups": [],
+   "why": "before 09:45 \u2014 morning base not verified yet (video pre-condition)"
+  },
+  {
+   "symbol": "AMBER",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 6297.0,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "AMBUJACEM",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 369.95,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "ANGELONE",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 297.3,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "ANGELONE",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "09:30",
+   "entry": 299.45,
+   "setups": [],
+   "why": "before 09:45 \u2014 morning base not verified yet (video pre-condition)"
+  },
+  {
+   "symbol": "APLAPOLLO",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 2143.1,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "ASHOKLEY",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "09:35",
+   "entry": 155.33,
+   "setups": [],
+   "why": "before 09:45 \u2014 morning base not verified yet (video pre-condition)"
+  },
+  {
+   "symbol": "ASIANPAINT",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 2398.3,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "ASIANPAINT",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "10:30",
+   "entry": 2424.2,
+   "setups": [
+    "S1"
+   ],
+   "why": "winner's-club gate: BUY-EX17 is mixed \u2014 needs \u22652 setups (has 1: S1)"
+  },
+  {
+   "symbol": "ASTRAL",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 1367.7,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "ASTRAL",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:50",
+   "entry": 1373.3,
+   "setups": [
+    "S1"
+   ],
+   "why": "winner's-club gate: BUY-EX is mixed \u2014 needs \u22652 setups (has 1: S1)"
+  },
+  {
+   "symbol": "AUBANK",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 888.2,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "AUROPHARMA",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:40",
+   "entry": 1667.5,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "AUROPHARMA",
+   "side": "SELL",
+   "signal": "SELL-EX8",
+   "time": "09:45",
+   "entry": 1663.0,
+   "setups": [
+    "S1"
+   ],
+   "why": "winner's-club gate: SELL-EX8 is mixed \u2014 needs \u22652 setups (has 1: S1)"
+  },
+  {
+   "symbol": "AXISBANK",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 1225.4,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "AXISBANK",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "10:20",
+   "entry": 1231.0,
+   "setups": [
+    "S1"
+   ],
+   "why": "winner's-club gate: BUY-EX is mixed \u2014 needs \u22652 setups (has 1: S1)"
+  },
+  {
+   "symbol": "BAJAJ-AUTO",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "10:10",
+   "entry": 10435.0,
+   "setups": [
+    "S1"
+   ],
+   "why": "winner's-club gate: BUY-EX17 is mixed \u2014 needs \u22652 setups (has 1: S1)"
+  },
+  {
+   "symbol": "BAJAJFINSV",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 1709.0,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "BAJAJFINSV",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 1714.3,
+   "setups": [],
+   "why": "before 09:45 \u2014 morning base not verified yet (video pre-condition)"
+  },
+  {
+   "symbol": "BAJAJHLDNG",
+   "side": "SELL",
+   "signal": "SELL-EX8",
+   "time": "09:35",
+   "entry": 10284.0,
+   "setups": [],
+   "why": "before 09:45 \u2014 morning base not verified yet (video pre-condition)"
+  },
+  {
+   "symbol": "BAJFINANCE",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:40",
+   "entry": 975.9,
+   "setups": [],
+   "why": "before 09:45 \u2014 morning base not verified yet (video pre-condition)"
+  },
+  {
+   "symbol": "BANDHANBNK",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 158.79,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "BANKBARODA",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "09:40",
+   "entry": 246.85,
+   "setups": [],
+   "why": "before 09:45 \u2014 morning base not verified yet (video pre-condition)"
+  },
+  {
+   "symbol": "BDL",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 1009.8,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "BDL",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:35",
+   "entry": 1017.5,
+   "setups": [],
+   "why": "before 09:45 \u2014 morning base not verified yet (video pre-condition)"
+  },
+  {
+   "symbol": "BEL",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 379.05,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "BEL",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:50",
+   "entry": 379.6,
+   "setups": [
+    "S1"
+   ],
+   "why": "winner's-club gate: BUY-EX is mixed \u2014 needs \u22652 setups (has 1: S1)"
+  },
+  {
+   "symbol": "BHARATFORG",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 1754.9,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "BHARATFORG",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:40",
+   "entry": 1780.0,
+   "setups": [],
+   "why": "before 09:45 \u2014 morning base not verified yet (video pre-condition)"
+  },
+  {
+   "symbol": "BHARTIARTL",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:50",
+   "entry": 2008.1,
+   "setups": [
+    "S1"
+   ],
+   "why": "winner's-club gate: BUY-EX is mixed \u2014 needs \u22652 setups (has 1: S1)"
+  },
+  {
+   "symbol": "BHEL",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 398.05,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "BHEL",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:45",
+   "entry": 403.15,
+   "setups": [
+    "S1"
+   ],
+   "why": "winner's-club gate: BUY-EX is mixed \u2014 needs \u22652 setups (has 1: S1)"
+  },
+  {
+   "symbol": "BIOCON",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 351.2,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "BIOCON",
+   "side": "SELL",
+   "signal": "SELL-EX3",
+   "time": "09:30",
+   "entry": 347.4,
+   "setups": [],
+   "why": "before 09:45 \u2014 morning base not verified yet (video pre-condition)"
+  },
+  {
+   "symbol": "BOSCHLTD",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "09:30",
+   "entry": 50310.0,
+   "setups": [],
+   "why": "before 09:45 \u2014 morning base not verified yet (video pre-condition)"
+  },
+  {
+   "symbol": "BPCL",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 300.2,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "BRITANNIA",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 4748.2,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "BRITANNIA",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "09:35",
+   "entry": 4789.9,
+   "setups": [],
+   "why": "before 09:45 \u2014 morning base not verified yet (video pre-condition)"
+  },
+  {
+   "symbol": "BSE",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "09:30",
+   "entry": 3521.2,
+   "setups": [],
+   "why": "before 09:45 \u2014 morning base not verified yet (video pre-condition)"
+  },
+  {
+   "symbol": "CAMS",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 682.1,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "CAMS",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "09:30",
+   "entry": 684.0,
+   "setups": [],
+   "why": "before 09:45 \u2014 morning base not verified yet (video pre-condition)"
+  },
+  {
+   "symbol": "CDSL",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 1282.0,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  },
+  {
+   "symbol": "CDSL",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "10:05",
+   "entry": 1308.4,
+   "setups": [
+    "S1"
+   ],
+   "why": "winner's-club gate: BUY-EX17 is mixed \u2014 needs \u22652 setups (has 1: S1)"
+  },
+  {
+   "symbol": "CGPOWER",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 821.0,
+   "setups": [],
+   "why": "scanner-table preview (90/290) \u2014 no chart label"
+  }
+ ]
 }
