@@ -332,6 +332,59 @@
     {
      "key": "ENTRY",
      "time": "09:50",
+     "price": 1373.3
+    },
+    {
+     "key": "TRAIL_ON",
+     "time": "10:45",
+     "price": 1394.4000244140625
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "11:45",
+     "price": 1381.7236
+    }
+   ],
+   "spurt_rank": 91
+  },
+  "ASTRAL#3": {
+   "symbol": "ASTRAL",
+   "side": "BUY",
+   "time": "09:50",
+   "signal": "BUY-EX",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 1373.3,
+   "sl": 1353.93,
+   "sl_anchor": "session-extreme*",
+   "risk_pts": 19.37,
+   "risk_pct": 1.411,
+   "risk_rs": 697.0,
+   "qty": 36,
+   "qty_full": 36,
+   "qty_capped": false,
+   "capital": 49439.0,
+   "tp1": 3291.02,
+   "tp2": 3291.02,
+   "trail_armed": true,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "trail 11:45",
+     36,
+     1381.7236,
+     "11:45"
+    ]
+   ],
+   "exit_text": "100% trail 11:45",
+   "leg2_time": "11:45",
+   "pnl": 303.0,
+   "r_total": 0.43,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "09:50",
      "price": 1373.300048828125
     },
     {
@@ -345,7 +398,7 @@
      "price": 1381.7236
     }
    ],
-   "spurt_rank": 91,
+   "spurt_rank": 94,
    "movers20": true
   }
  },
@@ -360,7 +413,10 @@
   "ADANIPOWER:EXIT_SL",
   "ASTRAL:TRAIL_ON",
   "ASTRAL:EXIT_SL",
-  "ASTRAL#2:ENTRY"
+  "ASTRAL#2:ENTRY",
+  "ASTRAL#2:TRAIL_ON",
+  "ASTRAL#2:EXIT_SL",
+  "ASTRAL#3:ENTRY"
  ],
  "gate": {
   "spurts": {
