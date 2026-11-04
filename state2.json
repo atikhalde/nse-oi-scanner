@@ -399,10 +399,57 @@
      "price": 5177.0352
     }
    ],
-   "spurt_rank": 60,
-   "movers20": true
+   "spurt_rank": 60
   },
   "HINDUNILVR": {
+   "symbol": "HINDUNILVR",
+   "side": "SELL",
+   "time": "11:00",
+   "signal": "SELL-EX1",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 1946.3,
+   "sl": 1957.39,
+   "sl_anchor": "pivot",
+   "risk_pts": 11.09,
+   "risk_pct": 0.57,
+   "risk_rs": 277.0,
+   "qty": 25,
+   "qty_full": 25,
+   "qty_capped": false,
+   "capital": 48658.0,
+   "tp1": 848.25,
+   "tp2": 848.25,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "SL 11:25",
+     25,
+     1957.3914,
+     "11:25"
+    ]
+   ],
+   "exit_text": "100% SL 11:25",
+   "leg2_time": "11:25",
+   "pnl": -277.0,
+   "r_total": -1.0,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "11:00",
+     "price": 1946.3
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "11:25",
+     "price": 1957.3914
+    }
+   ],
+   "spurt_rank": 100
+  },
+  "HINDUNILVR#2": {
    "symbol": "HINDUNILVR",
    "side": "SELL",
    "time": "11:00",
@@ -448,7 +495,7 @@
      "price": 1957.3914
     }
    ],
-   "spurt_rank": 100,
+   "spurt_rank": 102,
    "movers20": true
   }
  },
@@ -458,7 +505,11 @@
   "ALKEM:TRAIL_ON",
   "ALKEM:EXIT_SL",
   "ALKEM#2:ENTRY",
-  "HINDUNILVR:ENTRY"
+  "HINDUNILVR:ENTRY",
+  "ALKEM#2:TRAIL_ON",
+  "ALKEM#2:EXIT_SL",
+  "HINDUNILVR:EXIT_SL",
+  "HINDUNILVR#2:ENTRY"
  ],
  "gate": {
   "spurts": {
