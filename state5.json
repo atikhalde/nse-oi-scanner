@@ -177,7 +177,60 @@
      "price": 5177.0352
     }
    ],
-   "spurt_rank": 60,
+   "spurt_rank": 60
+  },
+  "ALKEM#3": {
+   "symbol": "ALKEM",
+   "side": "SELL",
+   "time": "09:45",
+   "signal": "SELL-EX1",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 5192.0,
+   "sl": 5230.55,
+   "sl_anchor": "pivot",
+   "risk_pts": 38.55,
+   "risk_pct": 0.742,
+   "risk_rs": 347.0,
+   "qty": 9,
+   "qty_full": 9,
+   "qty_capped": false,
+   "capital": 46728.0,
+   "tp1": 1375.96,
+   "tp2": 1375.96,
+   "trail_armed": true,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "trail 13:20",
+     9,
+     5177.0352,
+     "13:20"
+    ]
+   ],
+   "exit_text": "100% trail 13:20",
+   "leg2_time": "13:20",
+   "pnl": 135.0,
+   "r_total": 0.39,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "09:45",
+     "price": 5192.0
+    },
+    {
+     "key": "TRAIL_ON",
+     "time": "12:20",
+     "price": 5142.5
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "13:20",
+     "price": 5177.0352
+    }
+   ],
+   "spurt_rank": 104,
    "movers20": true
   }
  },
@@ -186,7 +239,10 @@
   "ALKEM:ENTRY",
   "ALKEM:TRAIL_ON",
   "ALKEM:EXIT_SL",
-  "ALKEM#2:ENTRY"
+  "ALKEM#2:ENTRY",
+  "ALKEM#2:TRAIL_ON",
+  "ALKEM#2:EXIT_SL",
+  "ALKEM#3:ENTRY"
  ],
  "gate": {
   "spurts": {
