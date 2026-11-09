@@ -125,12 +125,24 @@ def test_dhan_fallback_only_when_yahoo_misses():
 def test_history_is_last_resort_for_5m():
     import nse_scanner.data as d
 
+    # data/history/*.csv is refreshed every day by workflow 2 (Bootstrap), so
+    # the expected last bar must come from the committed CSV itself — never a
+    # hardcoded date (that made this test fail as soon as history moved past
+    # 2026-11-06, which took the whole live M15 workflow down).
+    committed_path = d.history_path("RELIANCE")
+    assert committed_path.exists(), "committed data/history/RELIANCE.csv must exist"
+    committed = d._normalize_ohlcv(pd.read_csv(committed_path))
+    assert not committed.empty
+    expected_last = committed.index[-1]
+
     with patch.object(d.feeds, "fetch_bars_yahoo", return_value=None), \
             patch.object(d, "security_id", return_value=None):
         df = d.fetch_bars("RELIANCE", "7d", "5m")
 
     assert not df.empty, "committed data/history must rescue a Yahoo+Dhan miss"
-    assert df.index[-1].date() <= dt.date(2026, 11, 6)
+    # No live leg was available, so the frame must be exactly the local history:
+    # same last bar as the committed CSV, nothing synthesised or fetched.
+    assert df.index[-1] == expected_last
     assert str(df.index.tz) == IST
 
 
