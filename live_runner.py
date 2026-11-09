@@ -225,7 +225,10 @@ def mode_test():
     _, meta = gate.nse_live(SYMS)
     print(" ", meta)
     print("== telegram ==")
-    tg.test()
+    tg_ok = tg.test()
+    if not tg_ok:
+        print("  telegram FAIL — alerts cannot arrive; see TG_FAIL line above")
+    ok = tg_ok and ok
     print("RESULT:", "PASS ✅" if ok else "FAIL ❌ (see above)")
     return 0 if ok else 1
 

@@ -59,6 +59,7 @@ jobs:
         if: github.event.schedule != '40 10 * * 1-5' && github.event.inputs.mode != 'reseed'
         run: |
           python -u test_fast_feed.py
+          python -u test_telegram_bot.py
           python -u test_m14_entry.py
           python -u test_m14_trader.py
           python -u test_m14_runner.py
