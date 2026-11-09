@@ -31,6 +31,7 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import json
+import logging
 import os
 import sys
 import time
@@ -78,55 +79,51 @@ def _fanout_targets() -> list[tuple[str, str]]:
     # secondary generic
     tok2 = os.environ.get("TELEGRAM_BOT_TOKEN_2", "").strip()
     chat2 = os.environ.get("TELEGRAM_CHAT_ID_2", "").strip()
+    if bool(tok2) != bool(chat2):
+        logging.warning("M15 generic secondary Telegram target is incomplete")
     if tok2 and chat2 and (tok2, chat2) != primary and (tok2, chat2) not in out:
         out.append((tok2, chat2))
     for suffix in ("A", "B"):
-        tok = (
-            os.environ.get(f"M15_BOT_TOKEN_{suffix}", "").strip()
-            or os.environ.get(f"M14_BOT_TOKEN_{suffix}", "").strip()
-            or os.environ.get(f"M13_BOT_TOKEN_{suffix}", "").strip()
-            or os.environ.get(f"M11_BOT_TOKEN_{suffix}", "").strip()
-        )
-        chat = (
-            os.environ.get(f"M15_CHAT_ID_{suffix}", "").strip()
-            or os.environ.get(f"M14_CHAT_ID_{suffix}", "").strip()
-            or os.environ.get(f"M13_CHAT_ID_{suffix}", "").strip()
-            or os.environ.get(f"M11_CHAT_ID_{suffix}", "").strip()
-        )
-        if tok and chat and (tok, chat) != primary and (tok, chat) not in out:
-            out.append((tok, chat))
+        # Choose a complete pair from one model, never mix unrelated credentials.
+        for model in ("M15", "M14", "M13", "M11"):
+            tok = os.environ.get(f"{model}_BOT_TOKEN_{suffix}", "").strip()
+            chat = os.environ.get(f"{model}_CHAT_ID_{suffix}", "").strip()
+            if bool(tok) != bool(chat):
+                logging.warning("%s Telegram target %s is incomplete; skipping pair", model, suffix)
+            if tok and chat:
+                if (tok, chat) != primary and (tok, chat) not in out:
+                    out.append((tok, chat))
+                break
     return out
 
 
-def _fanout_send(text: str, dry_run: bool = False) -> int:
-    """Send via primary (via nse_scanner.telegram) + fanout to extra targets. Returns successful sends."""
+def _fanout_send(text: str, dry_run: bool = False, parse_mode: str = "HTML") -> int:
+    """Send once per distinct target; any successful target permits dedupe.
+
+    Using the low-level sender avoids recursively calling the pipeline wrapper
+    and prevents the generic secondary bot from receiving duplicate messages.
+    """
+    primary = tg.config_from_env()
+    extras = _fanout_targets()
+    targets = []
+    if all(primary):
+        targets.append(primary)
+    elif not dry_run:
+        logging.warning("M15 primary Telegram token/chat missing or incomplete")
+    targets.extend(extras)
+    if dry_run or os.environ.get("DRY_RUN") == "1":
+        print(f"[DRY-RUN M15] {text}")
+        return max(1, len(targets))
+    if not targets:
+        logging.error("M15 has no complete Telegram targets configured")
+        return 0
     sent = 0
-    # Primary via existing module (handles dry-run internally)
-    if tg.send(text, dry_run=dry_run):
-        sent += 1
-    else:
-        # If primary fails, don't count secondary as success-of-primary path
-        # but still attempt fanout for visibility
-        pass
-    # Secondary fanout — direct POST per target (don't use tg.send which re-reads env)
-    extra = _fanout_targets()
-    if dry_run:
-        for tok, chat in extra:
-            print(f"[DRY-RUN fanout] -> {chat}: {text[:120]}...")
+    for index, (token, chat) in enumerate(targets, 1):
+        if tg._send_to(token, chat, text, parse_mode=parse_mode, label=f"M15 target {index}"):
             sent += 1
-        return sent
-    for tok, chat in extra:
-        try:
-            import requests
-            url = f"https://api.telegram.org/bot{tok}/sendMessage"
-            payload = {"chat_id": chat, "text": text, "parse_mode": "HTML", "disable_web_page_preview": True}
-            r = requests.post(url, json=payload, timeout=12)
-            if r.ok:
-                sent += 1
-            else:
-                print(f"M15 fanout FAIL {chat}: {r.status_code} {r.text[:160]}")
-        except Exception as e:
-            print(f"M15 fanout EXC {chat}: {type(e).__name__}: {e}")
+        else:
+            logging.error("M15 target %d delivery failed", index)
+    logging.info("M15 Telegram delivered to %d/%d configured targets", sent, len(targets))
     return sent
 
 
@@ -155,12 +152,21 @@ def _save_state_alias(st: dict) -> None:
         if m15_state.STATE_PATH == STATE_PRIMARY and STATE15_ALT != STATE_PRIMARY:
             STATE15_ALT.parent.mkdir(parents=True, exist_ok=True)
             STATE15_ALT.write_text(json.dumps(st, indent=2), encoding="utf-8")
-    except Exception:
-        pass
+    except OSError:
+        logging.exception("M15 could not synchronize state aliases")
+        raise
+
+
+class TelegramDeliveryError(Exception):
+    """No configured target accepted an attempted alert."""
 
 
 def run_cycle(*, dry_run: bool = False, force_sector: str | None = None, backfill: bool = False, wait_for_bar: bool = False) -> dict:
     """One M15 cycle — thin wrapper around nse_scanner pipeline with fanout."""
+    if not dry_run and os.environ.get("DRY_RUN") != "1":
+        if not all(tg.config_from_env()) and not _fanout_targets():
+            raise TelegramDeliveryError("M15 has no complete Telegram targets configured")
+    previous_dry_run = os.environ.get("DRY_RUN")
     if dry_run:
         os.environ["DRY_RUN"] = "1"
     # Patch telegram.send fanout: monkey-patch nse_scanner.pipeline.telegram.send to use fanout
@@ -169,8 +175,10 @@ def run_cycle(*, dry_run: bool = False, force_sector: str | None = None, backfil
     orig_send = tg.send
     def fanout_send_wrapper(text: str, dry_run: bool = False, parse_mode: str = "HTML") -> bool:
         # Use our fanout that respects dry_run
-        n = _fanout_send(text, dry_run=dry_run)
-        return n > 0
+        n = _fanout_send(text, dry_run=dry_run, parse_mode=parse_mode)
+        if not n:
+            raise TelegramDeliveryError("M15 alert failed for all configured Telegram targets")
+        return True
     # Apply patch
     tg.send = fanout_send_wrapper
     try:
@@ -180,15 +188,20 @@ def run_cycle(*, dry_run: bool = False, force_sector: str | None = None, backfil
             out = run_once(force_sector=force_sector, backfill=backfill)
     finally:
         tg.send = orig_send
+        if dry_run:
+            if previous_dry_run is None:
+                os.environ.pop("DRY_RUN", None)
+            else:
+                os.environ["DRY_RUN"] = previous_dry_run
     # Feed audit for early-exit paths too (pipeline already attaches it on a
     # full scan; WAIT/STALE/CLOSED returns get the per-cycle counters here).
     out.setdefault("feed", m15_data.feed_stats())
     # Sync alias after pipeline's internal saves
-    try:
+    if not dry_run and os.environ.get("DRY_RUN") != "1":
         st = m15_state.load()
-        _save_state_alias(st)
-    except Exception:
-        pass
+        # Early CLOSED/PENDING exits may not have created a ledger yet.
+        if st:
+            _save_state_alias(st)
     return out
 
 
@@ -221,6 +234,10 @@ def test_alert() -> int:
 
 
 if __name__ == "__main__":
+    logging.basicConfig(
+        level=getattr(logging, os.environ.get("LOG_LEVEL", "INFO").upper(), logging.INFO),
+        format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+    )
     ap = argparse.ArgumentParser(description="M15 PERSIST+MASTER paper runner")
     ap.add_argument("--loop", type=int, default=1, help="number of cycles")
     ap.add_argument("--dry-run", action="store_true", help="print without Telegram")
@@ -231,8 +248,7 @@ if __name__ == "__main__":
     a = ap.parse_args()
 
     if a.test_alert:
-        test_alert()
-        sys.exit(0)
+        sys.exit(0 if test_alert() > 0 else 1)
     if a.backfill and not a.dry_run:
         ap.error("--backfill requires --dry-run; old signals must never reach Telegram")
 
@@ -253,6 +269,7 @@ if __name__ == "__main__":
         except Exception as e:
             print(f"M15 cycle ERROR: {type(e).__name__}: {e}")
             import traceback; traceback.print_exc()
+            sys.exit(1)
         if i < a.loop - 1:
             print(f"--- M15 loop: cycle {i+2} of {a.loop} in ~300s ---")
             time.sleep(300)

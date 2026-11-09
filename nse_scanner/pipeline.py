@@ -267,8 +267,8 @@ def run_once(*, force_sector: str | None = None, ping_on_wait: bool = False, bac
         result["pending"] = trail_pending
 
     if md.pick_sector == "WAIT" or md.action == "WAIT":
-        if ping_on_wait and not market_changed and not sector_changed:
-            log.info("WAIT — no complementary persistent sector")
+        log.info("WAIT — no stock scan; market=%s sector=%s reason=%s",
+                 md.dir_label, md.pick_sector, md.pick_reason)
         _save(st)
         return result
 
@@ -366,6 +366,8 @@ def run_once(*, force_sector: str | None = None, ping_on_wait: bool = False, bac
     st["session"] = session
     st["feed"] = data.feed_stats()
     _save(st)
+    log.info("scan complete sector=%s current=%d/%d new_alerts=%d pending=%d",
+             md.pick_sector, len(current), len(tickers), len(new_signals), len(result.get("pending", [])))
     result["signals"] = new_signals
     result["feed"] = st["feed"]
     return result
