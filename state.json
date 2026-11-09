@@ -248,76 +248,133 @@
    "nbars": 74
   },
   "HINDUNILVR": {
-   "nbars": 33
+   "nbars": 74
   },
   "HINDZINC": {
-   "nbars": 30
+   "nbars": 74
   },
   "HYUNDAI": {
-   "nbars": 30
+   "nbars": 74
   },
   "ICICIBANK": {
-   "nbars": 30
+   "nbars": 74
   },
   "ICICIGI": {
-   "nbars": 30
+   "nbars": 74
   },
   "IDEA": {
-   "nbars": 30
+   "nbars": 74
   },
   "IDFCFIRSTB": {
-   "nbars": 30
+   "nbars": 74
   },
   "IEX": {
-   "nbars": 30
+   "nbars": 74
   },
   "INDHOTEL": {
-   "nbars": 30
+   "nbars": 74
   },
   "INDIANB": {
-   "nbars": 30
+   "nbars": 74
   },
   "INDIGO": {
-   "nbars": 30
+   "nbars": 74
   },
   "INDUSINDBK": {
-   "nbars": 30
+   "nbars": 74
   },
   "INDUSTOWER": {
-   "nbars": 30
+   "nbars": 74
   },
   "INFY": {
-   "nbars": 30
+   "nbars": 74
   },
   "INOXWIND": {
-   "nbars": 30
+   "nbars": 74
   },
   "IOC": {
-   "nbars": 30
+   "nbars": 74
   },
   "IREDA": {
-   "nbars": 30
+   "nbars": 73
   },
   "IRFC": {
-   "nbars": 30
+   "nbars": 74
   },
   "ITC": {
-   "nbars": 30
+   "nbars": 74
   },
   "JINDALSTEL": {
-   "nbars": 30
+   "nbars": 74
   },
   "JIOFIN": {
-   "nbars": 30
+   "nbars": 74
   },
   "JSWENERGY": {
-   "nbars": 30
+   "nbars": 74
   },
   "JSWSTEEL": {
-   "nbars": 30
+   "nbars": 74
   },
   "JUBLFOOD": {
-   "nbars": 4
+   "nbars": 74
+  },
+  "KALYANKJIL": {
+   "nbars": 74
+  },
+  "KAYNES": {
+   "nbars": 74
+  },
+  "KEI": {
+   "nbars": 74
+  },
+  "KFINTECH": {
+   "nbars": 74
+  },
+  "KOTAKBANK": {
+   "nbars": 74
+  },
+  "KPITTECH": {
+   "nbars": 74
+  },
+  "LAURUSLABS": {
+   "nbars": 74
+  },
+  "LICHSGFIN": {
+   "nbars": 74
+  },
+  "LICI": {
+   "nbars": 74
+  },
+  "LODHA": {
+   "nbars": 74
+  },
+  "LT": {
+   "nbars": 74
+  },
+  "LTF": {
+   "nbars": 74
+  },
+  "LTM": {
+   "nbars": 74
+  },
+  "LUPIN": {
+   "nbars": 74
+  },
+  "M&M": {
+   "nbars": 74
+  },
+  "MANAPPURAM": {
+   "nbars": 74
+  },
+  "MANKIND": {
+   "nbars": 74
+  },
+  "MARICO": {
+   "nbars": 74
+  },
+  "MARUTI": {
+   "nbars": 20
   }
  },
  "trades": {
@@ -640,9 +697,9 @@
    "qty": 25,
    "qty_full": 25,
    "qty_capped": false,
-   "capital": 49583.0,
-   "tp1": -26.45,
-   "tp2": -26.45,
+   "capital": 49582.0,
+   "tp1": -26.46,
+   "tp2": -26.46,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
@@ -662,10 +719,63 @@
     {
      "key": "ENTRY",
      "time": "12:00",
-     "price": 1983.300048828125
+     "price": 1983.3
     }
    ],
    "gate_rank": 29
+  },
+  "MARUTI": {
+   "symbol": "MARUTI",
+   "side": "BUY",
+   "time": "10:55",
+   "signal": "BUY-EX",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 12847.0,
+   "sl": 12792.44,
+   "sl_anchor": "pivot",
+   "risk_pts": 54.56,
+   "risk_pct": 0.425,
+   "risk_rs": 164.0,
+   "qty": 3,
+   "qty_full": 3,
+   "qty_capped": false,
+   "capital": 38541.0,
+   "tp1": 18248.34,
+   "tp2": 18248.34,
+   "trail_armed": true,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "trail 13:00",
+     3,
+     12859.4276,
+     "13:00"
+    ]
+   ],
+   "exit_text": "100% trail 13:00",
+   "leg2_time": "13:00",
+   "pnl": 37.0,
+   "r_total": 0.23,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "10:55",
+     "price": 12847.0
+    },
+    {
+     "key": "TRAIL_ON",
+     "time": "11:35",
+     "price": 12929.0
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "13:00",
+     "price": 12859.4276
+    }
+   ],
+   "gate_rank": 18
   }
  },
  "alerts": [
@@ -684,7 +794,8 @@
   "GRASIM:TRAIL_ON",
   "GRASIM:EXIT_SL",
   "HAL:EXIT_SL",
-  "HINDUNILVR:ENTRY"
+  "HINDUNILVR:ENTRY",
+  "MARUTI:ENTRY"
  ],
  "gate": {
   "status": "OK",
@@ -1485,6 +1596,123 @@
    "entry": 439.1,
    "rank": 2,
    "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "HINDUNILVR",
+   "side": "SELL",
+   "signal": "SELL-EX1",
+   "time": "12:00",
+   "entry": 1983.3,
+   "rank": 29,
+   "why": "open position already on stock (1-open-trade rule)"
+  },
+  {
+   "symbol": "JUBLFOOD",
+   "side": "SELL",
+   "signal": "SELL-EX3",
+   "time": "09:35",
+   "entry": 434.15,
+   "rank": 1,
+   "why": "open position already on stock (1-open-trade rule)"
+  },
+  {
+   "symbol": "KALYANKJIL",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:30",
+   "entry": 610.35,
+   "rank": 5,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "KAYNES",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 3271.5,
+   "rank": 190,
+   "why": "EX1/EX2 before 09:45 blocked \u2014 razor-edge class (B2)"
+  },
+  {
+   "symbol": "KFINTECH",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 919.65,
+   "rank": 112,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "LAURUSLABS",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 2396.0,
+   "rank": 23,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "LAURUSLABS",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "09:30",
+   "entry": 2417.8,
+   "rank": 23,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 quality filter"
+  },
+  {
+   "symbol": "LODHA",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 1150.0,
+   "rank": 154,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "LTM",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:40",
+   "entry": 4255.8,
+   "rank": 44,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "LUPIN",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 2010.8,
+   "rank": 55,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "LUPIN",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:35",
+   "entry": 2012.6,
+   "rank": 55,
+   "why": "EX1/EX2 before 09:45 blocked \u2014 razor-edge class (B2)"
+  },
+  {
+   "symbol": "MANKIND",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "09:30",
+   "entry": 2678.1,
+   "rank": 4,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 quality filter"
+  },
+  {
+   "symbol": "MARICO",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 899.0,
+   "rank": 69,
+   "why": "EX1/EX2 before 09:45 blocked \u2014 razor-edge class (B2)"
   }
  ],
  "ghosts": [
@@ -1586,6 +1814,26 @@
    "time": "09:35",
    "entry": 111.91,
    "rank": 20,
+   "grp": "R"
+  },
+  {
+   "symbol": "LAURUSLABS",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "code": 102,
+   "time": "09:30",
+   "entry": 2417.8,
+   "rank": 23,
+   "grp": "R"
+  },
+  {
+   "symbol": "MANKIND",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "code": 102,
+   "time": "09:30",
+   "entry": 2678.1,
+   "rank": 4,
    "grp": "R"
   }
  ]
