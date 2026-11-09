@@ -150,3 +150,28 @@ A 5m entry is known only after candle close (OPEN-stamped). Yahoo NSE (via `feed
 - `nse_scanner/` (12 modules), `config/universe.yaml`, `m15_runner.py`, `m15_alerts.py`, `M15_ENTRY_MODEL.md`, `.github/workflows/15_live_m15.yml`, `test_m15_runner.py`, `test_m15_data_feed.py`
 - M15 feed integration: `nse_scanner/data.py` (rewritten onto `feeds.py`), interval/ticker support in `feeds.py`, lazy 1m repair + `st["feed"]` audit in `nse_scanner/pipeline.py`, `yfinance` dropped from `requirements.txt`
 - State: `state/state15.json` + alias `state15.json` (git-committed by workflow)
+
+### Live operation and troubleshooting
+
+M15 remains paper-only and uses the same shared Yahoo/Dhan feed ladder as the
+other paper runners. The M15 workflow targets one minute after each 5-minute
+close and polls for the bar. It still refuses entries more than 180 seconds
+after close; GitHub Actions scheduling, runner startup, feed publication and
+fetch latency can exhaust that window. No late trades are replayed. GitHub
+scheduled runs are best-effort and must be enabled on the default branch;
+this repository's workflow explicitly checks out `main`.
+
+After deploying changes to `main`, manually dispatch workflow 15 with mode
+`test-alert` to check Telegram, then inspect a live run during market hours.
+The test fails if no target accepts the message; a successful test does not
+prove that data, scheduling or the live trading conditions are working. Check
+individual target failures in the log: delivery to any one target counts as
+success for deduplication, so a failed mirror is not retried after another
+recipient gets the alert. Configure complete token/chat pairs for each target.
+
+A live run now fails if no complete Telegram target is configured, if every
+recipient rejects an attempted alert, or if the cycle raises an exception.
+INFO logs show the target candle/deadline, market decision, WAIT reason,
+feed audit, and stock scan counts. WAIT, STALE, CLOSED, missing bars, and no
+qualifying fresh signal can still legitimately produce no stock alert. Dry-run
+and backfill are diagnostic only and do not write or consume the live ledger.
