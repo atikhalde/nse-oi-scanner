@@ -16,7 +16,12 @@ Flow:
      0.01), T1/T2/T3 at 1/2/3 R. One alert per symbol per IST session.
      EMA9 trailing exit on first completed close beyond EMA9.
 
+Data feed: the SAME pipeline M1–M6 use (feeds.py via live_runner/fast_feed) —
+Yahoo chart JSON primary, Dhan fallback, committed data/history/*.csv for
+daily context. nse_scanner/data.py no longer calls yfinance.
+
 Paper: state/state15.json (== state15.json root alias for legacy tooling).
+The cycle's feed audit (Yahoo/Dhan/history source mix) is stored as st["feed"].
 No broker orders — alerts only + EOD paper report.
 Usage: python -u m15_runner.py [--loop 1] [--dry-run] [--test-alert] [--sector IT] [--backfill]
 """
@@ -175,6 +180,9 @@ def run_cycle(*, dry_run: bool = False, force_sector: str | None = None, backfil
             out = run_once(force_sector=force_sector, backfill=backfill)
     finally:
         tg.send = orig_send
+    # Feed audit for early-exit paths too (pipeline already attaches it on a
+    # full scan; WAIT/STALE/CLOSED returns get the per-cycle counters here).
+    out.setdefault("feed", m15_data.feed_stats())
     # Sync alias after pipeline's internal saves
     try:
         st = m15_state.load()
@@ -232,6 +240,9 @@ if __name__ == "__main__":
         try:
             out = run_cycle(dry_run=a.dry_run, force_sector=a.sector, backfill=a.backfill, wait_for_bar=a.wait_for_bar)
             print(f"M15 cycle {i+1}/{a.loop}: bar={out.get('bar')} market={out.get('market')} pick={out.get('pick')} action={out.get('action')} signals={len(out.get('signals', []))}")
+            f = out.get("feed") or {}
+            print(f"  FEED yahoo={f.get('yahoo_calls')} dhan={f.get('dhan_calls')} "
+                  f"history={f.get('history_calls')} sources={f.get('sources')} fallback={f.get('fallback')}")
             for s in out.get("signals", []):
                 print(f"  ALERT {s.get('name')} {s.get('symbol')} {s.get('side')} {s.get('price')} @ {s.get('time')}")
             if out.get("pending"):

@@ -3,7 +3,7 @@
 Port of the decision core from
 `NIFTY Institutional Core + Flow [v4.0 Compact Table]`.
 
-Institutional OI / PCR / MaxPain are not available on yfinance and are omitted.
+Institutional OI / PCR / MaxPain are not available from the Yahoo feed and are omitted.
 VIX, Nifty structure, 15-sector breadth, live flow and persistent +/- are kept.
 
 Scanner pick (user rule):

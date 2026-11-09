@@ -2,7 +2,12 @@
 
 Every runner uses the same ladder: Yahoo first, Dhan only as a fallback when
 Yahoo returns nothing for a symbol. Dataframe contract: columns
-[dt (tz Asia/Kolkata), open, high, low, close, volume], 5-min bars.
+[dt (tz Asia/Kolkata), open, high, low, close, volume].
+
+`fetch_bars_yahoo()` is interval-aware ("5m" default, also "1m"/"1d") and
+accepts plain NSE codes ("RELIANCE"), Yahoo tickers ("RELIANCE.NS") and index
+symbols ("^NSEI", "NIFTY_FIN_SERVICE.NS"). This is the single network path for
+every model — M1–M6 and M15 (`nse_scanner.data`) all read bars through here.
 """
 import os
 import requests
@@ -30,10 +35,14 @@ def _dh_post(payload):
     return df
 
 
-def fetch_bars_dhan(security_id, frm, to):
-    """frm/to: 'YYYY-MM-DD HH:MM:SS' strings."""
+def fetch_bars_dhan(security_id, frm, to, interval="5"):
+    """Dhan intraday bars. frm/to: 'YYYY-MM-DD HH:MM:SS' strings.
+
+    interval: "1", "5" (minutes) — the same payload shape M1–M6 use.
+    """
+    _FEED_STATS["dhan_calls"] += 1
     return _dh_post({"securityId": str(security_id), "exchangeSegment": "NSE_EQ",
-                     "instrument": "EQUITY", "interval": "5", "oi": False,
+                     "instrument": "EQUITY", "interval": str(interval), "oi": False,
                      "fromDate": frm, "toDate": to})
 
 
@@ -96,12 +105,33 @@ def _yahoo_session():
     return _YH_SESSION
 
 
-def fetch_bars_yahoo(symbol, rng="1d"):
+def _yahoo_ticker(symbol: str) -> str:
+    """Map an NSE code / Yahoo ticker to a Yahoo chart path segment.
+
+    "^NSEI" and already-suffixed "NIFTY_FIN_SERVICE.NS" stay untouched; a plain
+    NSE code ("RELIANCE", "M&M", "BAJAJ-AUTO") gains the ".NS" suffix.
+    """
+    s = str(symbol).strip()
+    if not s:
+        return s
+    if s.startswith("^") or s.upper().endswith((".NS", ".BO")):
+        return s
+    return f"{s}.NS"
+
+
+def fetch_bars_yahoo(symbol, rng="1d", interval="5m"):
+    """Yahoo chart bars via the shared cookie/crumb session.
+
+    interval: "5m" (default, M1–M6 live path), "1m" (09:15 volume repair) or
+    "1d" (daily context). Returns [dt, open, high, low, close, volume] or None.
+    """
+    ticker = _yahoo_ticker(symbol)
+    _FEED_STATS["yahoo_calls"] += 1
     # Crumb + query1/query2. Bare v8 URLs often return HTTP 404 after Yahoo auth changes.
     for host in ("query1.finance.yahoo.com", "query2.finance.yahoo.com"):
         try:
             sess, crumb = _yahoo_session()
-            url = f"https://{host}/v8/finance/chart/{symbol}.NS?interval=5m&range={rng}"
+            url = f"https://{host}/v8/finance/chart/{ticker}?interval={interval}&range={rng}"
             if crumb:
                 url += f"&crumb={requests.utils.quote(crumb)}"
             r = sess.get(url, timeout=25)
@@ -122,6 +152,8 @@ def fetch_bars_yahoo(symbol, rng="1d"):
             df = pd.DataFrame({"dt": pd.to_datetime(ts, unit="s", utc=True).tz_convert(IST),
                                "open": q["open"], "high": q["high"], "low": q["low"],
                                "close": q["close"], "volume": q.get("volume")}).dropna()
+            if not df.empty:
+                _FEED_STATS["last_source"] = "yahoo"
             return df
         except Exception as e:
             # Include the exception type: a silent bare message hid a NameError
@@ -134,17 +166,14 @@ def fetch_today(symbol, security_id, now_ist):
     """Today's 5-min bars (09:15 .. now). Ladder: Yahoo (primary) -> Dhan (fallback).
 
     One Yahoo miss never kills the cycle: the symbol falls back to Dhan when a
-    token is configured. Counters are updated for the st["feed"] audit record.
+    token is configured. feed_stats() counters are maintained inside
+    fetch_bars_yahoo()/fetch_bars_dhan() so every caller shares one audit.
     """
     src = "none"
-    _FEED_STATS["yahoo_calls"] += 1
     df = fetch_bars_yahoo(symbol, "1d")
     if df is not None and not df.empty:
-        src = "yahoo"
-        _FEED_STATS["last_source"] = src
-        return df, src
+        return df, "yahoo"
     if dhan_ok():
-        _FEED_STATS["dhan_calls"] += 1
         if _FEED_STATS["fallback"] is None:
             _FEED_STATS["fallback"] = "yahoo-miss"
         frm = now_ist.strftime("%Y-%m-%d 09:15:00")
@@ -154,5 +183,6 @@ def fetch_today(symbol, security_id, now_ist):
             src = "dhan"
         except Exception as e:
             print(f"dhan fallback {symbol} fail: {e}")
-    _FEED_STATS["last_source"] = src
+    if src != "none" and df is not None and not df.empty:
+        _FEED_STATS["last_source"] = src
     return df, src

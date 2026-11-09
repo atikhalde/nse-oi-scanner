@@ -190,7 +190,7 @@ def render_report(res: dict) -> str:
     dom = res["dominant"]
     side_txt = "LONG" if dom["side"] == 1 else "SHORT" if dom["side"] == -1 else "—"
     lines = []
-    lines.append(f"MOCK TEST  {res['date']}  (yfinance 5m, IST)")
+    lines.append(f"MOCK TEST  {res['date']}  (Yahoo 5m via feeds.py, IST)")
     lines.append("=" * 72)
     lines.append("EOD snapshot")
     lines.append(f"  Nifty {last['nifty']:,.1f}  day {last['nifty_day_ret']:+.2f}%  VIX Δ {last['vix_chg']:+.2f}%")
