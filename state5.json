@@ -314,16 +314,16 @@
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 11:52",
+     "OPEN 15:25",
      34,
-     1427.0999755859375,
-     "11:52"
+     1439.0999755859375,
+     "15:25"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "11:52",
-   "pnl": 473.0,
-   "r_total": 0.76,
+   "leg2_time": "15:25",
+   "pnl": 65.0,
+   "r_total": 0.1,
    "closed": false,
    "events": [
     {
@@ -332,8 +332,7 @@
      "price": 1441.0
     }
    ],
-   "spurt_rank": 127,
-   "movers20": true
+   "spurt_rank": 127
   },
   "BAJFINANCE": {
    "symbol": "BAJFINANCE",
@@ -358,26 +357,25 @@
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 11:52",
+     "OPEN 15:25",
      46,
-     1068.699951171875,
-     "11:52"
+     1064.8499755859375,
+     "15:25"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "11:52",
-   "pnl": -25.0,
-   "r_total": -0.06,
+   "leg2_time": "15:25",
+   "pnl": 152.0,
+   "r_total": 0.35,
    "closed": false,
    "events": [
     {
      "key": "ENTRY",
      "time": "09:50",
-     "price": 1068.1500244140625
+     "price": 1068.15
     }
    ],
-   "spurt_rank": 169,
-   "movers20": true
+   "spurt_rank": 169
   },
   "GRASIM": {
    "symbol": "GRASIM",
@@ -396,8 +394,8 @@
    "qty_full": 15,
    "qty_capped": false,
    "capital": 47818.0,
-   "tp1": 362.11,
-   "tp2": 362.11,
+   "tp1": 362.12,
+   "tp2": 362.12,
    "trail_armed": true,
    "trail_style": "structure swings",
    "legs": [
@@ -417,7 +415,7 @@
     {
      "key": "ENTRY",
      "time": "09:35",
-     "price": 3187.89990234375
+     "price": 3187.9
     },
     {
      "key": "TRAIL_ON",
@@ -430,8 +428,7 @@
      "price": 3172.6344
     }
    ],
-   "spurt_rank": 22,
-   "movers20": true
+   "spurt_rank": 22
   },
   "HAL": {
    "symbol": "HAL",
@@ -450,8 +447,8 @@
    "qty_full": 10,
    "qty_capped": false,
    "capital": 49901.0,
-   "tp1": 8879.87,
-   "tp2": 8879.87,
+   "tp1": 8879.86,
+   "tp2": 8879.86,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
@@ -471,7 +468,7 @@
     {
      "key": "ENTRY",
      "time": "10:00",
-     "price": 4990.10009765625
+     "price": 4990.1
     },
     {
      "key": "EXIT_SL",
@@ -479,8 +476,7 @@
      "price": 4950.809444726563
     }
    ],
-   "spurt_rank": 14,
-   "movers20": true
+   "spurt_rank": 14
   },
   "HAVELLS": {
    "symbol": "HAVELLS",
@@ -505,17 +501,17 @@
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 11:52",
+     "trail 12:20",
      44,
-     1157.0999755859375,
-     "11:52"
+     1151.0697888183595,
+     "12:20"
     ]
    ],
-   "exit_text": "OPEN",
-   "leg2_time": "11:52",
-   "pnl": 1082.0,
-   "r_total": 2.25,
-   "closed": false,
+   "exit_text": "100% trail 12:20",
+   "leg2_time": "12:20",
+   "pnl": 817.0,
+   "r_total": 1.7,
+   "closed": true,
    "events": [
     {
      "key": "ENTRY",
@@ -526,10 +522,14 @@
      "key": "TRAIL_ON",
      "time": "10:05",
      "price": 1146.0
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "12:20",
+     "price": 1151.0697888183595
     }
    ],
-   "spurt_rank": 51,
-   "movers20": true
+   "spurt_rank": 51
   },
   "HCLTECH": {
    "symbol": "HCLTECH",
@@ -547,33 +547,37 @@
    "qty": 35,
    "qty_full": 35,
    "qty_capped": false,
-   "capital": 49353.0,
+   "capital": 49354.0,
    "tp1": 510.8,
    "tp2": 510.8,
-   "trail_armed": false,
+   "trail_armed": true,
    "trail_style": "structure swings",
    "legs": [
     [
-     "OPEN 11:52",
+     "OPEN 15:25",
      35,
-     1412.0,
-     "11:52"
+     1407.0,
+     "15:25"
     ]
    ],
    "exit_text": "OPEN",
-   "leg2_time": "11:52",
-   "pnl": -67.0,
-   "r_total": -0.21,
+   "leg2_time": "15:25",
+   "pnl": 108.0,
+   "r_total": 0.34,
    "closed": false,
    "events": [
     {
      "key": "ENTRY",
      "time": "10:25",
-     "price": 1410.0999755859375
+     "price": 1410.1
+    },
+    {
+     "key": "TRAIL_ON",
+     "time": "12:20",
+     "price": 1399.800048828125
     }
    ],
-   "spurt_rank": 52,
-   "movers20": true
+   "spurt_rank": 52
   },
   "INFY": {
    "symbol": "INFY",
@@ -627,7 +631,13 @@
   "HAL:ENTRY",
   "HAVELLS:ENTRY",
   "HCLTECH:ENTRY",
-  "INFY:ENTRY"
+  "INFY:ENTRY",
+  "GRASIM:TRAIL_ON",
+  "GRASIM:EXIT_SL",
+  "HAL:EXIT_SL",
+  "HAVELLS:TRAIL_ON",
+  "HAVELLS:EXIT_SL",
+  "HCLTECH:TRAIL_ON"
  ],
  "gate": {
   "spurts": {
@@ -637,10 +647,10 @@
   },
   "movers": {
    "count": 209,
-   "top20_cut": 2.56,
-   "bot20_cut": -1.65
+   "top20_cut": 0.0,
+   "bot20_cut": 0.0
   },
-  "breadth_bearish": 0.498
+  "breadth_bearish": 0.402
  },
  "eod_done": false,
  "cycles": 0,
