@@ -30,34 +30,34 @@ def targets() -> list[tuple[str, str]]:
 
 
 def send_message(text: str, silent: bool = False) -> int:
+    """Fan out to main + extra targets; returns count of SUCCESSFUL sends.
+    Every failure is printed by telegram_bot as a TG_FAIL line."""
     extra = targets(); to_main = M13_INCLUDE_MAIN or not extra
-    if to_main:
-        tg.send_message(text, silent=silent)
+    sent = 0
+    if to_main and tg.send_message(text, silent=silent):
+        sent += 1
     for tok, chat in extra:
         try:
-            tg._post(f"{tg.API}/bot{tok}/sendMessage",
-                     data={"chat_id": chat, "text": text, "parse_mode": "HTML",
-                           "disable_web_page_preview": True,
-                           "disable_notification": bool(silent)}, timeout=20)
+            if tg.send_message_to(tok, chat, text, silent=silent):
+                sent += 1
         except Exception as exc:
-            print(f"M13 extra target {chat}: message failed {type(exc).__name__}")
-    return (1 if to_main else 0) + len(extra)
+            print(f"M13 TG_FAIL extra target {chat}: {type(exc).__name__}: {exc}")
+    return sent
 
 
 def send_document(path: str, caption: str = "") -> int:
+    """Fan out a document to main + extra targets; returns SUCCESSFUL sends."""
     extra = targets(); to_main = M13_INCLUDE_MAIN or not extra
-    if to_main:
-        tg.send_document(path, caption=caption)
+    sent = 0
+    if to_main and tg.send_document(path, caption=caption):
+        sent += 1
     for tok, chat in extra:
         try:
-            with open(path, "rb") as f:
-                tg._post(f"{tg.API}/bot{tok}/sendDocument",
-                         data={"chat_id": chat, "caption": caption,
-                               "parse_mode": "HTML"},
-                         files={"document": f}, timeout=60)
+            if tg.send_document_to(tok, chat, path, caption=caption):
+                sent += 1
         except Exception as exc:
-            print(f"M13 extra target {chat}: document failed {type(exc).__name__}")
-    return (1 if to_main else 0) + len(extra)
+            print(f"M13 TG_FAIL extra target {chat}: document failed {type(exc).__name__}")
+    return sent
 
 
 def reserve_once(st: dict, key: str, save_state: Callable[[dict], None]) -> bool:
@@ -82,7 +82,7 @@ def reserve_batch(st: dict, keys: list[str], save_state: Callable[[dict], None])
 def test_alert() -> int:
     n = send_message("🧪 🅼13 TEST — three-target fanout is connected. "
                      "No trading state or order was created.")
-    print(f"M13 test alert dispatched to {n} target(s): "
+    print(f"M13 test alert delivered to {n} target(s): "
           f"main={'yes' if (M13_INCLUDE_MAIN or not targets()) else 'no'} "
           f"extras={len(targets())}")
     return n

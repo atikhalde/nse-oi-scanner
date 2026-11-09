@@ -50,6 +50,7 @@ jobs:
       - name: M13 tests
         run: |
           python -u test_fast_feed.py
+          python -u test_telegram_bot.py
           python -u test_m13_entry.py
           python -u test_m13_trader.py
           python -u test_m13_runner.py

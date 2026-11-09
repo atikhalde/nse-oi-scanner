@@ -56,38 +56,35 @@ def m12_targets() -> list[tuple[str, str]]:
 
 
 def _send_m12(text: str, silent: bool = False) -> int:
-    """Fan out one message to main + optional A/B bots; return target count."""
+    """Fan out one message to main + optional A/B bots; return SUCCESS count."""
     extra = m12_targets()
     to_main = M12_INCLUDE_MAIN or not extra
-    if to_main:
-        tg.send_message(text, silent=silent)
+    sent = 0
+    if to_main and tg.send_message(text, silent=silent):
+        sent += 1
     for tok, chat in extra:
         try:
-            tg._post(f"{tg.API}/bot{tok}/sendMessage",
-                     data={"chat_id": chat, "text": text, "parse_mode": "HTML",
-                           "disable_web_page_preview": True,
-                           "disable_notification": bool(silent)}, timeout=20)
+            if tg.send_message_to(tok, chat, text, silent=silent):
+                sent += 1
         except Exception as exc:
-            print(f"M12 extra target {chat}: message failed {type(exc).__name__}")
-    return (1 if to_main else 0) + len(extra)
+            print(f"M12 TG_FAIL extra target {chat}: {type(exc).__name__}: {exc}")
+    return sent
 
 
 def _doc_m12(path: str, caption: str = "") -> int:
-    """Fan out one report document to main + optional A/B bots."""
+    """Fan out one report document to main + optional A/B bots; return SUCCESS count."""
     extra = m12_targets()
     to_main = M12_INCLUDE_MAIN or not extra
-    if to_main:
-        tg.send_document(path, caption=caption)
+    sent = 0
+    if to_main and tg.send_document(path, caption=caption):
+        sent += 1
     for tok, chat in extra:
         try:
-            with open(path, "rb") as f:
-                tg._post(f"{tg.API}/bot{tok}/sendDocument",
-                         data={"chat_id": chat, "caption": caption,
-                               "parse_mode": "HTML"},
-                         files={"document": f}, timeout=60)
+            if tg.send_document_to(tok, chat, path, caption=caption):
+                sent += 1
         except Exception as exc:
-            print(f"M12 extra target {chat}: document failed {type(exc).__name__}")
-    return (1 if to_main else 0) + len(extra)
+            print(f"M12 TG_FAIL extra target {chat}: document failed {type(exc).__name__}")
+    return sent
 
 
 def test_alert() -> int:

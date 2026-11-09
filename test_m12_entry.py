@@ -97,14 +97,16 @@ def test_three_bot_fanout():
     keys = [f"{p}_{k}_{s}" for p in ("M12", "M11")
             for k in ("BOT_TOKEN", "CHAT_ID") for s in ("A", "B")]
     saved = {k: os.environ.get(k) for k in keys}
-    old_main, old_post, old_doc = R.tg.send_message, R.tg._post, R.tg.send_document
+    old_main, old_post, old_doc = R.tg.send_message, R.tg.send_message_to, R.tg.send_document
+    old_doc_to = R.tg.send_document_to
     calls = []
     try:
         for k in keys:
             os.environ.pop(k, None)
-        R.tg.send_message = lambda text, silent=False: calls.append(("main", text, silent))
-        R.tg._post = lambda url, **kw: calls.append(("extra", url, kw))
-        R.tg.send_document = lambda path, caption="": calls.append(("main-doc", path, caption))
+        R.tg.send_message = lambda text, silent=False: calls.append(("main", text, silent)) or True
+        R.tg.send_message_to = lambda tok, chat, text, silent=False: calls.append(("extra", tok, chat)) or True
+        R.tg.send_document = lambda path, caption="": calls.append(("main-doc", path, caption)) or True
+        R.tg.send_document_to = lambda tok, chat, path, caption="": calls.append(("extra-doc", tok, chat)) or True
         ok("M12 fanout falls back to main-only when no extra pairs exist",
            R._send_m12("x") == 1 and len(calls) == 1)
         calls.clear()
@@ -124,7 +126,8 @@ def test_three_bot_fanout():
             ok("M12 documents fan out to all three targets",
                R._doc_m12(f.name, "report") == 3 and len(calls) == 3)
     finally:
-        R.tg.send_message, R.tg._post, R.tg.send_document = old_main, old_post, old_doc
+        R.tg.send_message, R.tg.send_message_to, R.tg.send_document = old_main, old_post, old_doc
+        R.tg.send_document_to = old_doc_to
         for k, v in saved.items():
             if v is None:
                 os.environ.pop(k, None)

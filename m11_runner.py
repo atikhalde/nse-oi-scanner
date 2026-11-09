@@ -144,11 +144,10 @@ def _send_m11(text, silent=False):
     if M11_INCLUDE_MAIN or not extra:
         tg.send_message(text, silent=silent)
     for tok, chat in extra:
-        r = tg._post(f"{tg.API}/bot{tok}/sendMessage",
-                     json={"chat_id": chat, "text": text, "parse_mode": "HTML",
-                           "disable_web_page_preview": True, "disable_notification": silent})
-        if r is None or not getattr(r, "ok", False):
-            print(f"M11 extra-bot {chat}: message failed {getattr(r, 'status_code', '—')}")
+        try:
+            tg.send_message_to(tok, chat, text, silent=silent)
+        except Exception as e:
+            print(f"M11 TG_FAIL extra-bot {chat}: {type(e).__name__}: {e}")
 
 
 def _doc_m11(path, caption=""):
@@ -158,12 +157,9 @@ def _doc_m11(path, caption=""):
         tg.send_document(path, caption=caption)
     for tok, chat in extra:
         try:
-            with open(path, "rb") as f:
-                tg._post(f"{tg.API}/bot{tok}/sendDocument",
-                         data={"chat_id": chat, "caption": caption, "parse_mode": "HTML"},
-                         files={"document": f}, timeout=60)
+            tg.send_document_to(tok, chat, path, caption=caption)
         except Exception as e:
-            print(f"M11 extra-bot {chat}: document failed {type(e).__name__}: {e}")
+            print(f"M11 TG_FAIL extra-bot {chat}: document failed {type(e).__name__}: {e}")
 
 
 # ---------------- the 4 video setup detectors (pure functions) ----------------
