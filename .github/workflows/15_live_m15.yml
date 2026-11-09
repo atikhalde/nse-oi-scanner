@@ -1,0 +1,93 @@
+name: "15. LIVE M15 — PERSIST+MASTER 5m (paper-only)"
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "'live' = normal cycle · 'test-alert' = send M15 fanout test · 'backfill' = diagnostics only (dry-run) · 'live-sector' = force sector (use sector input)"
+        required: true
+        default: "live"
+      sector:
+        description: "force sector code when mode=live-sector (e.g. IT, BANK, AUTO)"
+        required: false
+        default: ""
+  schedule:
+    # Five-minute ticker: 09:22–15:32 IST (03:52–10:02 UTC), weekdays — 2m after each 5m close
+    # Aligned to Persist-check live-scan schedule; Yahoo 5m bar is OPEN-stamped so close+2m ensures publish
+    - cron: "52,57 3 * * 1-5"
+    - cron: "2,7,12,17,22,27,32,37,42,47,52,57 4-9 * * 1-5"
+    - cron: "2 10 * * 1-5"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: live-paper-m15
+  cancel-in-progress: false
+
+jobs:
+  live-m15:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      DHAN_TOKEN: ${{ secrets.DHAN_TOKEN }}
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      TELEGRAM_BOT_TOKEN_2: ${{ secrets.TELEGRAM_BOT_TOKEN_2 }}
+      TELEGRAM_CHAT_ID_2: ${{ secrets.TELEGRAM_CHAT_ID_2 }}
+      M15_BOT_TOKEN_A: ${{ secrets.M15_BOT_TOKEN_A }}
+      M15_CHAT_ID_A: ${{ secrets.M15_CHAT_ID_A }}
+      M15_BOT_TOKEN_B: ${{ secrets.M15_BOT_TOKEN_B }}
+      M15_CHAT_ID_B: ${{ secrets.M15_CHAT_ID_B }}
+      M14_BOT_TOKEN_A: ${{ secrets.M14_BOT_TOKEN_A }}
+      M14_CHAT_ID_A: ${{ secrets.M14_CHAT_ID_A }}
+      M14_BOT_TOKEN_B: ${{ secrets.M14_BOT_TOKEN_B }}
+      M14_CHAT_ID_B: ${{ secrets.M14_CHAT_ID_B }}
+      M13_BOT_TOKEN_A: ${{ secrets.M13_BOT_TOKEN_A }}
+      M13_CHAT_ID_A: ${{ secrets.M13_CHAT_ID_A }}
+      M13_BOT_TOKEN_B: ${{ secrets.M13_BOT_TOKEN_B }}
+      M13_CHAT_ID_B: ${{ secrets.M13_CHAT_ID_B }}
+      M11_BOT_TOKEN_A: ${{ secrets.M11_BOT_TOKEN_A }}
+      M11_CHAT_ID_A: ${{ secrets.M11_CHAT_ID_A }}
+      M11_BOT_TOKEN_B: ${{ secrets.M11_BOT_TOKEN_B }}
+      M11_CHAT_ID_B: ${{ secrets.M11_CHAT_ID_B }}
+      LOG_LEVEL: INFO
+      MAX_ALERT_LAG_SECONDS: "180"
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: M15 tests
+        run: |
+          python -u test_fast_feed.py
+          python -u test_telegram_bot.py
+          python -u test_m15_runner.py
+      - name: M15 fanout test
+        if: github.event.inputs.mode == 'test-alert'
+        run: python -u m15_runner.py --test-alert
+      - name: M15 backfill diagnostics (dry-run)
+        if: github.event.inputs.mode == 'backfill'
+        run: python -u m15_runner.py --backfill --dry-run
+      - name: M15 paper cycle (forced sector)
+        if: github.event.inputs.mode == 'live-sector'
+        run: python -u m15_runner.py --sector "${{ github.event.inputs.sector }}" --wait-for-bar --loop 1
+      - name: M15 paper cycle
+        if: github.event.inputs.mode != 'test-alert' && github.event.inputs.mode != 'backfill' && github.event.inputs.mode != 'live-sector'
+        run: python -u m15_runner.py --wait-for-bar --loop 1
+      - name: Commit M15 state
+        if: always()
+        run: |
+          git config user.name "paper-bot"
+          git config user.email "paper-bot@users.noreply.github.com"
+          # Preferred new path + legacy alias + old persist-check path (if used)
+          [ ! -e state/state15.json ] || git add -A -- state/state15.json
+          [ ! -e state15.json ] || git add -A -- state15.json
+          [ ! -e state/scan_state.json ] || git add -A -- state/scan_state.json
+          git diff --cached --quiet || git commit -m "m15cycle $(date -u +%F_%H%M)Z"
+          bash workflow_safe_push.sh
