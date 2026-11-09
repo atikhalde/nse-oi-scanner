@@ -68,6 +68,7 @@ jobs:
           python -u test_fast_feed.py
           python -u test_telegram_bot.py
           python -u test_m15_runner.py
+          python -u test_m15_data_feed.py
       - name: M15 fanout test
         if: github.event.inputs.mode == 'test-alert'
         run: python -u m15_runner.py --test-alert

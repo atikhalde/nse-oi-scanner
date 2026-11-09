@@ -11,6 +11,35 @@
 
 This model is that scanner, isolated as `M15` inside `nse-oi-scanner` so it shares secrets, history, and paper plumbing but keeps its own state/ledger.
 
+## 0. Data feed — the shared M1–M6 pipeline (no yfinance)
+
+M15 reads every bar through the **same `feeds.py` ladder as M1–M6** (live_runner /
+m2_runner / m5_runner / m6_runner / fast_feed). `nse_scanner/data.py` no longer
+calls `yfinance`; it is a thin adapter over the shared feed:
+
+| Interval | Ladder |
+|---|---|
+| 5m | `feeds.fetch_bars_yahoo(interval="5m")` → Dhan 5m (`DHAN_TOKEN` + `fno_universe.csv` securityId) → committed `data/history/*.csv` |
+| 1m | `feeds.fetch_bars_yahoo(interval="1m")` → Dhan 1m — requested **only** for symbols with a `Volume=0` 5m bar |
+| 1d | committed `data/history/*.csv` (local, zero network) → Yahoo daily — indices (Nifty/VIX/15 sectors) always use Yahoo daily |
+
+Notes:
+
+- Yahoo is reached with the same cookie + crumb session, `query1 → query2`
+  host retry and 401 re-handshake as M1–M6 (`feeds.fetch_bars_yahoo` now also
+  accepts `^NSEI` / `*.NS` tickers and `1m`/`1d` intervals).
+- `data/history/*.csv` is the 5m history bootstrapped by
+  `live_runner.py --bootstrap` and committed by workflow 2 — the same
+  local-history-first source M2/M5/M6 use. Daily context therefore survives a
+  Yahoo 429 storm, and local hits skip the inter-symbol sleep.
+- One dead symbol returns an empty frame; it never aborts the sector scan.
+- Every cycle stores a `feed` audit in `state/state15.json`
+  (`yahoo_calls`, `dhan_calls`, `history_calls`, `symbols`, `sources`,
+  `fallback`) and prints a `FEED ...` line in the Actions log.
+- Knobs: `M15_FEED_SLEEP` (default `0.05s` between network symbols),
+  `FEED_PERIOD_5M`/`FEED_PERIOD_1D` (legacy `YF_PERIOD_*` still honoured).
+- `pip install -r requirements.txt` no longer installs `yfinance`.
+
 ## 1. Engines
 
 ### L1 — Market + Sector Brain (`NIFTY Institutional Core + Flow v4.0`)
@@ -59,7 +88,9 @@ Per 5m bar:
   "sector": {"name": "IT", "side": 1, "reason": "PERSIST + IT qualified (78)"},
   "sent": {"INFY": {"code": 101, "name": "BUY-EX", "time": "10:30", "price": 1842.5}},
   "positions": {"INFY": {"side": "BUY", "entry": 1842.5, "sl": 1838.28, "entry_ema9": 1838.65, "entry_bar": "2026-11-09T10:30:00+05:30", "last_bar": "2026-11-09T10:30:00+05:30", "t1": 1846.72, "t2": 1850.94, "t3": 1855.16}},
-  "alerts": []
+  "alerts": [],
+  "feed": {"yahoo_calls": 61, "dhan_calls": 0, "history_calls": 20, "symbols": 59,
+           "sources": {"yahoo": 39, "history": 20, "none": 0}, "fallback": null}
 }
 ```
 
@@ -112,9 +143,10 @@ Actions: `.github/workflows/15_live_m15.yml` — crons `52,57 3 * * 1-5`, `2,7,1
 
 ## 6. Honest latency
 
-A 5m entry is known only after candle close (OPEN-stamped). yfinance NSE can lag/429. Actions cron can queue. Neither guarantees on-time alert. Lowest delay: `python -m nse_scanner live` on a Mumbai VPS with persistent `state/scan_state.json`. Actions is backup heartbeat.
+A 5m entry is known only after candle close (OPEN-stamped). Yahoo NSE (via `feeds.py`) can lag/429. Actions cron can queue. Neither guarantees on-time alert. Lowest delay: `python -m nse_scanner live` on a Mumbai VPS with persistent `state/scan_state.json`. Actions is backup heartbeat.
 
 ## 7. Files added
 
-- `nse_scanner/` (12 modules), `config/universe.yaml`, `m15_runner.py`, `m15_alerts.py`, `M15_ENTRY_MODEL.md`, `.github/workflows/15_live_m15.yml`, `test_m15_runner.py`
+- `nse_scanner/` (12 modules), `config/universe.yaml`, `m15_runner.py`, `m15_alerts.py`, `M15_ENTRY_MODEL.md`, `.github/workflows/15_live_m15.yml`, `test_m15_runner.py`, `test_m15_data_feed.py`
+- M15 feed integration: `nse_scanner/data.py` (rewritten onto `feeds.py`), interval/ticker support in `feeds.py`, lazy 1m repair + `st["feed"]` audit in `nse_scanner/pipeline.py`, `yfinance` dropped from `requirements.txt`
 - State: `state/state15.json` + alias `state15.json` (git-committed by workflow)

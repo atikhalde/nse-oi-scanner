@@ -136,8 +136,10 @@ def _track_positions(st: dict, bar: datetime, period_5m: str) -> list[str]:
 
 def run_once(*, force_sector: str | None = None, ping_on_wait: bool = False, backfill: bool = False) -> dict:
     uni = data.load_universe()
-    period_5m = os.environ.get("YF_PERIOD_5M", "7d")
-    period_1d = os.environ.get("YF_PERIOD_1D", "90d")
+    # FEED_* names are the current knobs; YF_* kept for older deployments.
+    period_5m = os.environ.get("FEED_PERIOD_5M", os.environ.get("YF_PERIOD_5M", "7d"))
+    period_1d = os.environ.get("FEED_PERIOD_1D", os.environ.get("YF_PERIOD_1D", "90d"))
+    data.reset_feed_stats()
 
     nifty_sym = uni["nifty"]
     vix_sym = uni["vix"]
@@ -163,7 +165,7 @@ def run_once(*, force_sector: str | None = None, ping_on_wait: bool = False, bac
     nifty_pack = data.fetch_symbol(nifty_sym, period_5m, period_1d)
     nifty_5 = nifty_pack["m5"]
     if nifty_5 is None or nifty_5.empty:
-        raise RuntimeError("No Nifty 5m data from yfinance")
+        raise RuntimeError("No Nifty 5m data from the shared feed (Yahoo/Dhan)")
 
     # Yahoo timestamps 5m candles by OPEN; the last row can still be forming.
     # Never evaluate or announce an unclosed candle.
@@ -294,7 +296,13 @@ def run_once(*, force_sector: str | None = None, ping_on_wait: bool = False, bac
             result["action"] = "PENDING"  # retry within the freshness deadline
         _save(st)
         return result
-    sm1 = data.fetch_many(current, "7d", "1m")
+    # The 1m feed only exists to repair a zero-volume 09:15 bar. Ask for it
+    # only for symbols that actually carry a zero-volume 5m bar: fewer Yahoo
+    # calls per cycle, identical repaired volume where it matters.
+    need_1m = [sym for sym in current if data.needs_1m_volume(sm5.get(sym))]
+    sm1 = data.fetch_many(need_1m, "7d", "1m") if need_1m else {}
+    if need_1m:
+        log.info("09:15 volume repair: fetching 1m for %d/%d symbols", len(need_1m), len(current))
     sd1 = data.fetch_many(current, period_1d, "1d")
 
     want_buy = md.pick_side == 1
@@ -356,8 +364,10 @@ def run_once(*, force_sector: str | None = None, ping_on_wait: bool = False, bac
 
     st["sent"] = sent
     st["session"] = session
+    st["feed"] = data.feed_stats()
     _save(st)
     result["signals"] = new_signals
+    result["feed"] = st["feed"]
     return result
 
 
@@ -422,7 +432,7 @@ def live_loop(grace: int | None = None) -> None:
 
     grace = int(os.environ.get("POLL_GRACE_SECONDS", grace or 12))
     log.info("live loop IST, grace=%ss after each 5m close", grace)
-    telegram.send("NSE live scanner started (5m · IST · yfinance).", dry_run=_dry())
+    telegram.send("NSE live scanner started (5m · IST · Yahoo/Dhan feed).", dry_run=_dry())
     while True:
         now = now_ist()
         if not is_weekday(now):

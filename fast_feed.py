@@ -1,4 +1,4 @@
-"""Fail-fast intraday feed (M12/M13/M14 test surface).
+"""Fail-fast intraday feed (M12/M13/M14 test surface; M15 uses the same ladder via nse_scanner.data).
 
 Same ladder as every other runner now: Yahoo is primary, Dhan is only a
 secondary fallback. M12/M13/M14 fetch bars through feeds.fetch_today(); this
