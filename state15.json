@@ -1,8 +1,17 @@
 {
-  "session": "",
-  "market": {},
-  "sector": {},
+  "session": "2026-11-11",
+  "market": {
+    "dir_state": 0,
+    "label": "NEUTRAL",
+    "conf": 62,
+    "regime": "TRANSITION"
+  },
+  "sector": {
+    "name": "WAIT",
+    "side": 0,
+    "reason": "WAIT \u2014 market TRANSITION conf 62"
+  },
+  "alerts": {},
   "sent": {},
-  "positions": {},
-  "alerts": {}
+  "positions": {}
 }
