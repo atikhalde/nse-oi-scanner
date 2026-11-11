@@ -2,14 +2,14 @@
   "session": "2026-11-11",
   "market": {
     "dir_state": 1,
-    "label": "STRONG BULL",
-    "conf": 91,
+    "label": "NEUTRAL",
+    "conf": 76,
     "regime": "TREND UP"
   },
   "sector": {
-    "name": "PSUBK",
+    "name": "AUTO",
     "side": 1,
-    "reason": "PERSIST + PSUBK qualified (score 97)"
+    "reason": "PERSIST + AUTO persistent (score 87)"
   },
   "alerts": {},
   "sent": {
@@ -20,29 +20,17 @@
       "price": 135.73
     }
   },
-  "positions": {
-    "PNB": {
-      "side": "BUY",
-      "entry": 135.73,
-      "sl": 134.94,
-      "entry_ema9": 134.97264714954179,
-      "t1": 136.52,
-      "t2": 137.31,
-      "t3": 138.1,
-      "entry_bar": "2026-11-11T10:25:00+05:30",
-      "last_bar": "2026-11-11T11:25:00+05:30"
-    }
-  },
+  "positions": {},
   "feed": {
-    "yahoo_calls": 64,
+    "yahoo_calls": 65,
     "dhan_calls": 0,
     "fallback": null,
     "last_source": "yahoo",
-    "history_calls": 7,
-    "symbols": 69,
+    "history_calls": 15,
+    "symbols": 78,
     "sources": {
-      "yahoo": 62,
-      "history": 7
+      "yahoo": 63,
+      "history": 15
     }
   }
 }
