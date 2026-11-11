@@ -2,14 +2,14 @@
   "session": "2026-11-11",
   "market": {
     "dir_state": 1,
-    "label": "NEUTRAL",
-    "conf": 88,
+    "label": "STRONG BULL",
+    "conf": 91,
     "regime": "TREND UP"
   },
   "sector": {
     "name": "PSUBK",
     "side": 1,
-    "reason": "PERSIST + PSUBK qualified (score 94)"
+    "reason": "PERSIST + PSUBK qualified (score 97)"
   },
   "alerts": {},
   "sent": {
@@ -30,18 +30,18 @@
       "t2": 137.31,
       "t3": 138.1,
       "entry_bar": "2026-11-11T10:25:00+05:30",
-      "last_bar": "2026-11-11T10:25:00+05:30"
+      "last_bar": "2026-11-11T11:25:00+05:30"
     }
   },
   "feed": {
-    "yahoo_calls": 63,
+    "yahoo_calls": 64,
     "dhan_calls": 0,
     "fallback": null,
     "last_source": "yahoo",
     "history_calls": 7,
-    "symbols": 68,
+    "symbols": 69,
     "sources": {
-      "yahoo": 61,
+      "yahoo": 62,
       "history": 7
     }
   }
