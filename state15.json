@@ -3,13 +3,13 @@
   "market": {
     "dir_state": 1,
     "label": "NEUTRAL",
-    "conf": 76,
+    "conf": 69,
     "regime": "TREND UP"
   },
   "sector": {
-    "name": "AUTO",
+    "name": "PSUBK",
     "side": 1,
-    "reason": "PERSIST + AUTO persistent (score 87)"
+    "reason": "PERSIST + PSUBK persistent (score 80)"
   },
   "alerts": {},
   "sent": {
@@ -22,15 +22,15 @@
   },
   "positions": {},
   "feed": {
-    "yahoo_calls": 64,
+    "yahoo_calls": 63,
     "dhan_calls": 0,
     "fallback": null,
     "last_source": "yahoo",
-    "history_calls": 15,
-    "symbols": 77,
+    "history_calls": 7,
+    "symbols": 68,
     "sources": {
-      "yahoo": 62,
-      "history": 15
+      "yahoo": 61,
+      "history": 7
     }
   }
 }
