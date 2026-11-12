@@ -1,15 +1,15 @@
 {
   "session": "2026-11-12",
   "market": {
-    "dir_state": -1,
-    "label": "BEAR",
-    "conf": 61,
+    "dir_state": 1,
+    "label": "NEUTRAL",
+    "conf": 48,
     "regime": "TRANSITION"
   },
   "sector": {
-    "name": "AUTO",
-    "side": -1,
-    "reason": "PERSIST \u2212 AUTO qualified (score 81)"
+    "name": "WAIT",
+    "side": 0,
+    "reason": "WAIT \u2014 market TRANSITION conf 48"
   },
   "alerts": {},
   "sent": {},
