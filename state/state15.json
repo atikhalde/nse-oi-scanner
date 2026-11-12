@@ -1,17 +1,29 @@
 {
   "session": "2026-11-12",
   "market": {
-    "dir_state": 0,
-    "label": "NEUTRAL",
-    "conf": 80,
+    "dir_state": 1,
+    "label": "BULL",
+    "conf": 64,
     "regime": "TRANSITION"
   },
   "sector": {
-    "name": "WAIT",
-    "side": 0,
-    "reason": "WAIT \u2014 market TRANSITION conf 80"
+    "name": "REALTY",
+    "side": 1,
+    "reason": "PERSIST + REALTY persistent (score 98)"
   },
   "alerts": {},
   "sent": {},
-  "positions": {}
+  "positions": {},
+  "feed": {
+    "yahoo_calls": 58,
+    "dhan_calls": 0,
+    "fallback": null,
+    "last_source": "yahoo",
+    "history_calls": 6,
+    "symbols": 62,
+    "sources": {
+      "yahoo": 56,
+      "history": 6
+    }
+  }
 }
