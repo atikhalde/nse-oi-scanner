@@ -275,7 +275,16 @@
    "nbars": 74
   },
   "INDIANB": {
-   "nbars": 4
+   "nbars": 74
+  },
+  "INDIGO": {
+   "nbars": 74
+  },
+  "INDUSINDBK": {
+   "nbars": 74
+  },
+  "INDUSTOWER": {
+   "nbars": 21
   }
  },
  "trades": {
@@ -787,7 +796,7 @@
     {
      "key": "ENTRY",
      "time": "10:00",
-     "price": 187.99000549316406
+     "price": 187.99
     },
     {
      "key": "TRAIL_ON",
@@ -800,8 +809,7 @@
      "price": 187.49749871520996
     }
    ],
-   "spurt_rank": 173,
-   "movers20": true
+   "spurt_rank": 173
   },
   "INDIANB": {
    "symbol": "INDIANB",
@@ -841,10 +849,58 @@
     {
      "key": "ENTRY",
      "time": "09:35",
-     "price": 941.5499877929688
+     "price": 941.55
     }
    ],
-   "spurt_rank": 104,
+   "spurt_rank": 104
+  },
+  "INDUSTOWER": {
+   "symbol": "INDUSTOWER",
+   "side": "SELL",
+   "time": "11:00",
+   "signal": "SELL-EX1",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 393.75,
+   "sl": 396.68,
+   "sl_anchor": "pivot",
+   "risk_pts": 2.93,
+   "risk_pct": 0.744,
+   "risk_rs": 369.0,
+   "qty": 126,
+   "qty_full": 126,
+   "qty_capped": false,
+   "capital": 49612.0,
+   "tp1": 103.75,
+   "tp2": 103.75,
+   "trail_armed": true,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "OPEN 15:25",
+     126,
+     386.95001220703125,
+     "15:25"
+    ]
+   ],
+   "exit_text": "OPEN",
+   "leg2_time": "15:25",
+   "pnl": 857.0,
+   "r_total": 2.32,
+   "closed": false,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "11:00",
+     "price": 393.75
+    },
+    {
+     "key": "TRAIL_ON",
+     "time": "12:00",
+     "price": 389.75
+    }
+   ],
+   "spurt_rank": 83,
    "movers20": true
   }
  },
@@ -868,7 +924,10 @@
   "BHEL:TRAIL_ON",
   "BHEL:EXIT_SL",
   "GAIL:ENTRY",
-  "INDIANB:ENTRY"
+  "INDIANB:ENTRY",
+  "GAIL:TRAIL_ON",
+  "GAIL:EXIT_SL",
+  "INDUSTOWER:ENTRY"
  ],
  "gate": {
   "spurts": {
@@ -1721,6 +1780,42 @@
    "entry": 938.45,
    "rank": 104,
    "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "INDIANB",
+   "side": "BUY",
+   "signal": "BUY-EX6",
+   "time": "09:35",
+   "entry": 941.55,
+   "rank": 84,
+   "why": "open position already on stock (1-open-trade rule)"
+  },
+  {
+   "symbol": "INDIGO",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 5685.7,
+   "rank": 162,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "INDUSINDBK",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "09:35",
+   "entry": 911.25,
+   "rank": 58,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 quality filter"
+  },
+  {
+   "symbol": "INDUSTOWER",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "09:35",
+   "entry": 397.4,
+   "rank": 83,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 quality filter"
   }
  ],
  "ghosts": [
@@ -1975,6 +2070,28 @@
    "entry": 885.0,
    "rank": 149,
    "mv": false,
+   "grp": "R"
+  },
+  {
+   "symbol": "INDUSINDBK",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "code": 102,
+   "time": "09:35",
+   "entry": 911.25,
+   "rank": 58,
+   "mv": true,
+   "grp": "R"
+  },
+  {
+   "symbol": "INDUSTOWER",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "code": 102,
+   "time": "09:35",
+   "entry": 397.4,
+   "rank": 83,
+   "mv": true,
    "grp": "R"
   }
  ]
