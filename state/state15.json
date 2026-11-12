@@ -1,36 +1,17 @@
 {
-  "session": "2026-11-11",
+  "session": "2026-11-12",
   "market": {
-    "dir_state": 1,
+    "dir_state": 0,
     "label": "NEUTRAL",
-    "conf": 69,
-    "regime": "TREND UP"
+    "conf": 80,
+    "regime": "TRANSITION"
   },
   "sector": {
-    "name": "PSUBK",
-    "side": 1,
-    "reason": "PERSIST + PSUBK persistent (score 80)"
+    "name": "WAIT",
+    "side": 0,
+    "reason": "WAIT \u2014 market TRANSITION conf 80"
   },
   "alerts": {},
-  "sent": {
-    "PNB": {
-      "code": 102,
-      "name": "BUY-EX17",
-      "time": "10:25",
-      "price": 135.73
-    }
-  },
-  "positions": {},
-  "feed": {
-    "yahoo_calls": 63,
-    "dhan_calls": 0,
-    "fallback": null,
-    "last_source": "yahoo",
-    "history_calls": 7,
-    "symbols": 68,
-    "sources": {
-      "yahoo": 61,
-      "history": 7
-    }
-  }
+  "sent": {},
+  "positions": {}
 }
