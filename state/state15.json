@@ -1,29 +1,29 @@
 {
   "session": "2026-11-12",
   "market": {
-    "dir_state": 1,
-    "label": "NEUTRAL",
-    "conf": 67,
+    "dir_state": -1,
+    "label": "BEAR",
+    "conf": 61,
     "regime": "TRANSITION"
   },
   "sector": {
-    "name": "REALTY",
-    "side": 1,
-    "reason": "PERSIST + REALTY persistent (score 96)"
+    "name": "AUTO",
+    "side": -1,
+    "reason": "PERSIST \u2212 AUTO qualified (score 81)"
   },
   "alerts": {},
   "sent": {},
   "positions": {},
   "feed": {
-    "yahoo_calls": 58,
+    "yahoo_calls": 64,
     "dhan_calls": 0,
     "fallback": null,
     "last_source": "yahoo",
-    "history_calls": 6,
-    "symbols": 62,
+    "history_calls": 15,
+    "symbols": 77,
     "sources": {
-      "yahoo": 56,
-      "history": 6
+      "yahoo": 62,
+      "history": 15
     }
   }
 }
