@@ -332,7 +332,103 @@
    "nbars": 74
   },
   "KOTAKBANK": {
-   "nbars": 14
+   "nbars": 74
+  },
+  "KPITTECH": {
+   "nbars": 74
+  },
+  "LAURUSLABS": {
+   "nbars": 74
+  },
+  "LICHSGFIN": {
+   "nbars": 74
+  },
+  "LICI": {
+   "nbars": 73
+  },
+  "LODHA": {
+   "nbars": 74
+  },
+  "LT": {
+   "nbars": 74
+  },
+  "LTF": {
+   "nbars": 74
+  },
+  "LTM": {
+   "nbars": 74
+  },
+  "LUPIN": {
+   "nbars": 74
+  },
+  "M&M": {
+   "nbars": 74
+  },
+  "MANAPPURAM": {
+   "nbars": 74
+  },
+  "MANKIND": {
+   "nbars": 74
+  },
+  "MARICO": {
+   "nbars": 74
+  },
+  "MARUTI": {
+   "nbars": 74
+  },
+  "MAXHEALTH": {
+   "nbars": 74
+  },
+  "MAZDOCK": {
+   "nbars": 73
+  },
+  "MCX": {
+   "nbars": 74
+  },
+  "MFSL": {
+   "nbars": 74
+  },
+  "MOTHERSON": {
+   "nbars": 74
+  },
+  "MOTILALOFS": {
+   "nbars": 74
+  },
+  "MPHASIS": {
+   "nbars": 74
+  },
+  "MUTHOOTFIN": {
+   "nbars": 73
+  },
+  "NAM-INDIA": {
+   "nbars": 74
+  },
+  "NATIONALUM": {
+   "nbars": 74
+  },
+  "NAUKRI": {
+   "nbars": 74
+  },
+  "NBCC": {
+   "nbars": 74
+  },
+  "NESTLEIND": {
+   "nbars": 74
+  },
+  "NHPC": {
+   "nbars": 74
+  },
+  "NMDC": {
+   "nbars": 74
+  },
+  "NTPC": {
+   "nbars": 74
+  },
+  "NUVAMA": {
+   "nbars": 75
+  },
+  "NYKAA": {
+   "nbars": 10
   }
  },
  "trades": {
@@ -945,7 +1041,7 @@
     {
      "key": "ENTRY",
      "time": "11:25",
-     "price": 366.95001220703125
+     "price": 366.95
     },
     {
      "key": "TRAIL_ON",
@@ -958,8 +1054,7 @@
      "price": 366.0732
     }
    ],
-   "spurt_rank": 153,
-   "movers20": true
+   "spurt_rank": 153
   },
   "INDUSINDBK": {
    "symbol": "INDUSINDBK",
@@ -1002,10 +1097,57 @@
      "price": 914.25
     }
    ],
-   "spurt_rank": 138,
-   "movers20": true
+   "spurt_rank": 138
   },
   "KOTAKBANK": {
+   "symbol": "KOTAKBANK",
+   "side": "SELL",
+   "time": "10:25",
+   "signal": "SELL-EX1",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 486.35,
+   "sl": 489.1,
+   "sl_anchor": "pivot",
+   "risk_pts": 2.75,
+   "risk_pct": 0.565,
+   "risk_rs": 280.0,
+   "qty": 102,
+   "qty_full": 102,
+   "qty_capped": false,
+   "capital": 49608.0,
+   "tp1": 214.32,
+   "tp2": 214.32,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "SL 14:35",
+     102,
+     489.0978,
+     "14:35"
+    ]
+   ],
+   "exit_text": "100% SL 14:35",
+   "leg2_time": "14:35",
+   "pnl": -280.0,
+   "r_total": -1.0,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "10:25",
+     "price": 486.35
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "14:35",
+     "price": 489.0978
+    }
+   ],
+   "spurt_rank": 92
+  },
+  "KOTAKBANK#2": {
    "symbol": "KOTAKBANK",
    "side": "SELL",
    "time": "10:25",
@@ -1051,7 +1193,110 @@
      "price": 489.0978
     }
    ],
-   "spurt_rank": 92,
+   "spurt_rank": 110,
+   "movers20": true
+  },
+  "LICI": {
+   "symbol": "LICI",
+   "side": "BUY",
+   "time": "10:00",
+   "signal": "BUY-EX7",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 407.0,
+   "sl": 404.37,
+   "sl_anchor": "pivot",
+   "risk_pts": 2.63,
+   "risk_pct": 0.646,
+   "risk_rs": 321.0,
+   "qty": 122,
+   "qty_full": 122,
+   "qty_capped": false,
+   "capital": 49654.0,
+   "tp1": 667.46,
+   "tp2": 667.46,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "SL 12:10",
+     122,
+     404.36912220458987,
+     "12:10"
+    ]
+   ],
+   "exit_text": "100% SL 12:10",
+   "leg2_time": "12:10",
+   "pnl": -321.0,
+   "r_total": -1.0,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "10:00",
+     "price": 407.0
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "12:10",
+     "price": 404.36912220458987
+    }
+   ],
+   "spurt_rank": 63,
+   "movers20": true
+  },
+  "NYKAA": {
+   "symbol": "NYKAA",
+   "side": "BUY",
+   "time": "10:05",
+   "signal": "BUY-EX",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 361.35,
+   "sl": 358.93,
+   "sl_anchor": "pivot",
+   "risk_pts": 2.42,
+   "risk_pct": 0.67,
+   "risk_rs": 334.0,
+   "qty": 138,
+   "qty_full": 138,
+   "qty_capped": false,
+   "capital": 49866.0,
+   "tp1": 601.11,
+   "tp2": 601.11,
+   "trail_armed": true,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "trail 11:45",
+     138,
+     364.3271138977051,
+     "11:45"
+    ]
+   ],
+   "exit_text": "100% trail 11:45",
+   "leg2_time": "11:45",
+   "pnl": 411.0,
+   "r_total": 1.23,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "10:05",
+     "price": 361.3500061035156
+    },
+    {
+     "key": "TRAIL_ON",
+     "time": "10:35",
+     "price": 364.25
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "11:45",
+     "price": 364.3271138977051
+    }
+   ],
+   "spurt_rank": 169,
    "movers20": true
   }
  },
@@ -1081,7 +1326,13 @@
   "BIOCON:EXIT_SL",
   "BIOCON#2:ENTRY",
   "INDUSINDBK:ENTRY",
-  "KOTAKBANK:ENTRY"
+  "KOTAKBANK:ENTRY",
+  "BIOCON#2:TRAIL_ON",
+  "BIOCON#2:EXIT_SL",
+  "KOTAKBANK:EXIT_SL",
+  "KOTAKBANK#2:ENTRY",
+  "LICI:ENTRY",
+  "NYKAA:ENTRY"
  ],
  "gate": {
   "spurts": {
@@ -2318,6 +2569,446 @@
    "rank": 75,
    "mv": true,
    "why": "weak EX variant (EX9+) blocked \u2014 B2 (GHOST-shadowed EOD)"
+  },
+  {
+   "symbol": "KPITTECH",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 548.65,
+   "rank": 114,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "LAURUSLABS",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 2426.4,
+   "rank": 61,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "LAURUSLABS",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 2434.1,
+   "rank": 61,
+   "mv": false,
+   "why": "EX1/EX2 at open blocked \u2014 razor class, allowed from 09:45"
+  },
+  {
+   "symbol": "LICHSGFIN",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "09:35",
+   "entry": 580.9,
+   "rank": 19,
+   "mv": false,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 (GHOST-shadowed EOD)"
+  },
+  {
+   "symbol": "LICI",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 405.1,
+   "rank": 63,
+   "mv": true,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "LODHA",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 1224.1,
+   "rank": 193,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "LODHA",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 1231.1,
+   "rank": 193,
+   "mv": false,
+   "why": "EX1/EX2 at open blocked \u2014 razor class, allowed from 09:45"
+  },
+  {
+   "symbol": "LT",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "09:40",
+   "entry": 4174.5,
+   "rank": 77,
+   "mv": false,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 (GHOST-shadowed EOD)"
+  },
+  {
+   "symbol": "LTF",
+   "side": "SELL",
+   "signal": "SELL-EX15",
+   "time": "11:50",
+   "entry": 275.28,
+   "rank": 70,
+   "mv": false,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 (GHOST-shadowed EOD)"
+  },
+  {
+   "symbol": "LTM",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 4252.0,
+   "rank": 195,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "LTM",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "09:35",
+   "entry": 4307.3,
+   "rank": 195,
+   "mv": false,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 (GHOST-shadowed EOD)"
+  },
+  {
+   "symbol": "LTM",
+   "side": "SELL",
+   "signal": "SELL-EX15",
+   "time": "11:45",
+   "entry": 4270.8,
+   "rank": 195,
+   "mv": false,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 (GHOST-shadowed EOD)"
+  },
+  {
+   "symbol": "LUPIN",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 2022.5,
+   "rank": 22,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "LUPIN",
+   "side": "SELL",
+   "signal": "SELL-EX15",
+   "time": "11:55",
+   "entry": 2015.0,
+   "rank": 22,
+   "mv": false,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 (GHOST-shadowed EOD)"
+  },
+  {
+   "symbol": "M&M",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 3336.5,
+   "rank": 184,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "MANAPPURAM",
+   "side": "SELL",
+   "signal": "NORMAL SELL",
+   "time": "10:10",
+   "entry": 311.05,
+   "rank": 2,
+   "mv": false,
+   "why": "M5 gate: spurt 2 \u00b7 movers N \u2014 need both"
+  },
+  {
+   "symbol": "MANKIND",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 2654.6,
+   "rank": 89,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "MANKIND",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "10:10",
+   "entry": 2666.9,
+   "rank": 89,
+   "mv": false,
+   "why": "M5 gate: spurt 89 \u00b7 movers N \u2014 need both"
+  },
+  {
+   "symbol": "MARICO",
+   "side": "BUY",
+   "signal": "BUY-EX7",
+   "time": "10:25",
+   "entry": 903.9,
+   "rank": 197,
+   "mv": false,
+   "why": "M5 gate: spurt 197 \u00b7 movers N \u2014 need both"
+  },
+  {
+   "symbol": "MAXHEALTH",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 940.25,
+   "rank": 55,
+   "mv": true,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "MAXHEALTH",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:35",
+   "entry": 948.6,
+   "rank": 55,
+   "mv": true,
+   "why": "EX1/EX2 at open blocked \u2014 razor class, allowed from 09:45"
+  },
+  {
+   "symbol": "MAZDOCK",
+   "side": "BUY",
+   "signal": "BUY-EX9",
+   "time": "09:55",
+   "entry": 1906.6,
+   "rank": 59,
+   "mv": false,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 (GHOST-shadowed EOD)"
+  },
+  {
+   "symbol": "MCX",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 3666.1,
+   "rank": 57,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "MCX",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 3692.0,
+   "rank": 57,
+   "mv": false,
+   "why": "EX1/EX2 at open blocked \u2014 razor class, allowed from 09:45"
+  },
+  {
+   "symbol": "MFSL",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:45",
+   "entry": 1381.1,
+   "rank": 41,
+   "mv": false,
+   "why": "M5 gate: spurt 41 \u00b7 movers N \u2014 need both"
+  },
+  {
+   "symbol": "MOTHERSON",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "09:55",
+   "entry": 166.13,
+   "rank": 135,
+   "mv": false,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 (GHOST-shadowed EOD)"
+  },
+  {
+   "symbol": "MOTHERSON",
+   "side": "SELL",
+   "signal": "SELL-EX15",
+   "time": "11:35",
+   "entry": 165.09,
+   "rank": 135,
+   "mv": false,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 (GHOST-shadowed EOD)"
+  },
+  {
+   "symbol": "MOTILALOFS",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 1222.85,
+   "rank": 198,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "MOTILALOFS",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 1228.55,
+   "rank": 198,
+   "mv": false,
+   "why": "EX1/EX2 at open blocked \u2014 razor class, allowed from 09:45"
+  },
+  {
+   "symbol": "MPHASIS",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 2424.0,
+   "rank": 191,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "MPHASIS",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 2445.0,
+   "rank": 191,
+   "mv": false,
+   "why": "EX1/EX2 at open blocked \u2014 razor class, allowed from 09:45"
+  },
+  {
+   "symbol": "MUTHOOTFIN",
+   "side": "SELL",
+   "signal": "SELL-EX15",
+   "time": "09:30",
+   "entry": 2859.1,
+   "rank": 120,
+   "mv": false,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 (GHOST-shadowed EOD)"
+  },
+  {
+   "symbol": "NAM-INDIA",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:45",
+   "entry": 1125.3,
+   "rank": 98,
+   "mv": false,
+   "why": "M5 gate: spurt 98 \u00b7 movers N \u2014 need both"
+  },
+  {
+   "symbol": "NAM-INDIA",
+   "side": "SELL",
+   "signal": "SELL-EX15",
+   "time": "11:15",
+   "entry": 1111.95,
+   "rank": 98,
+   "mv": false,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 (GHOST-shadowed EOD)"
+  },
+  {
+   "symbol": "NAUKRI",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:30",
+   "entry": 1180.8,
+   "rank": 117,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "NAUKRI",
+   "side": "BUY",
+   "signal": "BUY-EX12",
+   "time": "10:30",
+   "entry": 1193.4,
+   "rank": 117,
+   "mv": false,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 (GHOST-shadowed EOD)"
+  },
+  {
+   "symbol": "NAUKRI",
+   "side": "SELL",
+   "signal": "SELL-EX15",
+   "time": "11:45",
+   "entry": 1183.9,
+   "rank": 117,
+   "mv": false,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 (GHOST-shadowed EOD)"
+  },
+  {
+   "symbol": "NBCC",
+   "side": "BUY",
+   "signal": "BUY-EX9",
+   "time": "09:35",
+   "entry": 80.3,
+   "rank": 121,
+   "mv": false,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 (GHOST-shadowed EOD)"
+  },
+  {
+   "symbol": "NBCC",
+   "side": "SELL",
+   "signal": "SELL-EX1",
+   "time": "11:15",
+   "entry": 79.7,
+   "rank": 121,
+   "mv": false,
+   "why": "M5 gate: spurt 121 \u00b7 movers N \u2014 need both"
+  },
+  {
+   "symbol": "NESTLEIND",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "10:40",
+   "entry": 1268.1,
+   "rank": 172,
+   "mv": false,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 (GHOST-shadowed EOD)"
+  },
+  {
+   "symbol": "NHPC",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "09:35",
+   "entry": 76.89,
+   "rank": 75,
+   "mv": false,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 (GHOST-shadowed EOD)"
+  },
+  {
+   "symbol": "NTPC",
+   "side": "SELL",
+   "signal": "SELL-EX1",
+   "time": "11:00",
+   "entry": 320.55,
+   "rank": 100,
+   "mv": false,
+   "why": "M5 gate: spurt 100 \u00b7 movers N \u2014 need both"
+  },
+  {
+   "symbol": "NUVAMA",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:30",
+   "entry": 1893.4,
+   "rank": null,
+   "mv": false,
+   "why": "scanner-table preview (90/290) \u2014 no chart label, blocked"
+  },
+  {
+   "symbol": "NUVAMA",
+   "side": "SELL",
+   "signal": "SELL-EX2",
+   "time": "10:15",
+   "entry": 1858.3,
+   "rank": null,
+   "mv": false,
+   "why": "M5 gate: spurt - \u00b7 movers N \u2014 need both"
   }
  ],
  "ghosts": [
@@ -2715,6 +3406,182 @@
    "entry": 960.35,
    "rank": 75,
    "mv": true,
+   "grp": "R"
+  },
+  {
+   "symbol": "LICHSGFIN",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "code": 102,
+   "time": "09:35",
+   "entry": 580.9,
+   "rank": 19,
+   "mv": false,
+   "grp": "R"
+  },
+  {
+   "symbol": "LT",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "code": 102,
+   "time": "09:40",
+   "entry": 4174.5,
+   "rank": 77,
+   "mv": false,
+   "grp": "R"
+  },
+  {
+   "symbol": "LTF",
+   "side": "SELL",
+   "signal": "SELL-EX15",
+   "code": 216,
+   "time": "11:50",
+   "entry": 275.28,
+   "rank": 70,
+   "mv": false,
+   "grp": "R"
+  },
+  {
+   "symbol": "LTM",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "code": 102,
+   "time": "09:35",
+   "entry": 4307.3,
+   "rank": 195,
+   "mv": false,
+   "grp": "R"
+  },
+  {
+   "symbol": "LTM",
+   "side": "SELL",
+   "signal": "SELL-EX15",
+   "code": 216,
+   "time": "11:45",
+   "entry": 4270.8,
+   "rank": 195,
+   "mv": false,
+   "grp": "R"
+  },
+  {
+   "symbol": "LUPIN",
+   "side": "SELL",
+   "signal": "SELL-EX15",
+   "code": 216,
+   "time": "11:55",
+   "entry": 2015.0,
+   "rank": 22,
+   "mv": false,
+   "grp": "R"
+  },
+  {
+   "symbol": "MAZDOCK",
+   "side": "BUY",
+   "signal": "BUY-EX9",
+   "code": 108,
+   "time": "09:55",
+   "entry": 1906.6,
+   "rank": 59,
+   "mv": false,
+   "grp": "EX9"
+  },
+  {
+   "symbol": "MOTHERSON",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "code": 102,
+   "time": "09:55",
+   "entry": 166.13,
+   "rank": 135,
+   "mv": false,
+   "grp": "R"
+  },
+  {
+   "symbol": "MOTHERSON",
+   "side": "SELL",
+   "signal": "SELL-EX15",
+   "code": 216,
+   "time": "11:35",
+   "entry": 165.09,
+   "rank": 135,
+   "mv": false,
+   "grp": "R"
+  },
+  {
+   "symbol": "MUTHOOTFIN",
+   "side": "SELL",
+   "signal": "SELL-EX15",
+   "code": 216,
+   "time": "09:30",
+   "entry": 2859.1,
+   "rank": 120,
+   "mv": false,
+   "grp": "R"
+  },
+  {
+   "symbol": "NAM-INDIA",
+   "side": "SELL",
+   "signal": "SELL-EX15",
+   "code": 216,
+   "time": "11:15",
+   "entry": 1111.95,
+   "rank": 98,
+   "mv": false,
+   "grp": "R"
+  },
+  {
+   "symbol": "NAUKRI",
+   "side": "BUY",
+   "signal": "BUY-EX12",
+   "code": 111,
+   "time": "10:30",
+   "entry": 1193.4,
+   "rank": 117,
+   "mv": false,
+   "grp": "R"
+  },
+  {
+   "symbol": "NAUKRI",
+   "side": "SELL",
+   "signal": "SELL-EX15",
+   "code": 216,
+   "time": "11:45",
+   "entry": 1183.9,
+   "rank": 117,
+   "mv": false,
+   "grp": "R"
+  },
+  {
+   "symbol": "NBCC",
+   "side": "BUY",
+   "signal": "BUY-EX9",
+   "code": 108,
+   "time": "09:35",
+   "entry": 80.3,
+   "rank": 121,
+   "mv": false,
+   "grp": "EX9"
+  },
+  {
+   "symbol": "NESTLEIND",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "code": 102,
+   "time": "10:40",
+   "entry": 1268.1,
+   "rank": 172,
+   "mv": false,
+   "grp": "R"
+  },
+  {
+   "symbol": "NHPC",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "code": 102,
+   "time": "09:35",
+   "entry": 76.89,
+   "rank": 75,
+   "mv": false,
    "grp": "R"
   }
  ]
