@@ -2,14 +2,14 @@
   "session": "2026-11-13",
   "market": {
     "dir_state": -1,
-    "label": "BEAR",
-    "conf": 83,
+    "label": "NEUTRAL",
+    "conf": 50,
     "regime": "TRANSITION"
   },
   "sector": {
-    "name": "REALTY",
-    "side": -1,
-    "reason": "PERSIST \u2212 REALTY persistent (score 70)"
+    "name": "WAIT",
+    "side": 0,
+    "reason": "WAIT \u2014 market TRANSITION conf 50"
   },
   "alerts": {},
   "sent": {},
