@@ -3,27 +3,27 @@
   "market": {
     "dir_state": -1,
     "label": "BEAR",
-    "conf": 58,
+    "conf": 83,
     "regime": "TRANSITION"
   },
   "sector": {
-    "name": "FIN",
+    "name": "REALTY",
     "side": -1,
-    "reason": "PERSIST \u2212 FIN qualified (score 73)"
+    "reason": "PERSIST \u2212 REALTY persistent (score 70)"
   },
   "alerts": {},
   "sent": {},
   "positions": {},
   "feed": {
-    "yahoo_calls": 74,
+    "yahoo_calls": 58,
     "dhan_calls": 0,
     "fallback": null,
     "last_source": "yahoo",
-    "history_calls": 20,
-    "symbols": 92,
+    "history_calls": 6,
+    "symbols": 62,
     "sources": {
-      "yahoo": 72,
-      "history": 20
+      "yahoo": 56,
+      "history": 6
     }
   }
 }
