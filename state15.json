@@ -1,17 +1,29 @@
 {
   "session": "2026-11-13",
   "market": {
-    "dir_state": 0,
-    "label": "NEUTRAL",
-    "conf": 49,
+    "dir_state": -1,
+    "label": "BEAR",
+    "conf": 58,
     "regime": "TRANSITION"
   },
   "sector": {
-    "name": "WAIT",
-    "side": 0,
-    "reason": "WAIT \u2014 market TRANSITION conf 49"
+    "name": "FIN",
+    "side": -1,
+    "reason": "PERSIST \u2212 FIN qualified (score 73)"
   },
   "alerts": {},
   "sent": {},
-  "positions": {}
+  "positions": {},
+  "feed": {
+    "yahoo_calls": 74,
+    "dhan_calls": 0,
+    "fallback": null,
+    "last_source": "yahoo",
+    "history_calls": 20,
+    "symbols": 92,
+    "sources": {
+      "yahoo": 72,
+      "history": 20
+    }
+  }
 }
