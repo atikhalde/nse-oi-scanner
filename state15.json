@@ -3,13 +3,13 @@
   "market": {
     "dir_state": 1,
     "label": "NEUTRAL",
-    "conf": 41,
+    "conf": 56,
     "regime": "TRANSITION"
   },
   "sector": {
-    "name": "WAIT",
-    "side": 0,
-    "reason": "WAIT \u2014 market TRANSITION conf 41"
+    "name": "FMCG",
+    "side": 1,
+    "reason": "PERSIST + FMCG qualified (score 87)"
   },
   "alerts": {},
   "sent": {
@@ -36,7 +36,7 @@
       "t2": 438.69,
       "t3": 440.66,
       "entry_bar": "2026-11-16T09:55:00+05:30",
-      "last_bar": "2026-11-16T12:25:00+05:30"
+      "last_bar": "2026-11-16T12:55:00+05:30"
     }
   },
   "feed": {
