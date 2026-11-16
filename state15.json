@@ -3,13 +3,13 @@
   "market": {
     "dir_state": 1,
     "label": "NEUTRAL",
-    "conf": 47,
+    "conf": 65,
     "regime": "TRANSITION"
   },
   "sector": {
-    "name": "WAIT",
-    "side": 0,
-    "reason": "WAIT \u2014 market TRANSITION conf 47"
+    "name": "FMCG",
+    "side": 1,
+    "reason": "PERSIST + FMCG persistent (score 88)"
   },
   "alerts": {},
   "sent": {
@@ -28,14 +28,14 @@
   },
   "positions": {},
   "feed": {
-    "yahoo_calls": 60,
+    "yahoo_calls": 59,
     "dhan_calls": 0,
     "fallback": null,
     "last_source": "yahoo",
     "history_calls": 11,
-    "symbols": 69,
+    "symbols": 68,
     "sources": {
-      "yahoo": 58,
+      "yahoo": 57,
       "history": 11
     }
   }
