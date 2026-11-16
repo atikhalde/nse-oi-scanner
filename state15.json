@@ -1,17 +1,29 @@
 {
   "session": "2026-11-16",
   "market": {
-    "dir_state": 0,
-    "label": "NEUTRAL",
-    "conf": 49,
+    "dir_state": 1,
+    "label": "BULL",
+    "conf": 63,
     "regime": "TRANSITION"
   },
   "sector": {
-    "name": "WAIT",
-    "side": 0,
-    "reason": "WAIT \u2014 market TRANSITION conf 49"
+    "name": "FMCG",
+    "side": 1,
+    "reason": "PERSIST + FMCG qualified (score 59)"
   },
   "alerts": {},
   "sent": {},
-  "positions": {}
+  "positions": {},
+  "feed": {
+    "yahoo_calls": 59,
+    "dhan_calls": 0,
+    "fallback": null,
+    "last_source": "yahoo",
+    "history_calls": 11,
+    "symbols": 68,
+    "sources": {
+      "yahoo": 57,
+      "history": 11
+    }
+  }
 }
