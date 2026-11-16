@@ -3,13 +3,13 @@
   "market": {
     "dir_state": -1,
     "label": "BEAR",
-    "conf": 56,
+    "conf": 54,
     "regime": "TRANSITION"
   },
   "sector": {
-    "name": "PHA",
-    "side": -1,
-    "reason": "PERSIST \u2212 PHA persistent (score 98)"
+    "name": "WAIT",
+    "side": 0,
+    "reason": "WAIT \u2014 market TRANSITION conf 54"
   },
   "alerts": {},
   "sent": {
