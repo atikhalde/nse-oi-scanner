@@ -1,15 +1,15 @@
 {
   "session": "2026-11-16",
   "market": {
-    "dir_state": 1,
-    "label": "NEUTRAL",
-    "conf": 65,
+    "dir_state": -1,
+    "label": "BEAR",
+    "conf": 56,
     "regime": "TRANSITION"
   },
   "sector": {
-    "name": "FMCG",
-    "side": 1,
-    "reason": "PERSIST + FMCG persistent (score 88)"
+    "name": "PHA",
+    "side": -1,
+    "reason": "PERSIST \u2212 PHA persistent (score 98)"
   },
   "alerts": {},
   "sent": {
@@ -28,15 +28,15 @@
   },
   "positions": {},
   "feed": {
-    "yahoo_calls": 59,
+    "yahoo_calls": 58,
     "dhan_calls": 0,
     "fallback": null,
     "last_source": "yahoo",
-    "history_calls": 11,
+    "history_calls": 12,
     "symbols": 68,
     "sources": {
-      "yahoo": 57,
-      "history": 11
+      "yahoo": 56,
+      "history": 12
     }
   }
 }
