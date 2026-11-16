@@ -2,18 +2,54 @@
   "session": "2026-11-16",
   "market": {
     "dir_state": 1,
-    "label": "BULL",
-    "conf": 63,
-    "regime": "TRANSITION"
+    "label": "STRONG BULL",
+    "conf": 100,
+    "regime": "TREND UP"
   },
   "sector": {
     "name": "FMCG",
     "side": 1,
-    "reason": "PERSIST + FMCG qualified (score 59)"
+    "reason": "PERSIST + FMCG qualified (score 71)"
   },
   "alerts": {},
-  "sent": {},
-  "positions": {},
+  "sent": {
+    "HINDUNILVR": {
+      "code": 102,
+      "name": "BUY-EX17",
+      "time": "09:55",
+      "price": 1995.0
+    },
+    "VBL": {
+      "code": 103,
+      "name": "BUY-EX4",
+      "time": "09:55",
+      "price": 434.75
+    }
+  },
+  "positions": {
+    "HINDUNILVR": {
+      "side": "BUY",
+      "entry": 1995.0,
+      "sl": 1988.82,
+      "entry_ema9": 1989.2258070236064,
+      "t1": 2001.18,
+      "t2": 2007.36,
+      "t3": 2013.54,
+      "entry_bar": "2026-11-16T09:55:00+05:30",
+      "last_bar": "2026-11-16T09:55:00+05:30"
+    },
+    "VBL": {
+      "side": "BUY",
+      "entry": 434.75,
+      "sl": 432.78,
+      "entry_ema9": 432.8752938050988,
+      "t1": 436.72,
+      "t2": 438.69,
+      "t3": 440.66,
+      "entry_bar": "2026-11-16T09:55:00+05:30",
+      "last_bar": "2026-11-16T09:55:00+05:30"
+    }
+  },
   "feed": {
     "yahoo_calls": 59,
     "dhan_calls": 0,
