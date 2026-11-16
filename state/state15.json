@@ -3,13 +3,13 @@
   "market": {
     "dir_state": 1,
     "label": "NEUTRAL",
-    "conf": 56,
+    "conf": 47,
     "regime": "TRANSITION"
   },
   "sector": {
-    "name": "FMCG",
-    "side": 1,
-    "reason": "PERSIST + FMCG qualified (score 87)"
+    "name": "WAIT",
+    "side": 0,
+    "reason": "WAIT \u2014 market TRANSITION conf 47"
   },
   "alerts": {},
   "sent": {
@@ -26,19 +26,7 @@
       "price": 434.75
     }
   },
-  "positions": {
-    "VBL": {
-      "side": "BUY",
-      "entry": 434.75,
-      "sl": 432.78,
-      "entry_ema9": 432.8752938050988,
-      "t1": 436.72,
-      "t2": 438.69,
-      "t3": 440.66,
-      "entry_bar": "2026-11-16T09:55:00+05:30",
-      "last_bar": "2026-11-16T13:10:00+05:30"
-    }
-  },
+  "positions": {},
   "feed": {
     "yahoo_calls": 60,
     "dhan_calls": 0,
