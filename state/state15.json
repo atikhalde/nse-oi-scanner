@@ -1,29 +1,17 @@
 {
-  "session": "2026-11-13",
+  "session": "2026-11-16",
   "market": {
-    "dir_state": -1,
+    "dir_state": 0,
     "label": "NEUTRAL",
-    "conf": 50,
+    "conf": 49,
     "regime": "TRANSITION"
   },
   "sector": {
     "name": "WAIT",
     "side": 0,
-    "reason": "WAIT \u2014 market TRANSITION conf 50"
+    "reason": "WAIT \u2014 market TRANSITION conf 49"
   },
   "alerts": {},
   "sent": {},
-  "positions": {},
-  "feed": {
-    "yahoo_calls": 58,
-    "dhan_calls": 0,
-    "fallback": null,
-    "last_source": "yahoo",
-    "history_calls": 6,
-    "symbols": 62,
-    "sources": {
-      "yahoo": 56,
-      "history": 6
-    }
-  }
+  "positions": {}
 }
