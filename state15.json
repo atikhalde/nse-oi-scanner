@@ -2,14 +2,14 @@
   "session": "2026-11-16",
   "market": {
     "dir_state": 1,
-    "label": "STRONG BULL",
-    "conf": 100,
-    "regime": "TREND UP"
+    "label": "NEUTRAL",
+    "conf": 61,
+    "regime": "TRANSITION"
   },
   "sector": {
     "name": "FMCG",
     "side": 1,
-    "reason": "PERSIST + FMCG qualified (score 71)"
+    "reason": "PERSIST + FMCG qualified (score 79)"
   },
   "alerts": {},
   "sent": {
@@ -27,17 +27,6 @@
     }
   },
   "positions": {
-    "HINDUNILVR": {
-      "side": "BUY",
-      "entry": 1995.0,
-      "sl": 1988.82,
-      "entry_ema9": 1989.2258070236064,
-      "t1": 2001.18,
-      "t2": 2007.36,
-      "t3": 2013.54,
-      "entry_bar": "2026-11-16T09:55:00+05:30",
-      "last_bar": "2026-11-16T10:10:00+05:30"
-    },
     "VBL": {
       "side": "BUY",
       "entry": 434.75,
@@ -47,7 +36,7 @@
       "t2": 438.69,
       "t3": 440.66,
       "entry_bar": "2026-11-16T09:55:00+05:30",
-      "last_bar": "2026-11-16T10:10:00+05:30"
+      "last_bar": "2026-11-16T10:25:00+05:30"
     }
   },
   "feed": {
