@@ -233,8 +233,7 @@
      "price": 1203.0
     }
    ],
-   "spurt_rank": 19,
-   "movers20": true
+   "spurt_rank": 19
   },
   "ABCAPITAL": {
    "symbol": "ABCAPITAL",
@@ -274,11 +273,10 @@
     {
      "key": "ENTRY",
      "time": "10:50",
-     "price": 412.95001220703125
+     "price": 412.95
     }
    ],
-   "spurt_rank": 133,
-   "movers20": true
+   "spurt_rank": 133
   },
   "ADANIENT": {
    "symbol": "ADANIENT",
@@ -318,7 +316,7 @@
     {
      "key": "ENTRY",
      "time": "09:45",
-     "price": 2700.300048828125
+     "price": 2700.3
     },
     {
      "key": "TRAIL_ON",
@@ -331,8 +329,7 @@
      "price": 2737.9523
     }
    ],
-   "spurt_rank": 40,
-   "movers20": true
+   "spurt_rank": 40
   },
   "APLAPOLLO": {
    "symbol": "APLAPOLLO",
@@ -380,8 +377,7 @@
      "price": 2187.300048828125
     }
    ],
-   "spurt_rank": 39,
-   "movers20": true
+   "spurt_rank": 39
   },
   "APOLLOHOSP": {
    "symbol": "APOLLOHOSP",
@@ -429,8 +425,7 @@
      "price": 8751.7493
     }
    ],
-   "spurt_rank": 154,
-   "movers20": true
+   "spurt_rank": 154
   },
   "ASIANPAINT": {
    "symbol": "ASIANPAINT",
@@ -470,11 +465,10 @@
     {
      "key": "ENTRY",
      "time": "10:10",
-     "price": 2635.199951171875
+     "price": 2635.2
     }
    ],
-   "spurt_rank": 25,
-   "movers20": true
+   "spurt_rank": 25
   },
   "AUBANK": {
    "symbol": "AUBANK",
@@ -527,8 +521,7 @@
      "price": 993.3512777954102
     }
    ],
-   "spurt_rank": 93,
-   "movers20": true
+   "spurt_rank": 93
   },
   "AUROPHARMA": {
    "symbol": "AUROPHARMA",
@@ -568,7 +561,7 @@
     {
      "key": "ENTRY",
      "time": "09:55",
-     "price": 1809.699951171875
+     "price": 1809.7
     },
     {
      "key": "EXIT_SL",
@@ -576,8 +569,7 @@
      "price": 1796.9405888183594
     }
    ],
-   "spurt_rank": 15,
-   "movers20": true
+   "spurt_rank": 15
   },
   "ETERNAL": {
    "symbol": "ETERNAL",
@@ -620,10 +612,57 @@
      "price": 373.75
     }
    ],
-   "spurt_rank": 76,
-   "movers20": true
+   "spurt_rank": 76
   },
   "FEDERALBNK": {
+   "symbol": "FEDERALBNK",
+   "side": "BUY",
+   "time": "10:05",
+   "signal": "BUY-EX7",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 365.6,
+   "sl": 363.53,
+   "sl_anchor": "pivot",
+   "risk_pts": 2.07,
+   "risk_pct": 0.567,
+   "risk_rs": 282.0,
+   "qty": 136,
+   "qty_full": 136,
+   "qty_capped": false,
+   "capital": 49722.0,
+   "tp1": 570.8,
+   "tp2": 570.8,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "SL 12:45",
+     136,
+     363.5272861022949,
+     "12:45"
+    ]
+   ],
+   "exit_text": "100% SL 12:45",
+   "leg2_time": "12:45",
+   "pnl": -282.0,
+   "r_total": -1.0,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "10:05",
+     "price": 365.6
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "12:45",
+     "price": 363.5272861022949
+    }
+   ],
+   "spurt_rank": 151
+  },
+  "FEDERALBNK#2": {
    "symbol": "FEDERALBNK",
    "side": "BUY",
    "time": "10:05",
@@ -683,7 +722,16 @@
   "AUBANK:ENTRY",
   "AUROPHARMA:ENTRY",
   "ETERNAL:ENTRY",
-  "FEDERALBNK:ENTRY"
+  "FEDERALBNK:ENTRY",
+  "ADANIENT:TRAIL_ON",
+  "ADANIENT:EXIT_SL",
+  "APLAPOLLO:TRAIL_ON",
+  "APOLLOHOSP:EXIT_SL",
+  "AUBANK:TRAIL_ON",
+  "AUBANK:EXIT_SL",
+  "AUROPHARMA:EXIT_SL",
+  "FEDERALBNK:EXIT_SL",
+  "FEDERALBNK#2:ENTRY"
  ],
  "gate": {
   "spurts": {
