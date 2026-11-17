@@ -64,27 +64,21 @@ OFFICIAL_TICKERS = {
 NIFTY_TICKER = "^NSEI"
 VIX_TICKER = "^INDIAVIX"
 
-_UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/126.0 Safari/537.36"}
+import feeds
 
 
-def fetch_index_bars(ticker, rng="5d", retries=2):
-    """Yahoo 5m bars for an index ticker (same transport as feeds.fetch_bars_yahoo)."""
-    url = f"https://query1.finance.yahoo.com/v8/finance/chart/{ticker}?interval=5m&range={rng}"
-    for a in range(retries + 1):
+def fetch_index_bars(ticker, rng="5d", retries=1):
+    """Yahoo 5m bars for an index ticker via the shared pooled feeds session."""
+    for a in range(max(0, int(retries)) + 1):
         try:
-            r = requests.get(url, headers=_UA, timeout=20)
-            j = r.json()["chart"]["result"][0]
-            ts = j.get("timestamp") or []
-            q = j["indicators"]["quote"][0]
-            df = pd.DataFrame({"dt": pd.to_datetime(ts, unit="s", utc=True).tz_convert("Asia/Kolkata"),
-                               "open": q["open"], "high": q["high"], "low": q["low"],
-                               "close": q["close"], "volume": q.get("volume")})
-            return df.dropna(subset=["close"]).reset_index(drop=True)
+            df = feeds.fetch_bars_yahoo(ticker, rng=rng, interval="5m")
+            if df is not None and not df.empty:
+                return df.dropna(subset=["close"]).reset_index(drop=True)
         except Exception as e:
             if a == retries:
                 print(f"flow_map: yahoo index {ticker}: {type(e).__name__}: {e}")
                 return None
-            time.sleep(1.0)
+    return None
 
 
 # --------------------------------------------------------------- Pine helpers

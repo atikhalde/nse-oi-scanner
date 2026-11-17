@@ -18,4 +18,11 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install -r requirements.txt
+      - name: unit tests (offline, no secrets needed)
+        run: |
+          for t in test_master_scanner.py test_trader.py test_telegram_bot.py \
+                   test_fast_feed.py test_m15_runner.py test_m15_data_feed.py \
+                   test_m6_runner.py; do
+            echo "=== $t"; python -u "$t" || exit 1
+          done
       - run: python -u live_runner.py --test

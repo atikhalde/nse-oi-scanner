@@ -10,21 +10,26 @@ symbols ("^NSEI", "NIFTY_FIN_SERVICE.NS"). This is the single network path for
 every model — M1–M6 and M15 (`nse_scanner.data`) all read bars through here.
 """
 import os
+import threading
 import requests
+from requests.adapters import HTTPAdapter
 import pandas as pd
 
 UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/126.0 Safari/537.36"}
 IST = "Asia/Kolkata"
+DHAN_TIMEOUT = (4, 10)
+YAHOO_TIMEOUT = (4, 12)
+POOL_SIZE = 24
 
 
 def dhan_ok():
     return bool(os.environ.get("DHAN_TOKEN"))
 
 
-def _dh_post(payload):
+def _dh_post(payload, timeout=DHAN_TIMEOUT):
     tok = os.environ["DHAN_TOKEN"]
     r = requests.post("https://api.dhan.co/v2/charts/intraday", json=payload,
-                      headers={"Content-Type": "application/json", "access-token": tok}, timeout=30)
+                      headers={"Content-Type": "application/json", "access-token": tok}, timeout=timeout)
     r.raise_for_status()
     j = r.json()
     if not j.get("timestamp"):
@@ -40,7 +45,8 @@ def fetch_bars_dhan(security_id, frm, to, interval="5"):
 
     interval: "1", "5" (minutes) — the same payload shape M1–M6 use.
     """
-    _FEED_STATS["dhan_calls"] += 1
+    with _STATS_LOCK:
+        _FEED_STATS["dhan_calls"] += 1
     return _dh_post({"securityId": str(security_id), "exchangeSegment": "NSE_EQ",
                      "instrument": "EQUITY", "interval": str(interval), "oi": False,
                      "fromDate": frm, "toDate": to})
@@ -63,18 +69,25 @@ def fetch_fut_oi_dhan(security_id, frm, to):
 
 
 _YH_SESSION = None  # cached (requests.Session, crumb-or-None)
+_YH_LOCK = threading.Lock()
+_STATS_LOCK = threading.Lock()
+_DHAN_AUTH_BAD = False  # tripped on HTTP 401/403 so parallel fallback never repeats bad-token calls
 
 # Per-cycle feed counters (reset by runners via reset_feed_stats() before each
-# symbol loop). M12/M13/M14 read these to keep their st["feed"] audit record.
+# symbol loop). M12/M13/M14/M6/M15 read these to keep their st["feed"] audit record.
 _FEED_STATS = {"yahoo_calls": 0, "dhan_calls": 0, "fallback": None, "last_source": None}
 
 
 def reset_feed_stats():
-    _FEED_STATS.update({"yahoo_calls": 0, "dhan_calls": 0, "fallback": None, "last_source": None})
+    global _DHAN_AUTH_BAD
+    with _STATS_LOCK:
+        _FEED_STATS.update({"yahoo_calls": 0, "dhan_calls": 0, "fallback": None, "last_source": None})
+        _DHAN_AUTH_BAD = False
 
 
 def feed_stats():
-    return dict(_FEED_STATS)
+    with _STATS_LOCK:
+        return dict(_FEED_STATS)
 
 
 def _yahoo_session():
@@ -83,26 +96,52 @@ def _yahoo_session():
     Bare v8 chart URLs return 401/404 for equities since Yahoo's auth change:
     GET fc.yahoo.com to pick up the consent cookie (it returns an error status
     on purpose — only the cookie matters), then GET /v1/test/getcrumb with it.
-    Cached module-wide so a 210-symbol cycle costs one cookie/crumb handshake.
+    Cached module-wide with double-checked locking and a widened keep-alive pool
+    so both sequential and concurrent cycles share one handshake cleanly.
     """
     global _YH_SESSION
-    if _YH_SESSION is not None:
+    cached = _YH_SESSION
+    if cached is not None:
+        return cached
+    with _YH_LOCK:
+        if _YH_SESSION is not None:
+            return _YH_SESSION
+        sess = requests.Session()
+        if hasattr(sess, "mount"):
+            adapter = HTTPAdapter(pool_connections=POOL_SIZE, pool_maxsize=POOL_SIZE)
+            sess.mount("https://", adapter)
+            sess.mount("http://", adapter)
+        sess.headers.update(UA)
+        crumb = None
+        try:
+            sess.get("https://fc.yahoo.com", timeout=YAHOO_TIMEOUT)  # cookie only; status is irrelevant
+        except Exception:
+            pass
+        try:
+            r = sess.get("https://query1.finance.yahoo.com/v1/test/getcrumb", timeout=YAHOO_TIMEOUT)
+            if r.ok and r.text and not r.text.lstrip().startswith("<"):
+                crumb = r.text.strip()
+        except Exception:
+            pass
+        _YH_SESSION = (sess, crumb)
         return _YH_SESSION
-    sess = requests.Session()
-    sess.headers.update(UA)
-    crumb = None
+
+
+def warm_yahoo_session():
+    """Pre-warm Yahoo cookie/crumb and keep-alive TLS socket before candle close."""
     try:
-        sess.get("https://fc.yahoo.com", timeout=15)  # cookie only; status is irrelevant
+        sess, crumb = _yahoo_session()
+        url = "https://query1.finance.yahoo.com/v8/finance/chart/%5ENSEI?interval=5m&range=1d"
+        if crumb:
+            url += f"&crumb={requests.utils.quote(crumb)}"
+        r = sess.get(url, timeout=YAHOO_TIMEOUT)
+        if r.status_code in (401, 403):
+            with _YH_LOCK:
+                if _YH_SESSION is not None and _YH_SESSION[0] is sess:
+                    globals()["_YH_SESSION"] = None
+            _yahoo_session()
     except Exception:
         pass
-    try:
-        r = sess.get("https://query1.finance.yahoo.com/v1/test/getcrumb", timeout=15)
-        if r.ok and r.text and not r.text.lstrip().startswith("<"):
-            crumb = r.text.strip()
-    except Exception:
-        pass
-    _YH_SESSION = (sess, crumb)
-    return _YH_SESSION
 
 
 def _yahoo_ticker(symbol: str) -> str:
@@ -126,19 +165,23 @@ def fetch_bars_yahoo(symbol, rng="1d", interval="5m"):
     "1d" (daily context). Returns [dt, open, high, low, close, volume] or None.
     """
     ticker = _yahoo_ticker(symbol)
-    _FEED_STATS["yahoo_calls"] += 1
+    with _STATS_LOCK:
+        _FEED_STATS["yahoo_calls"] += 1
     # Crumb + query1/query2. Bare v8 URLs often return HTTP 404 after Yahoo auth changes.
     for host in ("query1.finance.yahoo.com", "query2.finance.yahoo.com"):
+        sess = None
         try:
             sess, crumb = _yahoo_session()
             url = f"https://{host}/v8/finance/chart/{ticker}?interval={interval}&range={rng}"
             if crumb:
                 url += f"&crumb={requests.utils.quote(crumb)}"
-            r = sess.get(url, timeout=25)
+            r = sess.get(url, timeout=YAHOO_TIMEOUT)
             if r.status_code in (401, 403):
-                # Crumb/cookie rejected — force a fresh handshake for the next try.
+                # Crumb/cookie rejected — invalidate this session once and retry.
                 print(f"yahoo {symbol}: HTTP {r.status_code} on {host}; re-handshaking")
-                globals()["_YH_SESSION"] = None
+                with _YH_LOCK:
+                    if _YH_SESSION is not None and _YH_SESSION[0] is sess:
+                        globals()["_YH_SESSION"] = None
                 continue
             if r.status_code == 404:
                 print(f"yahoo {symbol}: HTTP 404 on {host}; trying next host")
@@ -149,11 +192,17 @@ def fetch_bars_yahoo(symbol, rng="1d", interval="5m"):
             if not ts:
                 return None
             q = j["indicators"]["quote"][0]
+            vol = q.get("volume")
+            if vol is None:
+                vol = [0] * len(ts)
             df = pd.DataFrame({"dt": pd.to_datetime(ts, unit="s", utc=True).tz_convert(IST),
                                "open": q["open"], "high": q["high"], "low": q["low"],
-                               "close": q["close"], "volume": q.get("volume")}).dropna()
+                               "close": q["close"], "volume": vol})
+            df = df.dropna(subset=["open", "high", "low", "close"])
             if not df.empty:
-                _FEED_STATS["last_source"] = "yahoo"
+                df["volume"] = df["volume"].fillna(0)
+                with _STATS_LOCK:
+                    _FEED_STATS["last_source"] = "yahoo"
             return df
         except Exception as e:
             # Include the exception type: a silent bare message hid a NameError
@@ -169,20 +218,30 @@ def fetch_today(symbol, security_id, now_ist):
     token is configured. feed_stats() counters are maintained inside
     fetch_bars_yahoo()/fetch_bars_dhan() so every caller shares one audit.
     """
+    global _DHAN_AUTH_BAD
     src = "none"
     df = fetch_bars_yahoo(symbol, "1d")
     if df is not None and not df.empty:
         return df, "yahoo"
-    if dhan_ok():
-        if _FEED_STATS["fallback"] is None:
-            _FEED_STATS["fallback"] = "yahoo-miss"
+    if dhan_ok() and not _DHAN_AUTH_BAD:
+        with _STATS_LOCK:
+            if _FEED_STATS["fallback"] is None:
+                _FEED_STATS["fallback"] = "yahoo-miss"
         frm = now_ist.strftime("%Y-%m-%d 09:15:00")
         to = now_ist.strftime("%Y-%m-%d %H:%M:%S")
         try:
             df = fetch_bars_dhan(security_id, frm, to)
             src = "dhan"
         except Exception as e:
-            print(f"dhan fallback {symbol} fail: {e}")
+            status = getattr(getattr(e, "response", None), "status_code", None)
+            if status in (401, 403):
+                with _STATS_LOCK:
+                    if not _DHAN_AUTH_BAD:
+                        _DHAN_AUTH_BAD = True
+                        print(f"dhan fallback {symbol}: HTTP {status} (token invalid/expired — skipping Dhan for remainder of cycle)")
+            else:
+                print(f"dhan fallback {symbol} fail: {e}")
     if src != "none" and df is not None and not df.empty:
-        _FEED_STATS["last_source"] = src
+        with _STATS_LOCK:
+            _FEED_STATS["last_source"] = src
     return df, src
