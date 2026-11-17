@@ -2,14 +2,14 @@
   "session": "2026-11-17",
   "market": {
     "dir_state": 1,
-    "label": "BULL",
-    "conf": 90,
+    "label": "NEUTRAL",
+    "conf": 31,
     "regime": "TRANSITION"
   },
   "sector": {
-    "name": "PSUBK",
-    "side": 1,
-    "reason": "PERSIST + PSUBK qualified (score 91)"
+    "name": "WAIT",
+    "side": 0,
+    "reason": "WAIT \u2014 market TRANSITION conf 31"
   },
   "alerts": {},
   "sent": {
