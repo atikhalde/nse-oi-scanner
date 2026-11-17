@@ -1,17 +1,48 @@
 {
   "session": "2026-11-17",
   "market": {
-    "dir_state": 0,
-    "label": "NEUTRAL",
-    "conf": 56,
-    "regime": "TRANSITION"
+    "dir_state": 1,
+    "label": "BULL",
+    "conf": 63,
+    "regime": "TREND UP"
   },
   "sector": {
-    "name": "WAIT",
-    "side": 0,
-    "reason": "WAIT \u2014 market TRANSITION conf 56"
+    "name": "REALTY",
+    "side": 1,
+    "reason": "PERSIST + REALTY qualified (score 98)"
   },
   "alerts": {},
-  "sent": {},
-  "positions": {}
+  "sent": {
+    "ANANTRAJ": {
+      "code": 102,
+      "name": "BUY-EX17",
+      "time": "09:40",
+      "price": 466.8
+    }
+  },
+  "positions": {
+    "ANANTRAJ": {
+      "side": "BUY",
+      "entry": 466.8,
+      "sl": 464.18,
+      "entry_ema9": 464.2762975455212,
+      "t1": 469.42,
+      "t2": 472.04,
+      "t3": 474.66,
+      "entry_bar": "2026-11-17T09:40:00+05:30",
+      "last_bar": "2026-11-17T09:40:00+05:30"
+    }
+  },
+  "feed": {
+    "yahoo_calls": 58,
+    "dhan_calls": 0,
+    "fallback": null,
+    "last_source": "yahoo",
+    "history_calls": 6,
+    "symbols": 62,
+    "sources": {
+      "yahoo": 56,
+      "history": 6
+    }
+  }
 }
