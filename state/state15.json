@@ -1,42 +1,17 @@
 {
-  "session": "2026-11-16",
+  "session": "2026-11-17",
   "market": {
-    "dir_state": 1,
+    "dir_state": 0,
     "label": "NEUTRAL",
-    "conf": 24,
+    "conf": 56,
     "regime": "TRANSITION"
   },
   "sector": {
     "name": "WAIT",
     "side": 0,
-    "reason": "WAIT \u2014 market TRANSITION conf 24"
+    "reason": "WAIT \u2014 market TRANSITION conf 56"
   },
   "alerts": {},
-  "sent": {
-    "HINDUNILVR": {
-      "code": 102,
-      "name": "BUY-EX17",
-      "time": "09:55",
-      "price": 1995.0
-    },
-    "VBL": {
-      "code": 103,
-      "name": "BUY-EX4",
-      "time": "09:55",
-      "price": 434.75
-    }
-  },
-  "positions": {},
-  "feed": {
-    "yahoo_calls": 58,
-    "dhan_calls": 0,
-    "fallback": null,
-    "last_source": "yahoo",
-    "history_calls": 12,
-    "symbols": 68,
-    "sources": {
-      "yahoo": 56,
-      "history": 12
-    }
-  }
+  "sent": {},
+  "positions": {}
 }
