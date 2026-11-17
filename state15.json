@@ -3,13 +3,13 @@
   "market": {
     "dir_state": 1,
     "label": "NEUTRAL",
-    "conf": 60,
+    "conf": 49,
     "regime": "TREND UP"
   },
   "sector": {
-    "name": "BANK",
-    "side": 1,
-    "reason": "PERSIST + BANK persistent (score 60)"
+    "name": "WAIT",
+    "side": 0,
+    "reason": "WAIT \u2014 market TREND UP conf 49"
   },
   "alerts": {},
   "sent": {
