@@ -7,9 +7,9 @@
     "regime": "TREND UP"
   },
   "sector": {
-    "name": "REALTY",
+    "name": "BANK",
     "side": 1,
-    "reason": "PERSIST + REALTY qualified (score 98)"
+    "reason": "PERSIST + BANK persistent (score 70)"
   },
   "alerts": {},
   "sent": {
@@ -22,15 +22,15 @@
   },
   "positions": {},
   "feed": {
-    "yahoo_calls": 58,
+    "yahoo_calls": 64,
     "dhan_calls": 0,
     "fallback": null,
     "last_source": "yahoo",
-    "history_calls": 6,
-    "symbols": 62,
+    "history_calls": 15,
+    "symbols": 77,
     "sources": {
-      "yahoo": 56,
-      "history": 6
+      "yahoo": 62,
+      "history": 15
     }
   }
 }
