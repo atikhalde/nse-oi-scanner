@@ -3,13 +3,13 @@
   "market": {
     "dir_state": 1,
     "label": "STRONG BULL",
-    "conf": 96,
+    "conf": 100,
     "regime": "TREND UP"
   },
   "sector": {
-    "name": "PSUBK",
+    "name": "REALTY",
     "side": 1,
-    "reason": "PERSIST + PSUBK qualified (score 99)"
+    "reason": "PERSIST + REALTY qualified (score 98)"
   },
   "alerts": {},
   "sent": {
@@ -30,19 +30,19 @@
       "t2": 472.04,
       "t3": 474.66,
       "entry_bar": "2026-11-17T09:40:00+05:30",
-      "last_bar": "2026-11-17T10:25:00+05:30"
+      "last_bar": "2026-11-17T10:40:00+05:30"
     }
   },
   "feed": {
-    "yahoo_calls": 64,
+    "yahoo_calls": 59,
     "dhan_calls": 0,
     "fallback": null,
     "last_source": "yahoo",
-    "history_calls": 7,
-    "symbols": 69,
+    "history_calls": 6,
+    "symbols": 63,
     "sources": {
-      "yahoo": 62,
-      "history": 7
+      "yahoo": 57,
+      "history": 6
     }
   }
 }
