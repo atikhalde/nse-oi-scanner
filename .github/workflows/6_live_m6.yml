@@ -1,43 +1,122 @@
 name: "6. LIVE M6 — sector-flow gate (paper-only)"
 
+# NEXT-SECOND alerts: the runner wakes at candle_close + 1 s (09:20:01 … 15:25:01
+# IST) and alerts only if the bar is fresh.  Two shifts cover a full session so no
+# 5-min close is ever missed:
+#   Shift 1 ~09:16 → ~14:40 IST   (started by the M15 workflow completing: cron-job.org
+#                                  dispatches M15 every 15 min at 03:00:20Z, 03:15:10Z …)
+#   Shift 2 ~14:40 → ~15:32 IST   (self-dispatch handoff at Shift 1 exit)
+# `schedule` stays as a 5-minute backup ticker only; GitHub's scheduler is late by
+# 8 h on this repo (measured 10:55–12:59Z = 16:25–18:29 IST), so it can never be the
+# primary trigger — and every late run is refused by the runner's freshness guards.
+
 on:
-  workflow_dispatch:          # also driven by cron-job.org every 15 min (scheduler-proof)
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "session = full aligned loop · live = one cycle · dry-run · test-alert"
+        default: "session"
+        type: choice
+        options: ["session", "live", "dry-run", "test-alert"]
+  workflow_run:
+    workflows: ["15. LIVE M15 — PERSIST+MASTER 5m (paper-only)"]
+    types: [completed]
+    branches: [main]
   schedule:
-    # backup ticker only: 09:15–15:30 IST (03:45–10:00 UTC), weekdays
-    - cron: "45-59/15 3 * * 1-5"
-    - cron: "*/15 4-9 * * 1-5"
-    - cron: "0/15 10 * * 1-5"
+    - cron: "40,50,55 3 * * 1-5"
+    - cron: "*/5 4-9 * * 1-5"
 
 permissions:
   contents: write
+  actions: write          # self-dispatch the next shift
 
 concurrency:
   group: live-paper-m6
-  cancel-in-progress: false   # never cancel mid-trade-cycle; queue instead
+  cancel-in-progress: false
 
 jobs:
   live-m6:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 350
     env:
       DHAN_TOKEN: ${{ secrets.DHAN_TOKEN }}
       TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
       TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      TZ: Asia/Kolkata
+      M6_WAKE_OFFSET_SECONDS: "1.0"
+      M6_MAX_ALERT_LAG_SECONDS: "120"
+      M6_FETCH_WORKERS: "16"
     steps:
       - uses: actions/checkout@v5
         with:
           ref: main
-          fetch-depth: 0
+          fetch-depth: 20
+
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
+          cache: pip
+
       - run: pip install -r requirements.txt
-      - run: python -u m6_runner.py --loop 1
+
+      - name: M6 regression suite (offline)
+        if: steps.win.outputs.run == '1'
+        run: python -u test_m6_runner.py
+
+      # Instant guard (no runner spin-up cost): automated runs outside the IST
+      # session window exit immediately instead of replaying stale bars.
+      - name: session window guard
+        id: win
+        run: |
+          MODE="${{ github.event.inputs.mode || 'session' }}"
+          IST=$((10#$(date -u +%H) * 60 + 10#$(date -u +%M) + 330))
+          IST=$((IST % 1440))
+          echo "ist_minutes=$IST mode=$MODE event=${{ github.event_name }}"
+          if [ "$MODE" = "dry-run" ] || [ "$MODE" = "test-alert" ]; then
+            echo "run=1" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          if [ "${{ github.event_name }}" != "schedule" ] && [ "$IST" -ge 558 ] && [ "$IST" -le 586 ]; then
+            echo "run=1" >> "$GITHUB_OUTPUT"     # 09:18–09:46 IST: Shift 1 start
+          elif [ "${{ github.event_name }}" != "schedule" ] && [ "$IST" -ge 865 ] && [ "$IST" -le 905 ]; then
+            echo "run=1" >> "$GITHUB_OUTPUT"     # 14:25–15:05 IST: Shift 2 start
+          elif [ "${{ github.event_name }}" = "schedule" ] && [ "$IST" -ge 558 ] && [ "$IST" -le 940 ]; then
+            echo "run=1" >> "$GITHUB_OUTPUT"     # backup ticker inside the session
+          else
+            echo "run=0" >> "$GITHUB_OUTPUT"     # outside the session → idle exit
+          fi
+
+      - name: M6 session
+        if: steps.win.outputs.run == '1'
+        run: |
+          MODE="${{ github.event.inputs.mode || 'session' }}"
+          case "$MODE" in
+            test-alert) python -u m6_runner.py --test-alert ;;
+            dry-run)    python -u m6_runner.py --once --dry-run ;;
+            live)       python -u m6_runner.py --once --git-sync ;;
+            *)          python -u m6_runner.py --session --max-runtime-min 324 --git-sync ;;
+          esac
+
+      # Hand the baton to Shift 2 when Shift 1 leaves early, so the 14:45…15:25
+      # candle closes are never orphaned.  The queued run joins the same
+      # concurrency group and starts the moment this job finishes.
+      - name: hand off to the next shift
+        if: always() && steps.win.outputs.run == '1' && (github.event_name != 'schedule')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          IST=$((10#$(date -u +%H) * 60 + 10#$(date -u +%M) + 330)); IST=$((IST % 1440))
+          if [ "$IST" -ge 558 ] && [ "$IST" -lt 800 ]; then
+            echo "dispatching Shift 2"
+            gh workflow run 6_live_m6.yml -f mode=session || true
+          fi
+
       - name: commit state + reports
         if: always()
         run: |
           git config user.name "paper-bot"
           git config user.email "paper-bot@users.noreply.github.com"
-          git add -A
+          for f in state6.json paper_test_M6_*.xlsx learn/raw_M6_*.csv; do
+            [ -e "$f" ] && git add -- "$f"
+          done
           git diff --cached --quiet || git commit -m "m6cycle $(date -u +%F_%H%M)Z"
           bash workflow_safe_push.sh
