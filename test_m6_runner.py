@@ -820,6 +820,121 @@ def test_dry_run_and_cli():
             ok("--help works", e.code == 0)
 
 
+# ------------------------------------------------------------------ 12. fanout
+FANOUT_ENV = ("TELEGRAM_BOT_TOKEN", "TELEGRAM_CHAT_ID", "M6_BOT_TOKEN_2", "M6_CHAT_ID_2")
+
+
+def _set_env(vals):
+    for k in FANOUT_ENV:
+        v = vals.get(k)
+        if v is None:
+            os.environ.pop(k, None)
+        else:
+            os.environ[k] = v
+
+
+def test_telegram_fanout():
+    """M6 mirrors to an optional second bot; a dead destination never hides the other."""
+    old_msg, old_doc = M.tg.send_message_to, M.tg.send_document_to
+    old_state6, old_build, old_harvest = M.STATE6, M.report.build, M.learn_log.harvest
+    saved = {k: os.environ.get(k) for k in FANOUT_ENV}
+    calls, dead = [], set()
+
+    def fake_msg(tok, chat, text, silent=False):
+        calls.append(("msg", tok, chat))
+        return tok not in dead
+
+    def fake_doc(tok, chat, path, caption=""):
+        calls.append(("doc", tok, chat))
+        return tok not in dead
+
+    try:
+        M.tg.send_message_to, M.tg.send_document_to = fake_msg, fake_doc
+
+        # both bots configured → every alert and the EOD XLSX reach both
+        _set_env({"TELEGRAM_BOT_TOKEN": "t1", "TELEGRAM_CHAT_ID": "c1",
+                  "M6_BOT_TOKEN_2": "t2", "M6_CHAT_ID_2": "c2"})
+        ok("both M6 telegram targets are discovered, primary first",
+           M.telegram_targets()[0] == [("t1", "c1"), ("t2", "c2")], str(M.telegram_targets()))
+        calls.clear()
+        sent = M.send("<b>entry</b>")
+        ok("alert mirrors to the second bot", sent is True and calls == [
+            ("msg", "t1", "c1"), ("msg", "t2", "c2")], str(calls))
+        calls.clear()
+        M._fanout_document("report.xlsx", caption="EOD")
+        ok("EOD XLSX mirrors to the second bot", calls == [
+            ("doc", "t1", "c1"), ("doc", "t2", "c2")], str(calls))
+
+        # second-bot outage must not block the primary chat
+        calls.clear()
+        dead = {"t2"}
+        ok("secondary failure still delivers to primary", M.send("x") is True, str(calls))
+        ok("secondary failure is reported", ("msg", "t1", "c1") in calls and len(calls) == 2)
+        rc = M.test_alert()
+        ok("self-test fails loudly when an M6 target is unreachable", rc == 1, f"rc={rc}")
+
+        # primary outage must not block the mirror either
+        calls.clear()
+        dead = {"t1"}
+        ok("primary failure still delivers to the mirror", M.send("x") is True, str(calls))
+        dead = set()
+
+        # duplicate pair (same bot reused) is sent once, not twice
+        _set_env({"TELEGRAM_BOT_TOKEN": "t1", "TELEGRAM_CHAT_ID": "c1",
+                  "M6_BOT_TOKEN_2": "t1", "M6_CHAT_ID_2": "c1"})
+        calls.clear()
+        M.send("x")
+        ok("identical token/chat pair is deduplicated", calls == [("msg", "t1", "c1")], str(calls))
+
+        # incomplete optional pair is skipped, primary keeps working
+        _set_env({"TELEGRAM_BOT_TOKEN": "t1", "TELEGRAM_CHAT_ID": "c1",
+                  "M6_BOT_TOKEN_2": "t2"})
+        calls.clear()
+        M.send("x")
+        ok("half-configured mirror is ignored", calls == [("msg", "t1", "c1")], str(calls))
+
+        # single-chat mode is unchanged
+        _set_env({"TELEGRAM_BOT_TOKEN": "t1", "TELEGRAM_CHAT_ID": "c1"})
+        calls.clear()
+        ok("single-chat mode still sends once", M.send("x") is True and calls == [
+            ("msg", "t1", "c1")], str(calls))
+        ok("self-test confirms every configured target", M.test_alert() == 0)
+
+        # no credentials at all → nothing sent, dry-run touches no network
+        _set_env({})
+        calls.clear()
+        ok("unconfigured bot sends nothing", M.send("x") is False and calls == [], str(calls))
+        ok("test_alert reports the missing target", M.test_alert() == 1)
+        _set_env({"TELEGRAM_BOT_TOKEN": "t1", "TELEGRAM_CHAT_ID": "c1",
+                  "M6_BOT_TOKEN_2": "t2", "M6_CHAT_ID_2": "c2"})
+        calls.clear()
+        ok("dry-run fanout makes no Telegram call", M.send("x", dry_run=True) is False and calls == [],
+           str(calls))
+        ok("dry-run self-test exits clean", M.test_alert(dry_run=True) == 0 and calls == [])
+
+        # end to end: run_eod's summary text AND its XLSX both reach both bots,
+        # and the done-marker is still written before delivery
+        tmp = Path(tempfile.mkdtemp())
+        M.STATE6 = tmp / "state6.json"
+        (tmp / "r.xlsx").write_bytes(b"x")
+        M.report.build = lambda *a, **k: str(tmp / "r.xlsx")
+        M.learn_log.harvest = lambda *a, **k: None
+        st = M.fresh_state(DAY)
+        st["gate"] = {"status": "ON", "source": "nse", "r_total": 0}
+        st["trades"] = {"a": {"symbol": "AAA", "side": "BUY", "signal": "BUY-EX", "time": "10:00",
+                              "entry": 1, "exit": 2, "pnl": 1, "r_total": 0.5}}
+        calls.clear()
+        eod = M.run_eod(st, DAY, dt.datetime(2026, 11, 17, 15, 30, tzinfo=M.IST))
+        ok("EOD summary + XLSX fan out to both bots", eod and calls == [
+            ("msg", "t1", "c1"), ("msg", "t2", "c2"),
+            ("doc", "t1", "c1"), ("doc", "t2", "c2")], str(calls))
+        ok("EOD done-marker still written", st.get("eod_done") is True and M.STATE6.exists())
+    finally:
+        M.tg.send_message_to, M.tg.send_document_to = old_msg, old_doc
+        M.STATE6, M.report.build, M.learn_log.harvest = old_state6, old_build, old_harvest
+        _set_env(saved)
+
+
 # ------------------------------------------------------------------ main
 def main():
     print(f"M6 next-second runner tests · MAX_LAG={M.MAX_LAG}s · EXIT_LAG={M.EXIT_LAG}s · "
@@ -842,6 +957,7 @@ def main():
     test_causal_engine_frames()
     test_signal_rows_scope()
     test_dry_run_and_cli()
+    test_telegram_fanout()
     print("\nALL M6 RUNNER TESTS PASSED")
 
 

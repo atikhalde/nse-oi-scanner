@@ -807,19 +807,95 @@ def engine_frame(cache, today_closed):
 
 
 # --------------------------------------------------------------- notifier
-def send(text, silent=False, dry_run=False):
+# Two-destination fanout: M6 keeps TELEGRAM_BOT_TOKEN/TELEGRAM_CHAT_ID as its
+# primary chat and can mirror every alert + the EOD XLSX to one optional second
+# bot via M6_BOT_TOKEN_2/M6_CHAT_ID_2.  Pairs are never mixed across bots, an
+# incomplete pair is skipped with a warning, and one dead destination never
+# suppresses delivery to the other.
+def telegram_targets():
+    """Distinct (token, chat) M6 destinations — primary first, then the mirror.
+
+    Env:
+      TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID  — primary (required, unchanged)
+      M6_BOT_TOKEN_2 / M6_CHAT_ID_2          — optional second M6 bot
+    """
+    out, labels = [], []
+
+    def add(tok, chat, label):
+        tok, chat = (tok or "").strip(), (chat or "").strip()
+        if not tok and not chat:
+            return
+        if not (tok and chat):
+            print(f"M6 TG: {label} target incomplete (token/chat pair) — skipped")
+            return
+        if (tok, chat) in out:
+            print(f"M6 TG: {label} target duplicates an earlier one — skipped")
+            return
+        out.append((tok, chat))
+        labels.append(label)
+
+    add(os.environ.get("TELEGRAM_BOT_TOKEN"), os.environ.get("TELEGRAM_CHAT_ID"), "primary")
+    add(os.environ.get("M6_BOT_TOKEN_2"), os.environ.get("M6_CHAT_ID_2"), "M6 mirror")
+    return out, labels
+
+
+def _fanout_text(text, silent=False, dry_run=False):
+    """Deliver text to every M6 target; returns (delivered, configured)."""
     if dry_run:
         print(f"[DRY] {text}")
-        return False
-    return tg.send_message(text, silent=silent)
+        return 0, 0
+    targets, labels = telegram_targets()
+    if not targets:
+        print("TG_FAIL: TELEGRAM_BOT_TOKEN/TELEGRAM_CHAT_ID not set — message NOT sent")
+        print(f"[TG-DRY] {text}")
+        return 0, 0
+    sent = 0
+    for i, (tok, chat) in enumerate(targets):
+        if tg.send_message_to(tok, chat, text, silent=silent):
+            sent += 1
+        else:
+            print(f"M6 TG: text NOT delivered to {labels[i]} target {i + 1}/{len(targets)} chat={chat}")
+    return sent, len(targets)
+
+
+def _fanout_document(path, caption="", dry_run=False):
+    """Deliver one document to every M6 target; returns (delivered, configured)."""
+    if dry_run:
+        print(f"[DRY] document {path}")
+        return 0, 0
+    targets, labels = telegram_targets()
+    if not targets:
+        print("TG_FAIL: TELEGRAM_BOT_TOKEN/TELEGRAM_CHAT_ID not set — document NOT sent")
+        print(f"[TG-DRY] document {path} ({caption})")
+        return 0, 0
+    sent = 0
+    for i, (tok, chat) in enumerate(targets):
+        if tg.send_document_to(tok, chat, path, caption=caption):
+            sent += 1
+        else:
+            print(f"M6 TG: document NOT delivered to {labels[i]} target {i + 1}/{len(targets)} chat={chat}")
+    return sent, len(targets)
+
+
+def send(text, silent=False, dry_run=False):
+    """Alert to all M6 targets. True when at least one destination accepted it."""
+    sent, _ = _fanout_text(text, silent=silent, dry_run=dry_run)
+    return bool(sent)
 
 
 def test_alert(dry_run=False):
     msg = ("🧪 🅼6 TEST — next-second runner connected. Alerts fire at candle "
            "close +1s (09:20:01 … 15:25:01 IST). No position was opened.")
-    ok = send(msg, dry_run=dry_run)
-    print(f"M6 test alert: {'sent' if ok else 'not confirmed'}")
-    return 0 if (ok or dry_run) else 1
+    if dry_run:
+        send(msg, dry_run=True)
+        print("M6 test alert: dry-run — no Telegram call")
+        return 0
+    sent, total = _fanout_text(msg)
+    if not total:
+        print("M6 test alert: not confirmed — no Telegram target configured")
+        return 1
+    print(f"M6 test alert: {sent}/{total} target(s) confirmed")
+    return 0 if sent == total else 1
 
 
 def git_sync(reason="", dry_run=False, next_close=None, timeout=25):
@@ -1201,7 +1277,7 @@ def run_eod(st, today, now, board=None, bars_map=None, dry_run=False, reason="eo
             if dry_run:
                 print(f"[DRY] document {out}")
             else:
-                tg.send_document(out, caption=f"🅼6 📄 M6 sector-flow paper report {today}")
+                _fanout_document(out, caption=f"🅼6 📄 M6 sector-flow paper report {today}")
         print(f"M6 EOD ({reason}): {len(done)} trades · {len(st.get('skipped', []))} skipped")
         return True
     except Exception as e:
