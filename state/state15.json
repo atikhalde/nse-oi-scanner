@@ -1,17 +1,29 @@
 {
   "session": "2026-11-18",
   "market": {
-    "dir_state": 0,
-    "label": "NEUTRAL",
-    "conf": 44,
-    "regime": "TRANSITION"
+    "dir_state": -1,
+    "label": "BEAR",
+    "conf": 65,
+    "regime": "TREND DOWN"
   },
   "sector": {
-    "name": "WAIT",
-    "side": 0,
-    "reason": "WAIT \u2014 market TRANSITION conf 44"
+    "name": "CDUR",
+    "side": -1,
+    "reason": "PERSIST \u2212 CDUR persistent (score 90)"
   },
   "alerts": {},
   "sent": {},
-  "positions": {}
+  "positions": {},
+  "feed": {
+    "yahoo_calls": 61,
+    "dhan_calls": 0,
+    "fallback": null,
+    "last_source": "yahoo",
+    "history_calls": 9,
+    "symbols": 68,
+    "sources": {
+      "yahoo": 59,
+      "history": 9
+    }
+  }
 }
