@@ -1,0 +1,100 @@
+day,model,sym,side,sig,code,time,min,entry,rank,cls,taken,ghost,skip_why,breadth,daypct,sec,sec_bullq,sec_bearq,sec_pb,sec_pw,held,tilt,regime,cf_net_s,cf_net_p,cf_r_s,cf_r_p,cf_exit_s,cf_net,cf_r,cf_exit,mfe_r,mae_r,mfe30_r,mfe60_r,eod_pct,bear_close,day_regime
+2026-11-18,M6,DIXON,SELL,SELL-EX8,208,09:30,570,12881.0,,BREAKOUT,1,0,,0.788,-1.529,CDUR,0,0,0,1,1,-35.4,,604.0,,0.99,,100% trail 13:50,536,0.99,100% trail 13:50,1.36,0.27,0.29,0.54,2.07,0.732,TREND-DOWN
+2026-11-18,M6,TITAN,SELL,SELL-EX3,203,09:30,570,4813.1,,BREAKOUT,1,0,,0.788,-1.934,CDUR,0,0,0,1,1,-35.4,,1102.0,,1.77,,100% trail 13:55,1018,1.77,100% trail 13:55,2.66,0.28,0.5,1.23,3.43,0.732,TREND-DOWN
+2026-11-18,M6,VOLTAS,SELL,SELL-EX3,203,09:30,570,1131.0,,BREAKOUT,1,0,,0.788,-1.558,CDUR,0,0,0,1,1,-35.4,,-154.0,,-0.23,,OPEN,-200,-0.24,OPEN,0.49,0.53,0.28,0.28,-0.32,0.732,TREND-DOWN
+2026-11-18,M6,HAVELLS,SELL,SELL-EX3,203,09:35,575,1151.4,,BREAKOUT,1,0,,0.788,-2.009,CDUR,0,0,0,1,1,-35.4,,448.0,,0.51,,OPEN,386,0.48,OPEN,0.69,0.51,0.37,0.37,0.99,0.732,TREND-DOWN
+2026-11-18,M6,JINDALSTEL,SELL,SELL-EX3,203,09:35,575,1110.0,,BREAKOUT,1,0,,0.788,-2.418,MET,0,0,0,1,1,-35.4,,229.0,,0.37,,OPEN,273,0.51,OPEN,0.58,0.61,0.18,0.18,0.63,0.732,TREND-DOWN
+2026-11-18,M6,KALYANKJIL,SELL,SELL-EX3,203,09:35,575,671.0,,BREAKOUT,1,0,,0.788,-1.721,CDUR,0,0,0,1,1,-35.4,,1043.0,,1.18,,100% trail 13:05,979,1.18,100% trail 13:05,1.55,0.34,0.55,0.56,3.13,0.732,TREND-DOWN
+2026-11-18,M6,NATIONALUM,SELL,SELL-EX5,205,09:35,575,312.35,,BREAKOUT,1,0,,0.788,-2.664,MET,0,0,0,1,1,-35.4,,1078.0,,1.84,,100% trail 14:50,991,1.84,100% trail 14:50,2.23,0.56,0.2,0.2,1.36,0.732,TREND-DOWN
+2026-11-18,M6,VEDL,SELL,SELL-EX8,208,09:35,575,250.21,,BREAKOUT,1,0,,0.788,-1.89,MET,0,0,0,1,1,-35.4,,957.0,,1.35,,OPEN,915,1.35,OPEN,1.46,0.39,0.2,0.2,1.92,0.732,TREND-DOWN
+2026-11-18,M6,KFINTECH,SELL,SELL-EX1,201,09:30,570,952.4,,,0,0,sector CAPMKTS not bear-qualified (bull 61/bear 4),0.788,-1.306,CAPMKTS,0,0,0,0,1,-35.4,,,,,,,830,1.38,100% trail 13:50,1.91,0.47,0.71,0.71,2.06,0.732,TREND-DOWN
+2026-11-18,M6,NUVAMA,BUY,ENTRY BUY,90,09:30,570,1892.0,,,0,0,scanner-table preview (90/290) — no chart label,0.788,0.196,CAPMKTS,0,0,0,0,1,-35.4,,,,,,,-470,-1.0,100% SL 10:40,1.31,3.28,1.31,1.31,-1.1,0.732,TREND-DOWN
+2026-11-18,M6,HINDZINC,SELL,SELL-EX3,203,09:30,570,,,,0,0,discovered late (09:30 < 09:35) — not alerted,0.788,,MET,0,0,0,1,1,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,SAIL,SELL,SELL-EX3,203,09:30,570,,,,0,0,discovered late (09:30 < 09:35) — not alerted,0.788,,MET,0,0,0,1,1,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,ZYDUSLIFE,BUY,BUY-EX17,102,09:30,570,,,,0,0,discovered late (09:30 < 09:35) — not alerted,0.788,,PHA,0,0,0,0,0,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,CAMS,SELL,SELL-EX1,201,09:30,570,,,,0,0,discovered late (09:30 < 09:35) — not alerted,0.788,,CAPMKTS,0,0,0,0,1,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,CROMPTON,SELL,SELL-EX3,203,09:35,575,205.91,,,0,0,lags own sector (stock -1.45% vs CDUR -1.52%),0.788,-1.455,CDUR,0,0,0,1,1,-35.4,,,,,,,-614,-1.0,100% SL 10:10,0.18,1.24,0.18,0.18,-0.68,0.732,TREND-DOWN
+2026-11-18,M6,LAURUSLABS,SELL,ENTRY SELL,290,09:35,575,2335.4,,,0,0,scanner-table preview (90/290) — no chart label,0.788,-0.111,PHA,0,0,0,0,0,-35.4,,,,,,,230,0.49,OPEN,0.59,0.93,0.4,0.4,0.55,0.732,TREND-DOWN
+2026-11-18,M6,NMDC,SELL,SELL-EX8,208,09:30,570,,,,0,0,discovered late (09:30 < 09:35) — not alerted,0.788,,MET,0,0,0,1,1,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,INOXWIND,SELL,SELL-EX3,203,09:35,575,,,,0,0,discovered late (09:35 < 09:40) — not alerted,0.788,,GREEN,0,1,0,0,1,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,SUZLON,SELL,SELL-EX5,205,09:35,575,,,,0,0,discovered late (09:35 < 09:40) — not alerted,0.788,,GREEN,0,1,0,0,1,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,WAAREEENER,SELL,SELL-EX8,208,09:30,570,,,,0,0,discovered late (09:30 < 09:40) — not alerted,0.788,,GREEN,0,1,0,0,1,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,AUROPHARMA,SELL,SELL-EX12,212,09:40,580,1791.5,,,0,0,sector PHA not bear-qualified (bull 36/bear 13),0.788,-0.145,PHA,0,0,0,0,0,-35.4,,,,,,,-395,-1.0,100% SL 11:00,0.24,2.23,0.24,0.24,-0.27,0.732,TREND-DOWN
+2026-11-18,M6,CDSL,SELL,SELL-EX1,201,09:40,580,1434.3,,,0,0,sector CAPMKTS not bear-qualified (bull 37/bear 20),0.788,-0.382,CAPMKTS,0,0,0,0,1,-35.4,,,,,,,429,0.53,OPEN,0.8,0.26,0.07,0.25,1.23,0.732,TREND-DOWN
+2026-11-18,M6,HDFCAMC,SELL,SELL-EX1,201,09:40,580,2681.6,,,0,0,sector CAPMKTS not bear-qualified (bull 37/bear 20),0.788,-0.645,CAPMKTS,0,0,0,0,1,-35.4,,,,,,,519,0.92,100% trail 13:15,1.36,0.37,0.16,0.19,1.21,0.732,TREND-DOWN
+2026-11-18,M6,LUPIN,SELL,SELL-EX1,201,09:40,580,1948.8,,,0,0,sector PHA not bear-qualified (bull 36/bear 13),0.788,-0.062,PHA,0,0,0,0,0,-35.4,,,,,,,-799,-1.0,100% SL 13:45,0.07,1.54,0.07,0.07,-1.19,0.732,TREND-DOWN
+2026-11-18,M6,ZYDUSLIFE,BUY,ENTRY BUY,90,09:30,570,,,,0,0,discovered late (09:30 < 09:40) — not alerted,0.788,,PHA,0,0,0,0,0,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,RVNL,SELL,SELL-EX3,203,09:30,570,,,,0,0,discovered late (09:30 < 09:45) — not alerted,0.788,,RAILWAYS,0,1,0,0,1,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,AUROPHARMA,SELL,ENTRY SELL,290,09:40,580,,,,0,0,discovered late (09:40 < 09:45) — not alerted,0.788,,PHA,0,0,0,0,0,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,IRFC,SELL,SELL-EX3,203,09:30,570,,,,0,0,discovered late (09:30 < 09:45) — not alerted,0.788,,RAILWAYS,0,1,0,0,1,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,AMBER,BUY,BUY-EX17,102,09:50,590,6257.5,,,0,0,sector CDUR not bull-qualified (bull 2/bear 85),0.788,0.192,CDUR,0,0,0,1,1,-35.4,,,,,,,-174,-0.28,OPEN,0.56,0.48,0.29,0.47,-0.34,0.732,TREND-DOWN
+2026-11-18,M6,BLUESTARCO,BUY,BUY-EX5,104,09:55,595,1615.5,,,0,0,sector CDUR not bull-qualified (bull 2/bear 83),0.788,0.466,CDUR,0,0,0,1,1,-35.4,,,,,,,159,0.29,OPEN,0.55,0.94,0.26,0.26,0.39,0.732,TREND-DOWN
+2026-11-18,M6,CROMPTON,SELL,SELL-EX5,205,09:35,575,,,,0,0,discovered late (09:35 < 10:00) — not alerted,0.788,,CDUR,0,0,0,1,1,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,BIOCON,BUY,BUY-EX4,103,09:50,590,,,,0,0,discovered late (09:50 < 10:05) — not alerted,0.788,,PHA,0,0,0,0,0,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,GLENMARK,BUY,BUY-EX,101,10:00,600,,,,0,0,discovered late (10:00 < 10:05) — not alerted,0.788,,PHA,0,0,0,0,0,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,LUPIN,SELL,SELL-EX5,205,09:40,580,,,,0,0,discovered late (09:40 < 10:05) — not alerted,0.788,,PHA,0,0,0,0,0,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,CIPLA,BUY,BUY-EX17,102,09:50,590,,,,0,0,discovered late (09:50 < 10:05) — not alerted,0.788,,PHA,0,0,0,0,0,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,TORNTPHARM,BUY,BUY-EX5,104,09:55,595,,,,0,0,discovered late (09:55 < 10:05) — not alerted,0.788,,PHA,0,0,0,0,0,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,GODREJPROP,BUY,BUY-EX17,102,10:05,605,,,,0,0,discovered late (10:05 < 10:10) — not alerted,0.788,,REALTY,0,0,0,0,0,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,INDIGO,SELL,SELL-EX5,205,09:30,570,,,,0,0,discovered late (09:30 < 10:10) — not alerted,0.788,,TRAVEL,0,1,0,1,1,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,LODHA,SELL,SELL-EX5,205,09:40,580,,,,0,0,discovered late (09:40 < 10:10) — not alerted,0.788,,REALTY,0,0,0,0,0,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,PHOENIXLTD,BUY,BUY-EX7,106,09:55,595,,,,0,0,discovered late (09:55 < 10:10) — not alerted,0.788,,REALTY,0,0,0,0,0,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,DLF,SELL,SELL-EX5,205,09:35,575,,,,0,0,discovered late (09:35 < 10:10) — not alerted,0.788,,REALTY,0,0,0,0,0,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,INDHOTEL,SELL,SELL-EX8,208,09:30,570,,,,0,0,discovered late (09:30 < 10:10) — not alerted,0.788,,TRAVEL,0,1,0,1,1,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,PGEL,BUY,BUY-EX7,106,10:10,610,542.4,,,0,0,sector CDUR not bull-qualified (bull 3/bear 83),0.788,1.764,CDUR,0,0,0,1,1,-35.4,,,,,,,-630,-1.0,100% SL 13:25,0.28,1.49,0.28,0.28,-0.59,0.732,TREND-DOWN
+2026-11-18,M6,APLAPOLLO,SELL,NORMAL SELL,280,10:15,615,2167.8,,,0,0,lags own sector (stock -0.95% vs MET -1.57%),0.788,-0.946,MET,0,0,0,1,1,-35.4,,,,,,,65,0.55,100% trail 13:10,1.48,0.77,0.19,0.19,0.3,0.732,TREND-DOWN
+2026-11-18,M6,BLUESTARCO,BUY,BUY-EX9,108,09:55,595,,,,0,0,discovered late (09:55 < 10:15) — not alerted,0.788,,CDUR,0,0,0,1,1,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,OBEROIRLTY,BUY,BUY-EX6,105,10:00,600,,,,0,0,discovered late (10:00 < 10:15) — not alerted,0.788,,REALTY,0,0,0,0,0,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,PRESTIGE,BUY,BUY-EX4,103,10:05,605,,,,0,0,discovered late (10:05 < 10:25) — not alerted,0.788,,REALTY,0,0,0,0,0,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,DLF,SELL,SELL-EX1,201,09:35,575,,,,0,0,discovered late (09:35 < 10:30) — not alerted,0.788,,REALTY,0,0,0,0,0,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,FORTIS,SELL,SELL-EX3,203,09:40,580,,,,0,0,discovered late (09:40 < 10:50) — not alerted,0.788,,HOSPITALS,0,0,0,0,0,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,MAXHEALTH,SELL,NORMAL SELL,280,10:20,620,,,,0,0,discovered late (10:20 < 10:50) — not alerted,0.788,,HOSPITALS,0,0,0,0,0,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,APOLLOHOSP,SELL,SELL-EX5,205,10:35,635,,,,0,0,discovered late (10:35 < 10:50) — not alerted,0.788,,HOSPITALS,0,0,0,0,0,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,AUROPHARMA,BUY,BUY-EX4,103,11:00,660,,,,0,0,discovered late (11:00 < 11:05) — not alerted,0.788,,PHA,0,0,0,0,0,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,MANKIND,BUY,BUY-EX7,106,10:20,620,,,,0,0,discovered late (10:20 < 11:05) — not alerted,0.788,,PHA,0,0,0,0,0,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,ALKEM,BUY,BUY-EX4,103,10:25,625,,,,0,0,discovered late (10:25 < 11:05) — not alerted,0.788,,PHA,0,0,0,0,0,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,SUNPHARMA,SELL,SELL-EX5,205,10:30,630,,,,0,0,discovered late (10:30 < 11:05) — not alerted,0.788,,PHA,0,0,0,0,0,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,ZYDUSLIFE,SELL,SELL-EX1,201,10:15,615,,,,0,0,discovered late (10:15 < 11:05) — not alerted,0.788,,PHA,0,0,0,0,0,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,DRREDDY,BUY,BUY-EX12,111,11:10,670,,,,0,0,discovered late (11:10 < 11:15) — not alerted,0.788,,PHA,0,0,0,0,0,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,SUNPHARMA,BUY,BUY-EX7,106,11:10,670,,,,0,0,discovered late (11:10 < 11:15) — not alerted,0.788,,PHA,0,0,0,0,0,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,INDIANB,BUY,BUY-EX7,106,10:00,600,,,,0,0,discovered late (10:00 < 11:20) — not alerted,0.788,,PSUBK,0,0,1,0,1,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,PNB,BUY,BUY-EX4,103,09:55,595,,,,0,0,discovered late (09:55 < 11:20) — not alerted,0.788,,PSUBK,0,0,1,0,1,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,SBIN,SELL,SELL-EX5,205,09:40,580,,,,0,0,discovered late (09:40 < 11:20) — not alerted,0.788,,PSUBK,0,0,1,0,1,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,BANKBARODA,SELL,ENTRY SELL,290,09:40,580,,,,0,0,discovered late (09:40 < 11:20) — not alerted,0.788,,PSUBK,0,0,1,0,1,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,BANKBARODA,BUY,BUY-EX12,111,10:25,625,,,,0,0,discovered late (10:25 < 11:20) — not alerted,0.788,,PSUBK,0,0,1,0,1,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,BANKINDIA,SELL,SELL-EX1,201,09:40,580,,,,0,0,discovered late (09:40 < 11:20) — not alerted,0.788,,PSUBK,0,0,1,0,1,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,UNIONBANK,SELL,SELL-EX1,201,09:40,580,,,,0,0,discovered late (09:40 < 11:20) — not alerted,0.788,,PSUBK,0,0,1,0,1,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,BANKBARODA,SELL,SELL-EX1,201,09:40,580,,,,0,0,discovered late (09:40 < 11:35) — not alerted,0.788,,PSUBK,0,0,1,0,1,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,ABB,SELL,SELL-EX8,208,09:35,575,,,,0,0,discovered late (09:35 < 11:40) — not alerted,0.788,,CAPGOODS,0,0,0,0,0,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,BHEL,SELL,SELL-EX3,203,09:35,575,,,,0,0,discovered late (09:35 < 11:40) — not alerted,0.788,,CAPGOODS,0,0,0,0,0,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,GVT&D,SELL,ENTRY SELL,290,09:30,570,,,,0,0,discovered late (09:30 < 11:40) — not alerted,0.788,,CAPGOODS,0,0,0,0,0,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,GVT&D,SELL,SELL-EX19,219,10:25,625,,,,0,0,discovered late (10:25 < 11:40) — not alerted,0.788,,CAPGOODS,0,0,0,0,0,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,KEI,SELL,SELL-EX3,203,09:35,575,,,,0,0,discovered late (09:35 < 11:40) — not alerted,0.788,,CAPGOODS,0,0,0,0,0,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,POLYCAB,SELL,SELL-EX1,201,10:20,620,,,,0,0,discovered late (10:20 < 11:40) — not alerted,0.788,,CAPGOODS,0,0,0,0,0,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,SIEMENS,SELL,SELL-EX3,203,09:35,575,,,,0,0,discovered late (09:35 < 11:40) — not alerted,0.788,,CAPGOODS,0,0,0,0,0,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,CGPOWER,SELL,SELL-EX8,208,09:35,575,,,,0,0,discovered late (09:35 < 11:40) — not alerted,0.788,,CAPGOODS,0,0,0,0,0,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,KAYNES,BUY,BUY-EX9,108,09:30,570,,,,0,0,discovered late (09:30 < 11:40) — not alerted,0.788,,CAPGOODS,0,0,0,0,0,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,POWERINDIA,SELL,SELL-EX8,208,09:35,575,,,,0,0,discovered late (09:35 < 11:40) — not alerted,0.788,,CAPGOODS,0,0,0,0,0,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,BANKINDIA,SELL,SELL-EX5,205,09:40,580,,,,0,0,discovered late (09:40 < 11:45) — not alerted,0.788,,PSUBK,0,0,1,0,1,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,DRREDDY,SELL,SELL-EX1,201,10:35,635,,,,0,0,discovered late (10:35 < 11:55) — not alerted,0.788,,PHA,0,0,0,0,0,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,DIVISLAB,SELL,SELL-EX1,201,11:00,660,,,,0,0,discovered late (11:00 < 12:00) — not alerted,0.788,,PHA,0,0,0,0,0,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,KALYANKJIL,SELL,SELL-EX3,203,09:35,575,,,,0,0,discovered late (09:35 < 13:10) — not alerted,0.788,,CDUR,0,0,0,1,1,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,DIXON,SELL,SELL-EX8,208,09:30,570,,,,0,0,discovered late (09:30 < 13:50) — not alerted,0.788,,CDUR,0,0,0,1,1,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,HINDALCO,SELL,SELL-EX15,215,11:35,695,,,,0,0,discovered late (11:35 < 13:55) — not alerted,0.788,,MET,0,0,0,1,1,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,TITAN,SELL,SELL-EX3,203,09:30,570,,,,0,0,discovered late (09:30 < 13:55) — not alerted,0.788,,CDUR,0,0,0,1,1,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,JSWSTEEL,SELL,NORMAL SELL,280,10:50,650,,,,0,0,discovered late (10:50 < 13:55) — not alerted,0.788,,MET,0,0,0,1,1,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,INDIANB,BUY,BUY-EX9,108,10:00,600,,,,0,0,discovered late (10:00 < 14:25) — not alerted,0.788,,PSUBK,0,0,1,0,1,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,NATIONALUM,SELL,SELL-EX5,205,09:35,575,,,,0,0,discovered late (09:35 < 14:50) — not alerted,0.788,,MET,0,0,0,1,1,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,HINDALCO,,—,,15:10,910,,,,0,0,stale bar 15:10 (301s > 120s) — not alerted,0.788,,MET,0,0,0,1,1,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,HINDZINC,,—,,15:10,910,,,,0,0,stale bar 15:10 (301s > 120s) — not alerted,0.788,,MET,0,0,0,1,1,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,NATIONALUM,,—,,15:10,910,,,,0,0,stale bar 15:10 (301s > 120s) — not alerted,0.788,,MET,0,0,0,1,1,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,NMDC,,—,,15:10,910,,,,0,0,stale bar 15:10 (301s > 120s) — not alerted,0.788,,MET,0,0,0,1,1,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,BANKBARODA,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.788,,PSUBK,0,0,1,0,1,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,HINDALCO,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.788,,MET,0,0,0,1,1,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,HINDZINC,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.788,,MET,0,0,0,1,1,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,INDHOTEL,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.788,,TRAVEL,0,1,0,1,1,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,INDIANB,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.788,,PSUBK,0,0,1,0,1,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,INDIGO,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.788,,TRAVEL,0,1,0,1,1,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,NATIONALUM,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.788,,MET,0,0,0,1,1,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,NMDC,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.788,,MET,0,0,0,1,1,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
+2026-11-18,M6,UNIONBANK,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.788,,PSUBK,0,0,1,0,1,-35.4,,,,,,,,,,,,,,,0.732,TREND-DOWN
