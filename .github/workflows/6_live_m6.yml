@@ -42,6 +42,10 @@ jobs:
       DHAN_TOKEN: ${{ secrets.DHAN_TOKEN }}
       TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
       TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      # Optional second M6 bot: leave both secrets empty to keep single-chat
+      # delivery; set both to mirror every alert and the EOD XLSX.
+      M6_BOT_TOKEN_2: ${{ secrets.M6_BOT_TOKEN_2 }}
+      M6_CHAT_ID_2: ${{ secrets.M6_CHAT_ID_2 }}
       TZ: Asia/Kolkata
       M6_WAKE_OFFSET_SECONDS: "1.0"
       M6_MAX_ALERT_LAG_SECONDS: "120"
