@@ -1,9 +1,1685 @@
 {
  "date": "2026-11-18",
- "signals": {},
- "trades": {},
- "alerts": [],
- "gate": {},
+ "signals": {
+  "360ONE": {
+   "nbars": 73
+  },
+  "ABB": {
+   "nbars": 74
+  },
+  "ABCAPITAL": {
+   "nbars": 73
+  },
+  "ADANIENSOL": {
+   "nbars": 74
+  },
+  "ADANIENT": {
+   "nbars": 73
+  },
+  "ADANIGREEN": {
+   "nbars": 73
+  },
+  "ADANIPORTS": {
+   "nbars": 74
+  },
+  "ADANIPOWER": {
+   "nbars": 74
+  },
+  "ALKEM": {
+   "nbars": 73
+  },
+  "AMBER": {
+   "nbars": 73
+  },
+  "AMBUJACEM": {
+   "nbars": 74
+  },
+  "ANGELONE": {
+   "nbars": 73
+  },
+  "APLAPOLLO": {
+   "nbars": 73
+  },
+  "APOLLOHOSP": {
+   "nbars": 74
+  },
+  "ASHOKLEY": {
+   "nbars": 73
+  },
+  "ASIANPAINT": {
+   "nbars": 74
+  },
+  "ASTRAL": {
+   "nbars": 74
+  },
+  "AUBANK": {
+   "nbars": 73
+  },
+  "AUROPHARMA": {
+   "nbars": 74
+  },
+  "AXISBANK": {
+   "nbars": 73
+  },
+  "BAJAJ-AUTO": {
+   "nbars": 74
+  },
+  "BAJAJFINSV": {
+   "nbars": 74
+  },
+  "BAJAJHLDNG": {
+   "nbars": 75
+  },
+  "BAJFINANCE": {
+   "nbars": 74
+  },
+  "BANDHANBNK": {
+   "nbars": 74
+  },
+  "BANKBARODA": {
+   "nbars": 74
+  },
+  "BANKINDIA": {
+   "nbars": 73
+  },
+  "BDL": {
+   "nbars": 74
+  },
+  "BEL": {
+   "nbars": 74
+  },
+  "BHARATFORG": {
+   "nbars": 74
+  },
+  "BHARTIARTL": {
+   "nbars": 74
+  },
+  "BHEL": {
+   "nbars": 74
+  },
+  "BIOCON": {
+   "nbars": 73
+  },
+  "BLUESTARCO": {
+   "nbars": 73
+  },
+  "BOSCHLTD": {
+   "nbars": 73
+  },
+  "BPCL": {
+   "nbars": 74
+  },
+  "BRITANNIA": {
+   "nbars": 73
+  },
+  "BSE": {
+   "nbars": 74
+  },
+  "CAMS": {
+   "nbars": 74
+  },
+  "CANBK": {
+   "nbars": 73
+  },
+  "CDSL": {
+   "nbars": 74
+  },
+  "CGPOWER": {
+   "nbars": 73
+  },
+  "CHOLAFIN": {
+   "nbars": 74
+  },
+  "CIPLA": {
+   "nbars": 74
+  },
+  "COALINDIA": {
+   "nbars": 74
+  },
+  "COCHINSHIP": {
+   "nbars": 73
+  },
+  "COFORGE": {
+   "nbars": 74
+  },
+  "COLPAL": {
+   "nbars": 73
+  },
+  "CONCOR": {
+   "nbars": 73
+  },
+  "CROMPTON": {
+   "nbars": 74
+  },
+  "CUMMINSIND": {
+   "nbars": 74
+  },
+  "DABUR": {
+   "nbars": 74
+  },
+  "DALBHARAT": {
+   "nbars": 75
+  },
+  "DELHIVERY": {
+   "nbars": 73
+  },
+  "DIVISLAB": {
+   "nbars": 74
+  },
+  "DIXON": {
+   "nbars": 73
+  },
+  "DLF": {
+   "nbars": 73
+  },
+  "DMART": {
+   "nbars": 73
+  },
+  "DRREDDY": {
+   "nbars": 73
+  },
+  "EICHERMOT": {
+   "nbars": 74
+  },
+  "ETERNAL": {
+   "nbars": 74
+  },
+  "EXIDEIND": {
+   "nbars": 75
+  },
+  "FEDERALBNK": {
+   "nbars": 73
+  },
+  "FORCEMOT": {
+   "nbars": 74
+  },
+  "FORTIS": {
+   "nbars": 74
+  },
+  "GAIL": {
+   "nbars": 74
+  },
+  "GLENMARK": {
+   "nbars": 74
+  },
+  "GMRAIRPORT": {
+   "nbars": 74
+  },
+  "GODFRYPHLP": {
+   "nbars": 73
+  },
+  "GODREJCP": {
+   "nbars": 74
+  },
+  "GODREJPROP": {
+   "nbars": 33
+  }
+ },
+ "trades": {
+  "ABB": {
+   "symbol": "ABB",
+   "side": "SELL",
+   "time": "09:35",
+   "signal": "SELL-EX8",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 6800.0,
+   "sl": 6936.39,
+   "sl_anchor": "session-extreme*",
+   "risk_pts": 136.39,
+   "risk_pct": 2.006,
+   "risk_rs": 818.0,
+   "qty": 6,
+   "qty_full": 7,
+   "qty_capped": true,
+   "capital": 40800.0,
+   "tp1": -6702.31,
+   "tp2": -6702.31,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "OPEN 15:25",
+     6,
+     6851.0,
+     "15:25"
+    ]
+   ],
+   "exit_text": "OPEN",
+   "leg2_time": "15:25",
+   "pnl": -306.0,
+   "r_total": -0.37,
+   "closed": false,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "09:35",
+     "price": 6800.0
+    }
+   ],
+   "spurt_rank": 196,
+   "movers20": true
+  },
+  "ABCAPITAL": {
+   "symbol": "ABCAPITAL",
+   "side": "SELL",
+   "time": "11:25",
+   "signal": "SELL-EX1",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 410.15,
+   "sl": 415.58,
+   "sl_anchor": "pivot",
+   "risk_pts": 5.43,
+   "risk_pct": 1.325,
+   "risk_rs": 657.0,
+   "qty": 121,
+   "qty_full": 121,
+   "qty_capped": false,
+   "capital": 49628.0,
+   "tp1": -127.73,
+   "tp2": -127.73,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "OPEN 15:25",
+     121,
+     412.3999938964844,
+     "15:25"
+    ]
+   ],
+   "exit_text": "OPEN",
+   "leg2_time": "15:25",
+   "pnl": -272.0,
+   "r_total": -0.41,
+   "closed": false,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "11:25",
+     "price": 410.1499938964844
+    }
+   ],
+   "spurt_rank": 101,
+   "movers20": true
+  },
+  "ADANIGREEN": {
+   "symbol": "ADANIGREEN",
+   "side": "SELL",
+   "time": "10:25",
+   "signal": "SELL-EX1",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 1419.4,
+   "sl": 1433.79,
+   "sl_anchor": "pivot",
+   "risk_pts": 14.39,
+   "risk_pct": 1.014,
+   "risk_rs": 504.0,
+   "qty": 35,
+   "qty_full": 35,
+   "qty_capped": false,
+   "capital": 49679.0,
+   "tp1": -4.88,
+   "tp2": -4.88,
+   "trail_armed": true,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "trail 13:05",
+     35,
+     1399.6799044189452,
+     "13:05"
+    ]
+   ],
+   "exit_text": "100% trail 13:05",
+   "leg2_time": "13:05",
+   "pnl": 690.0,
+   "r_total": 1.37,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "10:25",
+     "price": 1419.4000244140625
+    },
+    {
+     "key": "TRAIL_ON",
+     "time": "11:45",
+     "price": 1387.5
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "13:05",
+     "price": 1399.6799044189452
+    }
+   ],
+   "spurt_rank": 186,
+   "movers20": true
+  },
+  "ADANIPOWER": {
+   "symbol": "ADANIPOWER",
+   "side": "SELL",
+   "time": "09:35",
+   "signal": "SELL-EX8",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 205.9,
+   "sl": 208.85,
+   "sl_anchor": "session-extreme*",
+   "risk_pts": 2.95,
+   "risk_pct": 1.434,
+   "risk_rs": 714.0,
+   "qty": 242,
+   "qty_full": 242,
+   "qty_capped": false,
+   "capital": 49828.0,
+   "tp1": -86.32,
+   "tp2": -86.32,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "OPEN 15:25",
+     242,
+     205.3000030517578,
+     "15:25"
+    ]
+   ],
+   "exit_text": "OPEN",
+   "leg2_time": "15:25",
+   "pnl": 145.0,
+   "r_total": 0.2,
+   "closed": false,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "09:35",
+     "price": 205.89999389648438
+    }
+   ],
+   "spurt_rank": 21,
+   "movers20": true
+  },
+  "ALKEM": {
+   "symbol": "ALKEM",
+   "side": "BUY",
+   "time": "10:25",
+   "signal": "BUY-EX4",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 5198.0,
+   "sl": 5151.97,
+   "sl_anchor": "pivot",
+   "risk_pts": 46.03,
+   "risk_pct": 0.886,
+   "risk_rs": 414.0,
+   "qty": 9,
+   "qty_full": 9,
+   "qty_capped": false,
+   "capital": 46782.0,
+   "tp1": 9755.03,
+   "tp2": 9755.03,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "OPEN 15:25",
+     9,
+     5222.5,
+     "15:25"
+    ]
+   ],
+   "exit_text": "OPEN",
+   "leg2_time": "15:25",
+   "pnl": 220.0,
+   "r_total": 0.53,
+   "closed": false,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "10:25",
+     "price": 5198.0
+    }
+   ],
+   "spurt_rank": 139,
+   "movers20": true
+  },
+  "AMBUJACEM": {
+   "symbol": "AMBUJACEM",
+   "side": "SELL",
+   "time": "10:10",
+   "signal": "SELL-EX1",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 386.0,
+   "sl": 389.78,
+   "sl_anchor": "pivot",
+   "risk_pts": 3.78,
+   "risk_pct": 0.979,
+   "risk_rs": 487.0,
+   "qty": 129,
+   "qty_full": 129,
+   "qty_capped": false,
+   "capital": 49794.0,
+   "tp1": 11.98,
+   "tp2": 11.98,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "OPEN 15:25",
+     129,
+     384.79998779296875,
+     "15:25"
+    ]
+   ],
+   "exit_text": "OPEN",
+   "leg2_time": "15:25",
+   "pnl": 155.0,
+   "r_total": 0.32,
+   "closed": false,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "10:10",
+     "price": 386.0
+    }
+   ],
+   "spurt_rank": 144,
+   "movers20": true
+  },
+  "APLAPOLLO": {
+   "symbol": "APLAPOLLO",
+   "side": "SELL",
+   "time": "10:15",
+   "signal": "NORMAL SELL",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 2167.8,
+   "sl": 2179.84,
+   "sl_anchor": "pivot",
+   "risk_pts": 12.04,
+   "risk_pct": 0.555,
+   "risk_rs": 277.0,
+   "qty": 23,
+   "qty_full": 23,
+   "qty_capped": false,
+   "capital": 49859.0,
+   "tp1": 976.26,
+   "tp2": 976.26,
+   "trail_armed": true,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "trail 13:10",
+     23,
+     2161.132091162109,
+     "13:10"
+    ]
+   ],
+   "exit_text": "100% trail 13:10",
+   "leg2_time": "13:10",
+   "pnl": 153.0,
+   "r_total": 0.55,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "10:15",
+     "price": 2167.800048828125
+    },
+    {
+     "key": "TRAIL_ON",
+     "time": "12:35",
+     "price": 2155.300048828125
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "13:10",
+     "price": 2161.132091162109
+    }
+   ],
+   "spurt_rank": 181,
+   "movers20": true
+  },
+  "ASIANPAINT": {
+   "symbol": "ASIANPAINT",
+   "side": "SELL",
+   "time": "09:30",
+   "signal": "SELL-EX3",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 2583.7,
+   "sl": 2595.32,
+   "sl_anchor": "session-extreme*",
+   "risk_pts": 11.62,
+   "risk_pct": 0.45,
+   "risk_rs": 221.0,
+   "qty": 19,
+   "qty_full": 19,
+   "qty_capped": false,
+   "capital": 49090.0,
+   "tp1": 1433.41,
+   "tp2": 1433.41,
+   "trail_armed": true,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "trail 11:25",
+     19,
+     2574.114817675781,
+     "11:25"
+    ]
+   ],
+   "exit_text": "100% trail 11:25",
+   "leg2_time": "11:25",
+   "pnl": 182.0,
+   "r_total": 0.82,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "09:30",
+     "price": 2583.699951171875
+    },
+    {
+     "key": "TRAIL_ON",
+     "time": "10:20",
+     "price": 2571.199951171875
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "11:25",
+     "price": 2574.114817675781
+    }
+   ],
+   "spurt_rank": 87,
+   "movers20": true
+  },
+  "AUBANK": {
+   "symbol": "AUBANK",
+   "side": "SELL",
+   "time": "09:35",
+   "signal": "SELL-EX8",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 979.05,
+   "sl": 995.85,
+   "sl_anchor": "session-extreme*",
+   "risk_pts": 16.8,
+   "risk_pct": 1.716,
+   "risk_rs": 857.0,
+   "qty": 51,
+   "qty_full": 51,
+   "qty_capped": false,
+   "capital": 49932.0,
+   "tp1": -684.07,
+   "tp2": -684.07,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "OPEN 15:25",
+     51,
+     977.0,
+     "15:25"
+    ]
+   ],
+   "exit_text": "OPEN",
+   "leg2_time": "15:25",
+   "pnl": 105.0,
+   "r_total": 0.12,
+   "closed": false,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "09:35",
+     "price": 979.0499877929688
+    }
+   ],
+   "spurt_rank": 42,
+   "movers20": true
+  },
+  "BDL": {
+   "symbol": "BDL",
+   "side": "SELL",
+   "time": "09:30",
+   "signal": "SELL-EX8",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 1018.6,
+   "sl": 1031.61,
+   "sl_anchor": "session-extreme*",
+   "risk_pts": 13.01,
+   "risk_pct": 1.277,
+   "risk_rs": 637.0,
+   "qty": 49,
+   "qty_full": 49,
+   "qty_capped": false,
+   "capital": 49911.0,
+   "tp1": -269.03,
+   "tp2": -269.03,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "OPEN 15:25",
+     49,
+     1013.4000244140625,
+     "15:25"
+    ]
+   ],
+   "exit_text": "OPEN",
+   "leg2_time": "15:25",
+   "pnl": 255.0,
+   "r_total": 0.4,
+   "closed": false,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "09:30",
+     "price": 1018.5999755859375
+    }
+   ],
+   "spurt_rank": 201,
+   "movers20": true
+  },
+  "BEL": {
+   "symbol": "BEL",
+   "side": "SELL",
+   "time": "09:35",
+   "signal": "SELL-EX3",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 394.5,
+   "sl": 398.28,
+   "sl_anchor": "session-extreme*",
+   "risk_pts": 3.78,
+   "risk_pct": 0.958,
+   "risk_rs": 476.0,
+   "qty": 126,
+   "qty_full": 126,
+   "qty_capped": false,
+   "capital": 49707.0,
+   "tp1": 20.31,
+   "tp2": 20.31,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "OPEN 15:25",
+     126,
+     395.79998779296875,
+     "15:25"
+    ]
+   ],
+   "exit_text": "OPEN",
+   "leg2_time": "15:25",
+   "pnl": -164.0,
+   "r_total": -0.34,
+   "closed": false,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "09:35",
+     "price": 394.5
+    }
+   ],
+   "spurt_rank": 90,
+   "movers20": true
+  },
+  "BHEL": {
+   "symbol": "BHEL",
+   "side": "SELL",
+   "time": "09:35",
+   "signal": "SELL-EX3",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 423.3,
+   "sl": 429.99,
+   "sl_anchor": "session-extreme*",
+   "risk_pts": 6.69,
+   "risk_pct": 1.579,
+   "risk_rs": 789.0,
+   "qty": 118,
+   "qty_full": 118,
+   "qty_capped": false,
+   "capital": 49949.0,
+   "tp1": -238.61,
+   "tp2": -238.61,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "OPEN 15:25",
+     118,
+     421.70001220703125,
+     "15:25"
+    ]
+   ],
+   "exit_text": "OPEN",
+   "leg2_time": "15:25",
+   "pnl": 189.0,
+   "r_total": 0.24,
+   "closed": false,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "09:35",
+     "price": 423.29998779296875
+    }
+   ],
+   "spurt_rank": 115,
+   "movers20": true
+  },
+  "BIOCON": {
+   "symbol": "BIOCON",
+   "side": "BUY",
+   "time": "09:50",
+   "signal": "BUY-EX4",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 362.6,
+   "sl": 357.38,
+   "sl_anchor": "session-extreme*",
+   "risk_pts": 5.22,
+   "risk_pct": 1.44,
+   "risk_rs": 715.0,
+   "qty": 137,
+   "qty_full": 137,
+   "qty_capped": false,
+   "capital": 49676.0,
+   "tp1": 879.53,
+   "tp2": 879.53,
+   "trail_armed": true,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "trail 12:30",
+     137,
+     364.927,
+     "12:30"
+    ]
+   ],
+   "exit_text": "100% trail 12:30",
+   "leg2_time": "12:30",
+   "pnl": 319.0,
+   "r_total": 0.45,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "09:50",
+     "price": 362.6000061035156
+    },
+    {
+     "key": "TRAIL_ON",
+     "time": "11:25",
+     "price": 367.8500061035156
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "12:30",
+     "price": 364.927
+    }
+   ],
+   "spurt_rank": 119,
+   "movers20": true
+  },
+  "CONCOR": {
+   "symbol": "CONCOR",
+   "side": "SELL",
+   "time": "09:35",
+   "signal": "SELL-EX3",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 436.85,
+   "sl": 441.89,
+   "sl_anchor": "session-extreme*",
+   "risk_pts": 5.04,
+   "risk_pct": 1.153,
+   "risk_rs": 574.0,
+   "qty": 114,
+   "qty_full": 114,
+   "qty_capped": false,
+   "capital": 49801.0,
+   "tp1": -61.95,
+   "tp2": -61.95,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "OPEN 15:25",
+     114,
+     436.95001220703125,
+     "15:25"
+    ]
+   ],
+   "exit_text": "OPEN",
+   "leg2_time": "15:25",
+   "pnl": -11.0,
+   "r_total": -0.02,
+   "closed": false,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "09:35",
+     "price": 436.8500061035156
+    }
+   ],
+   "spurt_rank": 175,
+   "movers20": true
+  },
+  "GODREJPROP": {
+   "symbol": "GODREJPROP",
+   "side": "SELL",
+   "time": "12:00",
+   "signal": "SELL-EX1",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 1880.9,
+   "sl": 1891.48,
+   "sl_anchor": "pivot",
+   "risk_pts": 10.58,
+   "risk_pct": 0.562,
+   "risk_rs": 275.0,
+   "qty": 26,
+   "qty_full": 26,
+   "qty_capped": false,
+   "capital": 48903.0,
+   "tp1": 833.66,
+   "tp2": 833.66,
+   "trail_armed": true,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "trail 12:55",
+     26,
+     1891.4781955810547,
+     "12:55"
+    ]
+   ],
+   "exit_text": "100% trail 12:55",
+   "leg2_time": "12:55",
+   "pnl": -275.0,
+   "r_total": -1.0,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "12:00",
+     "price": 1880.9000244140625
+    },
+    {
+     "key": "TRAIL_ON",
+     "time": "12:30",
+     "price": 1870.0
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "12:55",
+     "price": 1891.4781955810547
+    }
+   ],
+   "spurt_rank": 65,
+   "movers20": true
+  }
+ },
+ "alerts": [
+  "ABB:ENTRY",
+  "ABCAPITAL:ENTRY",
+  "ADANIGREEN:ENTRY",
+  "ADANIPOWER:ENTRY",
+  "ALKEM:ENTRY",
+  "AMBUJACEM:ENTRY",
+  "APLAPOLLO:ENTRY",
+  "ASIANPAINT:ENTRY",
+  "AUBANK:ENTRY",
+  "BDL:ENTRY",
+  "BEL:ENTRY",
+  "BHEL:ENTRY",
+  "BIOCON:ENTRY",
+  "CONCOR:ENTRY",
+  "GODREJPROP:ENTRY"
+ ],
+ "gate": {
+  "spurts": {
+   "status": "OK",
+   "source": "https://www.nseindia.com/api/live-analysis-oi-spurts-underlyings (curl-cffi)",
+   "count": 205
+  },
+  "movers": {
+   "count": 209,
+   "top20_cut": 0.0,
+   "bot20_cut": 0.0
+  }
+ },
  "eod_done": false,
- "cycles": 0
+ "cycles": 0,
+ "skipped": [
+  {
+   "symbol": "360ONE",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 1215.0,
+   "rank": 11,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "ABB",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 6825.0,
+   "rank": 196,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "ABCAPITAL",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "09:45",
+   "entry": 413.85,
+   "rank": 101,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 quality filter"
+  },
+  {
+   "symbol": "ADANIENSOL",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 1506.3,
+   "rank": 8,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "ADANIENT",
+   "side": "SELL",
+   "signal": "SELL-EX1",
+   "time": "09:35",
+   "entry": 2700.0,
+   "rank": 111,
+   "why": "EX1/EX2 before 09:45 blocked \u2014 razor-edge class (B2)"
+  },
+  {
+   "symbol": "ADANIGREEN",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 1434.5,
+   "rank": 186,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "ADANIPORTS",
+   "side": "SELL",
+   "signal": "SELL-EX1",
+   "time": "09:35",
+   "entry": 1897.6,
+   "rank": 171,
+   "why": "EX1/EX2 before 09:45 blocked \u2014 razor-edge class (B2)"
+  },
+  {
+   "symbol": "ADANIPOWER",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 207.85,
+   "rank": 21,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "ALKEM",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 5156.5,
+   "rank": 139,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "AMBER",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "09:50",
+   "entry": 6257.5,
+   "rank": 199,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 quality filter"
+  },
+  {
+   "symbol": "ANGELONE",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 361.4,
+   "rank": 9,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "APLAPOLLO",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 2171.0,
+   "rank": 181,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "ASHOKLEY",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 156.83,
+   "rank": 132,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "ASIANPAINT",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 2586.2,
+   "rank": 87,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "ASTRAL",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 1234.0,
+   "rank": 176,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "AUBANK",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 982.8,
+   "rank": 42,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "AUROPHARMA",
+   "side": "SELL",
+   "signal": "SELL-EX12",
+   "time": "09:40",
+   "entry": 1791.5,
+   "rank": 51,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 quality filter"
+  },
+  {
+   "symbol": "AXISBANK",
+   "side": "SELL",
+   "signal": "SELL-EX1",
+   "time": "09:40",
+   "entry": 1365.0,
+   "rank": 14,
+   "why": "EX1/EX2 before 09:45 blocked \u2014 razor-edge class (B2)"
+  },
+  {
+   "symbol": "BAJAJFINSV",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 1842.1,
+   "rank": 57,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "BAJFINANCE",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 1106.7,
+   "rank": 32,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "BANDHANBNK",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 172.4,
+   "rank": 148,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "BANKBARODA",
+   "side": "SELL",
+   "signal": "SELL-EX1",
+   "time": "09:40",
+   "entry": 272.58,
+   "rank": 58,
+   "why": "EX1/EX2 before 09:45 blocked \u2014 razor-edge class (B2)"
+  },
+  {
+   "symbol": "BANKINDIA",
+   "side": "SELL",
+   "signal": "SELL-EX1",
+   "time": "09:40",
+   "entry": 157.18,
+   "rank": 68,
+   "why": "EX1/EX2 before 09:45 blocked \u2014 razor-edge class (B2)"
+  },
+  {
+   "symbol": "BDL",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 1023.7,
+   "rank": 201,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "BEL",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 395.75,
+   "rank": 90,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "BHARATFORG",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 1702.0,
+   "rank": 85,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "BHEL",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 425.75,
+   "rank": 115,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "BOSCHLTD",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 48795.0,
+   "rank": 194,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "BRITANNIA",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 4703.4,
+   "rank": 16,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "BRITANNIA",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 4688.7,
+   "rank": 16,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "BSE",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 3912.2,
+   "rank": 95,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "CAMS",
+   "side": "SELL",
+   "signal": "SELL-EX1",
+   "time": "09:30",
+   "entry": 738.5,
+   "rank": 91,
+   "why": "EX1/EX2 before 09:45 blocked \u2014 razor-edge class (B2)"
+  },
+  {
+   "symbol": "CDSL",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 1460.9,
+   "rank": 116,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "CDSL",
+   "side": "SELL",
+   "signal": "SELL-EX1",
+   "time": "09:40",
+   "entry": 1434.3,
+   "rank": 116,
+   "why": "EX1/EX2 before 09:45 blocked \u2014 razor-edge class (B2)"
+  },
+  {
+   "symbol": "CGPOWER",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 804.45,
+   "rank": 86,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "CGPOWER",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 799.5,
+   "rank": 86,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "CHOLAFIN",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 1855.8,
+   "rank": 129,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "CIPLA",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 1382.3,
+   "rank": 2,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "CIPLA",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "09:50",
+   "entry": 1390.9,
+   "rank": 2,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 quality filter"
+  },
+  {
+   "symbol": "COALINDIA",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 390.7,
+   "rank": 106,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "COCHINSHIP",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 1136.8,
+   "rank": 197,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "COFORGE",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "09:50",
+   "entry": 2055.9,
+   "rank": 103,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 quality filter"
+  },
+  {
+   "symbol": "COFORGE",
+   "side": "SELL",
+   "signal": "SELL-EX15",
+   "time": "11:50",
+   "entry": 2037.0,
+   "rank": 103,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 quality filter"
+  },
+  {
+   "symbol": "COLPAL",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 1691.8,
+   "rank": 160,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "COLPAL",
+   "side": "SELL",
+   "signal": "SELL-EX12",
+   "time": "09:40",
+   "entry": 1684.2,
+   "rank": 160,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 quality filter"
+  },
+  {
+   "symbol": "CONCOR",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 438.6,
+   "rank": 175,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "CROMPTON",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 206.3,
+   "rank": 145,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "CUMMINSIND",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 3988.9,
+   "rank": 130,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "DABUR",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 381.2,
+   "rank": 180,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "DALBHARAT",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 1515.3,
+   "rank": null,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "DELHIVERY",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 454.2,
+   "rank": 150,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "DIVISLAB",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 11220.0,
+   "rank": 147,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "DIVISLAB",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 11228.0,
+   "rank": 147,
+   "why": "EX1/EX2 before 09:45 blocked \u2014 razor-edge class (B2)"
+  },
+  {
+   "symbol": "DIXON",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 12907.0,
+   "rank": 146,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "DLF",
+   "side": "SELL",
+   "signal": "SELL-EX1",
+   "time": "09:35",
+   "entry": 758.45,
+   "rank": 52,
+   "why": "EX1/EX2 before 09:45 blocked \u2014 razor-edge class (B2)"
+  },
+  {
+   "symbol": "DMART",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 3440.6,
+   "rank": 64,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "DRREDDY",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 1382.4,
+   "rank": 67,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "DRREDDY",
+   "side": "BUY",
+   "signal": "BUY-EX12",
+   "time": "11:10",
+   "entry": 1388.0,
+   "rank": 67,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 quality filter"
+  },
+  {
+   "symbol": "EICHERMOT",
+   "side": "SELL",
+   "signal": "SELL-EX1",
+   "time": "09:35",
+   "entry": 7730.0,
+   "rank": 54,
+   "why": "EX1/EX2 before 09:45 blocked \u2014 razor-edge class (B2)"
+  },
+  {
+   "symbol": "ETERNAL",
+   "side": "SELL",
+   "signal": "SELL-EX1",
+   "time": "09:35",
+   "entry": 373.55,
+   "rank": 74,
+   "why": "EX1/EX2 before 09:45 blocked \u2014 razor-edge class (B2)"
+  },
+  {
+   "symbol": "EXIDEIND",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 384.4,
+   "rank": null,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "FEDERALBNK",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 364.0,
+   "rank": 133,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "FORCEMOT",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 19772.0,
+   "rank": 165,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "FORTIS",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 801.15,
+   "rank": 41,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "GAIL",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 189.7,
+   "rank": 3,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "GAIL",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 190.8,
+   "rank": 3,
+   "why": "EX1/EX2 before 09:45 blocked \u2014 razor-edge class (B2)"
+  },
+  {
+   "symbol": "GMRAIRPORT",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 106.4,
+   "rank": 23,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "GODFRYPHLP",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 1776.2,
+   "rank": 203,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "GODREJPROP",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "10:05",
+   "entry": 1897.0,
+   "rank": 65,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 quality filter"
+  }
+ ],
+ "ghosts": [
+  {
+   "symbol": "ABCAPITAL",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "code": 102,
+   "time": "09:45",
+   "entry": 413.85,
+   "rank": 101,
+   "mv": true,
+   "grp": "R"
+  },
+  {
+   "symbol": "AMBER",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "code": 102,
+   "time": "09:50",
+   "entry": 6257.5,
+   "rank": 199,
+   "mv": true,
+   "grp": "R"
+  },
+  {
+   "symbol": "AUROPHARMA",
+   "side": "SELL",
+   "signal": "SELL-EX12",
+   "code": 213,
+   "time": "09:40",
+   "entry": 1791.5,
+   "rank": 51,
+   "mv": false,
+   "grp": "R"
+  },
+  {
+   "symbol": "CIPLA",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "code": 102,
+   "time": "09:50",
+   "entry": 1390.9,
+   "rank": 2,
+   "mv": false,
+   "grp": "R"
+  },
+  {
+   "symbol": "COFORGE",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "code": 102,
+   "time": "09:50",
+   "entry": 2055.9,
+   "rank": 103,
+   "mv": false,
+   "grp": "R"
+  },
+  {
+   "symbol": "COFORGE",
+   "side": "SELL",
+   "signal": "SELL-EX15",
+   "code": 216,
+   "time": "11:50",
+   "entry": 2037.0,
+   "rank": 103,
+   "mv": false,
+   "grp": "R"
+  },
+  {
+   "symbol": "COLPAL",
+   "side": "SELL",
+   "signal": "SELL-EX12",
+   "code": 213,
+   "time": "09:40",
+   "entry": 1684.2,
+   "rank": 160,
+   "mv": false,
+   "grp": "R"
+  },
+  {
+   "symbol": "DRREDDY",
+   "side": "BUY",
+   "signal": "BUY-EX12",
+   "code": 111,
+   "time": "11:10",
+   "entry": 1388.0,
+   "rank": 67,
+   "mv": false,
+   "grp": "R"
+  },
+  {
+   "symbol": "GODREJPROP",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "code": 102,
+   "time": "10:05",
+   "entry": 1897.0,
+   "rank": 65,
+   "mv": true,
+   "grp": "R"
+  }
+ ]
 }
