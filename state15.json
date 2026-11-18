@@ -2,28 +2,28 @@
   "session": "2026-11-18",
   "market": {
     "dir_state": -1,
-    "label": "BEAR",
-    "conf": 66,
+    "label": "NEUTRAL",
+    "conf": 55,
     "regime": "TREND DOWN"
   },
   "sector": {
-    "name": "CDUR",
+    "name": "MET",
     "side": -1,
-    "reason": "PERSIST \u2212 CDUR persistent (score 93)"
+    "reason": "PERSIST \u2212 MET persistent (score 91)"
   },
   "alerts": {},
   "sent": {},
   "positions": {},
   "feed": {
-    "yahoo_calls": 61,
+    "yahoo_calls": 60,
     "dhan_calls": 0,
     "fallback": null,
     "last_source": "yahoo",
-    "history_calls": 9,
+    "history_calls": 10,
     "symbols": 68,
     "sources": {
-      "yahoo": 59,
-      "history": 9
+      "yahoo": 58,
+      "history": 10
     }
   }
 }
