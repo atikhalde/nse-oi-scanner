@@ -33,7 +33,8 @@ master signal + home sector (fno_sector_map.csv — 17 official NSE sector
 indices + 13 synthetic equal-weight baskets) side-coupled QUALIFIED, top-2 of
 that side's board, persistent top-3 with persistent score > 70 (flow_map
 persist_min_score — applies to the direct and the 12-bar timed-hold paths),
-stock must lead its own sector; entries 09:26+ only; 90/290 previews blocked;
+stock must lead its own sector within 0.05 percentage points; entries 09:26+
+only; 90/290 previews blocked;
 ₹50k/₹900 sizing, structure
 SL, no targets, +1R structure trail, 15:20 square-off; 🅼6 alerts; ledger
 state6.json.
@@ -90,7 +91,9 @@ for _sec in MEMBERS:
     MEMBERS[_sec].sort()
 
 # 25-Jul-2026 user pick (option A): timed stable-flow hold 12×5m + beats-own-sector
-# leader filter (unchanged by this rewrite).
+# leader filter. A 0.05-percentage-point tolerance avoids rejecting near-equal
+# leaders (e.g. M&M +1.36% vs AUTO +1.39% on 19-Nov-2026).
+LEAD_TOLERANCE_PP = 0.05
 FM.set_hold("timed", 12)
 
 IST = L.IST
@@ -590,17 +593,23 @@ def _synth_input(sec, today, close_ts, bars_map, sym_cache):
 
 
 def lead_ok(board, sec, side, sd):
-    """beats-own-sector leader test (0 margin): BUY needs stock day% >= sector day%,
-    SELL needs stock day% <= sector day%. Waived only if sector metrics missing."""
+    """Allow at most 0.05 percentage points of lag behind the home sector.
+
+    BUY: stock day% >= sector day% - tolerance; SELL is symmetric.
+    Uses unrounded returns; epsilon only absorbs floating-point boundary noise.
+    Both scan prefilter and final entry validation call this shared helper.
+    Waived only if sector metrics are missing (existing behavior).
+    """
     d = board.sectors.get(sec) if sec else None
     if d is None:
         return True, "no sector metrics — lead waived"
     secd = d["day_ret"]
-    if side == "BUY" and sd < secd:
-        return False, f"lags own sector (stock {sd:+.2f}% vs {sec} {secd:+.2f}%)"
-    if side == "SELL" and sd > secd:
-        return False, f"lags own sector (stock {sd:+.2f}% vs {sec} {secd:+.2f}%)"
-    return True, f"LEAD {sd:+.2f}% vs {sec} {secd:+.2f}%"
+    lag = secd - sd if side == "BUY" else sd - secd
+    detail = (f"stock {sd:+.2f}% vs {sec} {secd:+.2f}%; "
+              f"lag {lag:+.3f}pp, tolerance {LEAD_TOLERANCE_PP:.2f}pp")
+    if lag > LEAD_TOLERANCE_PP + 1e-12:
+        return False, f"lags own sector ({detail})"
+    return True, f"LEAD ({detail})"
 
 
 def build_board(close_ts, today, bars_map, idx_live, sym_cache, log=print):

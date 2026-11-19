@@ -1022,7 +1022,7 @@ def test_persist_score_gate():
                 on_result(s, res)
         return out
 
-    def run_scan(board_dict):
+    def run_scan(board_dict, prev_close=1400.0):
         st = M.fresh_state(DAY)
         st["signals"][sym] = {"last_bar": "09:55", "nbars": 5}
         bars = _df([("09:55", 1497, 1499, 1496, 1498), ("10:00", 1499, 1501, 1498, 1500.0)])
@@ -1030,7 +1030,7 @@ def test_persist_score_gate():
         real = (M.send, M.fetch_symbols, M.symbol_history, M.run_engine_jobs)
         M.send = lambda text, silent=False, dry_run=False: sent.append(text) or True
         M.fetch_symbols = lambda symbols, now=None, workers=None: {}
-        M.symbol_history = lambda s, d: {"ok": True, "warmup": None, "prev_close": 1400.0,
+        M.symbol_history = lambda s, d: {"ok": True, "warmup": None, "prev_close": prev_close,
                                          "eng_hist": None, "yd": None, "prev2_close": None}
         M.run_engine_jobs = fake_engine
         try:
@@ -1045,11 +1045,40 @@ def test_persist_score_gate():
     stats, sent, _st = run_scan(FM.compute_board({"AUTO": strong}, nifty, 14.0, 100))
     ok("scan_entries alerts when AUTO persistent > 70",
        stats["entries"] == 1 and len(sent) == 1 and "M&M" in sent[0], f"{stats} {sent}")
+    # Near-equal leaders must survive BOTH the prefilter and final check.
+    real_board = FM.compute_board({"AUTO": strong}, nifty, 14.0, 100)
+    sector_return = real_board["sectors"]["AUTO"]["day_ret"]
+    near_pc = 1500.0 / (1 + (sector_return - 0.03) / 100)
+    stats, sent, _ = run_scan(real_board, prev_close=near_pc)
+    ok("M&M-like 0.03pp lag alerts through both leadership checks",
+       stats["entries"] == 1 and len(sent) == 1, str(stats))
+    lag_pc = 1500.0 / (1 + (sector_return - 0.06) / 100)
+    stats, sent, _ = run_scan(real_board, prev_close=lag_pc)
+    ok("0.06pp lag still blocks the stock alert",
+       stats["entries"] == 0 and sent == [], str(stats))
+    stats, sent, _ = run_scan(
+        FM.compute_board({"AUTO": strong}, nifty, 14.0, 100, cfg=cfg_hi), prev_close=near_pc)
+    ok("lead tolerance cannot bypass the persistent-score gate",
+       stats["entries"] == 0 and sent == [], str(stats))
     stats, sent, st = run_scan(FM.compute_board({"AUTO": strong}, nifty, 14.0, 100, cfg=cfg_hi))
     ok("scan_entries stays silent when AUTO persistent <= threshold",
        stats["entries"] == 0 and sent == [] and st["trades"] == {}, f"{stats} {sent}")
     ok("a gate-closed sector yields zero candidates (stock never scanned)",
        stats["candidates"] == 0, str(stats))
+
+
+def test_lead_tolerance():
+    from types import SimpleNamespace
+    board = SimpleNamespace(sectors={"AUTO": {"day_ret": 1.39}})
+    ok("M&M 19-Nov +1.36 vs AUTO +1.39 passes", M.lead_ok(board, "AUTO", "BUY", 1.36)[0])
+    for side, direction in (("BUY", -1), ("SELL", 1)):
+        for lag in (0.0, 0.03, 0.05, 0.050001, 0.06):
+            passed, reason = M.lead_ok(board, "AUTO", side, 1.39 + direction * lag)
+            ok(f"{side} leadership lag {lag}pp boundary", passed == (lag <= 0.05), reason)
+        ok(f"{side} outright leader still passes",
+           M.lead_ok(board, "AUTO", side, 1.39 - direction * 0.5)[0])
+    ok("lead reason discloses tolerance", "tolerance 0.05pp" in M.lead_ok(board, "AUTO", "BUY", 1.36)[1])
+    ok("missing sector retains existing waiver", M.lead_ok(board, None, "BUY", 1.36)[0])
 
 
 # ------------------------------------------------------------------ main
@@ -1076,6 +1105,7 @@ def main():
     test_dry_run_and_cli()
     test_telegram_fanout()
     test_persist_score_gate()
+    test_lead_tolerance()
     print("\nALL M6 RUNNER TESTS PASSED")
 
 
