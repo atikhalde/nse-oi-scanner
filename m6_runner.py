@@ -31,8 +31,10 @@ The previous runner broke that promise in four independent ways — all fixed he
 Trading rules are unchanged (24-Jul-2026 spec: Q0=A Q1=A Q2=B Q3=B Q4=A):
 master signal + home sector (fno_sector_map.csv — 17 official NSE sector
 indices + 13 synthetic equal-weight baskets) side-coupled QUALIFIED, top-2 of
-that side's board, persistent top-3, 12-bar timed hold, stock must lead its own
-sector; entries 09:26+ only; 90/290 previews blocked; ₹50k/₹900 sizing, structure
+that side's board, persistent top-3 with persistent score > 70 (flow_map
+persist_min_score — applies to the direct and the 12-bar timed-hold paths),
+stock must lead its own sector; entries 09:26+ only; 90/290 previews blocked;
+₹50k/₹900 sizing, structure
 SL, no targets, +1R structure trail, 15:20 square-off; 🅼6 alerts; ledger
 state6.json.
 
