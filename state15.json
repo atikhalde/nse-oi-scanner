@@ -2,14 +2,14 @@
   "session": "2026-11-19",
   "market": {
     "dir_state": -1,
-    "label": "BEAR",
-    "conf": 74,
+    "label": "NEUTRAL",
+    "conf": 54,
     "regime": "TRANSITION"
   },
   "sector": {
-    "name": "IT",
-    "side": -1,
-    "reason": "PERSIST \u2212 IT qualified (score 86)"
+    "name": "WAIT",
+    "side": 0,
+    "reason": "WAIT \u2014 market TRANSITION conf 54"
   },
   "alerts": {},
   "sent": {
@@ -36,18 +36,7 @@
       "t2": 2289.62,
       "t3": 2263.43,
       "entry_bar": "2026-11-19T09:25:00+05:30",
-      "last_bar": "2026-11-19T09:25:00+05:30"
-    },
-    "COFORGE": {
-      "side": "SELL",
-      "entry": 2019.0,
-      "sl": 2038.94,
-      "entry_ema9": 2038.5236628641367,
-      "t1": 1999.06,
-      "t2": 1979.12,
-      "t3": 1959.18,
-      "entry_bar": "2026-11-19T09:25:00+05:30",
-      "last_bar": "2026-11-19T09:25:00+05:30"
+      "last_bar": "2026-11-19T09:40:00+05:30"
     }
   },
   "feed": {
