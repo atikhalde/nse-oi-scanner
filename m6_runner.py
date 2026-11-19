@@ -34,8 +34,8 @@ indices + 13 synthetic equal-weight baskets) side-coupled QUALIFIED, top-2 of
 that side's board, persistent top-3 with persistent score > 70 (flow_map
 persist_min_score — applies to the direct and the 12-bar timed-hold paths),
 stock must lead its own sector within 0.05 percentage points; entries 09:26+
-only; top-5 composite stock rank within each eligible sector;
-90/290 previews blocked;
+only; top-5 composite stock rank within each eligible sector; >2% gaps or
+single-candle moves need two follow-through closes; 90/290 previews blocked;
 ₹50k/₹900 sizing, structure
 SL, no targets, +1R structure trail, 15:20 square-off; 🅼6 alerts; ledger
 state6.json.
@@ -617,6 +617,46 @@ def lead_ok(board, sec, side, sd):
 SECTOR_LEADER_LIMIT = 5
 
 
+BIG_MOVE_PCT = 2.0
+FOLLOW_THROUGH_BARS = 2
+
+
+def follow_through_ok(closed, prev_close, side):
+    """Gate >2% opening gaps, first-candle bodies and close-to-close moves.
+
+    A directional event needs two consecutive later closes progressing beyond
+    its close in that direction. Confirmation stays valid unless a new event
+    occurs. Opposite-side events do not block this side. Closed session bars
+    only; callers must remove forming/future bars before calling.
+    """
+    if closed is None or closed.empty or not prev_close or not np.isfinite(prev_close) or prev_close <= 0:
+        return False, "follow-through data missing"
+    c = closed["close"].to_numpy(dtype=float)
+    opening = float(closed.iloc[0]["open"])
+    if not np.isfinite(c).all() or not np.isfinite(opening) or np.any(c <= 0) or opening <= 0:
+        return False, "follow-through data invalid"
+    direction = 1 if side == "BUY" else -1
+    moves = (c[1:] / c[:-1] - 1) * 100
+    events = [j+1 for j, move in enumerate(moves) if direction * move > BIG_MOVE_PCT + 1e-10]
+    gap = (opening / prev_close - 1) * 100
+    body = (c[0] / opening - 1) * 100
+    if direction * gap > BIG_MOVE_PCT + 1e-10 or direction * body > BIG_MOVE_PCT + 1e-10:
+        events.insert(0, 0)
+    if not events:
+        return True, "no unconfirmed big move"
+    event = events[-1]
+    streak = 0
+    for j in range(event + 1, len(c)):
+        if direction * (c[j] - c[j-1]) > 0 and direction * (c[j] - c[event]) > 0:
+            streak += 1
+            if streak >= FOLLOW_THROUGH_BARS:
+                return True, "big move confirmed by two follow-through closes"
+        else:
+            streak = 0
+    return False, (f"big move at {closed.iloc[event]['t']} needs "
+                   f"{FOLLOW_THROUGH_BARS} follow-through closes — no alert")
+
+
 def rank_sector_stocks(board, sec_sides, bars_map, sym_cache, close_ts):
     """Rank all available peers, not just stocks with signals or no open trade.
 
@@ -624,6 +664,8 @@ def rank_sector_stocks(board, sec_sides, bars_map, sym_cache, close_ts):
     momentum, 20% volume participation (last <=3 bars / earlier session mean),
     20% directional structure (day-range position + distance from VWAP).
     Components use within-sector percentile ranks, with equal values tied.
+    Unconfirmed >2% directional gaps/impulses are excluded before ranking;
+    two later progressing closes are required to restore eligibility.
     Volume is a session-relative proxy, NOT time-of-day historical RVOL.
     Missing/zero volume is neutral; missing price/previous-close/current bar
     fails closed. Ties in the composite break alphabetically for determinism.
@@ -632,7 +674,7 @@ def rank_sector_stocks(board, sec_sides, bars_map, sym_cache, close_ts):
     target = (pd.Timestamp(close_ts) - pd.Timedelta(minutes=CANDLE_MIN)).strftime("%H:%M")
     result = {}
     for sec, sides in sec_sides.items():
-        rows = {}
+        rows, allowed = {}, {side: set() for side in sides}
         for sym in SEC_STOCKS.get(sec, []):
             b = _closed_bars(bars_map.get(sym), close_ts)
             pc = (sym_cache.get(sym) or {}).get("prev_close")
@@ -645,6 +687,9 @@ def rank_sector_stocks(board, sec_sides, bars_map, sym_cache, close_ts):
             h, l = b["high"].to_numpy(dtype=float), b["low"].to_numpy(dtype=float)
             if not (np.isfinite(c).all() and np.isfinite(h).all() and np.isfinite(l).all()) or np.any(c <= 0):
                 continue
+            for side in sides:
+                if follow_through_ok(b, pc, side)[0]:
+                    allowed[side].add(sym)
             v = b["volume"].fillna(0).clip(lower=0).to_numpy(dtype=float)
             v = np.where(np.isfinite(v), v, 0.0)
             n = min(3, max(1, len(c) - 1))
@@ -658,10 +703,11 @@ def rank_sector_stocks(board, sec_sides, bars_map, sym_cache, close_ts):
                              volume=participation, position=position,
                              vwap=(c[-1] / vwap - 1) * 100)
         for side in sides:
-            if not rows:
+            eligible = {sym: row for sym, row in rows.items() if sym in allowed[side]}
+            if not eligible:
                 result[(sec, side)] = {}
                 continue
-            frame = pd.DataFrame.from_dict(rows, orient="index")
+            frame = pd.DataFrame.from_dict(eligible, orient="index")
             direction = 1 if side == "BUY" else -1
             def percentile(values):
                 # Equal components carry equal influence, including small baskets.
@@ -996,6 +1042,7 @@ def git_sync(reason="", dry_run=False, next_close=None, timeout=25):
             pass
     files = ["state6.json"]
     files += sorted(p.name for p in ROOT.glob("paper_test_M6_*.xlsx"))
+    files += sorted(p.name for p in ROOT.glob("activity_M6_*.json"))
 
     def run(args):
         return subprocess.run(["git", "-C", str(ROOT)] + args, capture_output=True, text=True,
@@ -1238,6 +1285,10 @@ def scan_entries(st, today, close_ts, now, board, bars_map, sym_cache, dry_run=F
                     if not ok:
                         why = why2
                 if why is None:
+                    fok, fwhy = follow_through_ok(closed, (sym_cache.get(sym) or {}).get("prev_close"), side)
+                    if not fok:
+                        why = fwhy
+                if why is None:
                     leader = leader_ranks.get((sec, side), {}).get(sym)
                     if leader is None:
                         why = "sector leader ranking unavailable on current candle — no alert"
@@ -1268,6 +1319,9 @@ def scan_entries(st, today, close_ts, now, board, bars_map, sym_cache, dry_run=F
                 tr = trader.evaluate(sym, side, etime, entry, name, closed,
                                      warmup=(sym_cache.get(sym) or {}).get("warmup"))
                 if "error" in tr:
+                    _add_skip(st, dict(symbol=sym, side=side, signal=name, time=etime,
+                                       entry=round(entry, 2), sector=sec, why=f"trader rejected: {tr.get('error')}"))
+                    stats["skips"] += 1
                     print(f"  M6 {sym} {side} @ {etime} — trader rejected: {tr.get('error')}")
                     continue
                 tr["sector"] = sec
@@ -1336,6 +1390,118 @@ def _poll_pending(st, pending, bars_map, target_bar, close_ts, max_lag, stats, n
 
 
 # --------------------------------------------------------------- EOD
+def record_day_activity(st, bar, board, stats, meta, exits, latency):
+    """One replaceable closed-bar snapshot; survives restarts in state6.json."""
+    sectors = {}
+    if board is not None:
+        for sec, metrics in board.sectors.items():
+            sectors[sec] = dict(metrics=metrics,
+                               gates={side: dict(zip(("ok", "why"), board.entry_ok(side, sec)))
+                                      for side in ("BUY", "SELL")})
+    leaders = {key: value for key, value in st.get("stock_leaders", {}).items()
+               if value.get("time") == bar}
+    # Normalize numpy scalars now so normal save_state can serialize the journal.
+    snapshot = dict(time=bar, gate=st.get("gate", {}), sectors=sectors,
+                    net_tilt=getattr(board, "net_tilt", None),
+                    tilt=getattr(board, "tilt_label", "OFFLINE"), leaders=leaders,
+                    scan=stats, exits=exits, cycle_latency=latency, feed=feeds.feed_stats(), meta=meta)
+    st.setdefault("day_activity", {})[bar] = json.loads(json.dumps(
+        snapshot, default=lambda x: x.item() if isinstance(x, np.generic) else str(x)))
+
+
+def eod_activity_text(st):
+    """Observed facts only: no inferred rejected signals or hindsight entries."""
+    from collections import Counter
+    history = [v for _, v in sorted(st.get("day_activity", {}).items())]
+    skips = st.get("skipped", [])
+    lines = [f"M6 DAY ACTIVITY — {st.get('date', '?')}",
+             f"Recorded candles: {len(history)}; cycles: {st.get('cycles', 0)}; "
+             f"trades: {len(st.get('trades', {}))}; skip records: {len(skips)}",
+             "COVERAGE: only observed cycles; sector-closed stocks are not scanned. "
+             "Skip records can include historical signals, repeats and non-signal data issues; not unique missed trades.",
+             "Ranking weights: strength 40 / momentum 20 / session-volume 20 / structure 20. "
+             "Persistent >70; top-5; >2% impulse needs two follow-through closes.",
+             "No counterfactual P&L is claimed for blocked signals."]
+    if not history:
+        lines.append("No intraday journal available (older state); sector timeline cannot be reconstructed.")
+    if history:
+        lat = [h["cycle_latency"] for h in history]
+        lines.append(f"Cycle latency seconds min/mean/max: {min(lat):.1f}/{np.mean(lat):.1f}/{max(lat):.1f}")
+        totals = Counter()
+        for h in history:
+            for k in ("entries", "signals", "skips", "candidates", "fetched", "pending"):
+                totals[k] += h.get("scan", {}).get(k, 0)
+        lines.append("Scan totals (candidate counts repeat across candles): " + str(dict(totals)))
+        lines.append("MARKET MOMENTUM TIMELINE")
+        for h in history:
+            lines.append(f"{h['time']} {h['tilt']} tilt={h['net_tilt']} gate={h['gate'].get('status', '?')}")
+    lines.append("SECTOR MOMENTUM / PERSISTENCE (observed samples, not trade returns)")
+    names = sorted({sec for h in history for sec in h["sectors"]})
+    for sec in names:
+        samples = [(h["time"], h["sectors"][sec]) for h in history if sec in h["sectors"]]
+        metrics = [v["metrics"] for _, v in samples]
+        returns = [m.get("day_ret", 0) for m in metrics]
+        lines.append(f"{sec}: day return {returns[0]:+.2f}% -> {returns[-1]:+.2f}%; "
+                     f"min/max {min(returns):+.2f}%/{max(returns):+.2f}% ({len(samples)} samples)")
+        for flow in ("bull", "bear"):
+            values = [m.get(flow, 0) for m in metrics]
+            lines.append(f"  {flow} flow start/end {values[0]:.2f}/{values[-1]:.2f}; min/max {min(values):.2f}/{max(values):.2f}")
+        for side, key in (("BUY", "persist_bull"), ("SELL", "persist_bear")):
+            scores = [m.get(key, 0) for m in metrics]
+            opened = [t for t,v in samples if v["gates"][side]["ok"]]
+            changes, previous = [], None
+            for t,v in samples:
+                gate = v["gates"][side]
+                # Full numeric gate reasons for every candle remain in JSON.
+                if gate["ok"] != previous:
+                    changes.append(f"{t} {'OPEN' if gate['ok'] else 'CLOSED'} ({gate['why']})")
+                    previous = gate["ok"]
+            lines.append(f"  {side} persistent start/end {scores[0]:.2f}/{scores[-1]:.2f}, "
+                         f"min/max {min(scores):.2f}/{max(scores):.2f}; >70 {sum(x>70 for x in scores)}/{len(scores)}; "
+                         f"gate-open {len(opened)} candles; " + "; ".join(changes))
+    lines.append("TOP-5 LEADERSHIP — observed eligible-candle counts, not entry counts")
+    leader_counts = {}
+    for h in history:
+        for key, snapshot in h.get("leaders", {}).items():
+            counts = leader_counts.setdefault(key, Counter())
+            for sym, rank in snapshot.get("stocks", {}).items():
+                if rank.get("rank", 999) <= SECTOR_LEADER_LIMIT:
+                    counts[sym] += 1
+    for key, counts in sorted(leader_counts.items()):
+        lines.append(key + ": " + ", ".join(f"{sym} {n}" for sym,n in counts.most_common()))
+    lines.append("BLOCK REASONS — exact recorded reason counts")
+    for why, count in Counter(it.get("why", "unknown") for it in skips).most_common():
+        lines.append(f"{count} × {why}")
+    lines.append("ALL RECORDED BLOCKS / SKIPS")
+    for it in skips:
+        lines.append(f"{it.get('time', '?')} {it.get('symbol', '?')} {it.get('side') or '-'} "
+                     f"{it.get('signal', '-')} [{it.get('sector') or '-'}] price={it.get('entry')} — {it.get('why', '?')}")
+    lines.append("TRADE LEDGER — saved fields (including exits, costs and P&L where present)")
+    for key, trade in st.get("trades", {}).items():
+        lines.append(key + ": " + json.dumps(trade, ensure_ascii=False, default=str))
+    lines.append("Full per-candle sector metrics, gate reasons, stock ranks/components, scan/feed diagnostics "
+                 "and suppressed records are in the activity JSON attachment. No journal exists for unobserved candles.")
+    return "\n".join(lines)
+
+
+def send_activity_text(text, dry_run=False):
+    """Escape HTML and split before Telegram's 4096-character limit."""
+    import html
+    pieces, chunk, size = [], [], 0
+    for char in text:
+        escaped = html.escape(char)
+        units = len(escaped.encode("utf-16-le")) // 2
+        if size + units > 3000:
+            pieces.append("".join(chunk))
+            chunk, size = [], 0
+        chunk.append(escaped)
+        size += units
+    if chunk:
+        pieces.append("".join(chunk))
+    for i, piece in enumerate(pieces, 1):
+        send(f"🅼6 EOD activity {i}/{len(pieces)}\n" + piece, dry_run=dry_run)
+
+
 def run_eod(st, today, now, board=None, bars_map=None, dry_run=False, reason="eod"):
     """EOD report + Telegram summary. State is marked done BEFORE sending."""
     if st.get("eod_done"):
@@ -1369,6 +1535,12 @@ def run_eod(st, today, now, board=None, bars_map=None, dry_run=False, reason="eo
         st["eod_reason"] = reason
         save_state(st, dry_run)              # done BEFORE send → report can never double-send
         send(msg, dry_run=dry_run)
+        activity = eod_activity_text(st)
+        send_activity_text(activity, dry_run=dry_run)
+        if not dry_run:
+            audit = STATE6.parent / f"activity_M6_{today}.json"
+            audit.write_text(json.dumps(st, ensure_ascii=False, indent=2, default=str), encoding="utf-8")
+            _fanout_document(str(audit), caption=f"M6 full day activity audit {today}")
         if out:
             if dry_run:
                 print(f"[DRY] document {out}")
@@ -1488,6 +1660,7 @@ def run_cycle(now=None, target_close=None, dry_run=False, st=None, today=None,
     stats = scan_entries(st, today, close_ts, now, board, bars_map, sym_cache,
                          dry_run=dry_run) if gate_ok else {"entries": 0, "skips": 0,
                                                            "signals": 0, "latency": []}
+    record_day_activity(st, target_bar, board, stats, meta, exits, round((now-close_ts).total_seconds(), 2))
     t_scan = time.monotonic()
 
     # --- 7. heartbeat / diagnostics

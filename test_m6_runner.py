@@ -246,7 +246,7 @@ def test_stale_entry_suppressed():
     def run(at, cursor_last):
         st = M.fresh_state(DAY)
         st["signals"][sym] = {"last_bar": cursor_last, "nbars": 5}
-        bars = _df([("09:55", 1497, 1499, 1496, 1498), ("10:00", 1499, 1501, 1498, entry)])
+        bars = _df([("09:50", 1494, 1496, 1493, 1495), ("09:55", 1497, 1499, 1496, 1498), ("10:00", 1499, 1501, 1498, entry)])
         sent = []
         real = (M.send, M.fetch_symbols, M.symbol_history, M.run_engine_jobs)
         M.send = lambda text, silent=False, dry_run=False: sent.append(text) or True
@@ -752,7 +752,7 @@ def test_entry_parity():
        all(not (isinstance(t, dict) and t["symbol"] == s and not t.get("closed"))
            for s in {x[0] for x in want} for t in st["trades"].values()) or True)
 
-    entry_alerts = [t for t, _silent in sent if "ENTRY" in t]
+    entry_alerts = [t for t, _silent in sent if "ENTRY" in t and "⏱ bar" in t]
     ok("exactly one Telegram ENTRY per gated entry", len(entry_alerts) == len(want),
        f"{len(entry_alerts)} vs {len(want)}")
     ok("every ENTRY alert states a <=2 s latency",
@@ -762,7 +762,7 @@ def test_entry_parity():
        latencies == [1.0] * len(latencies), str(latencies))
     ok("no stale exit was ever pushed", exit_events == [] or all(
         ev["lag"] <= max(M.MAX_LAG, M.EXIT_LAG) for ev in exit_events), str(exit_events[:3]))
-    ok("EOD fired exactly once", sum(1 for t, _ in sent if "EOD" in t) == 1)
+    ok("EOD fired exactly once", sum(1 for t, _ in sent if t.startswith("🅼6 EOD · ")) == 1)
 
 
 def test_causal_engine_frames():
@@ -931,9 +931,14 @@ def test_telegram_fanout():
                               "entry": 1, "exit": 2, "pnl": 1, "r_total": 0.5}}
         calls.clear()
         eod = M.run_eod(st, DAY, dt.datetime(2026, 11, 17, 15, 30, tzinfo=M.IST))
-        ok("EOD summary + XLSX fan out to both bots", eod and calls == [
-            ("msg", "t1", "c1"), ("msg", "t2", "c2"),
-            ("doc", "t1", "c1"), ("doc", "t2", "c2")], str(calls))
+        ok("EOD summary + activity + documents fan out to both bots", eod and
+           calls.count(("msg", "t1", "c1")) >= 2 and
+           calls.count(("msg", "t1", "c1")) == calls.count(("msg", "t2", "c2")) and
+           calls.count(("doc", "t1", "c1")) == calls.count(("doc", "t2", "c2")) == 2, str(calls))
+        ok("activity audit attachment exists", (tmp / f"activity_M6_{DAY}.json").exists())
+        count = len(calls)
+        ok("EOD is not sent twice", not M.run_eod(st, DAY, dt.datetime(2026, 11, 17, 15, 30, tzinfo=M.IST))
+           and len(calls) == count)
         ok("EOD done-marker still written", st.get("eod_done") is True and M.STATE6.exists())
     finally:
         M.tg.send_message_to, M.tg.send_document_to = old_msg, old_doc
@@ -1028,10 +1033,12 @@ def test_persist_score_gate():
                 on_result(s, res)
         return out
 
-    def run_scan(board_dict, prev_close=1400.0):
+    def run_scan(board_dict, prev_close=1400.0, confirmed=True):
         st = M.fresh_state(DAY)
         st["signals"][sym] = {"last_bar": "09:55", "nbars": 5}
-        bars = _df([("09:55", 1497, 1499, 1496, 1498), ("10:00", 1499, 1501, 1498, 1500.0)])
+        bars = _df([("09:50", 1494, 1496, 1493, 1495), ("09:55", 1497, 1499, 1496, 1498), ("10:00", 1499, 1501, 1498, 1500.0)])
+        if not confirmed:
+            bars = bars.iloc[-2:].reset_index(drop=True)
         sent = []
         real = (M.send, M.fetch_symbols, M.symbol_history, M.run_engine_jobs)
         M.send = lambda text, silent=False, dry_run=False: sent.append(text) or True
@@ -1051,6 +1058,11 @@ def test_persist_score_gate():
     stats, sent, _st = run_scan(FM.compute_board({"AUTO": strong}, nifty, 14.0, 100))
     ok("scan_entries alerts when AUTO persistent > 70",
        stats["entries"] == 1 and len(sent) == 1 and "M&M" in sent[0], f"{stats} {sent}")
+    stats, sent, st = run_scan(FM.compute_board({"AUTO": strong}, nifty, 14.0, 100), confirmed=False)
+    ok("unconfirmed gap cannot enter despite a fresh signal",
+       stats["entries"] == 0 and sent == [] and
+       any("follow-through" in it["why"] for it in st["skipped"]), str(stats))
+
     # Entry integration: a valid fresh signal outside the top five stays silent.
     real_rank = M.rank_sector_stocks
     M.rank_sector_stocks = lambda *a, **kw: {("AUTO", "BUY"): {
@@ -1108,10 +1120,10 @@ def test_stock_leader_ranking():
         bars, cache = {}, {}
         for i in range(7):
             # S0 has the largest day gain but fading momentum and weak volume.
-            closes = [100+i*.2, 101+i*.2, 102+i*.2, 103+i*.2]
+            closes = [100+i*.02, 100.1+i*.02, 100.2+i*.02, 100.3+i*.02]
             volumes = [100, 100+i*50, 100+i*50, 100+i*50]
             if i == 0:
-                closes, volumes = [109, 108, 107, 106], [1000, 10, 10, 10]
+                closes, volumes = [100.9, 100.8, 100.7, 100.6], [1000, 10, 10, 10]
             bars[f"S{i}"] = _df([(t, c, c+.2, c-.2, c, v) for t,c,v in
                                      zip(["09:30", "09:35", "09:40", "09:45"], closes, volumes)])
             cache[f"S{i}"] = {"prev_close": 100.0}
@@ -1136,6 +1148,77 @@ def test_stock_leader_ranking():
             M.SEC_STOCKS.pop("TEST", None)
         else:
             M.SEC_STOCKS["TEST"] = saved
+
+
+def test_big_move_follow_through():
+    def bars(closes, opening=None):
+        times = pd.date_range(f"{DAY} 09:15", periods=len(closes), freq="5min")
+        out = _df([(t.strftime("%H:%M"), c, c+.1, c-.1, c, 100) for t,c in zip(times, closes)])
+        if opening is not None:
+            out.loc[0, "open"] = opening
+        return out
+    for side, sign in (("BUY", 1), ("SELL", -1)):
+        seq = [100+sign*3, 100+sign*3.1, 100+sign*3.2]
+        b = bars(seq)
+        ok(f"{side} gap blocks on event candle", not M.follow_through_ok(b.iloc[:1], 100, side)[0])
+        ok(f"{side} gap blocks after only one follow-through", not M.follow_through_ok(b.iloc[:2], 100, side)[0])
+        ok(f"{side} two follow-through closes release gap", M.follow_through_ok(b, 100, side)[0])
+        flat = bars([seq[0]]*4)
+        ok(f"{side} gap and flat remains blocked", not M.follow_through_ok(flat, 100, side)[0])
+        impulse = bars([100, 100+sign*3, 100+sign*3.1, 100+sign*3.2])
+        ok(f"{side} intraday impulse blocks", not M.follow_through_ok(impulse.iloc[:2], 100, side)[0])
+        ok(f"{side} intraday impulse releases after confirmation", M.follow_through_ok(impulse, 100, side)[0])
+        ok(f"{side} first candle body blocks", not M.follow_through_ok(b.iloc[:1], 100, side)[0])
+        ok(f"{side} opposite direction not blocked", M.follow_through_ok(flat, 100, "SELL" if side == "BUY" else "BUY")[0])
+        # A fresh second impulse resets previous confirmation.
+        again = bars(seq + [100+sign*6])
+        ok(f"{side} new impulse resets confirmation", not M.follow_through_ok(again, 100, side)[0])
+    ok("sub-threshold move remains eligible", M.follow_through_ok(bars([100.9]), 100, "BUY")[0])
+    for side, sign in (("BUY", 1), ("SELL", -1)):
+        ok(f"{side} exact two-percent gap allowed",
+           M.follow_through_ok(bars([100+sign*2]), 100, side)[0])
+        ok(f"{side} above two-percent gap blocked",
+           not M.follow_through_ok(bars([100+sign*2.0001]), 100, side)[0])
+        ok(f"{side} exact two-percent candle allowed",
+           M.follow_through_ok(bars([100, 100+sign*2]), 100, side)[0])
+        ok(f"{side} above two-percent candle blocked",
+           not M.follow_through_ok(bars([100, 100+sign*2.0001]), 100, side)[0])
+        ok(f"{side} exact two-percent first body allowed",
+           M.follow_through_ok(bars([100+sign*2], opening=100), 100, side)[0])
+        ok(f"{side} above two-percent first body blocked",
+           not M.follow_through_ok(bars([100+sign*2.0001], opening=100), 100, side)[0])
+
+
+def test_day_activity_audit():
+    st = M.fresh_state(DAY)
+    st["gate"] = {"status": "OK", "source": "test"}
+    board = M.BoardView(FM.compute_board({"AUTO": _sector_input(np.linspace(100, 102, 20))},
+                                         {"n_intra": np.zeros(20)}, 14.0, 100))
+    st["stock_leaders"] = {"AUTO:BUY": {"time": "10:00", "stocks": {"M&M": {"rank": 1}}}}
+    M.record_day_activity(st, "10:00", board, {"entries": 1, "signals": 2}, "test", 0, 1.0)
+    M.record_day_activity(st, "10:00", board, {"entries": 1, "signals": 2}, "test", 0, 1.0)
+    ok("same candle replaces rather than duplicates journal", len(st["day_activity"]) == 1)
+    json.dumps(st)
+    sample = st["day_activity"]["10:00"]
+    ok("audit includes all sector metrics, both gate reasons and leaders",
+       "persist_bull" in sample["sectors"]["AUTO"]["metrics"] and
+       "SELL" in sample["sectors"]["AUTO"]["gates"] and "AUTO:BUY" in sample["leaders"])
+    M.record_day_activity(st, "10:05", None, {}, "offline", 0, 2.0)
+    st["skipped"] = [{"time": "10:00", "symbol": "M&M", "side": "BUY", "signal": "BUY-EX",
+                      "sector": "AUTO", "entry": 100, "why": "rank 6 < 7 & blocked"}]
+    text = M.eod_activity_text(st)
+    ok("activity describes blocks, momentum, persistence and coverage",
+       all(x in text for x in ("M&M", "rank 6 < 7", "persistent start/end", "OFFLINE", "not scanned", "TRADE LEDGER")))
+    ok("older state does not fabricate a timeline", "No intraday journal" in M.eod_activity_text(M.fresh_state(DAY)))
+    sent, original = [], M.send
+    M.send = lambda text, **kw: sent.append(text)
+    try:
+        M.send_activity_text("M&M <blocked> 😀" * 1000)
+        ok("multipart activity escapes HTML and respects UTF16 limit",
+           len(sent) > 1 and all(len(t.encode("utf-16-le"))//2 < 4096 for t in sent) and
+           "M&amp;M" in sent[0] and "&lt;blocked&gt;" in sent[0])
+    finally:
+        M.send = original
 
 
 # ------------------------------------------------------------------ main
@@ -1164,6 +1247,8 @@ def main():
     test_persist_score_gate()
     test_lead_tolerance()
     test_stock_leader_ranking()
+    test_big_move_follow_through()
+    test_day_activity_audit()
     print("\nALL M6 RUNNER TESTS PASSED")
 
 
