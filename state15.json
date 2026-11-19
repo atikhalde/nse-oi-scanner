@@ -7,9 +7,9 @@
     "regime": "TREND UP"
   },
   "sector": {
-    "name": "CDUR",
+    "name": "AUTO",
     "side": 1,
-    "reason": "PERSIST + CDUR persistent (score 97)"
+    "reason": "PERSIST + AUTO persistent (score 96)"
   },
   "alerts": {},
   "sent": {
@@ -34,15 +34,15 @@
   },
   "positions": {},
   "feed": {
-    "yahoo_calls": 61,
+    "yahoo_calls": 64,
     "dhan_calls": 0,
     "fallback": null,
     "last_source": "yahoo",
-    "history_calls": 9,
-    "symbols": 68,
+    "history_calls": 15,
+    "symbols": 77,
     "sources": {
-      "yahoo": 59,
-      "history": 9
+      "yahoo": 62,
+      "history": 15
     }
   }
 }
