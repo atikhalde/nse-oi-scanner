@@ -1,0 +1,101 @@
+day,model,sym,side,sig,code,time,min,entry,rank,cls,taken,ghost,skip_why,breadth,daypct,sec,sec_bullq,sec_bearq,sec_pb,sec_pw,held,tilt,regime,cf_net_s,cf_net_p,cf_r_s,cf_r_p,cf_exit_s,cf_net,cf_r,cf_exit,mfe_r,mae_r,mfe30_r,mfe60_r,eod_pct,bear_close,day_regime
+2026-11-19,M6,INFY,SELL,SELL-EX3,203,09:30,570,1075.8,,BREAKOUT,1,0,,0.2,-2.976,IT,0,0,0,1,0,43.2,,-622.0,,-0.69,,OPEN,-714,-0.75,OPEN,0.15,0.85,0.03,0.12,-1.5,0.148,TREND-UP
+2026-11-19,M6,MARUTI,BUY,BUY-EX,101,09:30,570,12986.0,,PULLBACK,1,0,,0.2,2.802,AUTO,1,0,1,0,1,43.2,,1396.0,,6.35,,100% trail 12:20,1326,6.35,100% trail 12:20,8.52,0.89,4.08,4.61,4.64,0.148,TREND-UP
+2026-11-19,M6,EICHERMOT,BUY,BUY-EX,101,09:35,575,7897.0,,BREAKOUT,1,0,,0.2,2.558,AUTO,1,0,1,0,1,43.2,,684.0,,0.9,,100% trail 12:05,614,0.9,100% trail 12:05,1.13,0.21,0.35,0.56,2.05,0.148,TREND-UP
+2026-11-19,M6,HEROMOTOCO,BUY,BUY-EX,101,09:35,575,5428.0,,BREAKOUT,1,0,,0.2,3.331,AUTO,1,0,1,0,1,43.2,,540.0,,0.65,,OPEN,623,0.78,OPEN,0.79,0.28,0.1,0.28,2.36,0.148,TREND-UP
+2026-11-19,M6,UNOMINDA,BUY,BUY-EX,101,09:40,580,1407.0,,BREAKOUT,1,0,,0.2,2.701,AUTO,1,0,1,0,1,43.2,,-288.0,,-0.32,,OPEN,-549,-0.59,OPEN,0.07,0.59,0.07,0.07,-1.56,0.148,TREND-UP
+2026-11-19,M6,TVSMOTOR,BUY,BUY-EX,101,09:45,585,4483.0,,BREAKOUT,1,0,,0.2,2.609,AUTO,1,0,1,0,1,43.2,,527.0,,0.6,,100% trail 14:20,447,0.6,100% trail 14:20,1.36,0.26,0.46,0.92,2.64,0.148,TREND-UP
+2026-11-19,M6,HYUNDAI,BUY,BUY-EX,101,09:50,590,2154.9,,BREAKOUT,1,0,,0.2,2.737,AUTO,1,0,1,0,1,43.2,,911.0,,1.07,,OPEN,819,0.98,OPEN,1.22,0.18,0.15,0.4,2.98,0.148,TREND-UP
+2026-11-19,M6,APOLLOHOSP,SELL,SELL-EX8,208,09:50,590,8720.0,,BREAKOUT,1,0,,0.2,-1.145,HOSPITALS,0,0,0,0,0,43.2,,-52.0,,-0.12,,OPEN,-127,-0.2,OPEN,0.34,0.54,0.17,0.22,-0.21,0.148,TREND-UP
+2026-11-19,M6,WIPRO,SELL,SELL-EX3,203,09:50,590,181.15,,BREAKOUT,1,0,,0.2,-2.155,IT,0,0,0,1,0,43.2,,-402.0,,-1.0,,100% SL 10:50,-491,-1.0,100% SL 10:50,0.62,2.39,0.21,0.62,-1.53,0.148,TREND-UP
+2026-11-19,M6,TECHM,SELL,SELL-EX3,203,09:55,595,1709.6,,BREAKOUT,1,0,,0.2,-2.309,IT,0,0,0,1,0,43.2,,-358.0,,-1.0,,100% SL 11:05,-446,-1.0,100% SL 11:05,0.89,1.27,0.84,0.89,-0.78,0.148,TREND-UP
+2026-11-19,M6,MPHASIS,SELL,SELL-EX1,201,10:00,600,2346.0,,BREAKOUT,1,0,,0.2,-2.128,IT,0,0,0,1,0,43.2,,-409.0,,-1.0,,100% SL 11:45,-496,-1.0,100% SL 11:45,0.6,1.02,0.6,0.6,-0.43,0.148,TREND-UP
+2026-11-19,M6,TMPV,BUY,BUY-EX,101,10:00,600,259.3,,BREAKOUT,1,0,,0.2,2.673,AUTO,1,0,1,0,1,43.2,,448.0,,0.5,,OPEN,659,0.76,OPEN,0.76,0.12,0.68,0.73,1.62,0.148,TREND-UP
+2026-11-19,M6,HCLTECH,SELL,SELL-EX1,201,10:00,600,1312.9,,BREAKOUT,1,0,,0.2,-2.365,IT,0,0,0,1,0,43.2,,-432.0,,-1.0,,100% SL 10:50,-520,-1.0,100% SL 10:50,0.26,1.9,0.26,0.26,-1.52,0.148,TREND-UP
+2026-11-19,M6,MOTHERSON,BUY,BUY-EX,101,10:15,615,162.5,,BREAKOUT,1,0,,0.2,3.345,AUTO,1,0,1,0,1,43.2,,675.0,,0.96,,OPEN,872,1.29,OPEN,1.29,0.43,0.32,0.32,1.81,0.148,TREND-UP
+2026-11-19,M6,ASHOKLEY,BUY,BUY-EX,101,09:30,570,164.4,,,0,0,lags own sector (stock +1.20% vs AUTO +1.39%),0.2,1.2,AUTO,1,0,1,0,1,43.2,,,,,,,427,0.5,OPEN,0.95,0.22,0.76,0.76,1.06,0.148,TREND-UP
+2026-11-19,M6,FORCEMOT,BUY,BUY-EX,101,09:30,570,20160.0,,,0,0,lags own sector (stock +0.36% vs AUTO +1.39%),0.2,0.358,AUTO,1,0,1,0,1,43.2,,,,,,,352,1.1,100% trail 11:40,1.76,0.53,1.75,1.75,1.4,0.148,TREND-UP
+2026-11-19,M6,HDFCLIFE,SELL,SELL-EX5,205,09:30,570,573.35,,,0,0,lags own sector (stock -0.37% vs INSURANCE -1.07%),0.2,-0.374,INSURANCE,0,0,0,0,0,43.2,,,,,,,-572,-1.0,100% SL 10:00,0.04,1.44,0.04,0.04,-0.65,0.148,TREND-UP
+2026-11-19,M6,KPITTECH,SELL,ENTRY SELL,290,09:30,570,513.8,,,0,0,scanner-table preview (90/290) — no chart label,0.2,-1.524,IT,0,0,0,1,0,43.2,,,,,,,-782,-1.0,100% SL 11:20,0.24,1.44,0.23,0.24,-1.69,0.148,TREND-UP
+2026-11-19,M6,M&M,BUY,BUY-EX17,102,09:30,570,3404.9,,,0,0,lags own sector (stock +1.36% vs AUTO +1.39%),0.2,1.363,AUTO,1,0,1,0,1,43.2,,,,,,,952,1.17,100% trail 13:00,1.91,0.31,1.04,1.36,3.06,0.148,TREND-UP
+2026-11-19,M6,SONACOMS,BUY,BUY-EX,101,09:30,570,900.0,,,0,0,lags own sector (stock +1.24% vs AUTO +1.39%),0.2,1.237,AUTO,1,0,1,0,1,43.2,,,,,,,84,0.23,OPEN,0.6,0.6,0.6,0.6,0.23,0.148,TREND-UP
+2026-11-19,M6,TIINDIA,BUY,BUY-EX17,102,09:30,570,2208.7,,,0,0,lags own sector (stock +0.05% vs AUTO +1.39%),0.2,0.054,AUTO,1,0,1,0,1,43.2,,,,,,,476,0.91,100% trail 14:10,1.46,0.33,0.46,0.46,1.78,0.148,TREND-UP
+2026-11-19,M6,BHARATFORG,BUY,BUY-EX,101,09:35,575,1710.0,,,0,0,lags own sector (stock +1.51% vs AUTO +1.82%),0.2,1.514,AUTO,1,0,1,0,1,43.2,,,,,,,409,0.78,100% trail 14:40,1.11,0.83,0.61,0.61,1.12,0.148,TREND-UP
+2026-11-19,M6,TCS,SELL,SELL-EX3,203,09:35,575,2341.2,,,0,0,lags own sector (stock -1.61% vs IT -1.84%),0.2,-1.61,IT,0,0,0,1,0,43.2,,,,,,,-69,-0.03,OPEN,0.3,0.49,0.08,0.21,-0.06,0.148,TREND-UP
+2026-11-19,M6,TIINDIA,BUY,BUY-EX9,108,09:30,570,,,,0,0,discovered late (09:30 < 09:35) — not alerted,0.2,,AUTO,1,0,1,0,1,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,BOSCHLTD,BUY,BUY-EX,101,09:40,580,49485.0,,,0,0,lags own sector (stock +0.64% vs AUTO +2.17%),0.2,0.641,AUTO,1,0,1,0,1,43.2,,,,,,,-116,-0.23,OPEN,0.73,0.84,0.16,0.21,-0.17,0.148,TREND-UP
+2026-11-19,M6,FORTIS,SELL,SELL-EX1,201,09:30,570,,,,0,0,discovered late (09:30 < 09:40) — not alerted,0.2,,HOSPITALS,0,0,0,0,0,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,TATAELXSI,BUY,BUY-EX6,105,09:40,580,3677.0,,,0,0,sector IT not bull-qualified (bull 3/bear 80),0.2,0.191,IT,0,0,0,1,0,43.2,,,,,,,133,0.47,100% trail 13:10,1.43,0.27,0.8,0.8,1.31,0.148,TREND-UP
+2026-11-19,M6,COFORGE,BUY,BUY-EX6,105,09:45,585,2050.1,,,0,0,sector IT not bull-qualified (bull 5/bear 70),0.2,0.054,IT,0,0,0,1,0,43.2,,,,,,,-885,-1.0,100% SL 13:20,0.12,1.17,0.12,0.12,-0.44,0.148,TREND-UP
+2026-11-19,M6,TIINDIA,BUY,ENTRY BUY,90,09:30,570,,,,0,0,discovered late (09:30 < 09:55) — not alerted,0.2,,AUTO,1,0,1,0,1,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,BAJAJ-AUTO,BUY,BUY-EX17,102,10:00,600,10608.0,,,0,0,lags own sector (stock +0.36% vs AUTO +2.60%),0.2,0.36,AUTO,1,0,1,0,1,43.2,,,,,,,727,1.17,100% trail 12:05,1.34,0.1,0.24,1.2,1.97,0.148,TREND-UP
+2026-11-19,M6,TCS,SELL,SELL-EX1,201,10:00,600,2339.2,,,0,0,lags own sector (stock -1.69% vs IT -2.08%),0.2,-1.694,IT,0,0,0,1,0,43.2,,,,,,,-103,-0.07,OPEN,0.25,0.51,0.16,0.16,-0.15,0.148,TREND-UP
+2026-11-19,M6,BANKINDIA,BUY,BUY-EX,101,09:40,580,,,,0,0,discovered late (09:40 < 10:05) — not alerted,0.2,,PSUBK,1,0,0,0,1,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,BANKBARODA,BUY,BUY-EX,101,09:30,570,,,,0,0,discovered late (09:30 < 10:05) — not alerted,0.2,,PSUBK,1,0,0,0,1,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,CANBK,BUY,BUY-EX,101,09:30,570,,,,0,0,discovered late (09:30 < 10:05) — not alerted,0.2,,PSUBK,1,0,0,0,1,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,PNB,BUY,BUY-EX,101,09:40,580,,,,0,0,discovered late (09:40 < 10:05) — not alerted,0.2,,PSUBK,1,0,0,0,1,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,INDIANB,BUY,BUY-EX,101,09:40,580,,,,0,0,discovered late (09:40 < 10:05) — not alerted,0.2,,PSUBK,1,0,0,0,1,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,PERSISTENT,SELL,SELL-EX1,201,10:00,600,,,,0,0,discovered late (10:00 < 10:05) — not alerted,0.2,,IT,0,0,0,1,0,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,UNIONBANK,BUY,BUY-EX,101,09:40,580,,,,0,0,discovered late (09:40 < 10:05) — not alerted,0.2,,PSUBK,1,0,0,0,1,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,IRFC,BUY,BUY-EX,101,09:50,590,,,,0,0,discovered late (09:50 < 10:40) — not alerted,0.2,,RAILWAYS,1,0,0,0,1,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,RVNL,BUY,BUY-EX17,102,09:30,570,,,,0,0,discovered late (09:30 < 10:40) — not alerted,0.2,,RAILWAYS,1,0,0,0,1,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,AMBER,BUY,BUY-EX,101,09:30,570,,,,0,0,discovered late (09:30 < 10:45) — not alerted,0.2,,CDUR,1,0,1,0,1,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,BLUESTARCO,BUY,BUY-EX7,106,09:40,580,,,,0,0,discovered late (09:40 < 10:45) — not alerted,0.2,,CDUR,1,0,1,0,1,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,CROMPTON,BUY,BUY-EX,101,09:35,575,,,,0,0,discovered late (09:35 < 10:45) — not alerted,0.2,,CDUR,1,0,1,0,1,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,DIXON,BUY,ENTRY BUY,90,09:30,570,,,,0,0,discovered late (09:30 < 10:45) — not alerted,0.2,,CDUR,1,0,1,0,1,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,DIXON,BUY,BUY-EX12,111,10:30,630,,,,0,0,discovered late (10:30 < 10:45) — not alerted,0.2,,CDUR,1,0,1,0,1,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,HAVELLS,BUY,BUY-EX17,102,10:10,610,,,,0,0,discovered late (10:10 < 10:45) — not alerted,0.2,,CDUR,1,0,1,0,1,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,PGEL,BUY,BUY-EX,101,09:50,590,,,,0,0,discovered late (09:50 < 10:45) — not alerted,0.2,,CDUR,1,0,1,0,1,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,VOLTAS,BUY,BUY-EX,101,09:40,580,,,,0,0,discovered late (09:40 < 10:45) — not alerted,0.2,,CDUR,1,0,1,0,1,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,KALYANKJIL,BUY,BUY-EX9,108,09:40,580,,,,0,0,discovered late (09:40 < 10:45) — not alerted,0.2,,CDUR,1,0,1,0,1,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,HCLTECH,SELL,SELL-EX1,201,10:00,600,,,,0,0,discovered late (10:00 < 10:50) — not alerted,0.2,,IT,0,0,0,1,0,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,WIPRO,SELL,SELL-EX3,203,09:50,590,,,,0,0,discovered late (09:50 < 10:50) — not alerted,0.2,,IT,0,0,0,1,0,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,OFSS,BUY,BUY-EX5,104,11:00,660,9723.5,,,0,0,sector IT not bull-qualified (bull 24/bear 42),0.2,0.299,IT,0,0,0,1,0,43.2,,,,,,,535,1.17,OPEN,1.75,0.24,0.43,1.69,1.16,0.148,TREND-UP
+2026-11-19,M6,WIPRO,BUY,BUY-EX9,108,11:00,660,183.08,,,0,0,sector IT not bull-qualified (bull 24/bear 42),0.2,-1.113,IT,0,0,0,1,0,43.2,,,,,,,201,0.3,OPEN,0.54,0.33,0.11,0.15,0.46,0.148,TREND-UP
+2026-11-19,M6,TECHM,SELL,SELL-EX3,203,09:55,595,,,,0,0,discovered late (09:55 < 11:05) — not alerted,0.2,,IT,0,0,0,1,0,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,NAUKRI,BUY,BUY-EX4,103,10:50,650,,,,0,0,discovered late (10:50 < 11:05) — not alerted,0.2,,NEWAGE,0,0,0,1,0,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,NYKAA,BUY,BUY-EX17,102,09:30,570,,,,0,0,discovered late (09:30 < 11:05) — not alerted,0.2,,NEWAGE,0,0,0,1,0,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,SWIGGY,BUY,BUY-EX17,102,10:50,650,,,,0,0,discovered late (10:50 < 11:05) — not alerted,0.2,,NEWAGE,0,0,0,1,0,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,PIDILITIND,BUY,BUY-EX,101,09:30,570,,,,0,0,discovered late (09:30 < 11:10) — not alerted,0.2,,CHEMICALS,1,0,0,0,1,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,UPL,BUY,BUY-EX17,102,09:30,570,,,,0,0,discovered late (09:30 < 11:10) — not alerted,0.2,,CHEMICALS,1,0,0,0,1,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,ASIANPAINT,BUY,BUY-EX17,102,09:45,585,,,,0,0,discovered late (09:45 < 11:10) — not alerted,0.2,,CHEMICALS,1,0,0,0,1,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,NAUKRI,SELL,SELL-EX5,205,09:35,575,,,,0,0,discovered late (09:35 < 11:10) — not alerted,0.2,,NEWAGE,0,0,0,1,0,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,PIIND,BUY,BUY-EX17,102,09:30,570,,,,0,0,discovered late (09:30 < 11:10) — not alerted,0.2,,CHEMICALS,1,0,0,0,1,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,SRF,BUY,BUY-EX7,106,09:35,575,,,,0,0,discovered late (09:35 < 11:10) — not alerted,0.2,,CHEMICALS,1,0,0,0,1,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,INDUSTOWER,SELL,SELL-EX2,202,09:40,580,,,,0,0,discovered late (09:40 < 11:20) — not alerted,0.2,,TELECOM,0,0,0,0,0,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,BHARTIARTL,BUY,BUY-EX17,102,09:55,595,,,,0,0,discovered late (09:55 < 11:20) — not alerted,0.2,,TELECOM,0,0,0,0,0,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,KALYANKJIL,BUY,BUY-EX17,102,09:40,580,,,,0,0,discovered late (09:40 < 11:35) — not alerted,0.2,,CDUR,1,0,1,0,1,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,DMART,BUY,BUY-EX7,106,10:15,615,,,,0,0,discovered late (10:15 < 12:00) — not alerted,0.2,,CONSUMPTION,1,0,0,0,1,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,PAGEIND,BUY,ENTRY BUY,90,09:35,575,,,,0,0,discovered late (09:35 < 12:00) — not alerted,0.2,,CONSUMPTION,1,0,0,0,1,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,PAGEIND,BUY,BUY-EX,101,09:40,580,,,,0,0,discovered late (09:40 < 12:00) — not alerted,0.2,,CONSUMPTION,1,0,0,0,1,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,TRENT,BUY,BUY-EX17,102,09:35,575,,,,0,0,discovered late (09:35 < 12:00) — not alerted,0.2,,CONSUMPTION,1,0,0,0,1,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,EICHERMOT,BUY,BUY-EX,101,09:35,575,,,,0,0,discovered late (09:35 < 12:05) — not alerted,0.2,,AUTO,1,0,1,0,1,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,MPHASIS,SELL,SELL-EX5,205,10:00,600,,,,0,0,discovered late (10:00 < 12:15) — not alerted,0.2,,IT,0,0,0,1,0,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,SWIGGY,BUY,BUY-EX9,108,10:50,650,,,,0,0,discovered late (10:50 < 12:15) — not alerted,0.2,,NEWAGE,0,0,0,1,0,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,BRITANNIA,BUY,BUY-EX,101,09:45,585,,,,0,0,discovered late (09:45 < 12:30) — not alerted,0.2,,FMCG,1,0,1,0,1,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,COLPAL,BUY,BUY-EX,101,09:30,570,,,,0,0,discovered late (09:30 < 12:30) — not alerted,0.2,,FMCG,1,0,1,0,1,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,DABUR,BUY,BUY-EX,101,09:30,570,,,,0,0,discovered late (09:30 < 12:30) — not alerted,0.2,,FMCG,1,0,1,0,1,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,GODREJCP,BUY,BUY-EX,101,09:40,580,,,,0,0,discovered late (09:40 < 12:30) — not alerted,0.2,,FMCG,1,0,1,0,1,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,HINDUNILVR,BUY,BUY-EX,101,09:40,580,,,,0,0,discovered late (09:40 < 12:30) — not alerted,0.2,,FMCG,1,0,1,0,1,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,NESTLEIND,BUY,BUY-EX,101,10:40,640,,,,0,0,discovered late (10:40 < 12:30) — not alerted,0.2,,FMCG,1,0,1,0,1,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,GODFRYPHLP,BUY,BUY-EX17,102,09:30,570,,,,0,0,discovered late (09:30 < 12:30) — not alerted,0.2,,FMCG,1,0,1,0,1,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,VBL,SELL,SELL-EX8,208,09:40,580,,,,0,0,discovered late (09:40 < 12:30) — not alerted,0.2,,FMCG,1,0,1,0,1,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,360ONE,BUY,ENTRY BUY,90,09:40,580,,,,0,0,discovered late (09:40 < 13:05) — not alerted,0.2,,CAPMKTS,0,0,0,1,0,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,NAM-INDIA,BUY,BUY-EX9,108,09:35,575,,,,0,0,discovered late (09:35 < 13:05) — not alerted,0.2,,CAPMKTS,0,0,0,1,0,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,ANGELONE,BUY,BUY-EX9,108,09:40,580,,,,0,0,discovered late (09:40 < 13:05) — not alerted,0.2,,CAPMKTS,0,0,0,1,0,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,ANGELONE,SELL,SELL-EX15,215,11:40,700,,,,0,0,discovered late (11:40 < 13:05) — not alerted,0.2,,CAPMKTS,0,0,0,1,0,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,BSE,BUY,BUY-EX9,108,09:45,585,,,,0,0,discovered late (09:45 < 13:05) — not alerted,0.2,,CAPMKTS,0,0,0,1,0,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,CDSL,BUY,BUY-EX9,108,09:45,585,,,,0,0,discovered late (09:45 < 13:05) — not alerted,0.2,,CAPMKTS,0,0,0,1,0,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,HDFCAMC,BUY,BUY-EX9,108,09:45,585,,,,0,0,discovered late (09:45 < 13:05) — not alerted,0.2,,CAPMKTS,0,0,0,1,0,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,IEX,BUY,BUY-EX6,105,09:50,590,,,,0,0,discovered late (09:50 < 13:05) — not alerted,0.2,,CAPMKTS,0,0,0,1,0,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,IEX,BUY,BUY-EX,101,10:55,655,,,,0,0,discovered late (10:55 < 13:10) — not alerted,0.2,,CAPMKTS,0,0,0,1,0,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,HCLTECH,SELL,SELL-EX5,205,10:00,600,,,,0,0,discovered late (10:00 < 14:10) — not alerted,0.2,,IT,0,0,0,1,0,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,WIPRO,SELL,SELL-EX5,205,09:50,590,,,,0,0,discovered late (09:50 < 14:10) — not alerted,0.2,,IT,0,0,0,1,0,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,MARUTI,BUY,BUY-EX,101,09:30,570,,,,0,0,discovered late (09:30 < 14:35) — not alerted,0.2,,AUTO,1,0,1,0,1,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,TVSMOTOR,BUY,BUY-EX,101,09:45,585,,,,0,0,discovered late (09:45 < 14:35) — not alerted,0.2,,AUTO,1,0,1,0,1,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,BOSCHLTD,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.2,,AUTO,1,0,1,0,1,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,FORCEMOT,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.2,,AUTO,1,0,1,0,1,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,SONACOMS,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.2,,AUTO,1,0,1,0,1,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,TIINDIA,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.2,,AUTO,1,0,1,0,1,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,TMPV,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.2,,AUTO,1,0,1,0,1,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
+2026-11-19,M6,UNOMINDA,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.2,,AUTO,1,0,1,0,1,43.2,,,,,,,,,,,,,,,0.148,TREND-UP
