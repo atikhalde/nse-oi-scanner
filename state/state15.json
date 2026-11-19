@@ -3,13 +3,13 @@
   "market": {
     "dir_state": -1,
     "label": "NEUTRAL",
-    "conf": 54,
+    "conf": 69,
     "regime": "TRANSITION"
   },
   "sector": {
-    "name": "WAIT",
-    "side": 0,
-    "reason": "WAIT \u2014 market TRANSITION conf 54"
+    "name": "IT",
+    "side": -1,
+    "reason": "PERSIST \u2212 IT persistent (score 94)"
   },
   "alerts": {},
   "sent": {
@@ -24,6 +24,12 @@
       "name": "ENTRY SELL",
       "time": "09:25",
       "price": 2019.0
+    },
+    "TECHM": {
+      "code": 203,
+      "name": "SELL-EX3",
+      "time": "09:55",
+      "price": 1709.6
     }
   },
   "positions": {
@@ -36,18 +42,29 @@
       "t2": 2289.62,
       "t3": 2263.43,
       "entry_bar": "2026-11-19T09:25:00+05:30",
-      "last_bar": "2026-11-19T09:40:00+05:30"
+      "last_bar": "2026-11-19T09:55:00+05:30"
+    },
+    "TECHM": {
+      "side": "SELL",
+      "entry": 1709.6,
+      "sl": 1720.06,
+      "entry_ema9": 1719.7091467407179,
+      "t1": 1699.14,
+      "t2": 1688.68,
+      "t3": 1678.22,
+      "entry_bar": "2026-11-19T09:55:00+05:30",
+      "last_bar": "2026-11-19T09:55:00+05:30"
     }
   },
   "feed": {
-    "yahoo_calls": 61,
+    "yahoo_calls": 60,
     "dhan_calls": 0,
     "fallback": null,
     "last_source": "yahoo",
     "history_calls": 11,
-    "symbols": 70,
+    "symbols": 69,
     "sources": {
-      "yahoo": 59,
+      "yahoo": 58,
       "history": 11
     }
   }
