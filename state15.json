@@ -1,29 +1,65 @@
 {
-  "session": "2026-11-18",
+  "session": "2026-11-19",
   "market": {
     "dir_state": -1,
-    "label": "NEUTRAL",
-    "conf": 58,
+    "label": "BEAR",
+    "conf": 74,
     "regime": "TRANSITION"
   },
   "sector": {
-    "name": "MET",
+    "name": "IT",
     "side": -1,
-    "reason": "PERSIST \u2212 MET persistent (score 96)"
+    "reason": "PERSIST \u2212 IT qualified (score 86)"
   },
   "alerts": {},
-  "sent": {},
-  "positions": {},
+  "sent": {
+    "TCS": {
+      "code": 290,
+      "name": "ENTRY SELL",
+      "time": "09:25",
+      "price": 2342.0
+    },
+    "COFORGE": {
+      "code": 290,
+      "name": "ENTRY SELL",
+      "time": "09:25",
+      "price": 2019.0
+    }
+  },
+  "positions": {
+    "TCS": {
+      "side": "SELL",
+      "entry": 2342.0,
+      "sl": 2368.19,
+      "entry_ema9": 2367.707972395678,
+      "t1": 2315.81,
+      "t2": 2289.62,
+      "t3": 2263.43,
+      "entry_bar": "2026-11-19T09:25:00+05:30",
+      "last_bar": "2026-11-19T09:25:00+05:30"
+    },
+    "COFORGE": {
+      "side": "SELL",
+      "entry": 2019.0,
+      "sl": 2038.94,
+      "entry_ema9": 2038.5236628641367,
+      "t1": 1999.06,
+      "t2": 1979.12,
+      "t3": 1959.18,
+      "entry_bar": "2026-11-19T09:25:00+05:30",
+      "last_bar": "2026-11-19T09:25:00+05:30"
+    }
+  },
   "feed": {
-    "yahoo_calls": 60,
+    "yahoo_calls": 59,
     "dhan_calls": 0,
     "fallback": null,
     "last_source": "yahoo",
-    "history_calls": 10,
+    "history_calls": 11,
     "symbols": 68,
     "sources": {
-      "yahoo": 58,
-      "history": 10
+      "yahoo": 57,
+      "history": 11
     }
   }
 }
