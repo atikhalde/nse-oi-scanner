@@ -11,7 +11,11 @@ Boards per bar: Bull/Bear flow scores (EMA-smoothed like the chart), Persistent 
 top-3 leaders, qualification flags, net tilt. Gate helper entry_ok() implements the
 user-approved rule set (24-Jul-2026: Q0=A Q1=A Q2=A Q3=B Q4=A):
   BUY  ⟸ sector side==BULL + qualBull + bull board top-2 + persist_bull top-3
+         + persist_bull score > persist_min_score (70)
   SELL ⟸ sector side==BEAR + qualBear + bear board top-2 + persist_bear top-3
+         + persist_bear score > persist_min_score (70)
+The persistent-score gate applies to BOTH the direct top-2 path and the
+timed/stable hold path — top-3 membership alone no longer opens the gate.
 
 Deliberate micro-deviations from Pine (disclosed):
   1. hold% windows use partial windows for the first ~40 min (Pine sma is na in
@@ -51,6 +55,7 @@ CFG = dict(
     persist_rs_w=0.30,
     persist_pos_w=0.25,
     persist_base_w=0.15,
+    persist_min_score=70.0,     # stock alert fires only if sector persistent score > 70
 )
 
 OFFICIAL_TICKERS = {
@@ -108,6 +113,22 @@ def set_hold(mode="off", bars=12):
     """mode: 'off' | 'faithful' (exact stableFlow port) | 'timed' (hold N bars)."""
     HOLD["mode"] = mode
     HOLD["bars"] = int(bars)
+
+
+def persist_gate(side, d, cfg=CFG):
+    """Persistent-score gate: BUY needs persist_bull > persist_min_score (70),
+    SELL needs persist_bear > persist_min_score (70).  Strictly greater than —
+    a score of exactly 70 does NOT open the gate.  Returns (ok, why)."""
+    thr = float(cfg.get("persist_min_score", 70.0))
+    if side == "BUY":
+        s = float(d.get("persist_bull", 0.0) or 0.0)
+        tag = "Persistent+"
+    else:
+        s = float(d.get("persist_bear", 0.0) or 0.0)
+        tag = "Persistent-"
+    if s > thr:
+        return True, f"{tag} {s:.1f} > {thr:.0f}"
+    return False, f"{tag} {s:.1f} ≤ {thr:.0f} — no alert"
 
 
 def _stable_leader(pb, side, upto, cfg):
@@ -316,39 +337,50 @@ def compute_board(sectors_today, nifty_today, vix, minutes_now, cfg=CFG):
         if bside == "bull":
             if d["side"] != 1 or sector not in persist_bull_top3:
                 return False, ""
+            pok, pwhy = persist_gate("BUY", d, cfg)
+            if not pok:
+                return False, pwhy
             if hold_mode == "faithful":
                 if sector == hold_bull:
                     tag = "STRONG" if hold_bull_qual else "REL"
-                    return True, f"{sector} stableflow-HOLD-{tag} + Persist+ (score {d['bull']:.0f})"
+                    return True, f"{sector} stableflow-HOLD-{tag} + Persist+ (score {d['bull']:.0f}) · {pwhy}"
             elif sector in held_bull:
                 pool = sorted(((n, out[n]["bull"]) for n in ({n for n, _ in bull_q} | held_bull)),
                               key=lambda x: -x[1])
                 if sector in {n for n, _ in pool[:2]}:
-                    return True, f"{sector} timed-HOLD top2 + Persist+ (score {d['bull']:.0f})"
+                    return True, f"{sector} timed-HOLD top2 + Persist+ (score {d['bull']:.0f}) · {pwhy}"
             return False, ""
         if d["side"] != -1 or sector not in persist_bear_top3:
             return False, ""
+        pok, pwhy = persist_gate("SELL", d, cfg)
+        if not pok:
+            return False, pwhy
         if hold_mode == "faithful":
             if sector == hold_bear:
                 tag = "STRONG" if hold_bear_qual else "REL"
-                return True, f"{sector} stableflow-HOLD-{tag} + Persist- (score {d['bear']:.0f})"
+                return True, f"{sector} stableflow-HOLD-{tag} + Persist- (score {d['bear']:.0f}) · {pwhy}"
         elif sector in held_bear:
             pool = sorted(((n, out[n]["bear"]) for n in ({n for n, _ in bear_q} | held_bear)),
                           key=lambda x: -x[1])
             if sector in {n for n, _ in pool[:2]}:
-                return True, f"{sector} timed-HOLD top2 + Persist- (score {d['bear']:.0f})"
+                return True, f"{sector} timed-HOLD top2 + Persist- (score {d['bear']:.0f}) · {pwhy}"
         return False, ""
 
     def entry_ok(side, sector):
         if sector is None or sector not in out:
             return False, "no sector home/board"
         d = out[sector]
+        pok, pwhy = persist_gate(side, d, cfg)
         if side == "BUY":
             if d["side"] == 1 and d["qual_bull"] and sector in bull_top2 and sector in persist_bull_top3:
-                return True, f"{sector} bull-top2 + Persist+ (score {d['bull']:.0f})"
+                if pok:
+                    return True, f"{sector} bull-top2 + Persist+ (score {d['bull']:.0f}) · {pwhy}"
+                return False, f"sector {sector} {pwhy}"
             okh, whyh = _hold_ok("bull", sector, d)
             if okh:
                 return True, whyh
+            if whyh:
+                return False, f"sector {sector} {whyh}"
             if d["side"] != 1 or not d["qual_bull"]:
                 return False, f"sector {sector} not bull-qualified (bull {d['bull']:.0f}/bear {d['bear']:.0f})"
             if sector not in bull_top2:
@@ -356,10 +388,14 @@ def compute_board(sectors_today, nifty_today, vix, minutes_now, cfg=CFG):
             return False, f"sector {sector} not on Persistent+ board"
         else:
             if d["side"] == -1 and d["qual_bear"] and sector in bear_top2 and sector in persist_bear_top3:
-                return True, f"{sector} bear-top2 + Persist- (score {d['bear']:.0f})"
+                if pok:
+                    return True, f"{sector} bear-top2 + Persist- (score {d['bear']:.0f}) · {pwhy}"
+                return False, f"sector {sector} {pwhy}"
             okh, whyh = _hold_ok("bear", sector, d)
             if okh:
                 return True, whyh
+            if whyh:
+                return False, f"sector {sector} {whyh}"
             if d["side"] != -1 or not d["qual_bear"]:
                 return False, f"sector {sector} not bear-qualified (bull {d['bull']:.0f}/bear {d['bear']:.0f})"
             if sector not in bear_top2:

@@ -935,6 +935,123 @@ def test_telegram_fanout():
         _set_env(saved)
 
 
+# ------------------------------------------------------------------ 13. persistent-score gate
+def _sector_input(c):
+    """One synthetic sector input for flow_map.compute_board (20 bars)."""
+    c = np.asarray(c, dtype="float64")
+    return dict(o=c - 0.05, h=c + 0.08, l=c - 0.08, c=c,
+                c_full=np.concatenate([np.linspace(99, 100, 50), c]),
+                prev_close=100.0, day_open=100.0, or_high=101.0, or_low=99.5)
+
+
+def test_persist_score_gate():
+    """Stock alerts fire only when the home sector's persistent score > 70.
+
+    Covers the helper (strict >), the direct top-2 path, the timed-hold path
+    (which previously ignored the score entirely) and the scan_entries
+    integration on a real compute_board board.
+    """
+    ok("default persistent threshold is 70", FM.CFG["persist_min_score"] == 70.0)
+    ok("persist_gate blocks exactly 70 (strict >)",
+       FM.persist_gate("BUY", {"persist_bull": 70.0})[0] is False)
+    ok("persist_gate allows 70.01",
+       FM.persist_gate("BUY", {"persist_bull": 70.01})[0] is True)
+    ok("persist_gate blocks a weak 35.3 (the M&M/AUTO 09:55 case)",
+       FM.persist_gate("SELL", {"persist_bear": 35.27})[0] is False)
+    ok("persist_gate allows a strong 98.8",
+       FM.persist_gate("SELL", {"persist_bear": 98.85})[0] is True)
+    ok("persist_gate honours a custom threshold",
+       FM.persist_gate("BUY", {"persist_bull": 98.83}, cfg={"persist_min_score": 99.0})[0] is False)
+
+    nifty = {"n_intra": np.zeros(20)}
+    strong = _sector_input(np.linspace(100, 102, 20))
+    bear = _sector_input(np.linspace(100, 98, 20))
+
+    board = FM.compute_board({"AUTO": strong}, nifty, 14.0, 100)
+    d = board["sectors"]["AUTO"]
+    ok(f"strong sector persists at {d['persist_bull']:.1f} (>70)", d["persist_bull"] > 70.0)
+    ok("direct BUY path fires above 70", board["entry_ok"]("BUY", "AUTO")[0] is True,
+       str(board["entry_ok"]("BUY", "AUTO")))
+    ok("direct BUY reason quotes the persistent score",
+       "Persistent+" in board["entry_ok"]("BUY", "AUTO")[1], board["entry_ok"]("BUY", "AUTO")[1])
+
+    cfg_hi = dict(FM.CFG, persist_min_score=99.0)
+    board_hi = FM.compute_board({"AUTO": strong}, nifty, 14.0, 100, cfg=cfg_hi)
+    ok("direct BUY path blocked when threshold is above the score",
+       board_hi["entry_ok"]("BUY", "AUTO")[0] is False)
+    ok("blocked reason names the persistent score",
+       "Persistent+" in board_hi["entry_ok"]("BUY", "AUTO")[1]
+       and "no alert" in board_hi["entry_ok"]("BUY", "AUTO")[1],
+       board_hi["entry_ok"]("BUY", "AUTO")[1])
+
+    board_bear = FM.compute_board({"AUTO": bear}, nifty, 14.0, 100)
+    ok("direct SELL path fires above 70", board_bear["entry_ok"]("SELL", "AUTO")[0] is True,
+       str(board_bear["entry_ok"]("SELL", "AUTO")))
+    board_bear_hi = FM.compute_board({"AUTO": bear}, nifty, 14.0, 100, cfg=cfg_hi)
+    ok("direct SELL path blocked when threshold is above the score",
+       board_bear_hi["entry_ok"]("SELL", "AUTO")[0] is False
+       and "Persistent-" in board_bear_hi["entry_ok"]("SELL", "AUTO")[1],
+       str(board_bear_hi["entry_ok"]("SELL", "AUTO")))
+
+    # timed-hold path: qualified early, faded now, still inside the 12-bar hold
+    held_c = np.concatenate([np.linspace(100, 102, 12), np.full(8, 102.0)])
+    FM.set_hold("timed", 12)
+    try:
+        held = FM.compute_board({"AUTO": _sector_input(held_c)}, nifty, 14.0, 100)
+        ok("timed-hold BUY fires above 70", held["entry_ok"]("BUY", "AUTO")[0] is True,
+           str(held["entry_ok"]("BUY", "AUTO")))
+        held_hi = FM.compute_board({"AUTO": _sector_input(held_c)}, nifty, 14.0, 100, cfg=cfg_hi)
+        ok("timed-hold BUY is ALSO blocked above the score (no hold bypass)",
+           held_hi["entry_ok"]("BUY", "AUTO")[0] is False
+           and "Persistent+" in held_hi["entry_ok"]("BUY", "AUTO")[1],
+           str(held_hi["entry_ok"]("BUY", "AUTO")))
+    finally:
+        FM.set_hold("timed", 12)   # m6_runner's session mode
+
+    # integration: a real board + fake engine through scan_entries
+    sym = "M&M"
+    ok("M&M home sector is AUTO", M.SECTOR_OF.get(sym) == "AUTO")
+
+    def fake_engine(jobs, on_result=None):
+        out = {}
+        for s, _df in jobs:
+            res = pd.DataFrame({"scan_code": [111], "scan_name": ["BUY-EX12"]},
+                               index=pd.DatetimeIndex([pd.Timestamp(f"{DAY} 10:00", tz=M.IST)]))
+            out[s] = res
+            if on_result:
+                on_result(s, res)
+        return out
+
+    def run_scan(board_dict):
+        st = M.fresh_state(DAY)
+        st["signals"][sym] = {"last_bar": "09:55", "nbars": 5}
+        bars = _df([("09:55", 1497, 1499, 1496, 1498), ("10:00", 1499, 1501, 1498, 1500.0)])
+        sent = []
+        real = (M.send, M.fetch_symbols, M.symbol_history, M.run_engine_jobs)
+        M.send = lambda text, silent=False, dry_run=False: sent.append(text) or True
+        M.fetch_symbols = lambda symbols, now=None, workers=None: {}
+        M.symbol_history = lambda s, d: {"ok": True, "warmup": None, "prev_close": 1400.0,
+                                         "eng_hist": None, "yd": None, "prev2_close": None}
+        M.run_engine_jobs = fake_engine
+        try:
+            clock = pd.Timestamp(f"{DAY} 10:05:01", tz=M.IST).to_pydatetime()
+            stats = M.scan_entries(st, DAY, clock, clock, M.BoardView(board_dict),
+                                   {sym: bars}, {sym: M.symbol_history(sym, DAY)},
+                                   dry_run=False, fetch_missing=False)
+        finally:
+            M.send, M.fetch_symbols, M.symbol_history, M.run_engine_jobs = real
+        return stats, sent, st
+
+    stats, sent, _st = run_scan(FM.compute_board({"AUTO": strong}, nifty, 14.0, 100))
+    ok("scan_entries alerts when AUTO persistent > 70",
+       stats["entries"] == 1 and len(sent) == 1 and "M&M" in sent[0], f"{stats} {sent}")
+    stats, sent, st = run_scan(FM.compute_board({"AUTO": strong}, nifty, 14.0, 100, cfg=cfg_hi))
+    ok("scan_entries stays silent when AUTO persistent <= threshold",
+       stats["entries"] == 0 and sent == [] and st["trades"] == {}, f"{stats} {sent}")
+    ok("a gate-closed sector yields zero candidates (stock never scanned)",
+       stats["candidates"] == 0, str(stats))
+
+
 # ------------------------------------------------------------------ main
 def main():
     print(f"M6 next-second runner tests · MAX_LAG={M.MAX_LAG}s · EXIT_LAG={M.EXIT_LAG}s · "
@@ -958,6 +1075,7 @@ def main():
     test_signal_rows_scope()
     test_dry_run_and_cli()
     test_telegram_fanout()
+    test_persist_score_gate()
     print("\nALL M6 RUNNER TESTS PASSED")
 
 
