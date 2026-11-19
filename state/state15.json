@@ -7,9 +7,9 @@
     "regime": "TREND UP"
   },
   "sector": {
-    "name": "CDUR",
+    "name": "FMCG",
     "side": 1,
-    "reason": "PERSIST + CDUR qualified (score 98)"
+    "reason": "PERSIST + FMCG qualified (score 98)"
   },
   "alerts": {},
   "sent": {
@@ -34,15 +34,15 @@
   },
   "positions": {},
   "feed": {
-    "yahoo_calls": 61,
+    "yahoo_calls": 59,
     "dhan_calls": 0,
     "fallback": null,
     "last_source": "yahoo",
-    "history_calls": 9,
+    "history_calls": 11,
     "symbols": 68,
     "sources": {
-      "yahoo": 59,
-      "history": 9
+      "yahoo": 57,
+      "history": 11
     }
   }
 }
