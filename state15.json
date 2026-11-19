@@ -3,13 +3,13 @@
   "market": {
     "dir_state": 1,
     "label": "STRONG BULL",
-    "conf": 96,
+    "conf": 100,
     "regime": "TREND UP"
   },
   "sector": {
-    "name": "AUTO",
+    "name": "CDUR",
     "side": 1,
-    "reason": "PERSIST + AUTO qualified (score 98)"
+    "reason": "PERSIST + CDUR qualified (score 98)"
   },
   "alerts": {},
   "sent": {
@@ -34,15 +34,15 @@
   },
   "positions": {},
   "feed": {
-    "yahoo_calls": 64,
+    "yahoo_calls": 61,
     "dhan_calls": 0,
     "fallback": null,
     "last_source": "yahoo",
-    "history_calls": 15,
-    "symbols": 77,
+    "history_calls": 9,
+    "symbols": 68,
     "sources": {
-      "yahoo": 62,
-      "history": 15
+      "yahoo": 59,
+      "history": 9
     }
   }
 }
