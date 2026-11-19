@@ -28,13 +28,14 @@ The previous runner broke that promise in four independent ways — all fixed he
 4. DOUBLE WORK.  Open trades, the sector board and the entry scan each needed
    the same bars; they now share one parallel fetch per candle.
 
-Trading rules are unchanged (24-Jul-2026 spec: Q0=A Q1=A Q2=B Q3=B Q4=A):
+Trading rules (base 24-Jul-2026 spec: Q0=A Q1=A Q2=B Q3=B Q4=A):
 master signal + home sector (fno_sector_map.csv — 17 official NSE sector
 indices + 13 synthetic equal-weight baskets) side-coupled QUALIFIED, top-2 of
 that side's board, persistent top-3 with persistent score > 70 (flow_map
 persist_min_score — applies to the direct and the 12-bar timed-hold paths),
 stock must lead its own sector within 0.05 percentage points; entries 09:26+
-only; 90/290 previews blocked;
+only; top-5 composite stock rank within each eligible sector;
+90/290 previews blocked;
 ₹50k/₹900 sizing, structure
 SL, no targets, +1R structure trail, 15:20 square-off; 🅼6 alerts; ledger
 state6.json.
@@ -612,6 +613,75 @@ def lead_ok(board, sec, side, sd):
     return True, f"LEAD ({detail})"
 
 
+# Top-five eligibility is recomputed from completed candles, never future bars.
+SECTOR_LEADER_LIMIT = 5
+
+
+def rank_sector_stocks(board, sec_sides, bars_map, sym_cache, close_ts):
+    """Rank all available peers, not just stocks with signals or no open trade.
+
+    Composite (0..100): 40% sector-relative day strength, 20% last-15m
+    momentum, 20% volume participation (last <=3 bars / earlier session mean),
+    20% directional structure (day-range position + distance from VWAP).
+    Components use within-sector percentile ranks, with equal values tied.
+    Volume is a session-relative proxy, NOT time-of-day historical RVOL.
+    Missing/zero volume is neutral; missing price/previous-close/current bar
+    fails closed. Ties in the composite break alphabetically for determinism.
+    Returns {(sector, side): {symbol: {rank, score, components}}}.
+    """
+    target = (pd.Timestamp(close_ts) - pd.Timedelta(minutes=CANDLE_MIN)).strftime("%H:%M")
+    result = {}
+    for sec, sides in sec_sides.items():
+        rows = {}
+        for sym in SEC_STOCKS.get(sec, []):
+            b = _closed_bars(bars_map.get(sym), close_ts)
+            pc = (sym_cache.get(sym) or {}).get("prev_close")
+            if b is None or b.empty or not pc or not np.isfinite(pc) or pc <= 0:
+                continue
+            if str(b.iloc[-1]["t"]) != target:
+                continue
+            b = b.sort_values("dt")
+            c = b["close"].to_numpy(dtype=float)
+            h, l = b["high"].to_numpy(dtype=float), b["low"].to_numpy(dtype=float)
+            if not (np.isfinite(c).all() and np.isfinite(h).all() and np.isfinite(l).all()) or np.any(c <= 0):
+                continue
+            v = b["volume"].fillna(0).clip(lower=0).to_numpy(dtype=float)
+            v = np.where(np.isfinite(v), v, 0.0)
+            n = min(3, max(1, len(c) - 1))
+            baseline = float(np.mean(v[:-n])) if len(v) > n else 0.0
+            participation = float(np.mean(v[-n:]) / baseline) if baseline > 0 else np.nan
+            typical = (h + l + c) / 3
+            vwap = float(np.sum(typical * v) / np.sum(v)) if np.sum(v) > 0 else float(np.mean(typical))
+            position = (c[-1] - min(l)) / (max(h) - min(l)) if max(h) > min(l) else 0.5
+            rows[sym] = dict(strength=(c[-1] / pc - 1) * 100 - board.sectors[sec]["day_ret"],
+                             momentum=(c[-1] / c[max(0, len(c)-4)] - 1) * 100,
+                             volume=participation, position=position,
+                             vwap=(c[-1] / vwap - 1) * 100)
+        for side in sides:
+            if not rows:
+                result[(sec, side)] = {}
+                continue
+            frame = pd.DataFrame.from_dict(rows, orient="index")
+            direction = 1 if side == "BUY" else -1
+            def percentile(values):
+                # Equal components carry equal influence, including small baskets.
+                ranks = values.rank(method="average", pct=True)
+                return ranks.fillna(0.5)
+            components = pd.DataFrame(index=frame.index)
+            components["strength"] = percentile(direction * frame["strength"])
+            components["momentum"] = percentile(direction * frame["momentum"])
+            components["volume"] = percentile(frame["volume"])
+            components["structure"] = (percentile(direction * frame["position"]) +
+                                        percentile(direction * frame["vwap"])) / 2
+            scores = components.dot(pd.Series(dict(strength=40, momentum=20, volume=20, structure=20)))
+            ordered = sorted(scores.index, key=lambda sym: (-scores[sym], sym))
+            result[(sec, side)] = {
+                sym: dict(rank=i+1, score=round(float(scores[sym]), 2),
+                          components={k: round(float(v), 4) for k, v in components.loc[sym].items()})
+                for i, sym in enumerate(ordered)}
+    return result
+
+
 def build_board(close_ts, today, bars_map, idx_live, sym_cache, log=print):
     """Exact 30-sector board as of `close_ts`. Returns (board, meta) / (None, why)."""
     secs = {}
@@ -1066,6 +1136,11 @@ def scan_entries(st, today, close_ts, now, board, bars_map, sym_cache, dry_run=F
                 bars_map[sym] = b
 
     target_bar = (pd.Timestamp(close_ts) - pd.Timedelta(minutes=CANDLE_MIN)).strftime("%H:%M")
+    # Freeze a common ranking snapshot before asynchronous signal dispatch.
+    # Late peers wait for the next candle rather than displacing alerted leaders.
+    leader_ranks = rank_sector_stocks(board, sec_sides, bars_map, sym_cache, close_ts)
+    st["stock_leaders"] = {f"{sec}:{side}": dict(time=target_bar, stocks=ranks)
+                           for (sec, side), ranks in leader_ranks.items()}
     ready_lead, ready_lag, pending = [], [], []
     for sym in cands:
         b = bars_map.get(sym)
@@ -1162,6 +1237,16 @@ def scan_entries(st, today, close_ts, now, board, bars_map, sym_cache, dry_run=F
                                 ok, why2 = False, ltxt
                     if not ok:
                         why = why2
+                if why is None:
+                    leader = leader_ranks.get((sec, side), {}).get(sym)
+                    if leader is None:
+                        why = "sector leader ranking unavailable on current candle — no alert"
+                    elif leader["rank"] > SECTOR_LEADER_LIMIT:
+                        why = (f"outside sector top-{SECTOR_LEADER_LIMIT}: rank {leader['rank']} "
+                               f"composite {leader['score']:.2f}")
+                    else:
+                        why2 += (f" · sector rank {leader['rank']}/{SECTOR_LEADER_LIMIT} "
+                                 f"composite {leader['score']:.2f}")
                 entry = float(closed.loc[closed["t"] == etime, "close"].iloc[-1])
                 if why:
                     print(f"  M6 {sym} {side} {name} @ {etime} — SKIPPED: {why}")

@@ -679,6 +679,12 @@ def _causal_reference():
         if not lok:
             skips.append((sig["sym"], sig["time"], sig["side"], ltxt))
             continue
+        close = pd.Timestamp(f"{DAY} {sig['time']}", tz=M.IST) + pd.Timedelta(minutes=5)
+        ranks = M.rank_sector_stocks(board, {sec: [sig["side"]]}, day["bars"], day["cache"], close)
+        leader = ranks.get((sec, sig["side"]), {}).get(sig["sym"])
+        if leader is None or leader["rank"] > M.SECTOR_LEADER_LIMIT:
+            skips.append((sig["sym"], sig["time"], sig["side"], "outside sector leaders"))
+            continue
         expected.append((sig["sym"], sig["side"], sig["time"], sig["code"], sig["name"], sig["price"]))
         held.add(sig["sym"])
     print(f"  causal reference in {time.monotonic() - t0:.1f}s: {len(signals)} bar-signal(s) → "
@@ -1045,6 +1051,18 @@ def test_persist_score_gate():
     stats, sent, _st = run_scan(FM.compute_board({"AUTO": strong}, nifty, 14.0, 100))
     ok("scan_entries alerts when AUTO persistent > 70",
        stats["entries"] == 1 and len(sent) == 1 and "M&M" in sent[0], f"{stats} {sent}")
+    # Entry integration: a valid fresh signal outside the top five stays silent.
+    real_rank = M.rank_sector_stocks
+    M.rank_sector_stocks = lambda *a, **kw: {("AUTO", "BUY"): {
+        sym: {"rank": 6, "score": 45.0, "components": {}}}}
+    try:
+        stats, sent, st = run_scan(FM.compute_board({"AUTO": strong}, nifty, 14.0, 100))
+        ok("rank six fresh signal never alerts",
+           stats["entries"] == 0 and sent == [] and
+           any("outside sector top-5" in it["why"] for it in st["skipped"]), str(stats))
+    finally:
+        M.rank_sector_stocks = real_rank
+
     # Near-equal leaders must survive BOTH the prefilter and final check.
     real_board = FM.compute_board({"AUTO": strong}, nifty, 14.0, 100)
     sector_return = real_board["sectors"]["AUTO"]["day_ret"]
@@ -1081,6 +1099,45 @@ def test_lead_tolerance():
     ok("missing sector retains existing waiver", M.lead_ok(board, None, "BUY", 1.36)[0])
 
 
+def test_stock_leader_ranking():
+    from types import SimpleNamespace
+    board = SimpleNamespace(sectors={"TEST": {"day_ret": 1.0}})
+    saved = M.SEC_STOCKS.get("TEST")
+    M.SEC_STOCKS["TEST"] = [f"S{i}" for i in range(7)]
+    try:
+        bars, cache = {}, {}
+        for i in range(7):
+            # S0 has the largest day gain but fading momentum and weak volume.
+            closes = [100+i*.2, 101+i*.2, 102+i*.2, 103+i*.2]
+            volumes = [100, 100+i*50, 100+i*50, 100+i*50]
+            if i == 0:
+                closes, volumes = [109, 108, 107, 106], [1000, 10, 10, 10]
+            bars[f"S{i}"] = _df([(t, c, c+.2, c-.2, c, v) for t,c,v in
+                                     zip(["09:30", "09:35", "09:40", "09:45"], closes, volumes)])
+            cache[f"S{i}"] = {"prev_close": 100.0}
+        close = pd.Timestamp(f"{DAY} 09:50", tz=M.IST)
+        ranks = M.rank_sector_stocks(board, {"TEST": ["BUY", "SELL"]}, bars, cache, close)
+        buy = ranks[("TEST", "BUY")]
+        ok("exactly five of seven peers eligible", sum(x["rank"] <= 5 for x in buy.values()) == 5)
+        ok("highest day gain is not automatically top-ranked", buy["S0"]["rank"] > 1)
+        ok("component breakdown exposed", set(buy["S0"]["components"]) == {"strength", "momentum", "volume", "structure"})
+        ok("SELL ranks directional weakness differently", ranks[("TEST", "SELL")]["S0"]["rank"] != buy["S0"]["rank"])
+        # Future bars cannot affect this candle's eligibility.
+        future = _df([("10:00", 200, 220, 199, 215, 999999)])
+        bars["S6"] = pd.concat([bars["S6"], future], ignore_index=True)
+        ok("future candle excluded", M.rank_sector_stocks(board, {"TEST": ["BUY"]}, bars, cache, close)[("TEST", "BUY")] == buy)
+        cache["S1"] = {}
+        bars["S2"] = bars["S2"].iloc[:-1]
+        reduced = M.rank_sector_stocks(board, {"TEST": ["BUY"]}, bars, cache, close)[("TEST", "BUY")]
+        ok("missing previous close and stale peer excluded", "S1" not in reduced and "S2" not in reduced)
+        ok("fewer than five peers remain valid", len(reduced) == 5)
+    finally:
+        if saved is None:
+            M.SEC_STOCKS.pop("TEST", None)
+        else:
+            M.SEC_STOCKS["TEST"] = saved
+
+
 # ------------------------------------------------------------------ main
 def main():
     print(f"M6 next-second runner tests · MAX_LAG={M.MAX_LAG}s · EXIT_LAG={M.EXIT_LAG}s · "
@@ -1106,6 +1163,7 @@ def main():
     test_telegram_fanout()
     test_persist_score_gate()
     test_lead_tolerance()
+    test_stock_leader_ranking()
     print("\nALL M6 RUNNER TESTS PASSED")
 
 
