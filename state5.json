@@ -98,8 +98,7 @@
      "price": 6946.0
     }
    ],
-   "spurt_rank": 184,
-   "movers20": true
+   "spurt_rank": 184
   },
   "ABCAPITAL": {
    "symbol": "ABCAPITAL",
@@ -139,11 +138,10 @@
     {
      "key": "ENTRY",
      "time": "09:55",
-     "price": 417.29998779296875
+     "price": 417.3
     }
    ],
-   "spurt_rank": 109,
-   "movers20": true
+   "spurt_rank": 109
   },
   "ADANIGREEN": {
    "symbol": "ADANIGREEN",
@@ -191,8 +189,7 @@
      "price": 1415.5168888183593
     }
    ],
-   "spurt_rank": 147,
-   "movers20": true
+   "spurt_rank": 147
   },
   "ADANIPORTS": {
    "symbol": "ADANIPORTS",
@@ -232,11 +229,10 @@
     {
      "key": "ENTRY",
      "time": "10:15",
-     "price": 1905.5999755859375
+     "price": 1905.6
     }
    ],
-   "spurt_rank": 25,
-   "movers20": true
+   "spurt_rank": 25
   },
   "ADANIPOWER": {
    "symbol": "ADANIPOWER",
@@ -276,7 +272,7 @@
     {
      "key": "ENTRY",
      "time": "10:15",
-     "price": 207.0399932861328
+     "price": 207.04
     },
     {
      "key": "TRAIL_ON",
@@ -284,8 +280,7 @@
      "price": 210.0
     }
    ],
-   "spurt_rank": 28,
-   "movers20": true
+   "spurt_rank": 28
   },
   "AUBANK": {
    "symbol": "AUBANK",
@@ -338,7 +333,9 @@
   "ADANIGREEN:ENTRY",
   "ADANIPORTS:ENTRY",
   "ADANIPOWER:ENTRY",
-  "AUBANK:ENTRY"
+  "AUBANK:ENTRY",
+  "ADANIGREEN:EXIT_SL",
+  "ADANIPOWER:TRAIL_ON"
  ],
  "gate": {
   "spurts": {
