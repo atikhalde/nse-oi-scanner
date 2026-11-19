@@ -1,15 +1,15 @@
 {
   "session": "2026-11-19",
   "market": {
-    "dir_state": 0,
-    "label": "NEUTRAL",
-    "conf": 56,
+    "dir_state": 1,
+    "label": "BULL",
+    "conf": 75,
     "regime": "TRANSITION"
   },
   "sector": {
-    "name": "WAIT",
-    "side": 0,
-    "reason": "WAIT \u2014 market TRANSITION conf 56"
+    "name": "AUTO",
+    "side": 1,
+    "reason": "PERSIST + AUTO qualified (score 98)"
   },
   "alerts": {},
   "sent": {
@@ -42,7 +42,7 @@
       "t2": 2289.62,
       "t3": 2263.43,
       "entry_bar": "2026-11-19T09:25:00+05:30",
-      "last_bar": "2026-11-19T10:10:00+05:30"
+      "last_bar": "2026-11-19T10:25:00+05:30"
     },
     "TECHM": {
       "side": "SELL",
@@ -53,19 +53,19 @@
       "t2": 1688.68,
       "t3": 1678.22,
       "entry_bar": "2026-11-19T09:55:00+05:30",
-      "last_bar": "2026-11-19T10:10:00+05:30"
+      "last_bar": "2026-11-19T10:25:00+05:30"
     }
   },
   "feed": {
-    "yahoo_calls": 60,
+    "yahoo_calls": 66,
     "dhan_calls": 0,
     "fallback": null,
     "last_source": "yahoo",
-    "history_calls": 11,
-    "symbols": 69,
+    "history_calls": 15,
+    "symbols": 79,
     "sources": {
-      "yahoo": 58,
-      "history": 11
+      "yahoo": 64,
+      "history": 15
     }
   }
 }
