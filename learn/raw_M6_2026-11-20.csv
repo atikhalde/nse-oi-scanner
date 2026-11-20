@@ -1,0 +1,50 @@
+day,model,sym,side,sig,code,time,min,entry,rank,cls,taken,ghost,skip_why,breadth,daypct,sec,sec_bullq,sec_bearq,sec_pb,sec_pw,held,tilt,regime,cf_net_s,cf_net_p,cf_r_s,cf_r_p,cf_exit_s
+2026-11-20,M6,APOLLOHOSP,BUY,BUY-EX17,102,09:30,570,9063.5,,BREAKOUT,1,0,,0.125,3.725,HOSPITALS,0,0,1,0,1,3.3,,380.0,,0.54,,OPEN
+2026-11-20,M6,COFORGE,BUY,BUY-EX,101,09:30,570,2117.7,,BREAKOUT,1,0,,0.125,3.758,IT,0,0,0,0,0,3.3,,-276.0,,-0.32,,OPEN
+2026-11-20,M6,MAXHEALTH,BUY,BUY-EX17,102,09:30,570,1086.05,,BREAKOUT,1,0,,0.125,4.363,HOSPITALS,0,0,1,0,1,3.3,,-162.0,,-0.19,,OPEN
+2026-11-20,M6,LTM,BUY,BUY-EX,101,09:30,570,4230.0,,BREAKOUT,1,0,,0.125,3.679,IT,0,0,0,0,0,3.3,,-360.0,,-0.45,,OPEN
+2026-11-20,M6,PERSISTENT,BUY,BUY-EX,101,09:30,570,6062.0,,BREAKOUT,1,0,,0.125,3.095,IT,0,0,0,0,0,3.3,,110.0,,0.13,,OPEN
+2026-11-20,M6,MPHASIS,BUY,BUY-EX,101,09:55,595,2437.4,,BREAKOUT,1,0,,0.125,3.455,IT,0,0,0,0,0,3.3,,-566.0,,-1.0,,100% SL 13:40
+2026-11-20,M6,TATAELXSI,BUY,BUY-EX,101,09:55,595,3801.3,,BREAKOUT,1,0,,0.125,2.048,IT,0,0,0,0,0,3.3,,1417.0,,1.65,,100% trail 12:05
+2026-11-20,M6,APLAPOLLO,SELL,SELL-EX2,202,10:00,600,2044.8,,BREAKOUT,1,0,,0.125,-4.8,MET,0,0,0,0,0,3.3,,-722.0,,-0.84,,OPEN
+2026-11-20,M6,TECHM,BUY,BUY-EX,101,09:30,570,1763.8,,,0,0,big move at 09:15 needs 2 follow-through closes — no alert,0.125,2.368,IT,0,0,0,0,0,3.3,,,,,,
+2026-11-20,M6,INFY,BUY,BUY-EX,101,09:30,570,1109.6,,,0,0,"lags own sector (stock +1.62% vs IT +2.07%; lag +0.452pp, tolerance 0.05pp)",0.125,1.621,IT,0,0,0,0,0,3.3,,,,,,
+2026-11-20,M6,HCLTECH,BUY,BUY-EX,101,09:30,570,1357.6,,,0,0,"lags own sector (stock +1.85% vs IT +2.07%; lag +0.220pp, tolerance 0.05pp)",0.125,1.853,IT,0,0,0,0,0,3.3,,,,,,
+2026-11-20,M6,FORTIS,BUY,BUY-EX,101,09:30,570,821.2,,,0,0,"lags own sector (stock +1.40% vs HOSPITALS +3.16%; lag +1.762pp, tolerance 0.05p",0.125,1.401,HOSPITALS,0,0,1,0,1,3.3,,,,,,
+2026-11-20,M6,OFSS,SELL,SELL-EX1,201,09:35,575,9790.0,,,0,0,sector IT not bear-qualified (bull 87/bear 2),0.125,-0.473,IT,0,0,0,0,0,3.3,,,,,,
+2026-11-20,M6,PETRONET,SELL,SELL-EX8,208,09:30,570,,,,0,0,discovered late (09:30 < 09:35) — not alerted,0.125,,OIL,0,0,0,0,0,3.3,,,,,,
+2026-11-20,M6,OFSS,SELL,SELL-EX5,205,09:35,575,,,,0,0,discovered late (09:35 < 10:05) — not alerted,0.125,,IT,0,0,0,0,0,3.3,,,,,,
+2026-11-20,M6,TCS,BUY,BUY-EX,101,10:15,615,2397.5,,,0,0,outside sector top-5: rank 6 composite 62.00,0.125,2.339,IT,0,0,0,0,0,3.3,,,,,,
+2026-11-20,M6,WIPRO,BUY,BUY-EX,101,10:25,625,187.57,,,0,0,"lags own sector (stock +1.98% vs IT +2.84%; lag +0.857pp, tolerance 0.05pp)",0.125,1.979,IT,0,0,0,0,0,3.3,,,,,,
+2026-11-20,M6,GAIL,SELL,SELL-EX6,206,10:05,605,,,,0,0,discovered late (10:05 < 10:30) — not alerted,0.125,,OIL,0,0,0,0,0,3.3,,,,,,
+2026-11-20,M6,ONGC,SELL,SELL-EX2,202,10:25,625,,,,0,0,discovered late (10:25 < 10:30) — not alerted,0.125,,OIL,0,0,0,0,0,3.3,,,,,,
+2026-11-20,M6,DIVISLAB,SELL,SELL-EX2,202,10:00,600,,,,0,0,discovered late (10:00 < 10:50) — not alerted,0.125,,PHA,0,0,0,0,0,3.3,,,,,,
+2026-11-20,M6,CIPLA,BUY,ENTRY BUY,90,09:30,570,,,,0,0,discovered late (09:30 < 10:50) — not alerted,0.125,,PHA,0,0,0,0,0,3.3,,,,,,
+2026-11-20,M6,CIPLA,SELL,SELL-EX1,201,10:00,600,,,,0,0,discovered late (10:00 < 10:50) — not alerted,0.125,,PHA,0,0,0,0,0,3.3,,,,,,
+2026-11-20,M6,SUNPHARMA,SELL,SELL-EX1,201,09:30,570,,,,0,0,discovered late (09:30 < 10:50) — not alerted,0.125,,PHA,0,0,0,0,0,3.3,,,,,,
+2026-11-20,M6,ZYDUSLIFE,SELL,SELL-EX8,208,10:00,600,,,,0,0,discovered late (10:00 < 10:50) — not alerted,0.125,,PHA,0,0,0,0,0,3.3,,,,,,
+2026-11-20,M6,ALKEM,BUY,BUY-EX9,108,09:30,570,,,,0,0,discovered late (09:30 < 10:50) — not alerted,0.125,,PHA,0,0,0,0,0,3.3,,,,,,
+2026-11-20,M6,GLENMARK,BUY,ENTRY BUY,90,09:30,570,,,,0,0,discovered late (09:30 < 10:50) — not alerted,0.125,,PHA,0,0,0,0,0,3.3,,,,,,
+2026-11-20,M6,GLENMARK,SELL,SELL-EX1,201,10:50,650,2606.7,,,0,0,"lags own sector (stock -0.07% vs PHA -0.58%; lag +0.516pp, tolerance 0.05pp)",0.125,-0.069,PHA,0,0,0,0,0,3.3,,,,,,
+2026-11-20,M6,MANKIND,BUY,BUY-EX,101,09:40,580,,,,0,0,discovered late (09:40 < 10:50) — not alerted,0.125,,PHA,0,0,0,0,0,3.3,,,,,,
+2026-11-20,M6,TORNTPHARM,BUY,BUY-EX17,102,09:40,580,,,,0,0,discovered late (09:40 < 10:50) — not alerted,0.125,,PHA,0,0,0,0,0,3.3,,,,,,
+2026-11-20,M6,OFSS,BUY,BUY-EX7,106,10:55,655,9889.5,,,0,0,"lags own sector (stock +0.54% vs IT +2.72%; lag +2.178pp, tolerance 0.05pp)",0.125,0.539,IT,0,0,0,0,0,3.3,,,,,,
+2026-11-20,M6,INDHOTEL,BUY,BUY-EX,101,09:30,570,,,,0,0,discovered late (09:30 < 11:00) — not alerted,0.125,,TRAVEL,1,0,1,0,1,3.3,,,,,,
+2026-11-20,M6,RVNL,SELL,SELL-EX15,215,11:00,660,,,,0,0,discovered late (11:00 < 11:05) — not alerted,0.125,,RAILWAYS,0,0,0,1,0,3.3,,,,,,
+2026-11-20,M6,IRFC,SELL,SELL-EX15,215,11:25,685,82.86,,,0,0,"lags own sector (stock -1.66% vs RAILWAYS -1.82%; lag +0.156pp, tolerance 0.05pp",0.125,-1.662,RAILWAYS,0,0,0,1,0,3.3,,,,,,
+2026-11-20,M6,AXISBANK,BUY,BUY-EX,101,09:30,570,,,,0,0,discovered late (09:30 < 12:00) — not alerted,0.125,,BANK,0,0,1,0,1,3.3,,,,,,
+2026-11-20,M6,INDUSINDBK,BUY,BUY-EX,101,09:30,570,,,,0,0,discovered late (09:30 < 12:00) — not alerted,0.125,,BANK,0,0,1,0,1,3.3,,,,,,
+2026-11-20,M6,ICICIBANK,BUY,BUY-EX,101,10:45,645,,,,0,0,discovered late (10:45 < 12:00) — not alerted,0.125,,BANK,0,0,1,0,1,3.3,,,,,,
+2026-11-20,M6,HDFCBANK,BUY,BUY-EX,101,09:50,590,,,,0,0,discovered late (09:50 < 12:00) — not alerted,0.125,,BANK,0,0,1,0,1,3.3,,,,,,
+2026-11-20,M6,AUBANK,SELL,SELL-EX5,205,10:30,630,,,,0,0,discovered late (10:30 < 12:00) — not alerted,0.125,,BANK,0,0,1,0,1,3.3,,,,,,
+2026-11-20,M6,BANDHANBNK,BUY,BUY-EX,101,09:50,590,,,,0,0,discovered late (09:50 < 12:00) — not alerted,0.125,,BANK,0,0,1,0,1,3.3,,,,,,
+2026-11-20,M6,IDFCFIRSTB,BUY,BUY-EX4,103,11:10,670,,,,0,0,discovered late (11:10 < 12:00) — not alerted,0.125,,BANK,0,0,1,0,1,3.3,,,,,,
+2026-11-20,M6,KOTAKBANK,BUY,BUY-EX,101,09:40,580,,,,0,0,discovered late (09:40 < 12:00) — not alerted,0.125,,BANK,0,0,1,0,1,3.3,,,,,,
+2026-11-20,M6,DLF,BUY,BUY-EX,101,09:30,570,,,,0,0,discovered late (09:30 < 13:05) — not alerted,0.125,,REALTY,0,0,0,0,1,3.3,,,,,,
+2026-11-20,M6,PHOENIXLTD,BUY,BUY-EX,101,09:50,590,,,,0,0,discovered late (09:50 < 13:05) — not alerted,0.125,,REALTY,0,0,0,0,1,3.3,,,,,,
+2026-11-20,M6,PRESTIGE,BUY,BUY-EX17,102,09:40,580,,,,0,0,discovered late (09:40 < 13:05) — not alerted,0.125,,REALTY,0,0,0,0,1,3.3,,,,,,
+2026-11-20,M6,AUBANK,SELL,SELL-EX1,201,10:30,630,,,,0,0,discovered late (10:30 < 13:40) — not alerted,0.125,,BANK,0,0,1,0,1,3.3,,,,,,
+2026-11-20,M6,AUBANK,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.125,,BANK,0,0,1,0,1,3.3,,,,,,
+2026-11-20,M6,FEDERALBNK,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.125,,BANK,0,0,1,0,1,3.3,,,,,,
+2026-11-20,M6,RBLBANK,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.125,,BANK,0,0,1,0,1,3.3,,,,,,
+2026-11-20,M6,YESBANK,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.125,,BANK,0,0,1,0,1,3.3,,,,,,
