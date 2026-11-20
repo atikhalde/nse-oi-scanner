@@ -74,8 +74,8 @@
    "qty_full": 41,
    "qty_capped": false,
    "capital": 49879.0,
-   "tp1": 2126.52,
-   "tp2": 2126.52,
+   "tp1": 2126.51,
+   "tp2": 2126.51,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
@@ -95,7 +95,7 @@
     {
      "key": "ENTRY",
      "time": "09:55",
-     "price": 1216.550048828125
+     "price": 1216.55
     },
     {
      "key": "EXIT_SL",
@@ -103,8 +103,7 @@
      "price": 1207.3584555908203
     }
    ],
-   "spurt_rank": 165,
-   "movers20": true
+   "spurt_rank": 165
   },
   "ABB": {
    "symbol": "ABB",
@@ -147,8 +146,7 @@
      "price": 6980.5
     }
    ],
-   "spurt_rank": 186,
-   "movers20": true
+   "spurt_rank": 186
   },
   "ADANIENSOL": {
    "symbol": "ADANIENSOL",
@@ -167,8 +165,8 @@
    "qty_full": 33,
    "qty_capped": false,
    "capital": 49015.0,
-   "tp1": 3019.22,
-   "tp2": 3019.22,
+   "tp1": 3019.21,
+   "tp2": 3019.21,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
@@ -181,18 +179,17 @@
    ],
    "exit_text": "OPEN",
    "leg2_time": "15:25",
-   "pnl": 214.0,
+   "pnl": 215.0,
    "r_total": 0.42,
    "closed": false,
    "events": [
     {
      "key": "ENTRY",
      "time": "10:50",
-     "price": 1485.300048828125
+     "price": 1485.3
     }
    ],
-   "spurt_rank": 42,
-   "movers20": true
+   "spurt_rank": 42
   },
   "AMBER": {
    "symbol": "AMBER",
@@ -235,8 +232,7 @@
      "price": 6760.5
     }
    ],
-   "spurt_rank": 200,
-   "movers20": true
+   "spurt_rank": 200
   },
   "APLAPOLLO": {
    "symbol": "APLAPOLLO",
@@ -255,8 +251,8 @@
    "qty_full": 24,
    "qty_capped": true,
    "capital": 24538.0,
-   "tp1": -5055.8,
-   "tp2": -5055.8,
+   "tp1": -5055.81,
+   "tp2": -5055.81,
    "trail_armed": false,
    "trail_style": "structure swings",
    "legs": [
@@ -276,7 +272,7 @@
     {
      "key": "ENTRY",
      "time": "10:00",
-     "price": 2044.800048828125
+     "price": 2044.8
     },
     {
      "key": "EXIT_SL",
@@ -284,8 +280,7 @@
      "price": 2121.60009765625
     }
    ],
-   "spurt_rank": 6,
-   "movers20": true
+   "spurt_rank": 6
   },
   "ASHOKLEY": {
    "symbol": "ASHOKLEY",
@@ -325,13 +320,60 @@
     {
      "key": "ENTRY",
      "time": "09:35",
-     "price": 163.74000549316406
+     "price": 163.74
     }
    ],
-   "spurt_rank": 183,
-   "movers20": true
+   "spurt_rank": 183
   },
   "AUBANK": {
+   "symbol": "AUBANK",
+   "side": "SELL",
+   "time": "10:30",
+   "signal": "SELL-EX1",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 965.95,
+   "sl": 974.59,
+   "sl_anchor": "pivot",
+   "risk_pts": 8.64,
+   "risk_pct": 0.895,
+   "risk_rs": 441.0,
+   "qty": 51,
+   "qty_full": 51,
+   "qty_capped": false,
+   "capital": 49263.0,
+   "tp1": 110.1,
+   "tp2": 110.1,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "SL 11:50",
+     51,
+     974.5949044189452,
+     "11:50"
+    ]
+   ],
+   "exit_text": "100% SL 11:50",
+   "leg2_time": "11:50",
+   "pnl": -441.0,
+   "r_total": -1.0,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "10:30",
+     "price": 965.95
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "11:50",
+     "price": 974.5949044189452
+    }
+   ],
+   "spurt_rank": 101
+  },
+  "AUBANK#2": {
    "symbol": "AUBANK",
    "side": "SELL",
    "time": "10:30",
@@ -388,7 +430,11 @@
   "AMBER:ENTRY",
   "APLAPOLLO:ENTRY",
   "ASHOKLEY:ENTRY",
-  "AUBANK:ENTRY"
+  "AUBANK:ENTRY",
+  "360ONE:EXIT_SL",
+  "APLAPOLLO:EXIT_SL",
+  "AUBANK:EXIT_SL",
+  "AUBANK#2:ENTRY"
  ],
  "gate": {
   "spurts": {
