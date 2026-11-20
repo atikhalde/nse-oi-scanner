@@ -1042,7 +1042,7 @@ def git_sync(reason="", dry_run=False, next_close=None, timeout=25):
             pass
     files = ["state6.json"]
     files += sorted(p.name for p in ROOT.glob("paper_test_M6_*.xlsx"))
-    files += sorted(p.name for p in ROOT.glob("activity_M6_*.json"))
+    files += sorted(p.name for p in ROOT.glob("activity_M6_*.txt"))
 
     def run(args):
         return subprocess.run(["git", "-C", str(ROOT)] + args, capture_output=True, text=True,
@@ -1480,30 +1480,23 @@ def eod_activity_text(st):
     for key, trade in st.get("trades", {}).items():
         lines.append(key + ": " + json.dumps(trade, ensure_ascii=False, default=str))
     lines.append("Full per-candle sector metrics, gate reasons, stock ranks/components, scan/feed diagnostics "
-                 "and suppressed records are in the activity JSON attachment. No journal exists for unobserved candles.")
+                 "and suppressed records are in the activity TXT attachment. No journal exists for unobserved candles.")
     return "\n".join(lines)
 
 
-def send_activity_text(text, dry_run=False):
-    """Escape HTML and split before Telegram's 4096-character limit."""
+def eod_attachment_text(summary, st):
+    """Readable UTF-8 summary plus the complete saved audit, without truncation."""
     import html
-    pieces, chunk, size = [], [], 0
-    for char in text:
-        escaped = html.escape(char)
-        units = len(escaped.encode("utf-16-le")) // 2
-        if size + units > 3000:
-            pieces.append("".join(chunk))
-            chunk, size = [], 0
-        chunk.append(escaped)
-        size += units
-    if chunk:
-        pieces.append("".join(chunk))
-    for i, piece in enumerate(pieces, 1):
-        send(f"🅼6 EOD activity {i}/{len(pieces)}\n" + piece, dry_run=dry_run)
+    import re
+    from pprint import pformat
+    plain_summary = html.unescape(re.sub(r"</?[A-Za-z][^>]*>", "", summary))
+    return (plain_summary + "\n\n" + eod_activity_text(st) +
+            "\n\nFULL SAVED AUDIT — per-candle metrics, gate reasons, rankings and diagnostics\n" +
+            pformat(st, width=120, sort_dicts=False) + "\n")
 
 
 def run_eod(st, today, now, board=None, bars_map=None, dry_run=False, reason="eod"):
-    """EOD report + Telegram summary. State is marked done BEFORE sending."""
+    """EOD TXT + XLSX attachments only. State marked done BEFORE sending."""
     if st.get("eod_done"):
         return False
     bars_map = bars_map or {}
@@ -1534,13 +1527,12 @@ def run_eod(st, today, now, board=None, bars_map=None, dry_run=False, reason="eo
         st["eod_done"] = True
         st["eod_reason"] = reason
         save_state(st, dry_run)              # done BEFORE send → report can never double-send
-        send(msg, dry_run=dry_run)
-        activity = eod_activity_text(st)
-        send_activity_text(activity, dry_run=dry_run)
-        if not dry_run:
-            audit = STATE6.parent / f"activity_M6_{today}.json"
-            audit.write_text(json.dumps(st, ensure_ascii=False, indent=2, default=str), encoding="utf-8")
-            _fanout_document(str(audit), caption=f"M6 full day activity audit {today}")
+        audit = STATE6.parent / f"activity_M6_{today}.txt"
+        if dry_run:
+            print(f"[DRY] document {audit}")
+        else:
+            audit.write_text(eod_attachment_text(msg, st), encoding="utf-8")
+            _fanout_document(str(audit), caption=f"M6 EOD summary and full day activity {today}")
         if out:
             if dry_run:
                 print(f"[DRY] document {out}")
