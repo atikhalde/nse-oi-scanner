@@ -2,12 +2,14 @@
 
 ## Delivery
 
-At EOD, M6 retains its trade-summary alert and XLSX and additionally sends:
+At EOD, M6 sends **attachments only**, with no EOD Telegram text messages:
 
-- Numbered Telegram activity messages, escaped for HTML and split below Telegram's UTF-16 message limit.
-- `activity_M6_YYYY-MM-DD.json`: the day's saved state, including the complete observed candle journal, trade ledger, skip records and suppressed records.
+- `activity_M6_YYYY-MM-DD.txt`: a UTF-8 trade summary and activity review, followed by the full saved audit (complete observed candle journal, trade ledger, skips, suppressed records and diagnostics).
+- The existing `paper_test_M6_YYYY-MM-DD.xlsx` report.
 
-Both configured M6 Telegram destinations receive these. The existing EOD done-marker prevents duplicate EOD runs; it is not a guarantee of network delivery. Dry runs do not write or send the audit file. The workflow and runner git-sync preserve the activity JSON alongside the normal report.
+Both configured M6 Telegram destinations receive these documents with short captions. No activity JSON is sent. Internal state remains JSON. Intraday alerts are unchanged.
+
+The existing EOD done-marker prevents duplicate EOD runs; it is not a guarantee of network delivery. Dry runs do not write or send the audit file. The workflow and runner git-sync preserve the activity TXT alongside the normal report.
 
 ## Recorded at every evaluated candle
 
@@ -21,9 +23,9 @@ Both configured M6 Telegram destinations receive these. The existing EOD done-ma
 
 A repeated evaluation replaces that candle's snapshot. The daily state loader resets the journal on a new date. Ranking data from an earlier candle is never presented as a current ranking.
 
-## Telegram activity review
+## TXT activity review
 
-Includes the market-tilt timeline, per-sector start/end/min/max returns and bull/bear flow, persistent-score ranges and counts above 70, gate-open candle counts and opening/closing transitions, eligible leadership-candle counts, exact block-reason counts, every saved skip and the saved trade ledger (exits/costs/P&L when present). The JSON contains the full per-candle gate reasons and ranking components for detailed analysis.
+Includes the market-tilt timeline, per-sector start/end/min/max returns and bull/bear flow, persistent-score ranges and counts above 70, gate-open candle counts and opening/closing transitions, eligible leadership-candle counts, exact block-reason counts, every saved skip and the saved trade ledger (exits/costs/P&L when present). The TXT includes the full per-candle gate reasons and ranking components in its full saved audit section for detailed analysis.
 
 ## Follow-through filter
 

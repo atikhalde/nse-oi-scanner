@@ -119,7 +119,7 @@ jobs:
         run: |
           git config user.name "paper-bot"
           git config user.email "paper-bot@users.noreply.github.com"
-          for f in state6.json paper_test_M6_*.xlsx activity_M6_*.json learn/raw_M6_*.csv; do
+          for f in state6.json paper_test_M6_*.xlsx activity_M6_*.txt learn/raw_M6_*.csv; do
             [ -e "$f" ] && git add -- "$f"
           done
           git diff --cached --quiet || git commit -m "m6cycle $(date -u +%F_%H%M)Z"

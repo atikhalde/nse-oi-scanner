@@ -762,7 +762,7 @@ def test_entry_parity():
        latencies == [1.0] * len(latencies), str(latencies))
     ok("no stale exit was ever pushed", exit_events == [] or all(
         ev["lag"] <= max(M.MAX_LAG, M.EXIT_LAG) for ev in exit_events), str(exit_events[:3]))
-    ok("EOD fired exactly once", sum(1 for t, _ in sent if t.startswith("🅼6 EOD · ")) == 1)
+    ok("EOD is attachment-only", not any(t.startswith("🅼6 EOD") for t, _ in sent) and st["eod_done"])
 
 
 def test_causal_engine_frames():
@@ -918,7 +918,7 @@ def test_telegram_fanout():
            str(calls))
         ok("dry-run self-test exits clean", M.test_alert(dry_run=True) == 0 and calls == [])
 
-        # end to end: run_eod's summary text AND its XLSX both reach both bots,
+        # End to end: TXT summary and XLSX reach both bots without text messages,
         # and the done-marker is still written before delivery
         tmp = Path(tempfile.mkdtemp())
         M.STATE6 = tmp / "state6.json"
@@ -931,11 +931,13 @@ def test_telegram_fanout():
                               "entry": 1, "exit": 2, "pnl": 1, "r_total": 0.5}}
         calls.clear()
         eod = M.run_eod(st, DAY, dt.datetime(2026, 11, 17, 15, 30, tzinfo=M.IST))
-        ok("EOD summary + activity + documents fan out to both bots", eod and
-           calls.count(("msg", "t1", "c1")) >= 2 and
-           calls.count(("msg", "t1", "c1")) == calls.count(("msg", "t2", "c2")) and
+        ok("EOD TXT + XLSX fan out without any text messages", eod and
+           not any(call[0] == "msg" for call in calls) and
            calls.count(("doc", "t1", "c1")) == calls.count(("doc", "t2", "c2")) == 2, str(calls))
-        ok("activity audit attachment exists", (tmp / f"activity_M6_{DAY}.json").exists())
+        audit = tmp / f"activity_M6_{DAY}.txt"
+        ok("TXT attachment contains summary and full audit", audit.exists() and
+           all(x in audit.read_text(encoding="utf-8") for x in ("M6 DAY ACTIVITY", "AAA", "FULL SAVED AUDIT")))
+        ok("no JSON attachment generated", not (tmp / f"activity_M6_{DAY}.json").exists())
         count = len(calls)
         ok("EOD is not sent twice", not M.run_eod(st, DAY, dt.datetime(2026, 11, 17, 15, 30, tzinfo=M.IST))
            and len(calls) == count)
@@ -1210,15 +1212,10 @@ def test_day_activity_audit():
     ok("activity describes blocks, momentum, persistence and coverage",
        all(x in text for x in ("M&M", "rank 6 < 7", "persistent start/end", "OFFLINE", "not scanned", "TRADE LEDGER")))
     ok("older state does not fabricate a timeline", "No intraday journal" in M.eod_activity_text(M.fresh_state(DAY)))
-    sent, original = [], M.send
-    M.send = lambda text, **kw: sent.append(text)
-    try:
-        M.send_activity_text("M&M <blocked> 😀" * 1000)
-        ok("multipart activity escapes HTML and respects UTF16 limit",
-           len(sent) > 1 and all(len(t.encode("utf-16-le"))//2 < 4096 for t in sent) and
-           "M&amp;M" in sent[0] and "&lt;blocked&gt;" in sent[0])
-    finally:
-        M.send = original
+    content = M.eod_attachment_text("<b>M6 EOD</b> M&amp;M 😀", st)
+    ok("TXT is readable Unicode, not Telegram HTML", content.startswith("M6 EOD M&M 😀") and "<b>" not in content)
+    ok("TXT preserves full journal and all block details",
+       all(x in content for x in ("FULL SAVED AUDIT", "day_activity", "persist_bull", "10:05", "rank 6 < 7 & blocked")))
 
 
 # ------------------------------------------------------------------ main
