@@ -3,13 +3,13 @@
   "market": {
     "dir_state": 1,
     "label": "BULL",
-    "conf": 95,
+    "conf": 91,
     "regime": "TRANSITION"
   },
   "sector": {
-    "name": "IT",
+    "name": "BANK",
     "side": 1,
-    "reason": "PERSIST + IT qualified (score 99)"
+    "reason": "PERSIST + BANK qualified (score 86)"
   },
   "alerts": {},
   "sent": {
@@ -46,15 +46,15 @@
   },
   "positions": {},
   "feed": {
-    "yahoo_calls": 59,
+    "yahoo_calls": 64,
     "dhan_calls": 0,
     "fallback": null,
     "last_source": "yahoo",
-    "history_calls": 11,
-    "symbols": 68,
+    "history_calls": 15,
+    "symbols": 77,
     "sources": {
-      "yahoo": 57,
-      "history": 11
+      "yahoo": 62,
+      "history": 15
     }
   }
 }
