@@ -44,28 +44,16 @@
       "price": 9889.5
     }
   },
-  "positions": {
-    "TATAELXSI": {
-      "side": "BUY",
-      "entry": 3801.3,
-      "sl": 3761.41,
-      "entry_ema9": 3762.166992512106,
-      "t1": 3841.19,
-      "t2": 3881.08,
-      "t3": 3920.97,
-      "entry_bar": "2026-11-20T09:55:00+05:30",
-      "last_bar": "2026-11-20T11:10:00+05:30"
-    }
-  },
+  "positions": {},
   "feed": {
-    "yahoo_calls": 62,
+    "yahoo_calls": 60,
     "dhan_calls": 0,
     "fallback": null,
     "last_source": "yahoo",
     "history_calls": 11,
-    "symbols": 71,
+    "symbols": 69,
     "sources": {
-      "yahoo": 60,
+      "yahoo": 58,
       "history": 11
     }
   }
