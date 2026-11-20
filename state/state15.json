@@ -1,48 +1,29 @@
 {
-  "session": "2026-11-19",
+  "session": "2026-11-20",
   "market": {
     "dir_state": 1,
-    "label": "STRONG BULL",
-    "conf": 100,
-    "regime": "TREND UP"
+    "label": "BULL",
+    "conf": 69,
+    "regime": "TRANSITION"
   },
   "sector": {
-    "name": "AUTO",
+    "name": "IT",
     "side": 1,
-    "reason": "PERSIST + AUTO persistent (score 96)"
+    "reason": "PERSIST + IT qualified (score 87)"
   },
   "alerts": {},
-  "sent": {
-    "TCS": {
-      "code": 290,
-      "name": "ENTRY SELL",
-      "time": "09:25",
-      "price": 2342.0
-    },
-    "COFORGE": {
-      "code": 290,
-      "name": "ENTRY SELL",
-      "time": "09:25",
-      "price": 2019.0
-    },
-    "TECHM": {
-      "code": 203,
-      "name": "SELL-EX3",
-      "time": "09:55",
-      "price": 1709.6
-    }
-  },
+  "sent": {},
   "positions": {},
   "feed": {
-    "yahoo_calls": 64,
+    "yahoo_calls": 59,
     "dhan_calls": 0,
     "fallback": null,
     "last_source": "yahoo",
-    "history_calls": 15,
-    "symbols": 77,
+    "history_calls": 11,
+    "symbols": 68,
     "sources": {
-      "yahoo": 62,
-      "history": 15
+      "yahoo": 57,
+      "history": 11
     }
   }
 }
