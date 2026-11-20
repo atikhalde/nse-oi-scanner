@@ -390,6 +390,54 @@
    "qty_full": 51,
    "qty_capped": false,
    "capital": 49263.0,
+   "tp1": 110.1,
+   "tp2": 110.1,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "SL 11:50",
+     51,
+     974.5949044189452,
+     "11:50"
+    ]
+   ],
+   "exit_text": "100% SL 11:50",
+   "leg2_time": "11:50",
+   "pnl": -441.0,
+   "r_total": -1.0,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "10:30",
+     "price": 965.95
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "11:50",
+     "price": 974.5949044189452
+    }
+   ],
+   "spurt_rank": 101
+  },
+  "AUBANK#3": {
+   "symbol": "AUBANK",
+   "side": "SELL",
+   "time": "10:30",
+   "signal": "SELL-EX1",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 965.95,
+   "sl": 974.59,
+   "sl_anchor": "pivot",
+   "risk_pts": 8.64,
+   "risk_pct": 0.895,
+   "risk_rs": 441.0,
+   "qty": 51,
+   "qty_full": 51,
+   "qty_capped": false,
+   "capital": 49263.0,
    "tp1": 110.11,
    "tp2": 110.11,
    "trail_armed": false,
@@ -419,7 +467,7 @@
      "price": 974.5949044189452
     }
    ],
-   "spurt_rank": 101,
+   "spurt_rank": 146,
    "movers20": true
   }
  },
@@ -434,7 +482,9 @@
   "360ONE:EXIT_SL",
   "APLAPOLLO:EXIT_SL",
   "AUBANK:EXIT_SL",
-  "AUBANK#2:ENTRY"
+  "AUBANK#2:ENTRY",
+  "AUBANK#2:EXIT_SL",
+  "AUBANK#3:ENTRY"
  ],
  "gate": {
   "spurts": {
