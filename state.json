@@ -59,6 +59,54 @@
    "qty_full": 24,
    "qty_capped": true,
    "capital": 24538.0,
+   "tp1": -5055.81,
+   "tp2": -5055.81,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "SL 15:25",
+     12,
+     2121.60009765625,
+     "15:25"
+    ]
+   ],
+   "exit_text": "100% SL 15:25",
+   "leg2_time": "15:25",
+   "pnl": -922.0,
+   "r_total": -1.07,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "10:00",
+     "price": 2044.8
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "15:25",
+     "price": 2121.60009765625
+    }
+   ],
+   "gate_rank": 6
+  },
+  "APLAPOLLO#2": {
+   "symbol": "APLAPOLLO",
+   "side": "SELL",
+   "time": "10:00",
+   "signal": "SELL-EX2",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 2044.8,
+   "sl": 2116.52,
+   "sl_anchor": "session-extreme*",
+   "risk_pts": 71.72,
+   "risk_pct": 3.508,
+   "risk_rs": 861.0,
+   "qty": 12,
+   "qty_full": 24,
+   "qty_capped": true,
+   "capital": 24538.0,
    "tp1": -5055.8,
    "tp2": -5055.8,
    "trail_armed": false,
@@ -92,7 +140,9 @@
   }
  },
  "alerts": [
-  "APLAPOLLO:ENTRY"
+  "APLAPOLLO:ENTRY",
+  "APLAPOLLO:EXIT_SL",
+  "APLAPOLLO#2:ENTRY"
  ],
  "gate": {
   "status": "OK",
