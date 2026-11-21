@@ -215,6 +215,80 @@ class ContinuationTests(unittest.TestCase):
         self.assertEqual(st['setups'][key]['phase'], 'failed')
 
 
+class DirectOriginalBOSTests(unittest.TestCase):
+    def pattern(self, sell=False):
+        rows = [bar('09:25', h=105, l=100, c=104),
+                bar('09:30', o=104, h=107, l=104, c=106.5, e9=105.5, e10=105),
+                bar('09:35', o=106, h=110, l=105, c=109, e9=107.5, e10=107),
+                bar('09:40', o=109, h=109, l=107, c=108, e9=108, e10=107.8),
+                bar('09:45', o=108, h=112, l=108, c=111, e9=109, e10=108.7)]
+        return list(map(invert, rows)) if sell else rows
+
+    def test_original_signal_first_appears_on_bos_buy_and_sell(self):
+        for sell in (False, True):
+            rows = self.pattern(sell)
+            st = M.fresh_state(DAY)
+            key = M.seed(st, 'A', 212 if sell else 110, 'SELL-EX11' if sell else 'BUY-EX11', rows[-1], pd.DataFrame(rows))
+            self.assertTrue(M.direct_original_bos(st, key, rows[-1], pd.DataFrame(rows), at('09:50:01')))
+            self.assertEqual(st['setups'][key]['phase'], 'confirmed')
+            self.assertEqual(st['events'][0]['kind'], 'DIRECT_BOS_CONFIRMED')
+            self.assertEqual(st['events'][0]['seed'], rows[-1]['dt'])
+            self.assertEqual(st['events'][0]['bos'], 90 if sell else 110)
+            self.assertEqual(len(st['outbox']), 1)
+            self.assertFalse(M.direct_original_bos(st, key, rows[-1], pd.DataFrame(rows), at('09:50:02')))
+            self.assertEqual(len(st['events']), 1)
+
+    def test_no_pullback_or_no_breakout_not_direct(self):
+        rows = self.pattern()
+        rows[3].update(open=109.1, high=109.9, low=109, close=109.5, ema9=108, ema10=107.8)
+        st = M.fresh_state(DAY)
+        key = M.seed(st, 'A', 110, 'EX', rows[-1], pd.DataFrame(rows))
+        self.assertFalse(M.direct_original_bos(st, key, rows[-1], pd.DataFrame(rows), at('09:50:01')))
+        rows = self.pattern()
+        rows[-1]['close'] = 109.5
+        st = M.fresh_state(DAY)
+        key = M.seed(st, 'A', 110, 'EX', rows[-1], pd.DataFrame(rows))
+        self.assertFalse(M.direct_original_bos(st, key, rows[-1], pd.DataFrame(rows), at('09:50:01')))
+
+    def test_ema_violation_rejects_direct_and_replay_never_alerts(self):
+        rows = self.pattern()
+        rows[3]['ema9'] = 108.1
+        st = M.fresh_state(DAY)
+        key = M.seed(st, 'A', 110, 'EX', rows[-1], pd.DataFrame(rows))
+        self.assertFalse(M.direct_original_bos(st, key, rows[-1], pd.DataFrame(rows), at('09:50:01')))
+        rows = self.pattern()
+        st = M.fresh_state(DAY)
+        key = M.seed(st, 'A', 110, 'EX', rows[-1], pd.DataFrame(rows))
+        self.assertTrue(M.direct_original_bos(st, key, rows[-1], pd.DataFrame(rows), at('10:00')))
+        self.assertFalse(st['outbox'])
+        self.assertFalse(st['events'][0]['live'])
+
+    def test_existing_continuation_close_is_not_alerted_again(self):
+        rows = self.pattern()
+        st = M.fresh_state(DAY)
+        first = M.seed(st, 'A', 101, 'BUY-EX', rows[0], pd.DataFrame(rows[:1]))
+        for b in rows[1:]:
+            M.closed_bar(st, 'A', b, M.stamp(b['dt'])+pd.Timedelta(minutes=5,seconds=1))
+        self.assertEqual(st['setups'][first]['phase'], 'confirmed')
+        key = M.seed(st, 'A', 110, 'BUY-EX11', rows[-1], pd.DataFrame(rows))
+        self.assertTrue(M.direct_original_bos(st, key, rows[-1], pd.DataFrame(rows), at('09:50:01')))
+        self.assertEqual(len(st['events']), 1)
+        self.assertEqual(len(st['outbox']), 1)
+        self.assertIn('coincident_original_signals', st['events'][0])
+
+    def test_apply_integration_and_incomplete_or_future_context(self):
+        rows = self.pattern()
+        st = M.fresh_state(DAY)
+        R.apply(st, 'A', [(rows[-1],110,'BUY-EX11',pd.DataFrame(rows).to_dict('list'))], at('09:50:01'))
+        self.assertEqual(st['events'][0]['kind'], 'DIRECT_BOS_CONFIRMED')
+        self.assertIn('directly on BOS', st['signal_audit'][0]['reason'])
+        st = M.fresh_state(DAY)
+        key = M.seed(st, 'A',110,'EX',rows[-1],pd.DataFrame(rows))
+        self.assertFalse(M.direct_original_bos(st,key,rows[-1],pd.DataFrame(rows),at('09:48')))
+        self.assertFalse(M.direct_original_bos(st,key,rows[-1],pd.DataFrame(rows[-3:]),at('09:50:01')))
+        self.assertFalse(M.direct_original_bos(st,key,rows[-1],pd.DataFrame({'low':[100]}),at('09:50:01')))
+
+
 class RunnerTests(unittest.TestCase):
     def setUp(self):
         env = patch.dict(os.environ, {}, clear=True)

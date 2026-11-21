@@ -28,6 +28,14 @@ M16 is an **alerts-only** model. It does not place orders or reuse M2/M6 trade l
 - If the trigger candle is missing, record `CLOSE_UNAVAILABLE`; do not confirm using a different candle.
 - Historical reconstruction records events but suppresses stale alerts. Default close/send freshness budget is 30 seconds. Failed sends retry within that budget with a short backoff. An outbox left `sending` after a crash is uncertain and is not blindly duplicated.
 
+## Original indicator label on the BOS candle
+
+If the **first/original final label itself appears on an already qualifying BOS candle**, M16 sends `DIRECT_BOS_CONFIRMED` immediately on its fresh completed-candle observation. It does **not** require a previous indicator label or wait for another pullback.
+
+For this path, search the last up-to-24 completed session candles for the same directional rally, Fib/EMA pullback, EMA-close continuity and frozen-BOS conditions. Pattern anchors are a local price-pattern search, **not fabricated earlier indicator signals**. The setup retains the real original-label timestamp, plus its pattern-start timestamp and prior pattern evidence. The original label must still be confirmed strictly before 11:00. A naked breakout without the qualifying rally/pullback does not qualify.
+
+A final original label cannot be known before its candle closes: this path is a clearly labelled close-confirmed alert, not a retroactive running alert. Late/replay observations are audit-only. If an older tracked signal already produces the same symbol/side/BOS close alert, annotate that alert with the coincident original label rather than send another duplicate. Confirmed direct entries appear in both EOD reports.
+
 ## Timing / feed limitations
 
 Default watched-symbol poll cadence is one second (`M16_POLL_SECONDS`, minimum 1). Universe discovery is aligned to five-minute close +1 second before 11:00. Asynchronous fetches and separate active/discovery analysis workers prevent a whole-universe batch from holding up active setups. Late discovery bars are re-fetched within the initial freshness budget.
