@@ -14,10 +14,12 @@ on:
     branches: [main]
   schedule:
     - cron: "45,55 3 * * 1-5"
-    - cron: "*/15 4-6 * * 1-5"
+    - cron: "*/15 4-9 * * 1-5"
+    - cron: "5 10 * * 1-5" # 15:35 IST: retry failed EOD document delivery
 
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   group: live-m16-continuation
@@ -26,7 +28,7 @@ concurrency:
 jobs:
   continuation:
     runs-on: ubuntu-latest
-    timeout-minutes: 225
+    timeout-minutes: 350
     env:
       M16_BOT_TOKEN: ${{ secrets.M16_BOT_TOKEN }}
       M16_CHAT_ID: ${{ secrets.M16_CHAT_ID }}
@@ -47,7 +49,7 @@ jobs:
           cache: pip
       - run: pip install -r requirements.txt
       - name: M16 offline regressions
-        run: python -m unittest -v test_m16_runner
+        run: python -m unittest -v test_m16_runner test_m16_audit
       - name: M16 dedicated session
         env:
           MODE: ${{ inputs.mode || 'session' }}
@@ -56,15 +58,26 @@ jobs:
             test-alert) python -u m16_runner.py --test-alert ;;
             dry-run) python -u m16_runner.py --once --dry-run ;;
             once) python -u m16_runner.py --once ;;
-            *) python -u m16_runner.py --session --max-runtime-min 205 ;;
+            *) python -u m16_runner.py --session --max-runtime-min 324 ;;
           esac
       - name: Preserve M16 state and review
         if: always()
         run: |
           git config user.name paper-bot
           git config user.email paper-bot@users.noreply.github.com
-          for f in state16.json activity_M16_*.txt; do
+          for f in state16.json activity_M16_*.txt audit_M16_*.pdf; do
             [ ! -e "$f" ] || git add -- "$f"
           done
           git diff --cached --quiet || git commit -m "m16cycle $(date -u +%F_%H%M)Z"
           bash workflow_safe_push.sh
+
+      - name: Hand off full-day observation if first shift ended early
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MODE: ${{ inputs.mode || 'session' }}
+        run: |
+          IST=$((10#$(date -u +%H) * 60 + 10#$(date -u +%M) + 330)); IST=$((IST % 1440))
+          if [ "$MODE" = "session" ] && [ "$IST" -ge 555 ] && [ "$IST" -lt 931 ]; then
+            gh workflow run 16_live_m16.yml -f mode=session
+          fi
