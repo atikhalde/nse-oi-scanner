@@ -1,0 +1,70 @@
+name: "16. LIVE M16 — pullback BOS continuation (alerts-only)"
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "session / once / dry-run / dedicated bot self-test"
+        type: choice
+        default: session
+        options: [session, once, dry-run, test-alert]
+  workflow_run:
+    workflows: ["15. LIVE M15 — PERSIST+MASTER 5m (paper-only)"]
+    types: [completed]
+    branches: [main]
+  schedule:
+    - cron: "45,55 3 * * 1-5"
+    - cron: "*/15 4-6 * * 1-5"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: live-m16-continuation
+  cancel-in-progress: false
+
+jobs:
+  continuation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 225
+    env:
+      M16_BOT_TOKEN: ${{ secrets.M16_BOT_TOKEN }}
+      M16_CHAT_ID: ${{ secrets.M16_CHAT_ID }}
+      M16_BOT_TOKEN_2: ${{ secrets.M16_BOT_TOKEN_2 }}
+      M16_CHAT_ID_2: ${{ secrets.M16_CHAT_ID_2 }}
+      DHAN_TOKEN: ${{ secrets.DHAN_TOKEN }}
+      M16_POLL_SECONDS: "1"
+      M16_ENGINE_WORKERS: "4"
+      TZ: Asia/Kolkata
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 20
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: M16 offline regressions
+        run: python -m unittest -v test_m16_runner
+      - name: M16 dedicated session
+        env:
+          MODE: ${{ inputs.mode || 'session' }}
+        run: |
+          case "$MODE" in
+            test-alert) python -u m16_runner.py --test-alert ;;
+            dry-run) python -u m16_runner.py --once --dry-run ;;
+            once) python -u m16_runner.py --once ;;
+            *) python -u m16_runner.py --session --max-runtime-min 205 ;;
+          esac
+      - name: Preserve M16 state and review
+        if: always()
+        run: |
+          git config user.name paper-bot
+          git config user.email paper-bot@users.noreply.github.com
+          for f in state16.json activity_M16_*.txt; do
+            [ ! -e "$f" ] || git add -- "$f"
+          done
+          git diff --cached --quiet || git commit -m "m16cycle $(date -u +%F_%H%M)Z"
+          bash workflow_safe_push.sh
