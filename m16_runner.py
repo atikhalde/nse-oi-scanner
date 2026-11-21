@@ -10,7 +10,6 @@ import html
 import json
 import os
 import time
-from collections import Counter
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_completed
 from pathlib import Path
 from pprint import pformat
@@ -166,13 +165,52 @@ def analyze(job):
     return symbol, output
 
 
+def phase_snapshot(st):
+    return {key: s.get("phase") for key,s in st["setups"].items()}
+
+
+def record_transitions(st, before, now, source):
+    for key,s in st["setups"].items():
+        if before.get(key) != s.get("phase"):
+            st.setdefault("transitions", []).append(dict(
+                at=model.stamp(now).isoformat(), source=source, setup=key, symbol=s["symbol"],
+                previous=before.get(key), phase=s.get("phase"),
+                reason=s.get("invalid_reason", s.get("waiting_reason", "")),
+                bos=s.get("bos"), rally=s.get("rally_evidence", {})))
+
+
+def expire_setups(st, now):
+    previous = phase_snapshot(st)
+    model.expire(st, now)
+    record_transitions(st, previous, now, "deadline")
+
+
+def trim_diagnostics(st):
+    excess = max(0, len(st["diagnostics"])-2000)
+    if excess:
+        st["diagnostics_omitted"] = st.get("diagnostics_omitted", 0)+excess
+        st["diagnostics"] = st["diagnostics"][-2000:]
+
+
 def apply(st, symbol, rows, now):
     for bar, code, name, context in rows:
         if st["cursors"].get(symbol) and model.stamp(bar["dt"]) <= model.stamp(st["cursors"][symbol]):
             continue
+        previous = phase_snapshot(st)
+        # Preserve all processed completed candles, including post-cutoff
+        # observations. No forming-bar history is invented from final OHLC.
+        st.setdefault("audit_bars", {}).setdefault(symbol, {})[bar["dt"]] = dict(bar)
         model.closed_bar(st, symbol, bar, now, MAX_LAG)
         if code is not None:
-            model.seed(st, symbol, code, name, bar, pd.DataFrame(context))
+            key = model.seed(st, symbol, code, name, bar, pd.DataFrame(context))
+            setup = st["setups"].get(key, {})
+            st.setdefault("signal_audit", []).append(dict(
+                symbol=symbol, bar=bar["dt"], code=code, signal=name, setup=key,
+                observed=model.stamp(now).isoformat(),
+                historical=(model.stamp(now)-model.stamp(bar["dt"])-pd.Timedelta(minutes=5)).total_seconds() > MAX_LAG,
+                decision=setup.get("phase", "excluded"),
+                reason=setup.get("invalid_reason", "tracked final label" if key else "preview/unsupported code or outside seed window")))
+        record_transitions(st, previous, now, "closed candle "+bar["dt"])
         st["cursors"][symbol] = bar["dt"]
 
 
@@ -185,7 +223,9 @@ def observe_running(st, symbol, bars, now):
     required = model.stamp(current["dt"])-pd.Timedelta(minutes=5)
     if not cursor or model.stamp(cursor) < required:
         return
+    previous = phase_snapshot(st)
     model.running_bar(st, symbol, current, now)
+    record_transitions(st, previous, now, "running candle")
 
 
 def alert_text(e):
@@ -243,23 +283,30 @@ def flush(st, now, dry_run=False):
 
 
 def finish(st, dry_run=False):
+    """Full-day TXT + PDF; independent per-format and per-bot retry ledgers."""
     if st.get("eod_done"):
         return
-    text = (f"M16 CONTINUATION REVIEW — {st['date']}\n"
-            f"Setups: {len(st['setups'])}\nPhases: {dict(Counter(s['phase'] for s in st['setups'].values()))}\n"
-            f"Events: {dict(Counter(e['kind'] for e in st['events']))}\n"
-            "Running alerts are provisional; failed closes are NOT confirmed entries.\n"
-            "Historical replay events are recorded, not sent. No hypothetical P&L.\n\n" + pformat(st, width=120))
     if dry_run:
-        print("[DRY] M16 TXT review")
+        print("[DRY] M16 TXT + PDF full-day review")
         return
+    import m16_audit
+    text = "\n\n".join(name+"\n"+"\n".join(lines) for name,lines in m16_audit.sections(st))
     report = STATE.parent / f"activity_M16_{st['date']}.txt"
     report.write_text(text, encoding="utf-8")
-    ledger = st.setdefault("eod_deliveries", {})
-    if deliver_targets(st, ledger, lambda token, chat: tg.send_document_to(
-            token, chat, str(report), caption=f"M16 continuation review {st['date']}")):
-        st["eod_done"] = True
+    txt_ok = deliver_targets(st, st.setdefault("eod_deliveries", {}), lambda token, chat: tg.send_document_to(
+        token, chat, str(report), caption=f"M16 full-day review {st['date']} (TXT)"))
+    pdf_ok = False
+    try:
+        pdf = m16_audit.build_pdf(st, STATE.parent / f"audit_M16_{st['date']}.pdf")
+    except Exception as exc:
+        st["diagnostics"].append(dict(reason=f"PDF build failed: {type(exc).__name__}: {exc}"))
         save(st)
+        print("M16 PDF build failed; TXT delivery preserved, PDF can retry")
+    else:
+        pdf_ok = deliver_targets(st, st.setdefault("eod_pdf_deliveries", {}), lambda token, chat: tg.send_document_to(
+            token, chat, str(pdf), caption=f"M16 detailed full-day audit {st['date']} (PDF)"))
+    st["eod_done"] = txt_ok and pdf_ok
+    save(st)
 
 
 def cycle(st, now, bars_map, cache, pool=None, dry_run=False):
@@ -292,8 +339,8 @@ def cycle(st, now, bars_map, cache, pool=None, dry_run=False):
             st["diagnostics"].append(dict(at=model.stamp(observed).isoformat(), symbol=sym,
                                           reason=f"{type(exc).__name__}: {exc}"))
             print(f"M16 {sym}: {type(exc).__name__}: {exc}")
-    model.expire(st, now)
-    st["diagnostics"] = st["diagnostics"][-2000:]
+    expire_setups(st, now)
+    trim_diagnostics(st)
     save(st, dry_run)
 
 
@@ -318,8 +365,8 @@ def live_session(st, cache, max_minutes, dry_run=False):
             now = shared.now_ist()
             if now.strftime("%Y-%m-%d") != st["date"]:
                 break
-            if not model.before(now, "12:30:30"):
-                model.expire(st, now)
+            if not model.before(now, "15:31:00"):
+                expire_setups(st, now)
                 finish(st, dry_run)
                 break
             active = {s["symbol"] for s in st["setups"].values() if s["phase"] not in model.TERMINAL}
@@ -338,10 +385,13 @@ def live_session(st, cache, max_minutes, dry_run=False):
                     c = shared._closed_bars(cached[0], now) if cached else None
                     if c is None or c.empty or model.stamp(c.iloc[-1]["dt"]) < target:
                         symbols.add(sym)
-            symbols |= active
+            # Terminal/expired seeds stay under slower observation for the
+            # full-day research audit, without creating new entries.
+            audit_symbols = {s["symbol"] for s in st["setups"].values()}
+            symbols |= active | audit_symbols
             busy_fetch = set(fetches.values())
             for sym in sorted(symbols, key=lambda s: (s not in active, s)):
-                interval = poll if sym in active else max(5., poll)
+                interval = poll if sym in active else (30. if sym in audit_symbols else max(5., poll))
                 if sym not in busy_fetch and time.monotonic()-requested.get(sym, -1e10) >= interval:
                     executor = watch_fetch if sym in active else fetch_pool
                     fetches[executor.submit(timed_fetch, sym)] = sym
@@ -384,8 +434,8 @@ def live_session(st, cache, max_minutes, dry_run=False):
                 executor = active_pool if sym in active else discovery
                 engines[executor.submit(analyze, (sym, bars, cache[sym], cursor, observed))] = sym
             flush(st, shared.now_ist(), dry_run)
-            model.expire(st, shared.now_ist())
-            st["diagnostics"] = st["diagnostics"][-2000:]
+            expire_setups(st, shared.now_ist())
+            trim_diagnostics(st)
             if time.monotonic()-last_save >= 2:
                 save(st, dry_run)
                 last_save = time.monotonic()
@@ -398,6 +448,7 @@ def live_session(st, cache, max_minutes, dry_run=False):
 def replay(day, symbols):
     """Disk-only causal replay. Never infers tick timing or sends Telegram."""
     st = model.fresh_state(day)
+    st["mode"] = "offline_replay"
     end = pd.Timestamp(day + " 15:30", tz=model.IST)
     for sym in symbols:
         path = shared.L.HIST / f"{sym}.csv"
@@ -410,7 +461,7 @@ def replay(day, symbols):
         cache = shared.symbol_history(sym, day)
         _, rows = analyze((sym, bars, cache, None, end))
         apply(st, sym, rows, end)
-    model.expire(st, end)
+    expire_setups(st, end)
     return st
 
 
@@ -420,7 +471,7 @@ def main():
     parser.add_argument("--once", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--test-alert", action="store_true")
-    parser.add_argument("--max-runtime-min", type=float, default=205)
+    parser.add_argument("--max-runtime-min", type=float, default=324)
     parser.add_argument("--replay-date", help="Offline YYYY-MM-DD disk replay; no bot or feed calls")
     parser.add_argument("--symbols", nargs="+", default=None, help="Optional replay symbol subset")
     args = parser.parse_args()
@@ -435,8 +486,8 @@ def main():
             raise SystemExit("M16 test alert failed for one or more destinations")
         return
     now = shared.now_ist()
-    if now.weekday() >= 5 or now.strftime("%H:%M") < "09:15" or now.strftime("%H:%M") >= "12:31":
-        print("M16 outside weekday 09:15–12:31 IST window; no replay alerts")
+    if now.weekday() >= 5 or now.strftime("%H:%M") < "09:15" or now.strftime("%H:%M") >= "15:40":
+        print("M16 outside weekday 09:15–15:40 IST window; no replay alerts")
         return
     st = load(now.strftime("%Y-%m-%d"))
     if st.get("eod_done"):
@@ -451,7 +502,7 @@ def main():
     else:
         bars_map = shared.fetch_symbols(list(shared.L.SYMS), now)
         cycle(st, now, bars_map, cache, dry_run=args.dry_run)
-        if not model.before(shared.now_ist(), "12:30:30"):
+        if not model.before(shared.now_ist(), "15:31:00"):
             finish(st, args.dry_run)
 
 

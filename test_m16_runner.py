@@ -347,7 +347,7 @@ class RunnerTests(unittest.TestCase):
         st, _ = armed()
         st['cursors']['AXISBANK'] = at('09:45').isoformat()
         clock = [at('09:52')]
-        steps = iter([at('09:55:01'), at('09:55:02'), at('12:30:31')])
+        steps = iter([at('09:55:01'), at('09:55:02'), at('15:31:01')])
         candle = bar('09:50', o=108, h=112, l=108, c=111)
         frame = R.normalize(pd.DataFrame([bar('09:45', o=108, h=109, l=107, c=108), candle]), DAY)
         def fetch(sym):
@@ -361,7 +361,7 @@ class RunnerTests(unittest.TestCase):
             R.live_session(st, {'AXISBANK': {'ok': True}}, 1, dry_run=True)
         self.assertEqual([e['kind'] for e in st['events']], ['RUNNING_BREAK', 'CLOSE_CONFIRMED'])
 
-    def test_eod_txt_only(self):
+    def test_eod_txt_and_pdf_attachments_only(self):
         with tempfile.TemporaryDirectory() as tmp, patch.object(R, 'STATE', Path(tmp)/'state16.json'), patch.object(
             R, 'credentials', return_value=('own', 'chat')), patch.object(R.tg, 'send_message_to') as msg, patch.object(
             R.tg, 'send_document_to', return_value=True) as doc:
@@ -369,7 +369,8 @@ class RunnerTests(unittest.TestCase):
             R.finish(st)
             R.finish(st)
             msg.assert_not_called()
-            self.assertEqual(doc.call_count, 1)
+            self.assertEqual(doc.call_count, 2)
+            self.assertTrue((Path(tmp)/f'audit_M16_{DAY}.pdf').read_bytes().startswith(b'%PDF-'))
             content = (Path(tmp)/f'activity_M16_{DAY}.txt').read_text()
             self.assertIn('AXISBANK', content)
             self.assertTrue(st['eod_done'])
@@ -427,16 +428,17 @@ class MirrorTests(unittest.TestCase):
             self.assertEqual(send.call_count, 1)
             self.assertEqual(send.call_args.args[0], 'mirror-secret')
 
-    def test_txt_both_targets_without_duplicate_on_retry(self):
+    def test_txt_pdf_both_targets_without_duplicate_on_retry(self):
         with tempfile.TemporaryDirectory() as tmp, patch.object(R, 'STATE', Path(tmp)/'state16.json'), patch.object(
-            R.tg, 'send_document_to', side_effect=[True, False, True]) as doc:
+            R.tg, 'send_document_to', side_effect=[True, False, True, True, True]) as doc:
             st = self.event_state()
             R.finish(st)
             self.assertFalse(st['eod_done'])
             R.finish(st)
             R.finish(st)
             self.assertTrue(st['eod_done'])
-            self.assertEqual([c.args[0] for c in doc.call_args_list], ['primary-secret', 'mirror-secret', 'mirror-secret'])
+            self.assertEqual([c.args[0] for c in doc.call_args_list],
+                             ['primary-secret', 'mirror-secret', 'primary-secret', 'mirror-secret', 'mirror-secret'])
 
     def test_slow_primary_cannot_send_expired_running_alert_to_mirror(self):
         st = self.event_state()

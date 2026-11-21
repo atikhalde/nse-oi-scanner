@@ -108,7 +108,7 @@ def closed_bar(st, symbol, bar, now, max_lag=30):
         if s["symbol"] != symbol or s["phase"] in TERMINAL or t <= stamp(s["signal_bar"]):
             continue
         if not before(end, "12:30:00"):
-            s["phase"] = "expired"
+            s.update(phase="expired", invalid_reason="confirmation cutoff reached (12:30 IST)")
             continue
         previous = s.get("last_checked_bar", s["signal_bar"])
         if t <= stamp(previous):
@@ -134,21 +134,25 @@ def closed_bar(st, symbol, bar, now, max_lag=30):
                 confirmed = sign * (c-s["bos"]) > 0 and intact and holds
                 if not holds:
                     s["invalid_reason"] = "breakout candle close violates EMA9/EMA10"
+                elif not intact:
+                    s["invalid_reason"] = "breakout candle retraces more than 50% of rally"
+                elif not confirmed:
+                    s["invalid_reason"] = "breakout candle failed to close beyond BOS"
                 s["phase"] = "confirmed" if confirmed else "failed"
                 emit(st, s, "CLOSE_CONFIRMED" if confirmed else "CLOSE_FAILED", t, c, now, fresh)
                 continue
             # Feed omitted the trigger candle. Never confirm from a different bar.
-            s["phase"] = "failed"
+            s.update(phase="failed", invalid_reason="trigger candle unavailable; no false later-bar confirmation")
             emit(st, s, "CLOSE_UNAVAILABLE", trigger, c, now, False)
             continue
         if (lo <= s["anchor"] if sign == 1 else hi >= s["anchor"]):
-            s["phase"] = "invalid"
+            s.update(phase="invalid", invalid_reason="rally anchor broken")
             continue
         if s["phase"] == "armed":
             leg = sign * (s["bos"]-s["anchor"])
             depth = (s["bos"]-lo)/leg if sign == 1 else (hi-s["bos"])/leg
             if depth > .5:
-                s["phase"] = "invalid"
+                s.update(phase="invalid", invalid_reason="pullback retraced more than 50% of rally")
                 continue
         if s["phase"] == "armed" and t > stamp(s["pullback_bar"]):
             if sign * (c-s["bos"]) > 0:
@@ -166,6 +170,8 @@ def closed_bar(st, symbol, bar, now, max_lag=30):
             # that extends the extreme. Wait for a later, distinct pullback.
             s["peak"], s["peak_bar"] = extreme, t.isoformat()
             s["rally_evidence"] = rally_metrics(trail, sign)
+            if s["rally_evidence"]["ready"]:
+                s.pop("waiting_reason", None)
             continue
         if t <= stamp(s["peak_bar"]):
             continue
@@ -181,9 +187,10 @@ def closed_bar(st, symbol, bar, now, max_lag=30):
         depth = (s["peak"]-lo) / leg if sign == 1 else (hi-s["peak"]) / leg
         if depth > .5:
             # The requested setup is a SMALL pullback, not a deep reversal.
-            s["phase"] = "invalid"
+            s.update(phase="invalid", invalid_reason="pullback retraced more than 50% of rally")
             continue
         if fib or ema:
+            s.pop("waiting_reason", None)
             s.update(phase="armed", bos=s["peak"], pullback_bar=t.isoformat(),
                      pullback=" + ".join((["FIB_0.236_0.382"] if fib else []) + [f"EMA{n}" for n in ema]),
                      pullback_low=lo, pullback_high=hi)
@@ -200,13 +207,13 @@ def running_bar(st, symbol, bar, now):
             continue
         price = float(bar["close"])
         if (float(bar["low"]) <= s["anchor"] if s["side"] == "BUY" else float(bar["high"]) >= s["anchor"]):
-            s["phase"] = "invalid"
+            s.update(phase="invalid", invalid_reason="rally anchor broken during running candle")
             continue
         sign = 1 if s["side"] == "BUY" else -1
         leg = sign * (s["bos"]-s["anchor"])
         depth = (s["bos"]-float(bar["low"]))/leg if sign == 1 else (float(bar["high"])-s["bos"])/leg
         if depth > .5:
-            s["phase"] = "invalid"
+            s.update(phase="invalid", invalid_reason="pullback retraced more than 50% during running candle")
             continue
         if sign * (price-s["bos"]) > 0:
             s.update(phase="intrabar", trigger_bar=t.isoformat())
@@ -217,4 +224,4 @@ def expire(st, now):
     if not before(now, "12:30:00"):
         for s in st["setups"].values():
             if s["phase"] not in TERMINAL:
-                s["phase"] = "expired"
+                s.update(phase="expired", invalid_reason="confirmation cutoff reached (12:30 IST)")

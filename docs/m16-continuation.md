@@ -41,7 +41,7 @@ Create the new Telegram bot using BotFather, open/start it from the destination 
 - `M16_BOT_TOKEN`
 - `M16_CHAT_ID`
 
-Optional **second, independent M16 bot** (receives all running/close alerts, self-tests and the TXT review):
+Optional **second, independent M16 bot** (receives all running/close alerts, self-tests and the TXT/PDF reviews):
 
 - `M16_BOT_TOKEN_2`
 - `M16_CHAT_ID_2`
@@ -50,7 +50,7 @@ Set both mirror secrets, or leave both absent for single-bot mode. A half-config
 
 Do **not** paste credentials in chat or commit them. These names never fall back to M6/default credentials. `DHAN_TOKEN` remains the optional shared market-data fallback token, not a bot token.
 
-After the code is merged and the secrets are set, manually run workflow **16. LIVE M16 — pullback BOS continuation (alerts-only)** with mode `test-alert`. Verify the dedicated bot receives it, then run mode `session` during the weekday 09:15–12:30 IST window. The workflow includes a schedule backup and the existing M15 workflow-completion trigger, but GitHub scheduling is best effort. No bot creation or successful live send is implied by offline tests.
+After the code is merged and the secrets are set, manually run workflow **16. LIVE M16 — pullback BOS continuation (alerts-only)** with mode `test-alert`. Verify the dedicated bot receives it, then run mode `session` from 09:15 IST. Entries stop at 12:30, but seeded-stock observation continues to market close. Reports are generated at approximately 15:31 IST. The workflow includes a schedule backup and the existing M15 workflow-completion trigger, but GitHub scheduling is best effort. No bot creation or successful live send is implied by offline tests.
 
 The session refuses stale, outside-window and weekend starts. A continuous session is required for intrabar monitoring; `--once` is a diagnostic snapshot, not an adequate intrabar scheduler.
 
@@ -59,11 +59,12 @@ The session refuses stale, outside-window and weekend starts. A continuous sessi
 - `m16_model.py`: causal setup state machine, cutoffs and event creation.
 - `m16_runner.py`: feed/indicator integration, independent session and outbox.
 - `state16.json`: daily seeds, cursors, phases, observations, outbox and diagnostics. Atomic writes; corrupt state fails closed. Date rollover starts a new ledger.
-- `activity_M16_YYYY-MM-DD.txt`: attachment-only review at the end of the tracking window, containing all saved setup/event details and delivery statuses. No fabricated P&L or automatic trade management. It summarizes before marking EOD delivered, with per-destination acknowledgements. An uncertain crash-send is not blindly duplicated; its status remains available for manual review.
+- `activity_M16_YYYY-MM-DD.txt`: attachment-only full-day review. Existing TXT delivery is retained.
+- `audit_M16_YYYY-MM-DD.pdf`: detailed, paginated PDF audit with all saved data in an appendix, sent to both configured bots. TXT and PDF have independent per-bot delivery acknowledgements, so a failed PDF retry does not duplicate a successful TXT. Report-generation or delivery failure leaves EOD incomplete for retry; uncertain crash-sends remain available for manual review.
 - `.github/workflows/16_live_m16.yml`: isolated workflow/concurrency; saves only M16 state/reports.
 
 ```sh
-python -m unittest -v test_m16_runner
+python -m unittest -v test_m16_runner test_m16_audit
 python m16_runner.py --test-alert --dry-run
 python m16_runner.py --test-alert
 python m16_runner.py --session
@@ -71,6 +72,29 @@ python m16_runner.py --replay-date 2026-11-20 --symbols AXISBANK
 ```
 
 Replay reads local history only, prints the audit, sends nothing and writes no state. It **cannot establish historical intrabar crossing times** from completed five-minute bars.
+
+## Full-day PDF audit
+
+The runner keeps a completed-candle journal with OHLCV and EMA9/10, initial indicator decisions (including invalid/excluded seeds), historical/live observation markers and a phase-change timeline. Every known seeded symbol, including invalid/failed/confirmed/expired seeds, remains under slower 30-second feed polling through the close. Only active pre-cutoff setups use the fast polling cadence. **Post-12:30 observations never generate new entries.**
+
+The PDF contains:
+
+1. Coverage, phase/event counts and explicit data-retention limits.
+2. Rules and interpretation, including timing and feed limitations.
+3. Every recorded indicator decision, with discovery time and reason.
+4. Blocked/invalid/waiting/expired reason counts.
+5. Each setup's signal, anchor, rally evidence, pullback, frozen BOS and final state.
+6. Phase-change timeline with observation and source-candle timestamps.
+7. All running and closing alert observations.
+8. Later directional price extrema and last return relative to each alert's observed price. The event candle is excluded because its wicks could precede the intrabar crossing. These are **price observations, not executed returns or P&L**.
+9. Per-bot alert and document delivery statuses, including stale/failed/uncertain sends. A report cannot contain acknowledgements received after its own creation.
+10. Feed/engine diagnostics. Only the latest 2,000 diagnostic records are retained; the omitted-record count is explicitly reported rather than silently hidden.
+11. Per-symbol candle coverage and absent expected bars. Non-seeded symbols are discovery-only, not falsely presented as watched all afternoon.
+12. A complete saved-state appendix, without field truncation.
+
+A missing/older journal is labelled unavailable. Future deployment cannot reconstruct earlier unrecorded intrabar observations. No sector/persistent analysis is invented because M16 has no sector gates. It is not a broker trade ledger, order-execution report or simulated SL/target strategy.
+
+The GitHub session runs in shifts (324-minute maximum per invocation, persisted state followed by a handoff when needed) to stay below hosted-runner runtime limits. Backup schedules cover the afternoon; a 15:35 IST backup can retry EOD delivery. The runner accepts weekday starts until 15:40 IST for EOD retries. Successful collection still depends on the workflow actually running and the feed publishing data. The workflow preserves PDF, TXT and M16 state artifacts only.
 
 ## AXISBANK reference check
 
