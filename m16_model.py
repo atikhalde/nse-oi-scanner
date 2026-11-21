@@ -97,6 +97,62 @@ def emit(st, setup, kind, bar_time, price, now, live):
         st["outbox"][key] = dict(event=event, status="pending")
 
 
+def direct_original_bos(st, key, bar, context, now, max_lag=30):
+    """Find a pre-existing rally/pullback at the original label's own BOS.
+
+    Search at most 24 completed session candles using the SAME state machine.
+    Synthetic pattern anchors are local only, never real indicator labels.
+    Final-label direct alerts are close-confirmed, never retrospectively running.
+    """
+    original = st["setups"].get(key)
+    required = {"dt", "open", "high", "low", "close", "ema9", "ema10"}
+    if not original or original["phase"] != "rally" or not required.issubset(context.columns):
+        return False
+    t, now = stamp(bar["dt"]), stamp(now)
+    end = t+pd.Timedelta(minutes=5)
+    if end > now or not before(end, "11:00:00") or not ema_holds(bar, 1 if original["side"] == "BUY" else -1):
+        return False
+    ctx = context.copy()
+    ctx["dt"] = ctx["dt"].map(stamp)
+    ctx = ctx[(ctx["dt"] <= t) & (ctx["dt"].dt.strftime("%Y-%m-%d") == st["date"])].sort_values("dt").drop_duplicates("dt").tail(24).reset_index(drop=True)
+    if len(ctx) < 5 or stamp(ctx.iloc[-1]["dt"]) != t:
+        return False
+    for start in range(len(ctx)-4):
+        temp = fresh_state(st["date"])
+        first = ctx.iloc[start].to_dict()
+        code = 80 if original["side"] == "BUY" else 280
+        candidate_key = seed(temp, original["symbol"], code, "PATTERN_ONLY", first, ctx.iloc[:start+1])
+        candidate = temp["setups"].get(candidate_key)
+        if not candidate or candidate["phase"] == "invalid":
+            continue
+        for i in range(start+1, len(ctx)-1):
+            closed_bar(temp, original["symbol"], ctx.iloc[i].to_dict(), now, max_lag)
+        if candidate["phase"] != "armed":
+            continue
+        # Validate the actual original-signal candle as the breakout, including
+        # EMA continuity, pullback depth and missing-candle safeguards.
+        closed_bar(temp, original["symbol"], bar, now, max_lag)
+        if candidate["phase"] != "confirmed":
+            continue
+        original.update({field: candidate[field] for field in (
+            "anchor", "peak", "peak_bar", "bos", "pullback_bar", "pullback", "pullback_low", "pullback_high", "rally_evidence")})
+        original.update(phase="confirmed", direct_bos=True, pattern_start=stamp(first["dt"]).isoformat(),
+                        last_checked_bar=t.isoformat())
+        # An older indicator seed may already have alerted this same BOS close.
+        same = next((e for e in st["events"] if e["symbol"] == original["symbol"] and
+                     e["side"] == original["side"] and stamp(e["bar"]) == t and
+                     e.get("bos") == original["bos"] and
+                     e["kind"] in {"CLOSE_CONFIRMED", "CLOSE_ONLY", "DIRECT_BOS_CONFIRMED"}), None)
+        if same:
+            same.setdefault("coincident_original_signals", []).append(dict(setup=key, signal=original["signal"]))
+            original["direct_bos_event"] = same["id"]
+        else:
+            fresh = 0 <= (now-end).total_seconds() <= max_lag
+            emit(st, original, "DIRECT_BOS_CONFIRMED", t, float(bar["close"]), now, fresh)
+        return True
+    return False
+
+
 def closed_bar(st, symbol, bar, now, max_lag=30):
     """Advance once on a completed candle. Replay records facts, never late alerts."""
     t, now = stamp(bar["dt"]), stamp(now)

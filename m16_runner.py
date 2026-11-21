@@ -160,7 +160,13 @@ def analyze(job):
                 name = str(res.iloc[-1].get("scan_name", code))
         bar = {k: float(row[k]) for k in ("open", "high", "low", "close", "volume")}
         bar.update(dt=t.isoformat(), ema9=float(ema9), ema10=float(ema10))
-        context = prefix.tail(5)[["low", "high"]].to_dict("list")
+        # Closed session context only; includes pre-label pattern evidence for
+        # original signals that first appear on the BOS breakout itself.
+        pattern = prefix.tail(24).copy()
+        pattern["ema9"] = frame["close"].ewm(span=9, adjust=False).mean().tail(len(pattern)).to_numpy()
+        pattern["ema10"] = frame["close"].ewm(span=10, adjust=False).mean().tail(len(pattern)).to_numpy()
+        pattern["dt"] = pattern["dt"].map(lambda v: model.stamp(v).isoformat())
+        context = pattern[["dt", "open", "high", "low", "close", "volume", "ema9", "ema10"]].to_dict("list")
         output.append((bar, code, name, context))
     return symbol, output
 
@@ -203,13 +209,16 @@ def apply(st, symbol, rows, now):
         model.closed_bar(st, symbol, bar, now, MAX_LAG)
         if code is not None:
             key = model.seed(st, symbol, code, name, bar, pd.DataFrame(context))
+            if key:
+                model.direct_original_bos(st, key, bar, pd.DataFrame(context), now, MAX_LAG)
             setup = st["setups"].get(key, {})
             st.setdefault("signal_audit", []).append(dict(
                 symbol=symbol, bar=bar["dt"], code=code, signal=name, setup=key,
                 observed=model.stamp(now).isoformat(),
                 historical=(model.stamp(now)-model.stamp(bar["dt"])-pd.Timedelta(minutes=5)).total_seconds() > MAX_LAG,
                 decision=setup.get("phase", "excluded"),
-                reason=setup.get("invalid_reason", "tracked final label" if key else "preview/unsupported code or outside seed window")))
+                reason=setup.get("invalid_reason", "original signal confirmed directly on BOS" if setup.get("direct_bos") else
+                                 "tracked final label" if key else "preview/unsupported code or outside seed window")))
         record_transitions(st, previous, now, "closed candle "+bar["dt"])
         st["cursors"][symbol] = bar["dt"]
 
@@ -229,15 +238,18 @@ def observe_running(st, symbol, bars, now):
 
 
 def alert_text(e):
-    labels = dict(RUNNING_BREAK="RUNNING BOS — unconfirmed",
+    labels = dict(DIRECT_BOS_CONFIRMED="ORIGINAL SIGNAL ON BOS — CLOSE CONFIRMED",
+                  RUNNING_BREAK="RUNNING BOS — unconfirmed",
                   CLOSE_CONFIRMED="CANDLE CLOSE — BOS CONFIRMED",
                   CLOSE_FAILED="CANDLE CLOSE — BOS FAILED (not an entry)",
                   CLOSE_ONLY="CANDLE CLOSE — BOS confirmed; running crossing was not observed")
+    coincident = e.get("coincident_original_signals", [])
+    extra = ("Coincident final labels: "+", ".join(x["signal"] for x in coincident)+"\n") if coincident else ""
     return (f"M16 · {labels.get(e['kind'], e['kind'])}\n{e['symbol']} {e['side']} @ {e['price']:.2f}\n"
             f"BOS {e['bos']:.2f} · pullback {e['pullback']}\n"
             f"Original {e['signal']} candle {model.stamp(e['seed']).strftime('%H:%M')}\n"
             f"Breakout candle {model.stamp(e['bar']).strftime('%H:%M')} · observed {model.stamp(e['observed']).strftime('%H:%M:%S')} IST\n"
-            "Feed-polled observation, not a guaranteed tick-time fill. Alerts only; no live order.")
+            + extra + "Feed-polled observation, not a guaranteed tick-time fill. Alerts only; no live order.")
 
 
 def event_fresh(event, now):

@@ -32,6 +32,7 @@ def sections(st):
         'From seed through confirmation, BUY closes >= both EMA9/10; SELL closes <= both. Wick touches allowed. Missing continuity invalidates.',
         'Fib 0.236-0.382 band or EMA9/10 wick touch; freeze prior extreme as BOS. >50% retracement invalidates. No sector/persistent/top-five filters.',
         'RUNNING_BREAK is provisional. CLOSE_CONFIRMED and CLOSE_FAILED describe the SAME candle. CLOSE_ONLY means no intrabar crossing was observed.',
+        'DIRECT_BOS_CONFIRMED: the original final indicator label itself occurs on a qualifying BOS close. Prior price-pattern evidence, not a fabricated earlier indicator signal; no second pullback required.',
         'Delayed feed, computation, Telegram and GitHub scheduling can add latency. Poll cadence is not a zero-delay market-data guarantee.',
         'Complete recorded values are in the appendix, including per-bot delivery identifiers (hashes, never credentials).']
     signals = []
