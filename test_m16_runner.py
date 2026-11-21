@@ -402,7 +402,7 @@ class RunnerTests(unittest.TestCase):
         self.assertAlmostEqual(event['bos'], 1394., places=1)
         self.assertFalse(result['outbox'])
 
-    def test_live_session_monitors_and_confirms_without_batch_wait(self):
+    def run_snapshot_session(self, refresh_after_close):
         from concurrent.futures import Future
         class ImmediateExecutor:
             def __init__(self, **kw):
@@ -420,20 +420,45 @@ class RunnerTests(unittest.TestCase):
                 return f
         st, _ = armed()
         st['cursors']['AXISBANK'] = at('09:45').isoformat()
-        clock = [at('09:52')]
-        steps = iter([at('09:55:01'), at('09:55:02'), at('15:31:01')])
+        clock, elapsed = [at('09:52')], [0.]
+        steps = iter([at('09:55:01'), at('09:55:02'), at('09:55:03'), at('15:31:01')])
         candle = bar('09:50', o=108, h=112, l=108, c=111)
         frame = R.normalize(pd.DataFrame([bar('09:45', o=108, h=109, l=107, c=108), candle]), DAY)
         def fetch(sym):
+            if not refresh_after_close and clock[0] >= at('09:55'):
+                raise RuntimeError('fresh feed unavailable after close')
             return frame, clock[0]
         def analyze(job):
+            self.assertGreaterEqual(M.stamp(job[-1]), at('09:55'))
             return job[0], [(candle, None, '', {})]
+        def sleep(_):
+            clock[0] = next(steps)
+            elapsed[0] += 2.
         with patch.object(R, 'ThreadPoolExecutor', ImmediateExecutor), patch.object(R, 'ProcessPoolExecutor', ImmediateExecutor), patch.object(
             R.shared, 'now_ist', side_effect=lambda: clock[0]), patch.object(R, 'timed_fetch', side_effect=fetch), patch.object(
             R, 'analyze', side_effect=analyze), patch.object(R.shared.L, 'SYMS', ['AXISBANK']), patch.object(
-            R.time, 'sleep', side_effect=lambda _: clock.__setitem__(0, next(steps))), patch.object(R, 'save'):
+            R.time, 'sleep', side_effect=sleep), patch.object(R.time, 'monotonic', side_effect=lambda: elapsed[0]), patch.object(R, 'save'):
             R.live_session(st, {'AXISBANK': {'ok': True}}, 1, dry_run=True)
+        return st
+
+    def test_live_session_monitors_and_confirms_without_batch_wait(self):
+        st = self.run_snapshot_session(refresh_after_close=True)
         self.assertEqual([e['kind'] for e in st['events']], ['RUNNING_BREAK', 'CLOSE_CONFIRMED'])
+
+    def test_request_started_before_close_is_not_final_when_response_returns_later(self):
+        frame = R.normalize(pd.DataFrame([bar('09:45'), bar('09:50')]), DAY)
+        with patch.object(R.shared, 'now_ist', side_effect=[at('09:54:59'), at('09:55:03')]), patch.object(
+            R.shared, '_fetch_symbol', return_value=('AXISBANK', frame)):
+            bars, watermark = R.timed_fetch('AXISBANK')
+        self.assertEqual(watermark, at('09:54:59'))
+        closed = R.shared._closed_bars(bars, watermark)
+        self.assertEqual(closed.iloc[-1]['t'], '09:45')
+
+    def test_cached_forming_snapshot_cannot_be_promoted_to_closed(self):
+        st = self.run_snapshot_session(refresh_after_close=False)
+        self.assertEqual([e['kind'] for e in st['events']], ['RUNNING_BREAK'])
+        self.assertEqual(st['cursors']['AXISBANK'], at('09:45').isoformat())
+        self.assertTrue(any('fresh feed unavailable' in d.get('reason', '') for d in st['diagnostics']))
 
     def test_eod_txt_and_pdf_attachments_only(self):
         with tempfile.TemporaryDirectory() as tmp, patch.object(R, 'STATE', Path(tmp)/'state16.json'), patch.object(

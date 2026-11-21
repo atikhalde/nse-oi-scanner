@@ -357,8 +357,11 @@ def cycle(st, now, bars_map, cache, pool=None, dry_run=False):
 
 
 def timed_fetch(sym):
-    _, bars = shared._fetch_symbol(sym, shared.now_ist())
-    return bars, shared.now_ist()
+    # Conservative snapshot watermark: a request started BEFORE a candle
+    # closed cannot prove finality merely by returning AFTER the close.
+    started = shared.now_ist()
+    _, bars = shared._fetch_symbol(sym, started)
+    return bars, started
 
 
 def live_session(st, cache, max_minutes, dry_run=False):
@@ -435,7 +438,10 @@ def live_session(st, cache, max_minutes, dry_run=False):
                 observed = shared.now_ist()
                 if (observed-received).total_seconds() <= 5:
                     observe_running(st, sym, bars, observed)
-                closed = shared._closed_bars(bars, observed)
+                # Completion is judged at REQUEST START, not the later loop
+                # clock. A cached forming candle must never become a final
+                # candle merely because time passed without a fresh response.
+                closed = shared._closed_bars(bars, received)
                 if closed is None or closed.empty or sym in busy_engine:
                     continue
                 cursor = st["cursors"].get(sym)
@@ -444,7 +450,7 @@ def live_session(st, cache, max_minutes, dry_run=False):
                 if not cache.get(sym, {}).get("ok"):
                     continue
                 executor = active_pool if sym in active else discovery
-                engines[executor.submit(analyze, (sym, bars, cache[sym], cursor, observed))] = sym
+                engines[executor.submit(analyze, (sym, bars, cache[sym], cursor, received))] = sym
             flush(st, shared.now_ist(), dry_run)
             expire_setups(st, shared.now_ist())
             trim_diagnostics(st)
