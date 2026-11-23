@@ -448,7 +448,7 @@ class RunnerTests(unittest.TestCase):
     def test_request_started_before_close_is_not_final_when_response_returns_later(self):
         frame = R.normalize(pd.DataFrame([bar('09:45'), bar('09:50')]), DAY)
         with patch.object(R.shared, 'now_ist', side_effect=[at('09:54:59'), at('09:55:03')]), patch.object(
-            R.shared, '_fetch_symbol', return_value=('AXISBANK', frame)):
+            R.m16_feed, 'fetch', return_value=(frame, {'provider': 'test'})):
             bars, watermark = R.timed_fetch('AXISBANK')
         self.assertEqual(watermark, at('09:54:59'))
         closed = R.shared._closed_bars(bars, watermark)

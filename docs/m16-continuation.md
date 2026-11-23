@@ -114,3 +114,38 @@ Using the repository's 20-Nov-2026 AXISBANK bars and the actual causal indicator
 - Confirmed BOS-break candle: **10:35–10:40**, close approximately **₹1,394.90**.
 
 This matches the requested close-based chart example. The offline regression records it as `CLOSE_ONLY`, not an invented running-candle alert. Historical indicators/feeds can differ from TradingView; this single example is not a profitability validation.
+
+### Live-feed incident hardening
+
+M16 uses Yahoo only through `feeds.fetch_bars_yahoo`, the same Yahoo chart
+fetcher used by M6. No Dhan API, token, or security mapping is required; even a
+configured Dhan token is not used by M16. The shared M6 provider ladder is
+unchanged. M16 separately checks session and completed-candle freshness: a
+nonempty stale response is not success. The shared Yahoo fetcher handles its
+query1/query2 retries and cookie/crumb refresh.
+
+Active setups have a one-second minimum polling interval (one in-flight request
+per symbol), not a one-second end-to-end alert guarantee. Discovery and terminal
+research symbols retain slower polling to avoid hammering the whole universe.
+Network time, Yahoo publication and throttling, worker queues, and Telegram
+can all add latency. M6 also cannot guarantee one-second exchange-to-alert delay.
+
+The live runner preserves per-symbol provider, latest candle, availability,
+first failure and repetition counts. Repeated identical failures are aggregated.
+Dedicated-bot health notices report degradation, repeat at five-minute intervals,
+and report recovery. Failed notice deliveries retry on the next health check.
+These are operational warnings, not trade alerts. Reports distinguish historical
+and live-eligible events. Missing morning discovery is retried after 11:00 for
+research/recovery; historical signals remain audit-only, never backdated alerts.
+
+The workflow has a 09:00 IST prewarm dispatch, with the live loop waiting until
+09:15. GitHub scheduled starts are best effort, not an exchange-grade scheduler.
+The existing shift handoff remains in place. Check a morning run actually starts,
+and that both dedicated bot destinations work. A healthy poll is not proof of tick freshness: OHLC polling
+cannot guarantee every transient intrabar crossing. Provider quotas and Telegram
+latency still apply. Zero missed/delayed alerts requires a monitored always-on
+streaming service and verified provider entitlements; this patch does not claim
+that guarantee. Do not widen the 30-second entry budget to hide outages.
+
+Offline regression command:
+`python -m unittest -v test_m16_feed test_m16_runner test_m16_audit`

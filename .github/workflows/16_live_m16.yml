@@ -13,7 +13,7 @@ on:
     types: [completed]
     branches: [main]
   schedule:
-    - cron: "45,55 3 * * 1-5"
+    - cron: "30,45,55 3 * * 1-5" # prewarm history/dependencies before 09:15 IST
     - cron: "*/15 4-9 * * 1-5"
     - cron: "5 10 * * 1-5" # 15:35 IST: retry failed EOD document delivery
 
@@ -34,7 +34,6 @@ jobs:
       M16_CHAT_ID: ${{ secrets.M16_CHAT_ID }}
       M16_BOT_TOKEN_2: ${{ secrets.M16_BOT_TOKEN_2 }}
       M16_CHAT_ID_2: ${{ secrets.M16_CHAT_ID_2 }}
-      DHAN_TOKEN: ${{ secrets.DHAN_TOKEN }}
       M16_POLL_SECONDS: "1"
       M16_ENGINE_WORKERS: "4"
       TZ: Asia/Kolkata
@@ -49,7 +48,7 @@ jobs:
           cache: pip
       - run: pip install -r requirements.txt
       - name: M16 offline regressions
-        run: python -m unittest -v test_m16_runner test_m16_audit
+        run: python -m unittest -v test_m16_feed test_m16_runner test_m16_audit
       - name: M16 dedicated session
         env:
           MODE: ${{ inputs.mode || 'session' }}
