@@ -149,3 +149,18 @@ that guarantee. Do not widen the 30-second entry budget to hide outages.
 
 Offline regression command:
 `python -m unittest -v test_m16_feed test_m16_runner test_m16_audit`
+
+#### Follow-up timing review
+
+Discovery retry readiness is judged using the snapshot's request-start watermark,
+not the later loop clock. Thus a cached forming candle cannot suppress the
+required post-close refetch. Telegram outbox freshness advances across the
+entire batch (including time spent delivering earlier events), not just within
+each event. Health notices compare candle coverage against the expected close
+instead of treating normal five-minute universe polling as a 90-second outage.
+When history availability is known, missing history or a lagging analysis cursor
+also prevents a false healthy notice, even if Yahoo fetches succeed.
+
+Regression verification: 62 M16 feed/model/audit tests, full M6 runner suite,
+Python compilation, workflow YAML/configuration and embedded shell syntax checks.
+These are offline checks, not a live Yahoo publication or Telegram latency SLA.

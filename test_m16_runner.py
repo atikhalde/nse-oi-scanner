@@ -454,6 +454,31 @@ class RunnerTests(unittest.TestCase):
         closed = R.shared._closed_bars(bars, watermark)
         self.assertEqual(closed.iloc[-1]['t'], '09:45')
 
+    def test_discovery_retries_cached_preclose_snapshot_after_close(self):
+        frame = R.normalize(pd.DataFrame([bar('09:45'), bar('09:50')]), DAY)
+        cached = (frame, at('09:54:59'))
+        self.assertTrue(R.needs_discovery_refresh(cached, at('09:50')))
+        self.assertFalse(R.needs_discovery_refresh((frame, at('09:55:01')), at('09:50')))
+        self.assertTrue(R.needs_discovery_refresh(None, at('09:50')))
+
+    def test_slow_first_event_does_not_refresh_age_of_second_event(self):
+        st, _ = armed()
+        M.running_bar(st, 'AXISBANK', bar('09:50', h=112, l=108, c=111), at('09:52'))
+        first = next(iter(st['outbox'].values()))
+        second = copy.deepcopy(first)
+        second['event']['id'] += ':second'
+        st['outbox']['second'] = second
+        elapsed = [0.]
+        def send(*args):
+            elapsed[0] += 40.
+            return True
+        with patch.object(R, 'save'), patch.object(R, 'telegram_targets', return_value=[('own', 'chat')]), patch.object(
+                R.time, 'monotonic', side_effect=lambda: elapsed[0]), patch.object(
+                R.tg, 'send_message_to', side_effect=send) as sender:
+            R.flush(st, at('09:52:01'))
+        self.assertEqual(sender.call_count, 1)
+        self.assertEqual(second['status'], 'expired_unsent')
+
     def test_cached_forming_snapshot_cannot_be_promoted_to_closed(self):
         st = self.run_snapshot_session(refresh_after_close=False)
         self.assertEqual([e['kind'] for e in st['events']], ['RUNNING_BREAK'])
@@ -541,7 +566,7 @@ class MirrorTests(unittest.TestCase):
 
     def test_slow_primary_cannot_send_expired_running_alert_to_mirror(self):
         st = self.event_state()
-        with patch.object(R, 'save'), patch.object(R.time, 'monotonic', side_effect=[0.,0.,40.]), patch.object(
+        with patch.object(R, 'save'), patch.object(R.time, 'monotonic', side_effect=[0.,0.,0.,40.]), patch.object(
             R.tg, 'send_message_to', return_value=True) as send:
             R.flush(st, at('09:52:01'))
             self.assertEqual(send.call_count, 1)
