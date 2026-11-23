@@ -20,6 +20,7 @@ import m6_runner as shared
 import master_scanner as scanner
 import telegram_bot as tg
 import m16_model as model
+import m16_feed
 
 ROOT = Path(__file__).resolve().parent
 STATE = ROOT / "state16.json"
@@ -356,11 +357,54 @@ def cycle(st, now, bars_map, cache, pool=None, dry_run=False):
     save(st, dry_run)
 
 
+def record_feed_failure(st, symbol, now, reason):
+    health = st.setdefault("feed_health", {})
+    previous = health.get(symbol, {})
+    count = previous.get("failure_count", 0) + 1
+    first = previous.get("first_failure", now.isoformat()) if not previous.get("ok", True) else now.isoformat()
+    health[symbol] = dict(ok=False, at=now.isoformat(), first_failure=first,
+                          failure_count=count, reason=reason)
+    # Persist counts without flooding the audit and evicting outage evidence.
+    if previous.get("ok", True) or previous.get("reason") != reason:
+        st["diagnostics"].append(dict(at=now.isoformat(), symbol=symbol, reason=reason))
+
+
+def notify_health(st, now, dry_run=False):
+    if model.stamp(now).strftime("%H:%M:%S") < "09:16:00":
+        return
+    health = st.get("feed_health", {})
+    bad = []
+    for sym in shared.L.SYMS:
+        rec = health.get(sym, {})
+        # Symbols no longer scheduled after discovery are not falsely called stale.
+        watched = model.before(now, "11:00:00") or any(
+            x["symbol"] == sym for x in st["setups"].values())
+        if watched and (not rec.get("ok") or
+                        (model.stamp(now)-model.stamp(rec["at"])).total_seconds() > 90):
+            bad.append(sym)
+    status = "degraded" if bad else "healthy"
+    old = st.get("health_notice", {})
+    if old.get("complete") and old.get("status") == status and (status == "healthy" or
+            (model.stamp(now)-model.stamp(old["at"])).total_seconds() < 300):
+        return
+    text = (f"M16 FEED {status.upper()}: {len(bad)} monitored symbols unavailable/stale. "
+            "Live alerts may be missed or delayed; stale entries will NOT be sent. "
+            "Polling is not tick-time execution.") if bad else (
+            "M16 feed monitoring healthy on latest poll; polling latency still applies.")
+    ledger = old.get("deliveries", {}) if old.get("status") == status and not old.get("complete") else {}
+    complete = True if dry_run else deliver_targets(st, ledger,
+        lambda token, chat: tg.send_message_to(token, chat, text))
+    st["health_notice"] = dict(status=status, at=now.isoformat(), affected=bad,
+                              deliveries=ledger, complete=complete)
+    print(text)
+
+
 def timed_fetch(sym):
     # Conservative snapshot watermark: a request started BEFORE a candle
     # closed cannot prove finality merely by returning AFTER the close.
     started = shared.now_ist()
-    _, bars = shared._fetch_symbol(sym, started)
+    bars, health = m16_feed.fetch(sym, shared.L.SID.get(sym), started)
+    bars.attrs["m16_feed"] = health
     return bars, started
 
 
@@ -374,6 +418,7 @@ def live_session(st, cache, max_minutes, dry_run=False):
     poll = max(1., float(os.getenv("M16_POLL_SECONDS", "1")))
     last_discovery, fetches, engines, latest, requested = None, {}, {}, {}, {}
     worker_count = max(1, int(os.getenv("M16_ENGINE_WORKERS", "4")))
+    next_health = 0.0
     with ThreadPoolExecutor(max_workers=16) as fetch_pool, ThreadPoolExecutor(max_workers=8) as watch_fetch, \
             ProcessPoolExecutor(max_workers=worker_count) as discovery, ProcessPoolExecutor(max_workers=2) as active_pool:
         while time.monotonic()-started < max_minutes*60:
@@ -384,6 +429,9 @@ def live_session(st, cache, max_minutes, dry_run=False):
                 expire_setups(st, now)
                 finish(st, dry_run)
                 break
+            if model.before(now, "09:15:00"):
+                time.sleep(.5)
+                continue
             active = {s["symbol"] for s in st["setups"].values() if s["phase"] not in model.TERMINAL}
             bucket = (model.stamp(now)-pd.Timedelta(seconds=1)).floor("5min")
             scan = last_discovery != bucket and model.before(now, "11:00:00")
@@ -404,9 +452,15 @@ def live_session(st, cache, max_minutes, dry_run=False):
             # full-day research audit, without creating new entries.
             audit_symbols = {s["symbol"] for s in st["setups"].values()}
             symbols |= active | audit_symbols
+            # Recover missed morning discovery even after the seed cutoff.
+            # apply/model still enforce original candle cutoffs and no backdating.
+            for sym in shared.L.SYMS:
+                cursor = st["cursors"].get(sym)
+                if not model.before(now, "11:00:00") and (not cursor or model.stamp(cursor).strftime("%H:%M") < "10:50"):
+                    symbols.add(sym)
             busy_fetch = set(fetches.values())
             for sym in sorted(symbols, key=lambda s: (s not in active, s)):
-                interval = poll if sym in active else (30. if sym in audit_symbols else max(5., poll))
+                interval = poll if sym in active else (30. if sym in audit_symbols or not model.before(now, "11:00:00") else max(5., poll))
                 if sym not in busy_fetch and time.monotonic()-requested.get(sym, -1e10) >= interval:
                     executor = watch_fetch if sym in active else fetch_pool
                     fetches[executor.submit(timed_fetch, sym)] = sym
@@ -420,10 +474,12 @@ def live_session(st, cache, max_minutes, dry_run=False):
                     bars = normalize(raw, st["date"])
                     if bars is not None and not bars.empty:
                         latest[sym] = (bars, received)
+                        st.setdefault("feed_health", {})[sym] = dict(
+                            **raw.attrs.get("m16_feed", {}), at=now.isoformat(), ok=True)
                     else:
                         raise ValueError("current-session feed unavailable")
                 except Exception as exc:
-                    st["diagnostics"].append(dict(at=now.isoformat(), symbol=sym, reason=str(exc)))
+                    record_feed_failure(st, sym, now, str(exc))
             for future in list(engines):
                 if not future.done():
                     continue
@@ -452,6 +508,9 @@ def live_session(st, cache, max_minutes, dry_run=False):
                 executor = active_pool if sym in active else discovery
                 engines[executor.submit(analyze, (sym, bars, cache[sym], cursor, received))] = sym
             flush(st, shared.now_ist(), dry_run)
+            if time.monotonic() >= next_health:
+                notify_health(st, now, dry_run)
+                next_health = time.monotonic() + 30
             expire_setups(st, shared.now_ist())
             trim_diagnostics(st)
             if time.monotonic()-last_save >= 2:
@@ -504,8 +563,8 @@ def main():
             raise SystemExit("M16 test alert failed for one or more destinations")
         return
     now = shared.now_ist()
-    if now.weekday() >= 5 or now.strftime("%H:%M") < "09:15" or now.strftime("%H:%M") >= "15:40":
-        print("M16 outside weekday 09:15–15:40 IST window; no replay alerts")
+    if now.weekday() >= 5 or now.strftime("%H:%M") < "09:00" or now.strftime("%H:%M") >= "15:40":
+        print("M16 outside weekday 09:00–15:40 IST window; no replay alerts")
         return
     st = load(now.strftime("%Y-%m-%d"))
     if st.get("eod_done"):
@@ -518,7 +577,15 @@ def main():
     if args.session:
         live_session(st, cache, args.max_runtime_min, args.dry_run)
     else:
-        bars_map = shared.fetch_symbols(list(shared.L.SYMS), now)
+        bars_map = {}
+        with ThreadPoolExecutor(max_workers=8) as pool:
+            pending = {pool.submit(timed_fetch, sym): sym for sym in shared.L.SYMS}
+            for future in as_completed(pending):
+                sym = pending[future]
+                try:
+                    bars_map[sym], _ = future.result()
+                except Exception as exc:
+                    record_feed_failure(st, sym, shared.now_ist(), str(exc))
         cycle(st, now, bars_map, cache, dry_run=args.dry_run)
         if not model.before(shared.now_ist(), "15:31:00"):
             finish(st, args.dry_run)

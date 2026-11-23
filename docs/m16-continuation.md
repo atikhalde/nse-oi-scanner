@@ -114,3 +114,34 @@ Using the repository's 20-Nov-2026 AXISBANK bars and the actual causal indicator
 - Confirmed BOS-break candle: **10:35–10:40**, close approximately **₹1,394.90**.
 
 This matches the requested close-based chart example. The offline regression records it as `CLOSE_ONLY`, not an invented running-candle alert. Historical indicators/feeds can differ from TradingView; this single example is not a profitability validation.
+
+### Live-feed incident hardening
+
+M16 now has its own provider selector (`m16_feed.py`), leaving M6 and the
+shared Yahoo-first ladder unchanged. It prefers Dhan when `DHAN_TOKEN` and a
+security ID are available, then falls back to Yahoo only after checking session
+and completed-candle freshness. A nonempty stale response is not success.
+Authentication failures pause that provider for five minutes, and HTTP 429 for
+one minute; another provider may still serve the request. These cooldowns avoid
+repeatedly hammering a failing provider but can reduce coverage during outages.
+
+The live runner preserves per-symbol provider, latest candle, availability,
+first failure and repetition counts. Repeated identical failures are aggregated.
+Dedicated-bot health notices report degradation, repeat at five-minute intervals,
+and report recovery. Failed notice deliveries retry on the next health check.
+These are operational warnings, not trade alerts. Reports distinguish historical
+and live-eligible events. Missing morning discovery is retried after 11:00 for
+research/recovery; historical signals remain audit-only, never backdated alerts.
+
+The workflow has a 09:00 IST prewarm dispatch, with the live loop waiting until
+09:15. GitHub scheduled starts are best effort, not an exchange-grade scheduler.
+The existing shift handoff remains in place. Check a morning run actually starts,
+that both dedicated bot destinations work, and that the Dhan token/security
+mapping is valid. A healthy poll is not proof of tick freshness: OHLC polling
+cannot guarantee every transient intrabar crossing. Provider quotas and Telegram
+latency still apply. Zero missed/delayed alerts requires a monitored always-on
+streaming service and verified provider entitlements; this patch does not claim
+that guarantee. Do not widen the 30-second entry budget to hide outages.
+
+Offline regression command:
+`python -m unittest -v test_m16_feed test_m16_runner test_m16_audit`

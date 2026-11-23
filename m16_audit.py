@@ -14,11 +14,14 @@ def sections(st):
     setups = st.get('setups', {})
     events = st.get('events', [])
     bars = st.get('audit_bars', {})
-    coverage = [f"Date: {st.get('date', '?')} (IST) | Mode: {st.get('mode', 'live observations')}",
+    coverage = [f"Date: {st.get('date', '?')} (IST) | Mode: {st.get('mode', 'feed-polled observations; historical events are not live alerts')}",
                 f"Original tracked signals: {len(setups)}; continuation observations: {len(events)}",
                 f"Setup phases: {dict(Counter(s.get('phase', '?') for s in setups.values()))}",
                 f"Event types: {dict(Counter(e.get('kind', '?') for e in events))}",
                 f"Recorded completed candles: {sum(len(b) for b in bars.values())} across {len(bars)} symbols.",
+                f"Live eligible events: {sum(bool(e.get('live')) for e in events)}; historical only: {sum(not bool(e.get('live')) for e in events)}",
+                f"Latest health notice: {st.get('health_notice', {})}",
+                f"Per-symbol provider/availability: {st.get('feed_health', {})}",
                 f"Diagnostic records omitted by retention cap: {st.get('diagnostics_omitted', 0)}",
                 "Coverage is OBSERVED data only. Discovery covers the universe before 11:00; seeded stocks are then watched through market close.",
                 "Entry confirmation cutoff remains strictly before 12:30. Later prices are research observations, NOT new entries or trades.",
