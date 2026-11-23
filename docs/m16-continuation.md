@@ -117,13 +117,18 @@ This matches the requested close-based chart example. The offline regression rec
 
 ### Live-feed incident hardening
 
-M16 now has its own provider selector (`m16_feed.py`), leaving M6 and the
-shared Yahoo-first ladder unchanged. It prefers Dhan when `DHAN_TOKEN` and a
-security ID are available, then falls back to Yahoo only after checking session
-and completed-candle freshness. A nonempty stale response is not success.
-Authentication failures pause that provider for five minutes, and HTTP 429 for
-one minute; another provider may still serve the request. These cooldowns avoid
-repeatedly hammering a failing provider but can reduce coverage during outages.
+M16 uses Yahoo only through `feeds.fetch_bars_yahoo`, the same Yahoo chart
+fetcher used by M6. No Dhan API, token, or security mapping is required; even a
+configured Dhan token is not used by M16. The shared M6 provider ladder is
+unchanged. M16 separately checks session and completed-candle freshness: a
+nonempty stale response is not success. The shared Yahoo fetcher handles its
+query1/query2 retries and cookie/crumb refresh.
+
+Active setups have a one-second minimum polling interval (one in-flight request
+per symbol), not a one-second end-to-end alert guarantee. Discovery and terminal
+research symbols retain slower polling to avoid hammering the whole universe.
+Network time, Yahoo publication and throttling, worker queues, and Telegram
+can all add latency. M6 also cannot guarantee one-second exchange-to-alert delay.
 
 The live runner preserves per-symbol provider, latest candle, availability,
 first failure and repetition counts. Repeated identical failures are aggregated.
@@ -136,8 +141,7 @@ research/recovery; historical signals remain audit-only, never backdated alerts.
 The workflow has a 09:00 IST prewarm dispatch, with the live loop waiting until
 09:15. GitHub scheduled starts are best effort, not an exchange-grade scheduler.
 The existing shift handoff remains in place. Check a morning run actually starts,
-that both dedicated bot destinations work, and that the Dhan token/security
-mapping is valid. A healthy poll is not proof of tick freshness: OHLC polling
+and that both dedicated bot destinations work. A healthy poll is not proof of tick freshness: OHLC polling
 cannot guarantee every transient intrabar crossing. Provider quotas and Telegram
 latency still apply. Zero missed/delayed alerts requires a monitored always-on
 streaming service and verified provider entitlements; this patch does not claim

@@ -34,8 +34,7 @@ jobs:
       M16_CHAT_ID: ${{ secrets.M16_CHAT_ID }}
       M16_BOT_TOKEN_2: ${{ secrets.M16_BOT_TOKEN_2 }}
       M16_CHAT_ID_2: ${{ secrets.M16_CHAT_ID_2 }}
-      DHAN_TOKEN: ${{ secrets.DHAN_TOKEN }}
-      M16_POLL_SECONDS: "3"
+      M16_POLL_SECONDS: "1"
       M16_ENGINE_WORKERS: "4"
       TZ: Asia/Kolkata
     steps:

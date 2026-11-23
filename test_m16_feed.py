@@ -15,21 +15,20 @@ def frame(t='09:55', day='2026-11-23'):
 
 
 class FeedTests(unittest.TestCase):
-    def test_dhan_primary_does_not_call_yahoo(self):
+    def test_yahoo_only_even_if_dhan_configured(self):
         with patch.object(F.feeds, 'dhan_ok', return_value=True), patch.object(
-                F.feeds, 'fetch_bars_dhan', return_value=frame()), patch.object(
-                F.feeds, 'fetch_bars_yahoo') as yahoo:
-            bars, health = F.fetch('TEST', '1', NOW)
-        self.assertEqual(health['provider'], 'dhan')
-        yahoo.assert_not_called()
-
-    def test_stale_nonempty_primary_falls_back(self):
-        with patch.object(F.feeds, 'dhan_ok', return_value=True), patch.object(
-                F.feeds, 'fetch_bars_dhan', return_value=frame('09:30')), patch.object(
-                F.feeds, 'fetch_bars_yahoo', return_value=frame()):
+                F.feeds, 'fetch_bars_dhan') as dhan, patch.object(
+                F.feeds, 'fetch_bars_yahoo', return_value=frame()) as yahoo:
             bars, health = F.fetch('TEST', '1', NOW)
         self.assertEqual(health['provider'], 'yahoo')
-        self.assertIn('stale', health['fallback_errors'][0]['reason'])
+        yahoo.assert_called_once_with('TEST', '1d')
+        dhan.assert_not_called()
+
+    def test_no_token_or_security_id_required(self):
+        with patch.dict('os.environ', {}, clear=True), patch.object(
+                F.feeds, 'fetch_bars_yahoo', return_value=frame()):
+            _, health = F.fetch('TEST', None, NOW)
+        self.assertEqual(health['provider'], 'yahoo')
 
     def test_previous_session_nonempty_is_not_usable(self):
         with self.assertRaisesRegex(ValueError, 'current-session'):
@@ -50,21 +49,10 @@ class FeedTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'missing completed'):
             F.current_bars(frame('10:00'), NOW)
 
-    def test_rate_limit_cools_down_provider_and_uses_fallback(self):
-        import requests
-        exc = requests.HTTPError()
-        exc.response = requests.Response()
-        exc.response.status_code = 429
-        with patch.dict(F._COOLDOWN, {}, clear=True), patch.object(
-                F.feeds, 'dhan_ok', return_value=True), patch.object(
-                F.feeds, 'fetch_bars_dhan', side_effect=exc) as dhan, patch.object(
-                F.feeds, 'fetch_bars_yahoo', return_value=frame()):
-            _, first = F.fetch('TEST', '1', NOW)
-            _, second = F.fetch('TEST', '1', NOW)
-        self.assertEqual(first['provider'], 'yahoo')
-        self.assertEqual(first['fallback_errors'][0]['http_status'], 429)
-        self.assertEqual(dhan.call_count, 1)
-        self.assertIn('cooldown', second['fallback_errors'][0]['reason'])
+    def test_empty_yahoo_response_reports_failure(self):
+        with patch.object(F.feeds, 'fetch_bars_yahoo', return_value=None):
+            with self.assertRaisesRegex(ValueError, 'yahoo.*empty response'):
+                F.fetch('TEST', None, NOW)
 
     def test_duplicate_failures_preserve_first_and_count(self):
         st = M.fresh_state('2026-11-23')

@@ -1,11 +1,6 @@
-"""M16-only freshness-aware provider selection; other models are unchanged."""
-import threading
-import time
+"""M16 Yahoo-only feed, using M6's Yahoo fetcher with freshness checks."""
 import pandas as pd
 import feeds
-
-_COOLDOWN = {}
-_LOCK = threading.Lock()
 
 
 def current_bars(raw, now):
@@ -31,30 +26,14 @@ def current_bars(raw, now):
 
 
 def fetch(symbol, security_id, now):
-    """Prefer Dhan when configured; validate every response before fallback.
+    """Yahoo only; security_id retained for caller compatibility, never used.
 
-    Errors contain provider/status context but never response bodies or tokens.
+    The shared fetcher handles query1/query2 and authentication refresh just as
+    it does for M6. It can return None after failures, so no HTTP status is
+    invented here. A one-second polling target cannot guarantee publication.
     """
-    errors = []
-    providers = []
-    if feeds.dhan_ok() and security_id:
-        providers.append(('dhan', lambda: feeds.fetch_bars_dhan(
-            security_id, now.strftime('%Y-%m-%d 09:15:00'), now.strftime('%Y-%m-%d %H:%M:%S'))))
-    providers.append(('yahoo', lambda: feeds.fetch_bars_yahoo(symbol, '1d')))
-    for name, request in providers:
-        with _LOCK:
-            blocked = _COOLDOWN.get(name, 0) > time.monotonic()
-        if blocked:
-            errors.append(dict(provider=name, reason='provider cooldown after auth/rate limit'))
-            continue
-        try:
-            bars = current_bars(request(), now)
-            return bars, dict(provider=name, latest=bars.iloc[-1]['dt'].isoformat(), fallback_errors=errors)
-        except Exception as exc:
-            status = getattr(getattr(exc, 'response', None), 'status_code', None)
-            if status in (401, 403, 429):
-                with _LOCK:
-                    _COOLDOWN[name] = time.monotonic() + (60 if status == 429 else 300)
-            reason = str(exc) if isinstance(exc, ValueError) else type(exc).__name__
-            errors.append(dict(provider=name, reason=reason, http_status=status))
-    raise ValueError(f'no usable M16 feed: {errors}')
+    try:
+        bars = current_bars(feeds.fetch_bars_yahoo(symbol, '1d'), now)
+    except ValueError as exc:
+        raise ValueError(f'no usable M16 feed: yahoo: {exc}') from exc
+    return bars, dict(provider='yahoo', latest=bars.iloc[-1]['dt'].isoformat())
