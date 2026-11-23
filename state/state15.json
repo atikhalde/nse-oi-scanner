@@ -3,13 +3,13 @@
   "market": {
     "dir_state": -1,
     "label": "STRONG BEAR",
-    "conf": 99,
+    "conf": 100,
     "regime": "TREND DOWN"
   },
   "sector": {
-    "name": "PSUBK",
+    "name": "BANK",
     "side": -1,
-    "reason": "PERSIST \u2212 PSUBK persistent (score 97)"
+    "reason": "PERSIST \u2212 BANK persistent (score 94)"
   },
   "alerts": {},
   "sent": {
@@ -22,15 +22,15 @@
   },
   "positions": {},
   "feed": {
-    "yahoo_calls": 63,
+    "yahoo_calls": 64,
     "dhan_calls": 0,
     "fallback": null,
     "last_source": "yahoo",
-    "history_calls": 7,
-    "symbols": 68,
+    "history_calls": 15,
+    "symbols": 77,
     "sources": {
-      "yahoo": 61,
-      "history": 7
+      "yahoo": 62,
+      "history": 15
     }
   }
 }
