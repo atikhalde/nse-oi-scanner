@@ -74,6 +74,29 @@ class FeedTests(unittest.TestCase):
             R.notify_health(st, NOW+pd.Timedelta(seconds=31), True)
             self.assertEqual(st['health_notice']['status'], 'healthy')
 
+    def test_normal_five_minute_discovery_cadence_is_not_an_outage(self):
+        st = M.fresh_state('2026-11-23')
+        st['feed_health'] = {'TEST': dict(ok=True, at=NOW.isoformat(), latest=frame().iloc[-1]['dt'].isoformat())}
+        with patch.object(R.shared.L, 'SYMS', ['TEST']):
+            R.notify_health(st, NOW+pd.Timedelta(minutes=3), True)
+            self.assertEqual(st['health_notice']['status'], 'healthy')
+            R.notify_health(st, NOW+pd.Timedelta(minutes=5), True)
+            self.assertEqual(st['health_notice']['status'], 'degraded')
+
+    def test_fresh_feed_cannot_hide_stalled_analysis_or_missing_history(self):
+        st = M.fresh_state('2026-11-23')
+        st['feed_health'] = {'TEST': dict(ok=True, at=NOW.isoformat(), latest=frame().iloc[-1]['dt'].isoformat())}
+        st['history_health'] = {'TEST': True}
+        with patch.object(R.shared.L, 'SYMS', ['TEST']):
+            R.notify_health(st, NOW, True)
+            self.assertEqual(st['health_notice']['status'], 'degraded')
+            st['cursors']['TEST'] = frame().iloc[-1]['dt'].isoformat()
+            R.notify_health(st, NOW, True)
+            self.assertEqual(st['health_notice']['status'], 'healthy')
+            st['history_health']['TEST'] = False
+            R.notify_health(st, NOW, True)
+            self.assertEqual(st['health_notice']['status'], 'degraded')
+
     def test_failed_health_delivery_is_retried(self):
         st = M.fresh_state('2026-11-23')
         with patch.object(R.shared.L, 'SYMS', ['TEST']), patch.object(

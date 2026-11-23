@@ -267,9 +267,12 @@ def event_fresh(event, now):
 
 def flush(st, now, dry_run=False):
     """Durable per-event outbox. Uncertain crash sends are not blindly repeated."""
+    batch_started = time.monotonic()
+    batch_now = model.stamp(now)
     for item in st["outbox"].values():
         if item["status"] not in {"pending", "failed"}:
             continue
+        now = batch_now + pd.Timedelta(seconds=time.monotonic()-batch_started)
         if item.get("retry_after") and model.stamp(now) < model.stamp(item["retry_after"]):
             continue
         e = item["event"]
@@ -284,11 +287,10 @@ def flush(st, now, dry_run=False):
         ledger = item.setdefault("deliveries", {})
         # Recheck between bot sends too: a slow/failing first bot must not
         # make the mirror send an already-closed "running candle" alert.
-        started = time.monotonic()
         delivered = deliver_targets(st, ledger, lambda token, chat:
                                     tg.send_message_to(token, chat, html.escape(alert_text(e))),
-                                    can_send=lambda: event_fresh(e, model.stamp(now) +
-                                        pd.Timedelta(seconds=time.monotonic()-started)))
+                                    can_send=lambda: event_fresh(e, batch_now +
+                                        pd.Timedelta(seconds=time.monotonic()-batch_started)))
         item["status"] = "sent" if delivered else "failed"
         if item["status"] == "failed":
             item["retry_after"] = (model.stamp(now) + pd.Timedelta(seconds=3)).isoformat()
@@ -379,15 +381,23 @@ def notify_health(st, now, dry_run=False):
         # Symbols no longer scheduled after discovery are not falsely called stale.
         watched = model.before(now, "11:00:00") or any(
             x["symbol"] == sym for x in st["setups"].values())
-        if watched and (not rec.get("ok") or
-                        (model.stamp(now)-model.stamp(rec["at"])).total_seconds() > 90):
+        expected = (model.stamp(now)-pd.Timedelta(seconds=30)).floor("5min")-pd.Timedelta(minutes=5)
+        latest = rec.get("latest")
+        stale = (model.stamp(latest) < expected) if latest else (
+            not rec.get("at") or (model.stamp(now)-model.stamp(rec["at"])).total_seconds() > 90)
+        history_bad = st.get("history_health", {}).get(sym) is False
+        cursor = st.get("cursors", {}).get(sym)
+        analysis_bad = (sym in st.get("history_health", {}) and
+                        expected.strftime("%H:%M") >= "09:15" and
+                        (not cursor or model.stamp(cursor) < expected))
+        if watched and (not rec.get("ok") or stale or history_bad or analysis_bad):
             bad.append(sym)
     status = "degraded" if bad else "healthy"
     old = st.get("health_notice", {})
     if old.get("complete") and old.get("status") == status and (status == "healthy" or
             (model.stamp(now)-model.stamp(old["at"])).total_seconds() < 300):
         return
-    text = (f"M16 FEED {status.upper()}: {len(bad)} monitored symbols unavailable/stale. "
+    text = (f"M16 FEED {status.upper()}: {len(bad)} monitored symbols have feed/history/analysis gaps. "
             "Live alerts may be missed or delayed; stale entries will NOT be sent. "
             "Polling is not tick-time execution.") if bad else (
             "M16 feed monitoring healthy on latest poll; polling latency still applies.")
@@ -406,6 +416,12 @@ def timed_fetch(sym):
     bars, health = m16_feed.fetch(sym, shared.L.SID.get(sym), started)
     bars.attrs["m16_feed"] = health
     return bars, started
+
+
+def needs_discovery_refresh(cached, target):
+    """A pre-close snapshot is not final merely because the loop clock advanced."""
+    closed = shared._closed_bars(cached[0], cached[1]) if cached else None
+    return closed is None or closed.empty or model.stamp(closed.iloc[-1]["dt"]) < target
 
 
 def live_session(st, cache, max_minutes, dry_run=False):
@@ -445,8 +461,7 @@ def live_session(st, cache, max_minutes, dry_run=False):
                 target = bucket-pd.Timedelta(minutes=5)
                 for sym in shared.L.SYMS:
                     cached = latest.get(sym)
-                    c = shared._closed_bars(cached[0], now) if cached else None
-                    if c is None or c.empty or model.stamp(c.iloc[-1]["dt"]) < target:
+                    if needs_discovery_refresh(cached, target):
                         symbols.add(sym)
             # Terminal/expired seeds stay under slower observation for the
             # full-day research audit, without creating new entries.
@@ -570,6 +585,7 @@ def main():
     if st.get("eod_done"):
         return
     cache = {sym: shared.symbol_history(sym, st["date"]) for sym in shared.L.SYMS}
+    st["history_health"] = {sym: bool(rec.get("ok")) for sym, rec in cache.items()}
     missing_history = [sym for sym, rec in cache.items() if not rec.get("ok")]
     if missing_history:
         st["diagnostics"].append(dict(at=now.isoformat(), reason="history unavailable", symbols=missing_history))
