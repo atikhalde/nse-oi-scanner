@@ -1,60 +1,17 @@
 {
-  "session": "2026-11-20",
+  "session": "2026-11-23",
   "market": {
-    "dir_state": 1,
-    "label": "STRONG BULL",
-    "conf": 100,
+    "dir_state": 0,
+    "label": "NEUTRAL",
+    "conf": 87,
     "regime": "TRANSITION"
   },
   "sector": {
-    "name": "BANK",
-    "side": 1,
-    "reason": "PERSIST + BANK qualified (score 91)"
+    "name": "WAIT",
+    "side": 0,
+    "reason": "WAIT \u2014 market TRANSITION conf 87"
   },
   "alerts": {},
-  "sent": {
-    "MPHASIS": {
-      "code": 101,
-      "name": "BUY-EX",
-      "time": "09:55",
-      "price": 2437.4
-    },
-    "TATAELXSI": {
-      "code": 101,
-      "name": "BUY-EX",
-      "time": "09:55",
-      "price": 3801.3
-    },
-    "LTTS": {
-      "code": 101,
-      "name": "BUY-EX",
-      "time": "09:55",
-      "price": 4164.9
-    },
-    "WIPRO": {
-      "code": 101,
-      "name": "BUY-EX",
-      "time": "10:25",
-      "price": 187.57
-    },
-    "OFSS": {
-      "code": 106,
-      "name": "BUY-EX7",
-      "time": "10:55",
-      "price": 9889.5
-    }
-  },
-  "positions": {},
-  "feed": {
-    "yahoo_calls": 64,
-    "dhan_calls": 0,
-    "fallback": null,
-    "last_source": "yahoo",
-    "history_calls": 15,
-    "symbols": 77,
-    "sources": {
-      "yahoo": 62,
-      "history": 15
-    }
-  }
+  "sent": {},
+  "positions": {}
 }
