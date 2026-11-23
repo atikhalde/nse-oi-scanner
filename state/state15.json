@@ -20,28 +20,16 @@
       "price": 97.44
     }
   },
-  "positions": {
-    "MAHABANK": {
-      "side": "SELL",
-      "entry": 97.44,
-      "sl": 97.67,
-      "entry_ema9": 97.64059290475987,
-      "t1": 97.21,
-      "t2": 96.98,
-      "t3": 96.75,
-      "entry_bar": "2026-11-23T10:55:00+05:30",
-      "last_bar": "2026-11-23T10:55:00+05:30"
-    }
-  },
+  "positions": {},
   "feed": {
-    "yahoo_calls": 63,
+    "yahoo_calls": 64,
     "dhan_calls": 0,
     "fallback": null,
     "last_source": "yahoo",
     "history_calls": 7,
-    "symbols": 68,
+    "symbols": 69,
     "sources": {
-      "yahoo": 61,
+      "yahoo": 62,
       "history": 7
     }
   }
