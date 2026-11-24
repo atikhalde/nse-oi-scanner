@@ -171,3 +171,31 @@ Health-notice upgrade also recognizes an already delivered legacy notice, so an
 ongoing outage does not generate another warning just because the code restarted.
 Failed destinations may retry; destinations that acknowledged delivery are skipped.
 Trade/BOS notifications and their freshness rules are unchanged.
+
+### Regular-session holiday guard
+
+`m16_calendar.py` contains the NSE **equities trading** holiday table for 2026,
+including 24 November (Prakash Gurpurb Sri Guru Nanak Dev) and the 15 January
+Maharashtra election closure. Source:
+https://www.nseindia.com/resources/exchange-communication-holidays
+The separate, longer **clearing** holiday table must not be used to suppress
+trading on otherwise-open weekdays.
+
+The workflow checks the calendar using only Python's standard library before
+installing dependencies or starting a session. Known holidays/weekends skip
+scanner startup and self-handoff. The runner independently guards startup,
+live-session entry and health notifications, so a manual invocation cannot
+mistake a known holiday for a Yahoo outage. No holiday trade alerts, degraded
+notices, history loads or state overwrites are produced. An explicit dedicated
+bot self-test remains available on closed days.
+
+Dates are evaluated in Asia/Kolkata. Missing Yahoo candles NEVER determine
+holiday status. Unknown calendar years remain eligible on weekdays, with an
+explicit console warning; update the maintained holiday table annually and for
+new exchange circulars. Unexpected closures will still appear as monitoring
+problems, not guessed holidays. Special/Muhurat sessions outside the regular
+09:15-15:30 schedule are not supported by this regular-session strategy.
+
+Startup health checks also wait until 09:20:30 IST: the first five-minute candle
+closes at 09:20, with the normal 30-second publication allowance. Lack of a
+completed candle at 09:16 is not a legitimate initial analysis failure.

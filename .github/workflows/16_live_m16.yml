@@ -42,14 +42,21 @@ jobs:
         with:
           ref: main
           fetch-depth: 20
+      - name: Check regular NSE session before installing or starting scanner
+        id: market
+        run: python3 m16_calendar.py >> "$GITHUB_OUTPUT"
       - uses: actions/setup-python@v6
+        if: steps.market.outputs.regular_session == 'true' || inputs.mode == 'test-alert'
         with:
           python-version: "3.12"
           cache: pip
       - run: pip install -r requirements.txt
+        if: steps.market.outputs.regular_session == 'true' || inputs.mode == 'test-alert'
       - name: M16 offline regressions
-        run: python -m unittest -v test_m16_feed test_m16_runner test_m16_audit
+        if: steps.market.outputs.regular_session == 'true' || inputs.mode == 'test-alert'
+        run: python -m unittest -v test_m16_calendar test_m16_feed test_m16_runner test_m16_audit
       - name: M16 dedicated session
+        if: steps.market.outputs.regular_session == 'true' || inputs.mode == 'test-alert'
         env:
           MODE: ${{ inputs.mode || 'session' }}
         run: |
@@ -71,7 +78,7 @@ jobs:
           bash workflow_safe_push.sh
 
       - name: Hand off full-day observation if first shift ended early
-        if: success()
+        if: success() && steps.market.outputs.regular_session == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MODE: ${{ inputs.mode || 'session' }}

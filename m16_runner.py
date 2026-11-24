@@ -21,6 +21,7 @@ import master_scanner as scanner
 import telegram_bot as tg
 import m16_model as model
 import m16_feed
+import m16_calendar
 
 ROOT = Path(__file__).resolve().parent
 STATE = ROOT / "state16.json"
@@ -372,7 +373,11 @@ def record_feed_failure(st, symbol, now, reason):
 
 
 def notify_health(st, now, dry_run=False):
-    if model.stamp(now).strftime("%H:%M:%S") < "09:16:00":
+    if m16_calendar.session_status(now)[0] == "closed":
+        return
+    # No completed 5m candle is due before 09:20. Allow the normal
+    # publication grace before declaring initial discovery unhealthy.
+    if model.stamp(now).strftime("%H:%M:%S") < "09:20:30":
         return
     health = st.get("feed_health", {})
     bad = []
@@ -440,6 +445,9 @@ def live_session(st, cache, max_minutes, dry_run=False):
     Separate active-analysis workers keep the morning seed-discovery queue from
     starving existing setups. Network requests still have upstream latency.
     """
+    if m16_calendar.session_status(shared.now_ist())[0] == "closed":
+        print("M16 market closed; no regular-session monitoring")
+        return
     started, last_save = time.monotonic(), 0.0
     poll = max(1., float(os.getenv("M16_POLL_SECONDS", "1")))
     last_discovery, fetches, engines, latest, requested = None, {}, {}, {}, {}
@@ -581,16 +589,22 @@ def main():
         result = replay(args.replay_date, args.symbols or list(shared.L.SYMS))
         print(pformat(result, width=120))
         return
-    if not args.dry_run:
-        credentials()
     if args.test_alert:
         if not test_alert(args.dry_run):
             raise SystemExit("M16 test alert failed for one or more destinations")
         return
     now = shared.now_ist()
+    status, reason = m16_calendar.session_status(now)
+    if status == "closed":
+        print(f"M16 market closed: {reason}; no feed requests, entries or degraded notices")
+        return
+    if status == "unknown":
+        print(f"M16 calendar warning: {reason}")
     if now.weekday() >= 5 or now.strftime("%H:%M") < "09:00" or now.strftime("%H:%M") >= "15:40":
         print("M16 outside weekday 09:00–15:40 IST window; no replay alerts")
         return
+    if not args.dry_run:
+        credentials()
     st = load(now.strftime("%Y-%m-%d"))
     if st.get("eod_done"):
         return
