@@ -394,18 +394,28 @@ def notify_health(st, now, dry_run=False):
             bad.append(sym)
     status = "degraded" if bad else "healthy"
     old = st.get("health_notice", {})
-    if old.get("complete") and old.get("status") == status and (status == "healthy" or
-            (model.stamp(now)-model.stamp(old["at"])).total_seconds() < 300):
+    # Session-scoped, persisted dedupe: never repeat operational notices,
+    # even after recovery/degradation flapping or a workflow restart.
+    notices = st.setdefault("health_notices", {})
+    if old.get("status") and old.get("complete"):
+        notices.setdefault(old["status"], old)
+    notice = notices.setdefault(status, dict(complete=False))
+    if notice.get("complete"):
+        st["health_notice"] = dict(notice, status=status, affected=bad,
+                                  checked_at=now.isoformat())
         return
     text = (f"M16 FEED {status.upper()}: {len(bad)} monitored symbols have feed/history/analysis gaps. "
             "Live alerts may be missed or delayed; stale entries will NOT be sent. "
             "Polling is not tick-time execution.") if bad else (
             "M16 feed monitoring healthy on latest poll; polling latency still applies.")
-    ledger = old.get("deliveries", {}) if old.get("status") == status and not old.get("complete") else {}
+    # Preserve successful destinations when retrying a partial send.
+    ledger = notice.setdefault("deliveries", old.get("deliveries", {})
+                               if old.get("status") == status else {})
     complete = True if dry_run else deliver_targets(st, ledger,
         lambda token, chat: tg.send_message_to(token, chat, text))
-    st["health_notice"] = dict(status=status, at=now.isoformat(), affected=bad,
-                              deliveries=ledger, complete=complete)
+    notice.update(status=status, at=now.isoformat(), affected=bad,
+                  deliveries=ledger, complete=complete)
+    st["health_notice"] = dict(notice)
     print(text)
 
 

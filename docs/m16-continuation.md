@@ -132,8 +132,10 @@ can all add latency. M6 also cannot guarantee one-second exchange-to-alert delay
 
 The live runner preserves per-symbol provider, latest candle, availability,
 first failure and repetition counts. Repeated identical failures are aggregated.
-Dedicated-bot health notices report degradation, repeat at five-minute intervals,
-and report recovery. Failed notice deliveries retry on the next health check.
+Dedicated-bot health notices send at most one degradation and one healthy/recovery
+notice per session. Persisted per-status delivery ledgers prevent repeats across
+workflow restarts and health-status flapping. Monitoring and audit updates continue
+without Telegram reminders. Failed notice deliveries retry on the next health check.
 These are operational warnings, not trade alerts. Reports distinguish historical
 and live-eligible events. Missing morning discovery is retried after 11:00 for
 research/recovery; historical signals remain audit-only, never backdated alerts.
@@ -164,3 +166,8 @@ also prevents a false healthy notice, even if Yahoo fetches succeed.
 Regression verification: 62 M16 feed/model/audit tests, full M6 runner suite,
 Python compilation, workflow YAML/configuration and embedded shell syntax checks.
 These are offline checks, not a live Yahoo publication or Telegram latency SLA.
+
+Health-notice upgrade also recognizes an already delivered legacy notice, so an
+ongoing outage does not generate another warning just because the code restarted.
+Failed destinations may retry; destinations that acknowledged delivery are skipped.
+Trade/BOS notifications and their freshness rules are unchanged.

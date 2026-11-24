@@ -97,6 +97,33 @@ class FeedTests(unittest.TestCase):
             R.notify_health(st, NOW, True)
             self.assertEqual(st['health_notice']['status'], 'degraded')
 
+    def test_health_notices_once_per_session_even_after_flapping_and_restart(self):
+        import json
+        st = M.fresh_state('2026-11-23')
+        with patch.object(R.shared.L, 'SYMS', ['TEST']), patch.object(
+                R, 'deliver_targets', return_value=True) as send:
+            R.notify_health(st, NOW)
+            R.notify_health(st, NOW+pd.Timedelta(minutes=6))
+            R.notify_health(st, NOW+pd.Timedelta(minutes=12))
+            self.assertEqual(send.call_count, 1)
+            st['feed_health'] = {'TEST': dict(ok=True, at=NOW.isoformat())}
+            R.notify_health(st, NOW)
+            self.assertEqual(send.call_count, 2)
+            st = json.loads(json.dumps(st))
+            st['feed_health'] = {}
+            R.notify_health(st, NOW+pd.Timedelta(minutes=20))
+            st['feed_health'] = {'TEST': dict(ok=True, at=NOW.isoformat())}
+            R.notify_health(st, NOW)
+            self.assertEqual(send.call_count, 2)
+        self.assertEqual(st['health_notice']['status'], 'healthy')
+
+    def test_preexisting_delivered_notice_is_not_repeated_after_upgrade(self):
+        st = M.fresh_state('2026-11-23')
+        st['health_notice'] = dict(status='degraded', at=NOW.isoformat(), complete=True, deliveries={})
+        with patch.object(R.shared.L, 'SYMS', ['TEST']), patch.object(R, 'deliver_targets') as send:
+            R.notify_health(st, NOW+pd.Timedelta(minutes=10))
+        send.assert_not_called()
+
     def test_failed_health_delivery_is_retried(self):
         st = M.fresh_state('2026-11-23')
         with patch.object(R.shared.L, 'SYMS', ['TEST']), patch.object(
