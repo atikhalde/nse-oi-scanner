@@ -100,5 +100,20 @@ class CalendarTests(unittest.TestCase):
         send.assert_called_once_with(False)
 
 
+class WorkflowCoverageTests(unittest.TestCase):
+    def test_normal_morning_shift_covers_entire_entry_window(self):
+        import re
+        import yaml
+        from pathlib import Path
+        workflow = yaml.safe_load((Path(__file__).parent / '.github/workflows/16_live_m16.yml').read_text())
+        job = workflow['jobs']['continuation']
+        script = next(step['run'] for step in job['steps'] if step.get('name') == 'M16 dedicated session')
+        runtime = int(re.search(r'--session --max-runtime-min (\d+)', script).group(1))
+        # 09:00 to 12:35 is 215 minutes; leave room for persistence/artifacts.
+        self.assertGreaterEqual(runtime, 215)
+        self.assertGreaterEqual(job['timeout-minutes'] - runtime, 10)
+        self.assertIn('dry-run) python -u m16_runner.py --once --dry-run', script)
+
+
 if __name__ == '__main__':
     unittest.main()

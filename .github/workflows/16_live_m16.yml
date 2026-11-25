@@ -26,7 +26,8 @@ concurrency:
 jobs:
   continuation:
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    # Keep the normal 09:00 start alive through the full 12:30 entry window.
+    timeout-minutes: 240
     env:
       M16_BOT_TOKEN: ${{ secrets.M16_BOT_TOKEN }}
       M16_CHAT_ID: ${{ secrets.M16_CHAT_ID }}
@@ -66,7 +67,7 @@ jobs:
             feed-probe) python -u m16_runner.py --feed-probe ;;
             dry-run) python -u m16_runner.py --once --dry-run ;;
             once) python -u m16_runner.py --once ;;
-            *) python -u m16_runner.py --session --max-runtime-min 110 ;;
+            *) python -u m16_runner.py --session --max-runtime-min 225 ;;
           esac
       - name: Upload M16 diagnostic snapshot even after failure
         if: always()
