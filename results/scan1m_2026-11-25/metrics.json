@@ -1,0 +1,721 @@
+{
+  "audit_counts": {
+    "alerts": 15,
+    "cancelled": 3,
+    "candles": 72,
+    "catchup": 15,
+    "confirmed": 5,
+    "early_sent": null,
+    "entries": 15,
+    "judged": 53,
+    "late_entries": 8
+  },
+  "big_winners": {
+    "count": 15,
+    "entered": 3,
+    "missed": 12,
+    "missed_blocked": {
+      "earlier": 7,
+      "follower": 2,
+      "none": 3
+    },
+    "sectors": {
+      "CDUR": 2,
+      "FMCG": 5,
+      "IT": 3,
+      "MEDIA": 4,
+      "PHA": 1
+    },
+    "threshold_pp": 3.0,
+    "top10": [
+      {
+        "best_rank": 100.0,
+        "blocked": "earlier",
+        "directional_last_pct": 8.59,
+        "entered": false,
+        "last_mv": -8.59,
+        "name": "SUNTV",
+        "net_r": null,
+        "rank_avg": 79.4,
+        "sector": "MEDIA",
+        "top5": 72
+      },
+      {
+        "best_rank": 99.8,
+        "blocked": "earlier",
+        "directional_last_pct": 7.33,
+        "entered": false,
+        "last_mv": -7.33,
+        "name": "NAZARA",
+        "net_r": null,
+        "rank_avg": 74.9,
+        "sector": "MEDIA",
+        "top5": 69
+      },
+      {
+        "best_rank": 99.5,
+        "blocked": "earlier",
+        "directional_last_pct": 6.53,
+        "entered": false,
+        "last_mv": -6.53,
+        "name": "TIPSMUSIC",
+        "net_r": null,
+        "rank_avg": 76.8,
+        "sector": "MEDIA",
+        "top5": 71
+      },
+      {
+        "best_rank": 99.9,
+        "blocked": "earlier",
+        "directional_last_pct": 6.24,
+        "entered": false,
+        "last_mv": 6.24,
+        "name": "DABUR",
+        "net_r": null,
+        "rank_avg": 81.4,
+        "sector": "FMCG",
+        "top5": 71
+      },
+      {
+        "best_rank": 100.0,
+        "blocked": "",
+        "directional_last_pct": 5.65,
+        "entered": false,
+        "last_mv": -5.65,
+        "name": "OFSS",
+        "net_r": null,
+        "rank_avg": 77.4,
+        "sector": "IT",
+        "top5": 65
+      },
+      {
+        "best_rank": 99.8,
+        "blocked": "",
+        "directional_last_pct": 5.5,
+        "entered": false,
+        "last_mv": -5.5,
+        "name": "COFORGE",
+        "net_r": null,
+        "rank_avg": 76.0,
+        "sector": "IT",
+        "top5": 65
+      },
+      {
+        "best_rank": 99.9,
+        "blocked": "follower",
+        "directional_last_pct": 5.08,
+        "entered": false,
+        "last_mv": 5.08,
+        "name": "HINDUNILVR",
+        "net_r": null,
+        "rank_avg": 73.9,
+        "sector": "FMCG",
+        "top5": 66
+      },
+      {
+        "best_rank": 99.9,
+        "blocked": "",
+        "directional_last_pct": 5.02,
+        "entered": true,
+        "last_mv": 5.02,
+        "name": "GODREJCP",
+        "net_r": 2.15,
+        "rank_avg": 67.8,
+        "sector": "FMCG",
+        "top5": 60
+      },
+      {
+        "best_rank": 99.5,
+        "blocked": "earlier",
+        "directional_last_pct": 4.56,
+        "entered": false,
+        "last_mv": -4.56,
+        "name": "KALYANKJIL",
+        "net_r": null,
+        "rank_avg": 78.3,
+        "sector": "CDUR",
+        "top5": 69
+      },
+      {
+        "best_rank": 97.2,
+        "blocked": "earlier",
+        "directional_last_pct": 4.21,
+        "entered": false,
+        "last_mv": -4.21,
+        "name": "DIXON",
+        "net_r": null,
+        "rank_avg": 78.9,
+        "sector": "CDUR",
+        "top5": 70
+      }
+    ],
+    "unique_names": 175
+  },
+  "blocked_rule_counts": {
+    "candle_cap": 3,
+    "earlier": 46,
+    "follower": 59,
+    "no_target": 2
+  },
+  "board_final_refusal_counts": {
+    "earlier": 10,
+    "follower": 58,
+    "none": 122
+  },
+  "board_meta": {
+    "errors": [],
+    "every_min": 5,
+    "fields": [
+      "n",
+      "rank",
+      "s",
+      "v",
+      "t",
+      "lead",
+      "mv",
+      "rk"
+    ],
+    "from": "09:20",
+    "names": 13679,
+    "period": "1d",
+    "seconds": [
+      9.57,
+      9.65,
+      9.66,
+      9.58,
+      9.68,
+      9.58,
+      10.01,
+      8.84,
+      8.84,
+      9.11,
+      8.66,
+      8.94,
+      9.16,
+      8.66,
+      8.82,
+      8.8,
+      8.77,
+      8.81,
+      8.93,
+      8.65
+    ],
+    "skipped": [],
+    "stale": 1,
+    "sweeps": 72,
+    "to": "15:15"
+  },
+  "books": {
+    "avg_give_back_r": 0.98,
+    "avg_hold_min": 64.0,
+    "avg_loss_rs": -399.27,
+    "avg_mfe_r": 1.17,
+    "avg_net_r": 0.01,
+    "avg_win_rs": 938.74,
+    "best_rs": 1961.56,
+    "costs_rs": 1389.23,
+    "equity": [
+      -923.81,
+      -1414.52,
+      -1461.76,
+      -1762.51,
+      -767.77,
+      -1255.56,
+      -1849.64,
+      -2098.36,
+      -1766.85,
+      -1073.57,
+      -360.97,
+      -456.11,
+      1505.45,
+      1100.27
+    ],
+    "give_back_pct": 83.5,
+    "gross_rs": 2489.48,
+    "losses": 9,
+    "max_dd_rs": 2098.36,
+    "net_r": 0.14,
+    "net_rs": 1100.27,
+    "open_net_rs": 87.62,
+    "open_trades": 1,
+    "peak_rs": 0.0,
+    "profit_factor": 1.31,
+    "return_on_risk_pct": 11.2,
+    "risk_rs": 9845.42,
+    "trades": 14,
+    "win_rate": 35.7,
+    "wins": 5,
+    "worst_rs": -923.81
+  },
+  "cancel_why": {
+    "candle_cap": 1,
+    "sector_moved": 2
+  },
+  "checks": {
+    "board_name_bar_rows": 13680,
+    "html_pick_cells": 53,
+    "missing_mv_cells": 1,
+    "top5_marker_mismatches": 0
+  },
+  "costs": {
+    "bps_per_side": 5.0,
+    "capital_per_trade": 100000.0,
+    "min_per_order": 20.0
+  },
+  "counterfactual": {
+    "all_ledger_gross_to_mfe": 0.1649358582773366,
+    "all_ledger_trail_proxy_r_sum": 0.587365122246704,
+    "close_r_sum": 14.86437206884957,
+    "cost_r": 0.14013902190524707,
+    "hold_net_r_sum": 14.08532525343471,
+    "mfe_r_sum": 22.721453462318323,
+    "n": 6,
+    "risk_pct": 0.7178237971021002,
+    "stops": 2,
+    "trades": [
+      {
+        "all_ledger_trail_proxy_r": 1.190241251472548,
+        "bar": "09:35",
+        "board_pos": 1,
+        "board_rank": 72.6,
+        "close_pp": 5.64,
+        "close_r": 7.857081393468751,
+        "counter_persist": 1,
+        "dominant_persist": 97,
+        "final_mv": -8.59,
+        "hold_net_r": 7.716942371563504,
+        "mae_r": -0.0,
+        "mfe_r": 8.066046324146113,
+        "mv0": -2.95,
+        "name": "SUNTV",
+        "pick": "WAIT",
+        "sector": "MEDIA",
+        "side": -1,
+        "stopped": 0,
+        "winner_trail_proxy_r": 2.8392483060994316
+      },
+      {
+        "all_ledger_trail_proxy_r": -1.140139021905247,
+        "bar": "09:35",
+        "board_pos": 2,
+        "board_rank": 67.9,
+        "close_pp": -0.8399999999999999,
+        "close_r": -1.1702036117932182,
+        "counter_persist": 1,
+        "dominant_persist": 97,
+        "final_mv": -2.04,
+        "hold_net_r": -1.140139021905247,
+        "mae_r": -1.9364083576102065,
+        "mfe_r": 1.936408357610206,
+        "mv0": -2.88,
+        "name": "SAREGAMA",
+        "pick": "WAIT",
+        "sector": "MEDIA",
+        "side": -1,
+        "stopped": 1,
+        "winner_trail_proxy_r": -1.140139021905247
+      },
+      {
+        "all_ledger_trail_proxy_r": 0.5307954164821727,
+        "bar": "10:10",
+        "board_pos": 1,
+        "board_rank": 81.9,
+        "close_pp": 2.86,
+        "close_r": 3.9842646782483384,
+        "counter_persist": 1,
+        "dominant_persist": 90,
+        "final_mv": 5.08,
+        "hold_net_r": 3.8441256563430914,
+        "mae_r": -0.13930995378490707,
+        "mfe_r": 4.067850650519282,
+        "mv0": 2.22,
+        "name": "HINDUNILVR",
+        "pick": "WAIT",
+        "sector": "FMCG",
+        "side": 1,
+        "stopped": 0,
+        "winner_trail_proxy_r": 1.431883428982787
+      },
+      {
+        "all_ledger_trail_proxy_r": 0.9880418316845582,
+        "bar": "10:10",
+        "board_pos": 2,
+        "board_rank": 68.2,
+        "close_pp": 3.6100000000000003,
+        "close_r": 5.0290893316351415,
+        "counter_persist": 1,
+        "dominant_persist": 90,
+        "final_mv": 6.24,
+        "hold_net_r": 4.8889503097298945,
+        "mae_r": 0.0,
+        "mfe_r": 6.840118730838931,
+        "mv0": 2.63,
+        "name": "DABUR",
+        "pick": "WAIT",
+        "sector": "FMCG",
+        "side": 1,
+        "stopped": 0,
+        "winner_trail_proxy_r": 2.4077217932553037
+      },
+      {
+        "all_ledger_trail_proxy_r": 0.15856466641791933,
+        "bar": "12:35",
+        "board_pos": 1,
+        "board_rank": 79.8,
+        "close_pp": 0.040000000000000036,
+        "close_r": 0.05572398151396283,
+        "counter_persist": 1,
+        "dominant_persist": 94,
+        "final_mv": -1.95,
+        "hold_net_r": -0.08441504039128425,
+        "mae_r": -0.9194456949803858,
+        "mfe_r": 1.8110293992037905,
+        "mv0": -1.91,
+        "name": "TATASTEEL",
+        "pick": "FMCG",
+        "sector": "MET",
+        "side": -1,
+        "stopped": 0,
+        "winner_trail_proxy_r": 0.6374823485197342
+      },
+      {
+        "all_ledger_trail_proxy_r": -1.140139021905247,
+        "bar": "12:35",
+        "board_pos": 2,
+        "board_rank": 79.3,
+        "close_pp": -0.6400000000000001,
+        "close_r": -0.8915837042234046,
+        "counter_persist": 1,
+        "dominant_persist": 94,
+        "final_mv": -2.82,
+        "hold_net_r": -1.140139021905247,
+        "mae_r": -1.1841346071717092,
+        "mfe_r": -0.0,
+        "mv0": -3.46,
+        "name": "WELCORP",
+        "pick": "FMCG",
+        "sector": "MET",
+        "side": -1,
+        "stopped": 1,
+        "winner_trail_proxy_r": -1.140139021905247
+      }
+    ],
+    "winner_trail_proxy_r_sum": 5.036057833046763,
+    "worst_winner_trail_ratio": 0.352
+  },
+  "earlier_final_refusals": [
+    {
+      "best_rank": 99.9,
+      "directional_last_pct": 6.24,
+      "last_mv": 6.24,
+      "name": "DABUR",
+      "rank_avg": 81.4,
+      "sector": "FMCG",
+      "top5": 71
+    },
+    {
+      "best_rank": 99.9,
+      "directional_last_pct": 3.26,
+      "last_mv": 3.26,
+      "name": "DIVISLAB",
+      "rank_avg": 70.7,
+      "sector": "PHA",
+      "top5": 58
+    },
+    {
+      "best_rank": 87.6,
+      "directional_last_pct": 2.76,
+      "last_mv": 2.76,
+      "name": "ITC",
+      "rank_avg": 59.2,
+      "sector": "FMCG",
+      "top5": 55
+    },
+    {
+      "best_rank": 90.4,
+      "directional_last_pct": 2.44,
+      "last_mv": -2.44,
+      "name": "WHIRLPOOL",
+      "rank_avg": 60.1,
+      "sector": "CDUR",
+      "top5": 47
+    },
+    {
+      "best_rank": 86.6,
+      "directional_last_pct": 2.72,
+      "last_mv": -2.72,
+      "name": "JINDALSTEL",
+      "rank_avg": 65.3,
+      "sector": "MET",
+      "top5": 71
+    },
+    {
+      "best_rank": 97.2,
+      "directional_last_pct": 4.21,
+      "last_mv": -4.21,
+      "name": "DIXON",
+      "rank_avg": 78.9,
+      "sector": "CDUR",
+      "top5": 70
+    },
+    {
+      "best_rank": 99.5,
+      "directional_last_pct": 4.56,
+      "last_mv": -4.56,
+      "name": "KALYANKJIL",
+      "rank_avg": 78.3,
+      "sector": "CDUR",
+      "top5": 69
+    },
+    {
+      "best_rank": 99.5,
+      "directional_last_pct": 6.53,
+      "last_mv": -6.53,
+      "name": "TIPSMUSIC",
+      "rank_avg": 76.8,
+      "sector": "MEDIA",
+      "top5": 71
+    },
+    {
+      "best_rank": 99.8,
+      "directional_last_pct": 7.33,
+      "last_mv": -7.33,
+      "name": "NAZARA",
+      "rank_avg": 74.9,
+      "sector": "MEDIA",
+      "top5": 69
+    },
+    {
+      "best_rank": 100.0,
+      "directional_last_pct": 8.59,
+      "last_mv": -8.59,
+      "name": "SUNTV",
+      "rank_avg": 79.4,
+      "sector": "MEDIA",
+      "top5": 72
+    }
+  ],
+  "entry_quality": {
+    "all_net_r": 0.17999999999999935,
+    "n": 15,
+    "pos3": {
+      "n": 4,
+      "net_r": -1.1400000000000001
+    },
+    "pos4plus": {
+      "n": 8,
+      "net_r": -2.1900000000000004
+    },
+    "top2": {
+      "n": 3,
+      "net_r": 3.51
+    }
+  },
+  "exit_engine": {
+    "cost_r_sum": 2.533435040135703,
+    "costs_pct_of_gross": 0.5580402333017337,
+    "ema9_exits": 10,
+    "ema9_give_back_r_sum": 8.719999999999999,
+    "give_back_r_sum": 13.669999999999996,
+    "gross_r_sum": 2.7,
+    "mfe_r_sum": 16.37,
+    "net_r_sum": 0.13999999999999935,
+    "sl_hits": 4
+  },
+  "input_files": {
+    "audit-2026-11-25-1m.json": {
+      "bytes": 651397,
+      "sha256": "f2e1703ad50364bf47d057aae2b297c2b3aea06371e979fd6022d864a08ffaba"
+    },
+    "audit-2026-11-25-1m.pdf": {
+      "bytes": 948989,
+      "sha256": "226ab86a2b3dfa63b2fc62d13b18c5e078d85875667bae62da6d7f77e3cc70e4"
+    },
+    "board-2026-11-25-1m.html": {
+      "bytes": 1267228,
+      "sha256": "ba51c2229edd6f76950ee7472782126580a9ace5c10f0d9f03314a3d8cc9e07e"
+    },
+    "board-2026-11-25-1m.pdf": {
+      "bytes": 322105,
+      "sha256": "e3d1bcd1f66506a38f7518ff49991e0ce43e3a8413c42b1948dccbd96954035f"
+    }
+  },
+  "leadership_rows_by_sector": {
+    "CDUR": 16,
+    "FIN": 160,
+    "FMCG": 425,
+    "MEDIA": 192,
+    "MET": 152,
+    "PHA": 48
+  },
+  "leadership_scanned_by_sector": {
+    "CDUR": 10,
+    "FIN": 100,
+    "FMCG": 275,
+    "MEDIA": 120,
+    "MET": 95,
+    "PHA": 30
+  },
+  "market": {
+    "conf": 65,
+    "dir_state": 1,
+    "label": "BULL",
+    "regime": "TRANSITION"
+  },
+  "pick_counts": {
+    "FMCG": 50,
+    "MET": 2,
+    "PHA": 1,
+    "WAIT": 19
+  },
+  "scan": {
+    "alt": null,
+    "bar": "2026-11-25 15:10",
+    "conf": 65,
+    "extra": [
+      "PHA"
+    ],
+    "follow": false,
+    "intra": 3.018,
+    "label": "BULL",
+    "sector": "FMCG",
+    "side": 1
+  },
+  "sector_gate_pick_entries": {
+    "AUTO": {
+      "above_70": 0,
+      "above_85": 0,
+      "day_ret": 1.04,
+      "entries": 0,
+      "gate_candles": 0,
+      "pick_candles": 0,
+      "side": 1
+    },
+    "BANK": {
+      "above_70": 12,
+      "above_85": 0,
+      "day_ret": 1.7,
+      "entries": 0,
+      "gate_candles": 13,
+      "pick_candles": 0,
+      "side": 1
+    },
+    "CDUR": {
+      "above_70": 32,
+      "above_85": 0,
+      "day_ret": -0.33,
+      "entries": 1,
+      "gate_candles": 21,
+      "pick_candles": 0,
+      "side": -1
+    },
+    "DEF": {
+      "above_70": 0,
+      "above_85": 0,
+      "day_ret": 0.78,
+      "entries": 0,
+      "gate_candles": 0,
+      "pick_candles": 0,
+      "side": 1
+    },
+    "ENE": {
+      "above_70": 8,
+      "above_85": 0,
+      "day_ret": -0.11,
+      "entries": 0,
+      "gate_candles": 7,
+      "pick_candles": 0,
+      "side": -1
+    },
+    "FIN": {
+      "above_70": 34,
+      "above_85": 0,
+      "day_ret": 2.11,
+      "entries": 6,
+      "gate_candles": 17,
+      "pick_candles": 0,
+      "side": 1
+    },
+    "FMCG": {
+      "above_70": 71,
+      "above_85": 60,
+      "day_ret": 3.5,
+      "entries": 5,
+      "gate_candles": 38,
+      "pick_candles": 50,
+      "side": 1
+    },
+    "IT": {
+      "above_70": 0,
+      "above_85": 0,
+      "day_ret": 0.87,
+      "entries": 0,
+      "gate_candles": 0,
+      "pick_candles": 0,
+      "side": -1
+    },
+    "MEDIA": {
+      "above_70": 70,
+      "above_85": 62,
+      "day_ret": -4.29,
+      "entries": 0,
+      "gate_candles": 29,
+      "pick_candles": 0,
+      "side": -1
+    },
+    "MET": {
+      "above_70": 55,
+      "above_85": 34,
+      "day_ret": -2.27,
+      "entries": 2,
+      "gate_candles": 24,
+      "pick_candles": 2,
+      "side": -1
+    },
+    "OIL": {
+      "above_70": 2,
+      "above_85": 0,
+      "day_ret": 0.79,
+      "entries": 0,
+      "gate_candles": 9,
+      "pick_candles": 0,
+      "side": 1
+    },
+    "PHA": {
+      "above_70": 21,
+      "above_85": 0,
+      "day_ret": 2.09,
+      "entries": 1,
+      "gate_candles": 7,
+      "pick_candles": 1,
+      "side": 1
+    },
+    "PSE": {
+      "above_70": 0,
+      "above_85": 0,
+      "day_ret": 0.84,
+      "entries": 0,
+      "gate_candles": 3,
+      "pick_candles": 0,
+      "side": 1
+    },
+    "PSUBK": {
+      "above_70": 6,
+      "above_85": 0,
+      "day_ret": 0.22,
+      "entries": 0,
+      "gate_candles": 5,
+      "pick_candles": 0,
+      "side": -1
+    },
+    "REALTY": {
+      "above_70": 15,
+      "above_85": 0,
+      "day_ret": 0.0,
+      "entries": 0,
+      "gate_candles": 14,
+      "pick_candles": 0,
+      "side": -1
+    }
+  }
+}

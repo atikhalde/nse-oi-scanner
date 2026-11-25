@@ -7,3 +7,11 @@ logs/
 .venv/
 .lock-*
 .m16-unhealthy
+
+# User-provided raw 1m report exports (large binary/HTML/JSON inputs); derived CSVs and analysis are tracked.
+results/scan1m_2026-11-25/inputs/
+
+# M1E paper forward-test/replay artifacts (state and journals stay local).
+state/edge_second_book_state.json
+reports/m1_edge_*.jsonl
+results/m1_edge_replay/
