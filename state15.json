@@ -2,14 +2,14 @@
   "session": "2026-11-25",
   "market": {
     "dir_state": 1,
-    "label": "STRONG BULL",
-    "conf": 99,
-    "regime": "TREND UP"
+    "label": "NEUTRAL",
+    "conf": 66,
+    "regime": "TRANSITION"
   },
   "sector": {
     "name": "FMCG",
     "side": 1,
-    "reason": "PERSIST + FMCG qualified (score 95)"
+    "reason": "PERSIST + FMCG qualified (score 97)"
   },
   "alerts": {},
   "sent": {
@@ -32,50 +32,16 @@
       "price": 428.55
     }
   },
-  "positions": {
-    "HINDUNILVR": {
-      "side": "BUY",
-      "entry": 2053.4,
-      "sl": 2044.32,
-      "entry_ema9": 2044.7317532839686,
-      "t1": 2062.48,
-      "t2": 2071.56,
-      "t3": 2080.64,
-      "entry_bar": "2026-11-25T09:55:00+05:30",
-      "last_bar": "2026-11-25T10:55:00+05:30"
-    },
-    "ITC": {
-      "side": "BUY",
-      "entry": 306.65,
-      "sl": 304.62,
-      "entry_ema9": 304.68535704516825,
-      "t1": 308.68,
-      "t2": 310.71,
-      "t3": 312.74,
-      "entry_bar": "2026-11-25T09:55:00+05:30",
-      "last_bar": "2026-11-25T10:55:00+05:30"
-    },
-    "VBL": {
-      "side": "BUY",
-      "entry": 428.55,
-      "sl": 426.51,
-      "entry_ema9": 426.5989619720764,
-      "t1": 430.59,
-      "t2": 432.63,
-      "t3": 434.67,
-      "entry_bar": "2026-11-25T09:55:00+05:30",
-      "last_bar": "2026-11-25T10:55:00+05:30"
-    }
-  },
+  "positions": {},
   "feed": {
-    "yahoo_calls": 62,
+    "yahoo_calls": 59,
     "dhan_calls": 0,
     "fallback": null,
     "last_source": "yahoo",
     "history_calls": 11,
-    "symbols": 71,
+    "symbols": 68,
     "sources": {
-      "yahoo": 60,
+      "yahoo": 57,
       "history": 11
     }
   }

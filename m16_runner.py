@@ -393,13 +393,15 @@ def notify_health(st, now, dry_run=False):
     if model.stamp(now).strftime("%H:%M:%S") < "09:20:30":
         return
     health = st.get("feed_health", {})
-    bad, details = [], {}
+    bad, details, watched_symbols = [], {}, []
     for sym in shared.L.SYMS:
         rec = health.get(sym, {})
         # Symbols no longer scheduled after discovery are not falsely called stale.
         discovery_missing = not st.get("cursors", {}).get(sym) or model.stamp(st["cursors"][sym]).strftime("%H:%M") < "10:50"
         watched = model.before(now, "11:00:00") or discovery_missing or any(
             x["symbol"] == sym for x in st["setups"].values())
+        if watched:
+            watched_symbols.append(sym)
         expected = (model.stamp(now)-pd.Timedelta(seconds=30)).floor("5min")-pd.Timedelta(minutes=5)
         latest = rec.get("latest")
         stale = (model.stamp(latest) < expected) if latest else (
@@ -419,7 +421,7 @@ def notify_health(st, now, dry_run=False):
             if analysis_bad: reasons.append("analysis cursor behind expected close")
             if not model.before(now, "11:00:00") and discovery_missing: reasons.append("morning discovery incomplete")
             details[sym] = dict(reasons=reasons, latest=latest, cursor=cursor, expected=expected.isoformat())
-    st["monitoring_health"] = dict(at=now.isoformat(), affected=bad, details=details)
+    st["monitoring_health"] = dict(at=now.isoformat(), affected=bad, watched=watched_symbols, details=details)
     status = "degraded" if bad else "healthy"
     old = st.get("health_notice", {})
     # Session-scoped, persisted dedupe: never repeat operational notices,
@@ -495,6 +497,8 @@ def live_session(st, cache, max_minutes, dry_run=False):
     last_discovery, fetches, engines, latest, requested = None, {}, {}, {}, {}
     worker_count = max(1, int(os.getenv("M16_ENGINE_WORKERS", "4")))
     next_health, next_heartbeat = 0.0, 0.0
+    outage_since = None
+    (ROOT / ".m16-unhealthy").unlink(missing_ok=True) if not dry_run else None
     failures, retry_at = {}, {}
     with ThreadPoolExecutor(max_workers=16) as fetch_pool, ThreadPoolExecutor(max_workers=8) as watch_fetch, \
             ProcessPoolExecutor(max_workers=worker_count) as discovery, ProcessPoolExecutor(max_workers=2) as active_pool:
@@ -584,6 +588,19 @@ def live_session(st, cache, max_minutes, dry_run=False):
             flush(st, shared.now_ist(), dry_run)
             if time.monotonic() >= next_health:
                 notify_health(st, now, dry_run)
+                monitored = st.get("monitoring_health", {})
+                watched = monitored.get("watched", [])
+                bad = monitored.get("affected", [])
+                widespread = len(watched) >= 3 and len(bad)/len(watched) >= .8
+                clock = time.monotonic()
+                outage_since = (clock if outage_since is None else outage_since) if widespread else None
+                if outage_since is not None and clock-outage_since >= float(os.getenv("M16_UNHEALTHY_EXIT_SECONDS", "300")):
+                    save(st, dry_run)
+                    if not dry_run:
+                        (ROOT / ".m16-unhealthy").write_text(now.isoformat())
+                    for pending in list(engines)+list(fetches):
+                        pending.cancel()
+                    raise SystemExit("M16 sustained widespread outage; requesting supervised restart")
                 next_health = time.monotonic() + 30
             if time.monotonic() >= next_heartbeat:
                 print("M16 progress " + json.dumps(dict(at=now.isoformat(),
@@ -622,12 +639,26 @@ def replay(day, symbols):
     return st
 
 
+def feed_probe(symbols=None):
+    """Read-only Yahoo probe: no state writes, bot messages or trade alerts."""
+    report = []
+    for sym in list(symbols or shared.L.SYMS[:3]):
+        try:
+            bars, health = m16_feed.fetch(sym, shared.L.SID.get(sym), shared.now_ist())
+            report.append(dict(symbol=sym, ok=True, health=health))
+        except Exception as exc:
+            report.append(dict(symbol=sym, ok=False, reason=str(exc)))
+    print(json.dumps(report, indent=2))
+    return report
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--session", action="store_true")
     parser.add_argument("--once", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--test-alert", action="store_true")
+    parser.add_argument("--feed-probe", action="store_true")
     parser.add_argument("--max-runtime-min", type=float, default=324)
     parser.add_argument("--replay-date", help="Offline YYYY-MM-DD disk replay; no bot or feed calls")
     parser.add_argument("--symbols", nargs="+", default=None, help="Optional replay symbol subset")
@@ -635,6 +666,9 @@ def main():
     if args.replay_date:
         result = replay(args.replay_date, args.symbols or list(shared.L.SYMS))
         print(pformat(result, width=120))
+        return
+    if args.feed_probe:
+        feed_probe(args.symbols)
         return
     if args.test_alert:
         if not test_alert(args.dry_run):
@@ -662,11 +696,17 @@ def main():
         st["diagnostics"].append(dict(at=now.isoformat(), reason="history unavailable", symbols=missing_history))
         print(f"M16 history unavailable for {len(missing_history)} symbols; recorded in diagnostics")
     if args.session:
+        limit = max(1, int(os.getenv("M16_MAX_SESSION_STARTS", "12")))
+        if st.get("session_starts", 0) >= limit:
+            raise SystemExit("M16 supervised restart cap reached")
+        st["session_starts"] = st.get("session_starts", 0)+1
+        save(st, args.dry_run)
         live_session(st, cache, args.max_runtime_min, args.dry_run)
     else:
         bars_map = {}
+        chosen = list(shared.L.SYMS[:max(1, int(os.getenv("M16_DRY_RUN_SYMBOLS", "3")))]) if args.dry_run else list(shared.L.SYMS)
         with ThreadPoolExecutor(max_workers=8) as pool:
-            pending = {pool.submit(timed_fetch, sym): sym for sym in shared.L.SYMS}
+            pending = {pool.submit(timed_fetch, sym): sym for sym in chosen}
             for future in as_completed(pending):
                 sym = pending[future]
                 try:

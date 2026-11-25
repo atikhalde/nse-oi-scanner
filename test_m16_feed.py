@@ -116,7 +116,7 @@ class FeedTests(unittest.TestCase):
         with patch.object(F.feeds, '_yahoo_session', return_value=(session, None)):
             result = F.feeds.fetch_bars_yahoo('TEST', on_error=errors.append, timeout=(2, 3))
         self.assertIsNone(result)
-        self.assertEqual(sum(x['http_status'] == 429 for x in errors), 2)
+        self.assertEqual(sum(x['http_status'] == 429 for x in errors), 1)
         self.assertEqual(session.get.call_args.kwargs['timeout'], (2, 3))
 
     def test_outage_episode_survives_success_and_records_recovery(self):
@@ -130,6 +130,19 @@ class FeedTests(unittest.TestCase):
         self.assertIn('recovered_at', episode)
         R.record_feed_failure(st, 'TEST', NOW+pd.Timedelta(seconds=20), 'empty')
         self.assertEqual(len(st['feed_outages']['TEST']), 2)
+
+    def test_shared_typed_api_preserves_retry_after_and_callback(self):
+        from unittest.mock import MagicMock
+        response = MagicMock(status_code=429, headers={'Retry-After': '90'})
+        session = MagicMock()
+        session.get.return_value = response
+        errors = []
+        with patch.object(F.feeds, '_yahoo_session', return_value=(session, None)):
+            with self.assertRaises(F.feeds.YahooFetchError) as caught:
+                F.feeds.fetch_bars_yahoo('TEST', raise_errors=True, on_error=errors.append)
+        self.assertEqual(caught.exception.retry_after, 90)
+        self.assertEqual(errors[0]['http_status'], 429)
+        self.assertEqual(session.get.call_count, 1)
 
     def test_poisoned_session_recovery_is_throttled(self):
         with patch.object(F, '_LAST_SESSION_RESET', float('-inf')), patch.object(

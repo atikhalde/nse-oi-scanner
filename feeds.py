@@ -8,9 +8,15 @@ Yahoo returns nothing for a symbol. Dataframe contract: columns
 accepts plain NSE codes ("RELIANCE"), Yahoo tickers ("RELIANCE.NS") and index
 symbols ("^NSEI", "NIFTY_FIN_SERVICE.NS"). This is the single network path for
 every model — M1–M6 and M15 (`nse_scanner.data`) all read bars through here.
+
+Callers that need actionable diagnostics can pass `raise_errors=True`; the
+legacy return-None contract remains the default for other models.
 """
 import os
 import threading
+from email.utils import parsedate_to_datetime
+from datetime import datetime, timezone
+
 import requests
 from requests.adapters import HTTPAdapter
 import pandas as pd
@@ -20,6 +26,32 @@ IST = "Asia/Kolkata"
 DHAN_TIMEOUT = (4, 10)
 YAHOO_TIMEOUT = (4, 12)
 POOL_SIZE = 24
+
+
+class YahooFetchError(RuntimeError):
+    """Typed Yahoo chart failure with the HTTP status and provider host."""
+
+    def __init__(self, symbol, host, reason, status=None, retry_after=None):
+        self.symbol = str(symbol)
+        self.host = str(host)
+        self.reason = str(reason)
+        self.status = int(status) if status is not None else None
+        self.retry_after = float(retry_after) if retry_after is not None else None
+        if self.status == 429:
+            self.category = "rate_limited"
+        elif self.status in (401, 403):
+            self.category = "auth"
+        elif self.status == 404:
+            self.category = "not_found"
+        elif self.status is not None and self.status >= 500:
+            self.category = "server"
+        else:
+            self.category = "transport"
+        if self.status == 200 and any(word in self.reason.lower() for word in ("empty response", "no timestamps", "empty chart")):
+            self.category = "empty_response"
+        label = f"HTTP {self.status}" if self.status is not None else "request failed"
+        retry = f" retry_after={self.retry_after:g}s" if self.retry_after is not None else ""
+        super().__init__(f"yahoo {self.symbol} {self.host}: {label} {self.reason}{retry}")
 
 
 def dhan_ok():
@@ -127,6 +159,16 @@ def _yahoo_session():
         return _YH_SESSION
 
 
+def invalidate_yahoo_session(sess=None):
+    """Discard the cached session; only the owner of a stale session may clear it."""
+    global _YH_SESSION
+    with _YH_LOCK:
+        if _YH_SESSION is None:
+            return
+        if sess is None or _YH_SESSION[0] is sess:
+            _YH_SESSION = None
+
+
 def warm_yahoo_session():
     """Pre-warm Yahoo cookie/crumb and keep-alive TLS socket before candle close."""
     try:
@@ -136,9 +178,7 @@ def warm_yahoo_session():
             url += f"&crumb={requests.utils.quote(crumb)}"
         r = sess.get(url, timeout=YAHOO_TIMEOUT)
         if r.status_code in (401, 403):
-            with _YH_LOCK:
-                if _YH_SESSION is not None and _YH_SESSION[0] is sess:
-                    globals()["_YH_SESSION"] = None
+            invalidate_yahoo_session(sess)
             _yahoo_session()
     except Exception:
         pass
@@ -158,64 +198,131 @@ def _yahoo_ticker(symbol: str) -> str:
     return f"{s}.NS"
 
 
-def fetch_bars_yahoo(symbol, rng="1d", interval="5m", on_error=None, timeout=None):
+def _retry_after_seconds(value):
+    """Parse Retry-After as delta-seconds or an HTTP-date; invalid values are ignored."""
+    if value is None:
+        return None
+    text = str(value).strip()
+    if not text:
+        return None
+    try:
+        return max(0.0, float(text))
+    except (TypeError, ValueError):
+        pass
+    try:
+        when = parsedate_to_datetime(text)
+        if when.tzinfo is None:
+            when = when.replace(tzinfo=timezone.utc)
+        return max(0.0, (when - datetime.now(timezone.utc)).total_seconds())
+    except (TypeError, ValueError, OverflowError):
+        return None
+
+
+def fetch_bars_yahoo(symbol, rng="1d", interval="5m", raise_errors=False, on_error=None, timeout=None):
     """Yahoo chart bars via the shared cookie/crumb session.
 
     interval: "5m" (default, M1–M6 live path), "1m" (09:15 volume repair) or
     "1d" (daily context). Returns [dt, open, high, low, close, volume] or None.
+
+    With `raise_errors=True`, a typed `YahooFetchError` carries the HTTP status,
+    host, category and Retry-After. This is used by M16's circuit breaker.
+    Other callers retain the historical return-None behavior.
     """
-    def report(host, reason, status=None):
+    def report(err):
         if on_error is not None:
-            on_error(dict(host=host, reason=reason, http_status=status))
+            on_error(dict(host=err.host, reason=err.category, http_status=err.status,
+                          retry_after=err.retry_after))
 
     ticker = _yahoo_ticker(symbol)
     with _STATS_LOCK:
         _FEED_STATS["yahoo_calls"] += 1
-    # Crumb + query1/query2. Bare v8 URLs often return HTTP 404 after Yahoo auth changes.
-    for host in ("query1.finance.yahoo.com", "query2.finance.yahoo.com"):
-        sess = None
-        try:
-            sess, crumb = _yahoo_session()
-            url = f"https://{host}/v8/finance/chart/{ticker}?interval={interval}&range={rng}"
-            if crumb:
-                url += f"&crumb={requests.utils.quote(crumb)}"
-            r = sess.get(url, timeout=timeout or YAHOO_TIMEOUT)
-            if r.status_code >= 400:
-                report(host, "HTTP error", r.status_code)
-            if r.status_code in (401, 403):
-                # Crumb/cookie rejected — invalidate this session once and retry.
-                print(f"yahoo {symbol}: HTTP {r.status_code} on {host}; re-handshaking")
-                with _YH_LOCK:
-                    if _YH_SESSION is not None and _YH_SESSION[0] is sess:
-                        globals()["_YH_SESSION"] = None
-                continue
-            if r.status_code == 404:
-                print(f"yahoo {symbol}: HTTP 404 on {host}; trying next host")
-                continue
-            r.raise_for_status()
-            j = r.json()["chart"]["result"][0]
-            ts = j.get("timestamp")
-            if not ts:
-                report(host, "no chart timestamps")
-                return None
-            q = j["indicators"]["quote"][0]
-            vol = q.get("volume")
-            if vol is None:
-                vol = [0] * len(ts)
-            df = pd.DataFrame({"dt": pd.to_datetime(ts, unit="s", utc=True).tz_convert(IST),
-                               "open": q["open"], "high": q["high"], "low": q["low"],
-                               "close": q["close"], "volume": vol})
-            df = df.dropna(subset=["open", "high", "low", "close"])
-            if not df.empty:
-                df["volume"] = df["volume"].fillna(0)
-                with _STATS_LOCK:
-                    _FEED_STATS["last_source"] = "yahoo"
-            return df
-        except Exception as e:
-            # Include the exception type: a silent bare message hid a NameError
-            # in _yahoo_session for days while every symbol returned None.
-            report(host, type(e).__name__)
-            print(f"yahoo {symbol}: {type(e).__name__}: {e}; retrying (no wait)")
+    hosts = ("query1.finance.yahoo.com", "query2.finance.yahoo.com")
+    last_error = None
+    auth_retry_used = False
+
+    for host in hosts:
+        while True:
+            sess = None
+            try:
+                sess, crumb = _yahoo_session()
+                url = f"https://{host}/v8/finance/chart/{ticker}?interval={interval}&range={rng}"
+                if crumb:
+                    url += f"&crumb={requests.utils.quote(crumb)}"
+                r = sess.get(url, timeout=timeout or YAHOO_TIMEOUT)
+                status = r.status_code
+                retry_after = _retry_after_seconds(r.headers.get("Retry-After"))
+
+                if status in (401, 403):
+                    err = YahooFetchError(symbol, host, "cookie/crumb rejected", status, retry_after)
+                    last_error = err
+                    report(err)
+                    invalidate_yahoo_session(sess)
+                    print(f"yahoo {symbol}: HTTP {status} on {host}; re-handshaking")
+                    if not auth_retry_used:
+                        auth_retry_used = True
+                        continue  # one fresh-session retry on the SAME host
+                    if raise_errors:
+                        raise err
+                    return None
+
+                if status == 429:
+                    err = YahooFetchError(symbol, host, "rate limited", status, retry_after)
+                    last_error = err
+                    report(err)
+                    print(f"yahoo {symbol}: HTTP 429 on {host}; no immediate second-host retry")
+                    if raise_errors:
+                        raise err
+                    return None
+
+                if status == 404:
+                    err = YahooFetchError(symbol, host, "chart endpoint not found", status, retry_after)
+                    last_error = err
+                    report(err)
+                    print(f"yahoo {symbol}: HTTP 404 on {host}; trying next host")
+                    break  # try the other host
+
+                r.raise_for_status()
+                j = r.json()["chart"]["result"][0]
+                ts = j.get("timestamp")
+                if not ts:
+                    err = YahooFetchError(symbol, host, "empty response / no timestamps", status, retry_after)
+                    last_error = err
+                    report(err)
+                    print(f"yahoo {symbol}: empty response on {host}; trying next host")
+                    if raise_errors and host == hosts[-1]:
+                        raise err
+                    break
+                q = j["indicators"]["quote"][0]
+                vol = q.get("volume")
+                if vol is None:
+                    vol = [0] * len(ts)
+                df = pd.DataFrame({"dt": pd.to_datetime(ts, unit="s", utc=True).tz_convert(IST),
+                                   "open": q["open"], "high": q["high"], "low": q["low"],
+                                   "close": q["close"], "volume": vol})
+                df = df.dropna(subset=["open", "high", "low", "close"])
+                if not df.empty:
+                    df["volume"] = df["volume"].fillna(0)
+                    with _STATS_LOCK:
+                        _FEED_STATS["last_source"] = "yahoo"
+                return df
+            except YahooFetchError:
+                # Raised deliberately by the branches above; loop control is
+                # already applied there, so never mask it as an unknown error.
+                raise
+            except Exception as e:
+                status = getattr(getattr(e, "response", None), "status_code", None)
+                retry_after = _retry_after_seconds(
+                    getattr(getattr(e, "response", None), "headers", {}).get("Retry-After"))
+                err = YahooFetchError(symbol, host, f"{type(e).__name__}: {e}", status, retry_after)
+                last_error = err
+                report(err)
+                print(f"yahoo {symbol}: {type(e).__name__}: {e}; trying next host")
+                if raise_errors and (status == 429 or host == hosts[-1]):
+                    raise err
+                break
+
+    if raise_errors:
+        raise last_error or YahooFetchError(symbol, hosts[-1], "all Yahoo hosts failed")
     return None
 
 

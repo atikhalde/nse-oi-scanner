@@ -1,6 +1,6 @@
 # M16 — independent small-pullback / BOS continuation alerts
 
-M16 is an **alerts-only** model. It does not place orders or reuse M2/M6 trade ledgers, bot credentials, sector boards, persistent scores, leader ranks, sizing or exits. It imports M6's read-only history, normalization and feed adapters, so the universe and Yahoo-primary / Dhan-fallback provider path are shared. It never writes M6 state.
+M16 is an **alerts-only** model. It does not place orders or reuse M2/M6 trade ledgers, bot credentials, sector boards, persistent scores, leader ranks, sizing or exits. It imports M6's read-only history, normalization and feed adapters, so the universe and Yahoo chart transport are shared. M16 itself is Yahoo-only; it never invokes Dhan. It never writes M6 state.
 
 ## Rules (IST; five-minute candles)
 
@@ -222,3 +222,17 @@ remains intact. Missing discovery cannot become healthy just because 11:00 passe
 without any tracked seeds. End-of-job artifacts preserve diagnostic state even
 if pushing the Git state fails. Artifact upload is not a live intraday snapshot
 service; the running job's console supplies intraday progress.
+
+### Concurrent-main merge reconciliation
+
+The merged workflow retains supervised 110-minute shifts, a 12-start daily cap,
+a read-only `--feed-probe`, isolated probe/dry-run concurrency groups, and
+a five-minute sustained widespread-outage watchdog requesting a new supervised
+runner. A reported HTTP Retry-After extends the M16 rate-limit cooldown. The shared
+transport retains its typed `YahooFetchError` API as well as the M16 diagnostic
+callback and timeout override.
+
+Optional Dhan fallback and per-episode repeated bot notices from the concurrent
+main changes are intentionally not enabled: the user requested Yahoo-only data
+and no repeated operational warnings. Once-per-session dedupe remains in force.
+Validation after reconciliation: 87 M16 tests and the full M6 runner regression.

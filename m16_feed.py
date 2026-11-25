@@ -84,7 +84,7 @@ def fetch(symbol, security_id, now):
             if any(x.get('http_status') == 429 for x in transport_errors):
                 rate_limited = True
                 with _COOLDOWN_LOCK:
-                    _COOLDOWN_UNTIL = max(_COOLDOWN_UNTIL, time.monotonic()+30)
+                    _COOLDOWN_UNTIL = max(_COOLDOWN_UNTIL, time.monotonic()+max([30.0]+[float(x.get("retry_after") or 0) for x in transport_errors]))
             # A second range request cannot cure rate limiting/auth failure.
             if any(x.get('http_status') in (401, 403, 429) for x in transport_errors):
                 break
