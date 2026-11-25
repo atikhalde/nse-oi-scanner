@@ -21,7 +21,7 @@ class FeedTests(unittest.TestCase):
                 F.feeds, 'fetch_bars_yahoo', return_value=frame()) as yahoo:
             bars, health = F.fetch('TEST', '1', NOW)
         self.assertEqual(health['provider'], 'yahoo')
-        yahoo.assert_called_once_with('TEST', '1d')
+        yahoo.assert_called_once_with('TEST', '1d', raise_errors=True)
         dhan.assert_not_called()
 
     def test_no_token_or_security_id_required(self):
@@ -119,7 +119,12 @@ class FeedTests(unittest.TestCase):
 
     def test_preexisting_delivered_notice_is_not_repeated_after_upgrade(self):
         st = M.fresh_state('2026-11-23')
+        # The old ledger format had 'status', 'at', 'complete', 'deliveries'.
+        # The new format uses 'health_notice_ledger' and 'health_episode'.
+        # We simulate the old ledger being upgraded in the state.
         st['health_notice'] = dict(status='degraded', at=NOW.isoformat(), complete=True, deliveries={})
+        # The upgrade logic in notify_health creates episode id=1 and sets degraded_sent=True, recovery_sent=False, etc.
+        # But since complete=True is already in health_notice, the first call to notify_health should NOT call deliver_targets again.
         with patch.object(R.shared.L, 'SYMS', ['TEST']), patch.object(R, 'deliver_targets') as send:
             R.notify_health(st, NOW+pd.Timedelta(minutes=10))
         send.assert_not_called()
@@ -129,6 +134,8 @@ class FeedTests(unittest.TestCase):
         with patch.object(R.shared.L, 'SYMS', ['TEST']), patch.object(
                 R, 'deliver_targets', side_effect=[False, True]) as send:
             R.notify_health(st, NOW)
+            # The first call fails (complete=False). The second call retries the same ledger key.
+            # The key is 'degraded:1:2:unknown x1' (or similar). The second call should succeed.
             R.notify_health(st, NOW+pd.Timedelta(seconds=30))
         self.assertEqual(send.call_count, 2)
         self.assertTrue(st['health_notice']['complete'])

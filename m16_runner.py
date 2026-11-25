@@ -26,6 +26,15 @@ import m16_calendar
 ROOT = Path(__file__).resolve().parent
 STATE = ROOT / "state16.json"
 MAX_LAG = 30
+# Bounded recovery: missing morning discovery is retried a fixed number of
+# times in a short post-11 window, never for the remainder of the session.
+RECOVERY_DEADLINE = os.getenv("M16_RECOVERY_DEADLINE", "11:15:00")
+RECOVERY_MAX_ATTEMPTS = max(0, int(os.getenv("M16_RECOVERY_MAX_ATTEMPTS", "2")))
+RECOVERY_INTERVAL_SECONDS = max(30., float(os.getenv("M16_RECOVERY_INTERVAL_SECONDS", "300")))
+UNHEALTHY_EXIT_SECONDS = max(60., float(os.getenv("M16_UNHEALTHY_EXIT_SECONDS", "300")))
+UNHEALTHY_FRACTION = min(1., max(0.5, float(os.getenv("M16_UNHEALTHY_FRACTION", "0.8"))))
+MAX_SESSION_STARTS = max(1, int(os.getenv("M16_MAX_SESSION_STARTS", "12")))
+DRY_RUN_SYMBOLS = max(1, int(os.getenv("M16_DRY_RUN_SYMBOLS", "3")))
 
 
 def credentials():
@@ -360,68 +369,210 @@ def cycle(st, now, bars_map, cache, pool=None, dry_run=False):
     save(st, dry_run)
 
 
-def record_feed_failure(st, symbol, now, reason):
+def error_details(exc):
+    """JSON-safe provider, HTTP status, category and retry details."""
+    return m16_feed.error_detail(exc)
+
+
+def record_feed_failure(st, symbol, now, reason, exc=None):
     health = st.setdefault("feed_health", {})
     previous = health.get(symbol, {})
     count = previous.get("failure_count", 0) + 1
     first = previous.get("first_failure", now.isoformat()) if not previous.get("ok", True) else now.isoformat()
+    detail = error_details(exc) if exc is not None else dict(
+        category="unknown", status=None, retry_after=None, provider=None,
+        paused=False, attempts=[], reason=str(reason))
     health[symbol] = dict(ok=False, at=now.isoformat(), first_failure=first,
-                          failure_count=count, reason=reason)
-    # Persist counts without flooding the audit and evicting outage evidence.
-    if previous.get("ok", True) or previous.get("reason") != reason:
-        st["diagnostics"].append(dict(at=now.isoformat(), symbol=symbol, reason=reason))
+                          failure_count=count, reason=str(reason), error=detail)
+    # Preserve exact status/category transitions without flooding the audit.
+    old_error = previous.get("error") or {}
+    changed = (old_error.get("status"), old_error.get("category")) != (detail.get("status"), detail.get("category"))
+    if previous.get("ok", True) or previous.get("reason") != str(reason) or changed:
+        st["diagnostics"].append(dict(at=now.isoformat(), symbol=symbol, reason=str(reason), error=detail))
 
 
-def notify_health(st, now, dry_run=False):
-    if m16_calendar.session_status(now)[0] == "closed":
-        return
-    # No completed 5m candle is due before 09:20. Allow the normal
-    # publication grace before declaring initial discovery unhealthy.
-    if model.stamp(now).strftime("%H:%M:%S") < "09:20:30":
-        return
+def _health_bad_symbols(st, now):
+    """Monitored symbols with feed, history or analysis coverage gaps."""
     health = st.get("feed_health", {})
-    bad = []
+    setups = {x["symbol"] for x in st["setups"].values()}
+    bad, watched = [], []
     for sym in shared.L.SYMS:
         rec = health.get(sym, {})
-        # Symbols no longer scheduled after discovery are not falsely called stale.
-        watched = model.before(now, "11:00:00") or any(
-            x["symbol"] == sym for x in st["setups"].values())
+        # After 11:00 a stale discovery cursor is also an unhealthy gap.
+        cursor = st.get("cursors", {}).get(sym)
+        morning_gap = (not cursor or model.stamp(cursor).strftime("%H:%M") < "10:50")
+        monitored = (model.before(now, "11:00:00") or sym in setups or morning_gap)
+        if not monitored:
+            continue
+        watched.append(sym)
         expected = (model.stamp(now)-pd.Timedelta(seconds=30)).floor("5min")-pd.Timedelta(minutes=5)
         latest = rec.get("latest")
         stale = (model.stamp(latest) < expected) if latest else (
             not rec.get("at") or (model.stamp(now)-model.stamp(rec["at"])).total_seconds() > 90)
         history_bad = st.get("history_health", {}).get(sym) is False
-        cursor = st.get("cursors", {}).get(sym)
         analysis_bad = (sym in st.get("history_health", {}) and
                         expected.strftime("%H:%M") >= "09:15" and
                         (not cursor or model.stamp(cursor) < expected))
-        if watched and (not rec.get("ok") or stale or history_bad or analysis_bad):
+        if not rec.get("ok") or stale or history_bad or analysis_bad:
             bad.append(sym)
-    status = "degraded" if bad else "healthy"
-    old = st.get("health_notice", {})
-    # Session-scoped, persisted dedupe: never repeat operational notices,
-    # even after recovery/degradation flapping or a workflow restart.
-    notices = st.setdefault("health_notices", {})
-    if old.get("status") and old.get("complete"):
-        notices.setdefault(old["status"], old)
-    notice = notices.setdefault(status, dict(complete=False))
-    if notice.get("complete"):
-        st["health_notice"] = dict(notice, status=status, affected=bad,
-                                  checked_at=now.isoformat())
+    return bad, watched
+
+
+def _feed_error_summary(st, bad):
+    from collections import Counter
+    parts = []
+    for sym in bad:
+        err = (st.get("feed_health", {}).get(sym) or {}).get("error") or {}
+        status = err.get("status")
+        category = err.get("category") or "unknown"
+        parts.append(f"{category}{' HTTP ' + str(status) if status is not None else ''}")
+    counts = Counter(parts)
+    return ", ".join(f"{name} x{n}" for name, n in counts.most_common(3)) or "status unavailable"
+
+
+def _health_level(fraction, bad):
+    if not bad:
+        return 0
+    if fraction >= .8 or len(bad) >= 20:
+        return 2
+    return 1
+
+
+def notify_health(st, now, dry_run=False, precomputed=None):
+    """Send on genuine episodes/severity changes, not once per status per day.
+
+    A widened outage, a new provider-error category and an explicit recovery
+    after degradation each produce one notice per episode. Repeated checks of
+    the same severity only advance `checked_at`; failed deliveries retry.
+    """
+    if m16_calendar.session_status(now)[0] == "closed":
         return
-    text = (f"M16 FEED {status.upper()}: {len(bad)} monitored symbols have feed/history/analysis gaps. "
-            "Live alerts may be missed or delayed; stale entries will NOT be sent. "
-            "Polling is not tick-time execution.") if bad else (
-            "M16 feed monitoring healthy on latest poll; polling latency still applies.")
-    # Preserve successful destinations when retrying a partial send.
-    ledger = notice.setdefault("deliveries", old.get("deliveries", {})
-                               if old.get("status") == status else {})
-    complete = True if dry_run else deliver_targets(st, ledger,
-        lambda token, chat: tg.send_message_to(token, chat, text))
-    notice.update(status=status, at=now.isoformat(), affected=bad,
-                  deliveries=ledger, complete=complete)
-    st["health_notice"] = dict(notice)
-    print(text)
+    # No completed 5m candle is due before 09:20; allow publication grace.
+    if model.stamp(now).strftime("%H:%M:%S") < "09:20:30":
+        return
+    bad, watched = precomputed or _health_bad_symbols(st, now)
+    fraction = (len(bad) / len(watched)) if watched else 0.
+    level = _health_level(fraction, bad)
+    category = _feed_error_summary(st, bad)
+    notices = st.setdefault("health_notices", {})
+    ledger = st.setdefault("health_notice_ledger", {})
+    episode = st.setdefault("health_episode", dict(
+        id=0, active=False, degraded_sent=False, recovery_sent=False,
+        level=0, category="", affected=0, started_at=None))
+
+    # Upgrade an old once-per-day ledger without repeating an already delivered
+    # warning. Its affected count initializes the prior severity.
+    old = st.get("health_notice", {})
+    if not episode.get("id") and old.get("status") == "degraded" and old.get("complete"):
+        prior = len(old.get("affected") or [])
+        episode.update(id=1, active=True, degraded_sent=True, recovery_sent=False,
+                       level=_health_level(1.0 if prior else 0., ["legacy"] * prior),
+                       category="status unavailable", affected=prior,
+                       started_at=old.get("at"))
+        notices.setdefault("degraded", old)
+
+    if bad:
+        if not episode.get("active"):
+            episode.update(id=episode.get("id", 0)+1, active=True, degraded_sent=False,
+                           recovery_sent=False, level=0, category="", affected=0,
+                           started_at=now.isoformat())
+        reason = None
+        if not episode.get("degraded_sent"):
+            reason = "degradation"
+        elif level > episode.get("level", 0):
+            reason = "severity escalation"
+        elif category != episode.get("category") and category != "status unavailable":
+            reason = "provider status/category change"
+        key = f"degraded:{episode['id']}:{level}:{category}"
+        notice = ledger.setdefault(key, dict(complete=False))
+        if not notice.get("complete"):
+            reason = reason or "retry pending delivery"
+            text = (f"M16 FEED {reason.upper()}: {len(bad)}/{len(watched)} monitored symbols have gaps "
+                    f"({fraction:.0%}); diagnostics: {category}. Live alerts may be missed or delayed; "
+                    "stale entries will NOT be sent. Polling is not tick-time execution.")
+            targets = notice.setdefault("deliveries", {})
+            complete = True if dry_run else deliver_targets(st, targets, lambda token, chat:
+                tg.send_message_to(token, chat, text))
+            notice.update(status="degraded", reason=reason, at=now.isoformat(),
+                          affected=bad, severity=level, category=category,
+                          deliveries=targets, complete=complete, episode=episode["id"])
+            notices[key] = dict(notice)
+            st["health_notice"] = dict(notice)
+            print(text)
+        else:
+            st["health_notice"] = dict(notice, status="degraded",
+                                      affected=bad, checked_at=now.isoformat(),
+                                      severity=level, category=category,
+                                      episode=episode["id"])
+        episode.update(active=True, degraded_sent=episode.get("degraded_sent") or bool(reason),
+                       recovery_sent=False, level=max(episode.get("level", 0), level),
+                       category=category, affected=len(bad))
+        return
+
+    # Healthy: send an explicit recovery once per degraded episode.
+    if episode.get("active") and episode.get("degraded_sent") and not episode.get("recovery_sent"):
+        key = f"healthy:{episode['id']}"
+        notice = ledger.setdefault(key, dict(complete=False))
+        if not notice.get("complete"):
+            text = ("M16 FEED RECOVERED: latest monitored feed, history and analysis checks are healthy. "
+                    "Polling latency still applies; this is not a tick-time execution guarantee.")
+            targets = notice.setdefault("deliveries", {})
+            complete = True if dry_run else deliver_targets(st, targets, lambda token, chat:
+                tg.send_message_to(token, chat, text))
+            notice.update(status="healthy", reason="recovery", at=now.isoformat(),
+                          affected=[], severity=0, category="",
+                          deliveries=targets, complete=complete, episode=episode["id"])
+            notices[key] = dict(notice)
+            st["health_notice"] = dict(notice)
+            print(text)
+        episode["recovery_sent"] = True
+    else:
+        # Keep existing ledger intact; only update the running notice summary.
+        st["health_notice"] = dict(notice if 'notice' in locals() else old.get("health_notice", {}), status="healthy", affected=[],
+                                  checked_at=now.isoformat(), severity=0,
+                                  category="", episode=episode.get("id", 0))
+    episode.update(active=False, level=0, category="", affected=0)
+
+
+def recovery_candidates(st, now, requested=None, monotonic=None):
+    """Bounded set of stale discovery cursors eligible for post-11 recovery."""
+    if model.before(now, "11:00:00") or not model.before(now, RECOVERY_DEADLINE):
+        return set()
+    if RECOVERY_MAX_ATTEMPTS <= 0:
+        return set()
+    clock = (monotonic() if monotonic else time.monotonic())
+    requested = requested or {}
+    ledger = st.setdefault("feed_recovery", {})
+    out = set()
+    for sym in shared.L.SYMS:
+        rec = ledger.get(sym) or {}
+        if rec.get("attempts", 0) >= RECOVERY_MAX_ATTEMPTS:
+            continue
+        if clock - requested.get(sym, -1e10) < RECOVERY_INTERVAL_SECONDS:
+            continue
+        cursor = st["cursors"].get(sym)
+        if cursor and model.stamp(cursor).strftime("%H:%M") >= "10:50":
+            continue
+        out.add(sym)
+    return out
+
+
+def mark_recovery_attempt(st, sym, now):
+    rec = st.setdefault("feed_recovery", {}).setdefault(sym, dict(attempts=0))
+    rec["attempts"] = rec.get("attempts", 0) + 1
+    rec["last_requested"] = model.stamp(now).isoformat()
+
+
+def unhealthy_session(st, watched, bad, started_monotonic=None, now_monotonic=None, outage_since=None):
+    """True once a sustained, widespread feed outage warrants a fresh runner."""
+    if len(watched) < 3 or not bad:
+        return False, None
+    fraction = len(bad) / len(watched)
+    if fraction < UNHEALTHY_FRACTION:
+        return False, None
+    clock = time.monotonic() if now_monotonic is None else now_monotonic
+    since = clock if outage_since is None else outage_since
+    return (clock - since >= UNHEALTHY_EXIT_SECONDS), since
 
 
 def timed_fetch(sym):
@@ -453,6 +604,16 @@ def live_session(st, cache, max_minutes, dry_run=False):
     last_discovery, fetches, engines, latest, requested = None, {}, {}, {}, {}
     worker_count = max(1, int(os.getenv("M16_ENGINE_WORKERS", "4")))
     next_health = 0.0
+    outage_since = None
+    try:
+        (ROOT / ".m16-unhealthy").unlink(missing_ok=True)
+    except OSError:
+        pass
+    m16_feed.reset_breaker()
+    st["feed_control"] = m16_feed.breaker_status()
+    st.setdefault("diagnostics", []).append(dict(
+        at=model.stamp(shared.now_ist()).isoformat(), reason="feed-control configuration",
+        **m16_feed.breaker_status()))
     with ThreadPoolExecutor(max_workers=16) as fetch_pool, ThreadPoolExecutor(max_workers=8) as watch_fetch, \
             ProcessPoolExecutor(max_workers=worker_count) as discovery, ProcessPoolExecutor(max_workers=2) as active_pool:
         while time.monotonic()-started < max_minutes*60:
@@ -485,19 +646,21 @@ def live_session(st, cache, max_minutes, dry_run=False):
             # full-day research audit, without creating new entries.
             audit_symbols = {s["symbol"] for s in st["setups"].values()}
             symbols |= active | audit_symbols
-            # Recover missed morning discovery even after the seed cutoff.
-            # apply/model still enforce original candle cutoffs and no backdating.
-            for sym in shared.L.SYMS:
-                cursor = st["cursors"].get(sym)
-                if not model.before(now, "11:00:00") and (not cursor or model.stamp(cursor).strftime("%H:%M") < "10:50"):
-                    symbols.add(sym)
+            # Bounded post-11 recovery: at most two attempts per stale cursor,
+            # only until 11:15, never a whole-universe retry storm until close.
+            recovery_symbols = recovery_candidates(st, now, requested)
+            symbols |= recovery_symbols
             busy_fetch = set(fetches.values())
             for sym in sorted(symbols, key=lambda s: (s not in active, s)):
                 interval = poll if sym in active else (30. if sym in audit_symbols or not model.before(now, "11:00:00") else max(5., poll))
+                if sym in recovery_symbols and sym not in active:
+                    interval = max(interval, RECOVERY_INTERVAL_SECONDS)
                 if sym not in busy_fetch and time.monotonic()-requested.get(sym, -1e10) >= interval:
                     executor = watch_fetch if sym in active else fetch_pool
                     fetches[executor.submit(timed_fetch, sym)] = sym
                     requested[sym] = time.monotonic()
+                    if sym in recovery_symbols:
+                        mark_recovery_attempt(st, sym, now)
             for future in list(fetches):
                 if not future.done():
                     continue
@@ -508,11 +671,12 @@ def live_session(st, cache, max_minutes, dry_run=False):
                     if bars is not None and not bars.empty:
                         latest[sym] = (bars, received)
                         st.setdefault("feed_health", {})[sym] = dict(
-                            **raw.attrs.get("m16_feed", {}), at=now.isoformat(), ok=True)
+                            **raw.attrs.get("m16_feed", {}), at=now.isoformat(), ok=True,
+                            error=None, failure_count=0)
                     else:
                         raise ValueError("current-session feed unavailable")
                 except Exception as exc:
-                    record_feed_failure(st, sym, now, str(exc))
+                    record_feed_failure(st, sym, now, str(exc), exc)
             for future in list(engines):
                 if not future.done():
                     continue
@@ -542,7 +706,19 @@ def live_session(st, cache, max_minutes, dry_run=False):
                 engines[executor.submit(analyze, (sym, bars, cache[sym], cursor, received))] = sym
             flush(st, shared.now_ist(), dry_run)
             if time.monotonic() >= next_health:
-                notify_health(st, now, dry_run)
+                coverage = _health_bad_symbols(st, now)
+                notify_health(st, now, dry_run, coverage)
+                restart, outage_since = unhealthy_session(
+                    st, coverage[1], coverage[0], outage_since=outage_since)
+                if restart:
+                    print("M16 sustained widespread feed outage; saving state and exiting for a fresh supervised runner")
+                    save(st, dry_run)
+                    if not dry_run:
+                        (ROOT / ".m16-unhealthy").write_text(model.stamp(now).isoformat(), encoding="utf-8")
+                    for future in list(engines) + list(fetches):
+                        future.cancel()
+                    raise SystemExit("M16 feed unhealthy; restart from a clean runner")
+                st["feed_control"] = m16_feed.breaker_status()
                 next_health = time.monotonic() + 30
             expire_setups(st, shared.now_ist())
             trim_diagnostics(st)
@@ -575,19 +751,43 @@ def replay(day, symbols):
     return st
 
 
+def feed_probe(symbols=None):
+    """One-shot provider/status probe: no state writes, no Telegram, no alerts."""
+    m16_feed.reset_breaker()
+    chosen = list(symbols or shared.L.SYMS[:DRY_RUN_SYMBOLS])
+    report = []
+    for sym in chosen:
+        now = shared.now_ist()
+        try:
+            bars, health = m16_feed.fetch(sym, shared.L.SID.get(sym), now)
+            report.append(dict(symbol=sym, ok=True, latest=health.get("latest"),
+                               provider=health.get("provider"), attempts=health.get("attempts"),
+                               breaker=m16_feed.breaker_status()))
+        except Exception as exc:
+            report.append(dict(symbol=sym, ok=False, error=error_details(exc),
+                               breaker=m16_feed.breaker_status()))
+    print(json.dumps(report, indent=2, ensure_ascii=False, default=str))
+    return report
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--session", action="store_true")
     parser.add_argument("--once", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--test-alert", action="store_true")
-    parser.add_argument("--max-runtime-min", type=float, default=324)
+    parser.add_argument("--feed-probe", action="store_true",
+                        help="Print exact provider/HTTP diagnostics; no state or bot writes")
+    parser.add_argument("--max-runtime-min", type=float, default=110)
     parser.add_argument("--replay-date", help="Offline YYYY-MM-DD disk replay; no bot or feed calls")
-    parser.add_argument("--symbols", nargs="+", default=None, help="Optional replay symbol subset")
+    parser.add_argument("--symbols", nargs="+", default=None, help="Optional replay/probe symbol subset")
     args = parser.parse_args()
     if args.replay_date:
         result = replay(args.replay_date, args.symbols or list(shared.L.SYMS))
         print(pformat(result, width=120))
+        return
+    if args.feed_probe:
+        feed_probe(args.symbols)
         return
     if args.test_alert:
         if not test_alert(args.dry_run):
@@ -600,14 +800,23 @@ def main():
         return
     if status == "unknown":
         print(f"M16 calendar warning: {reason}")
-    if now.weekday() >= 5 or now.strftime("%H:%M") < "09:00" or now.strftime("%H:%M") >= "15:40":
+    outside = now.weekday() >= 5 or now.strftime("%H:%M") < "09:00" or now.strftime("%H:%M") >= "15:40"
+    if outside and not args.dry_run:
         print("M16 outside weekday 09:00–15:40 IST window; no replay alerts")
         return
+    if outside:
+        print("[DRY] outside regular runner window; offline dry-run checks only, no state or bot writes")
     if not args.dry_run:
         credentials()
     st = load(now.strftime("%Y-%m-%d"))
-    if st.get("eod_done"):
+    if st.get("eod_done") and not args.dry_run:
         return
+    if args.session and not args.dry_run:
+        st["session_starts"] = st.get("session_starts", 0) + 1
+        save(st)
+        if st["session_starts"] > MAX_SESSION_STARTS:
+            print(f"M16 supervised restart cap ({MAX_SESSION_STARTS}) reached; refusing another loop")
+            return
     cache = {sym: shared.symbol_history(sym, st["date"]) for sym in shared.L.SYMS}
     st["history_health"] = {sym: bool(rec.get("ok")) for sym, rec in cache.items()}
     missing_history = [sym for sym, rec in cache.items() if not rec.get("ok")]
@@ -618,17 +827,26 @@ def main():
         live_session(st, cache, args.max_runtime_min, args.dry_run)
     else:
         bars_map = {}
+        probe_symbols = shared.L.SYMS[:DRY_RUN_SYMBOLS] if args.dry_run else shared.L.SYMS
+        print(f"[DRY] probing {len(probe_symbols)} symbol(s); no state or report writes, no Telegram sends"
+              if args.dry_run else f"M16 once: probing {len(probe_symbols)} symbol(s)")
         with ThreadPoolExecutor(max_workers=8) as pool:
-            pending = {pool.submit(timed_fetch, sym): sym for sym in shared.L.SYMS}
+            pending = {pool.submit(timed_fetch, sym): sym for sym in probe_symbols}
             for future in as_completed(pending):
                 sym = pending[future]
                 try:
                     bars_map[sym], _ = future.result()
+                    print(f"[DRY] {sym}: current-session feed accepted" if args.dry_run
+                          else f"M16 {sym}: current-session feed accepted")
                 except Exception as exc:
-                    record_feed_failure(st, sym, shared.now_ist(), str(exc))
+                    record_feed_failure(st, sym, shared.now_ist(), str(exc), exc)
+                    print(f"[DRY] {sym}: {error_details(exc)}" if args.dry_run
+                          else f"M16 {sym}: {type(exc).__name__}: {exc}")
         cycle(st, now, bars_map, cache, dry_run=args.dry_run)
         if not model.before(shared.now_ist(), "15:31:00"):
             finish(st, args.dry_run)
+        if args.dry_run:
+            print("[DRY] M16 dry-run complete; state/report files and Telegram delivery untouched")
 
 
 if __name__ == "__main__":

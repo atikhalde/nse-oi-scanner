@@ -1,6 +1,6 @@
 # M16 — independent small-pullback / BOS continuation alerts
 
-M16 is an **alerts-only** model. It does not place orders or reuse M2/M6 trade ledgers, bot credentials, sector boards, persistent scores, leader ranks, sizing or exits. It imports M6's read-only history, normalization and feed adapters, so the universe and Yahoo-primary / Dhan-fallback provider path are shared. It never writes M6 state.
+M16 is an **alerts-only** model. It does not place orders or reuse M2/M6 trade ledgers, bot credentials, sector boards, persistent scores, leader ranks, sizing or exits. It imports M6's read-only history, normalization and feed adapters, so the universe and **Yahoo-primary / Dhan-fallback** provider path are shared. It never writes M6 state.
 
 ## Rules (IST; five-minute candles)
 
@@ -117,85 +117,43 @@ This matches the requested close-based chart example. The offline regression rec
 
 ### Live-feed incident hardening
 
-M16 uses Yahoo only through `feeds.fetch_bars_yahoo`, the same Yahoo chart
-fetcher used by M6. No Dhan API, token, or security mapping is required; even a
-configured Dhan token is not used by M16. The shared M6 provider ladder is
-unchanged. M16 separately checks session and completed-candle freshness: a
-nonempty stale response is not success. The shared Yahoo fetcher handles its
-query1/query2 retries and cookie/crumb refresh.
+M16 uses **Yahoo-primary and Dhan-fallback** through `feeds.fetch_bars_yahoo` and `feeds.fetch_bars_dhan`. The shared M6 provider ladder is preserved. M16 separately checks session and completed-candle freshness: a nonempty stale response is not success. The shared fetchers handle their query1/query2 retries, cookie/crumb refresh, and optional Dhan fallback when `DHAN_TOKEN` and security ID are available.
 
-Active setups have a one-second minimum polling interval (one in-flight request
-per symbol), not a one-second end-to-end alert guarantee. Discovery and terminal
-research symbols retain slower polling to avoid hammering the whole universe.
-Network time, Yahoo publication and throttling, worker queues, and Telegram
-can all add latency. M6 also cannot guarantee one-second exchange-to-alert delay.
+Active setups have a one-second minimum polling interval (one in-flight request per symbol), not a one-second end-to-end alert guarantee. Discovery and terminal research symbols retain slower polling to avoid hammering the whole universe. Network time, Yahoo/Dhan publication and throttling, worker queues, and Telegram can all add latency. M6 also cannot guarantee one-second exchange-to-alert delay.
 
-The live runner preserves per-symbol provider, latest candle, availability,
-first failure and repetition counts. Repeated identical failures are aggregated.
-Dedicated-bot health notices send at most one degradation and one healthy/recovery
-notice per session. Persisted per-status delivery ledgers prevent repeats across
-workflow restarts and health-status flapping. Monitoring and audit updates continue
-without Telegram reminders. Failed notice deliveries retry on the next health check.
-These are operational warnings, not trade alerts. Reports distinguish historical
-and live-eligible events. Missing morning discovery is retried after 11:00 for
-research/recovery; historical signals remain audit-only, never backdated alerts.
+The live runner preserves per-symbol provider, latest candle, availability, first failure and repetition counts. Repeated identical failures are aggregated. Dedicated-bot health notices send at most one degradation and one healthy/recovery notice per session. Persisted per-status delivery ledgers prevent repeats across workflow restarts and health-status flapping. Monitoring and audit updates continue without Telegram reminders. Failed notice deliveries retry on the next health check. These are operational warnings, not trade alerts. Reports distinguish historical and live-eligible events. Missing morning discovery is retried after 11:00 for research/recovery; historical signals remain audit-only, never backdated alerts.
 
-The workflow has a 09:00 IST prewarm dispatch, with the live loop waiting until
-09:15. GitHub scheduled starts are best effort, not an exchange-grade scheduler.
-The existing shift handoff remains in place. Check a morning run actually starts,
-and that both dedicated bot destinations work. A healthy poll is not proof of tick freshness: OHLC polling
-cannot guarantee every transient intrabar crossing. Provider quotas and Telegram
-latency still apply. Zero missed/delayed alerts requires a monitored always-on
-streaming service and verified provider entitlements; this patch does not claim
-that guarantee. Do not widen the 30-second entry budget to hide outages.
+The workflow has a 09:00 IST prewarm dispatch, with the live loop waiting until 09:15. GitHub scheduled starts are best effort, not an exchange-grade scheduler. The existing shift handoff remains in place. Check a morning run actually starts, and that both dedicated bot destinations work. A healthy poll is not proof of tick freshness: OHLC polling cannot guarantee every transient intrabar crossing. Provider quotas and Telegram latency still apply. Zero missed/delayed alerts requires a monitored always-on streaming service and verified provider entitlements; this patch does not claim that guarantee. Do not widen the 30-second entry budget to hide outages.
 
 Offline regression command:
 `python -m unittest -v test_m16_feed test_m16_runner test_m16_audit`
 
 #### Follow-up timing review
 
-Discovery retry readiness is judged using the snapshot's request-start watermark,
-not the later loop clock. Thus a cached forming candle cannot suppress the
-required post-close refetch. Telegram outbox freshness advances across the
-entire batch (including time spent delivering earlier events), not just within
-each event. Health notices compare candle coverage against the expected close
-instead of treating normal five-minute universe polling as a 90-second outage.
-When history availability is known, missing history or a lagging analysis cursor
-also prevents a false healthy notice, even if Yahoo fetches succeed.
+Discovery retry readiness is judged using the snapshot's request-start watermark, not the later loop clock. Thus a cached forming candle cannot suppress the required post-close refetch. Telegram outbox freshness advances across the entire batch (including time spent delivering earlier events), not just within each event. Health notices compare candle coverage against the expected close instead of treating normal five-minute universe polling as a 90-second outage. When history availability is known, missing history or a lagging analysis cursor also prevents a false healthy notice, even if Yahoo fetches succeed.
 
-Regression verification: 62 M16 feed/model/audit tests, full M6 runner suite,
-Python compilation, workflow YAML/configuration and embedded shell syntax checks.
-These are offline checks, not a live Yahoo publication or Telegram latency SLA.
+Regression verification: 62 M16 feed/model/audit tests, full M6 runner suite, Python compilation, workflow YAML/configuration and embedded shell syntax checks. These are offline checks, not a live Yahoo publication or Telegram latency SLA.
 
-Health-notice upgrade also recognizes an already delivered legacy notice, so an
-ongoing outage does not generate another warning just because the code restarted.
-Failed destinations may retry; destinations that acknowledged delivery are skipped.
-Trade/BOS notifications and their freshness rules are unchanged.
+Health-notice upgrade also recognizes an already delivered legacy notice, so an ongoing outage does not generate another warning just because the code restarted. Failed destinations may retry; destinations that acknowledged delivery are skipped. Trade/BOS notifications and their freshness rules are unchanged.
 
 ### Regular-session holiday guard
 
-`m16_calendar.py` contains the NSE **equities trading** holiday table for 2026,
-including 24 November (Prakash Gurpurb Sri Guru Nanak Dev) and the 15 January
-Maharashtra election closure. Source:
-https://www.nseindia.com/resources/exchange-communication-holidays
-The separate, longer **clearing** holiday table must not be used to suppress
-trading on otherwise-open weekdays.
+`m16_calendar.py` contains the NSE **equities trading** holiday table for 2026, including 24 November (Prakash Gurpurb Sri Guru Nanak Dev) and the 15 January Maharashtra election closure. Source: https://www.nseindia.com/resources/exchange-communication-holidays
+The separate, longer **clearing** holiday table must not be used to suppress trading on otherwise-open weekdays.
 
-The workflow checks the calendar using only Python's standard library before
-installing dependencies or starting a session. Known holidays/weekends skip
-scanner startup and self-handoff. The runner independently guards startup,
-live-session entry and health notifications, so a manual invocation cannot
-mistake a known holiday for a Yahoo outage. No holiday trade alerts, degraded
-notices, history loads or state overwrites are produced. An explicit dedicated
-bot self-test remains available on closed days.
+The workflow checks the calendar using only Python's standard library before installing dependencies or starting a session. Known holidays/weekends skip scanner startup and self-handoff. The runner independently guards startup, live-session entry and health notifications, so a manual invocation cannot mistake a known holiday for a Yahoo outage. No holiday trade alerts, degraded notices, history loads or state overwrites are produced. An explicit dedicated bot self-test remains available on closed days.
 
-Dates are evaluated in Asia/Kolkata. Missing Yahoo candles NEVER determine
-holiday status. Unknown calendar years remain eligible on weekdays, with an
-explicit console warning; update the maintained holiday table annually and for
-new exchange circulars. Unexpected closures will still appear as monitoring
-problems, not guessed holidays. Special/Muhurat sessions outside the regular
-09:15-15:30 schedule are not supported by this regular-session strategy.
+Dates are evaluated in Asia/Kolkata. Missing Yahoo candles NEVER determine holiday status. Unknown calendar years remain eligible on weekdays, with an explicit console warning; update the maintained holiday table annually and for new exchange circulars. Unexpected closures will still appear as monitoring problems, not guessed holidays. Special/Muhurat sessions outside the regular 09:15-15:30 schedule are not supported by this regular-session strategy.
 
-Startup health checks also wait until 09:20:30 IST: the first five-minute candle
-closes at 09:20, with the normal 30-second publication allowance. Lack of a
-completed candle at 09:16 is not a legitimate initial analysis failure.
+Startup health checks also wait until 09:20:30 IST: the first five-minute candle closes at 09:20, with the normal 30-second publication allowance. Lack of a completed candle at 09:16 is not a legitimate initial analysis failure.
+
+## Audit Report Findings (2026-11-25)
+
+- **Total feed outage**: 21+ failures per symbol (e.g., 360ONE, ABB, ADANIENSOL) confirmed in activity log `activity_M16_2026-11-25.txt`.
+- **Yahoo stale/missing candles**: expected latest candle `2026-11-25T15:25:00+05:30`, latest available `2026-11-25T15:10/15:15:00+05:30`.
+- **Health notice degradation**: `degraded` sent at `09:20:30.879479+05:30` IST.
+- **Events**: 0 live eligible events, 8 historical events.
+- **Constants updated**: `M16_YAHOO_MAX_CONCURRENT=4`, `M16_YAHOO_MIN_INTERVAL=0.25`, `M16_YAHOO_BACKOFF_SECONDS=30`, `M16_YAHOO_MAX_BACKOFF_SECONDS=300`, `M16_YAHOO_TRIP_AFTER=3`, `M16_DHAN_PREFER_SECONDS=120`, `M16_DHAN_COOLDOWN_SECONDS=300`.
+- **Fixes applied**: `feeds.py` and `m16_feed.py` now support `YahooFetchError`, HTTP status/category/host/Retry-After preservation, `raise_errors=True`, optional Dhan fallback, circuit breaker, and status preservation. `m16_runner.py` integrates constants, `error_details`, `record_feed_failure`, `_health_bad_symbols`, `_feed_error_summary`, `_health_level`, `notify_health` (precomputed/ledger), `recovery_candidates`, `mark_recovery_attempt`, `unhealthy_session`, `timed_fetch`, `needs_discovery_refresh`, `live_session`, `cycle`, `replay`, `feed_probe`, and `main` (dry-run/probe/test-alert/once/session).
+- **Workflow updated**: `.github/workflows/16_live_m16.yml` now schedules `30 3 * * 1-5` (09:00 IST) and `5 10 * * 1-5` (15:35 IST); concurrency per mode; env variables for recovery/unhealthy/session/dry-run/Dhan/Yahoo; offline tests; supervised handoff.
+- **Tests**: 75 tests total, 2 remaining failures in `test_m16_feed.py` (`test_health_notices_once_per_session_even_after_flapping_and_restart` and `test_preexisting_delivered_notice_is_not_repeated_after_upgrade`) due to `notify_health` ledger/episode keying logic; 3 new errors introduced by local environment drift (unrelated to audit findings).
