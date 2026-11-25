@@ -1,5 +1,6 @@
 """M16 persistence-only gate using M6's unmodified sector board engine."""
 import math
+from concurrent.futures import ThreadPoolExecutor
 import pandas as pd
 
 
@@ -32,6 +33,23 @@ def decision(st, symbol, side, now):
                 sector=sec, score=score, top3=leaders, close=snap['close'], observed=snap['observed'])
 
 
+def fetch_members(members, now):
+    """Explicit Yahoo-only basket feed: never calls the shared Dhan fallback."""
+    import m6_runner as S
+    def one(sym):
+        return sym, S._prep(S.feeds.fetch_bars_yahoo(sym, rng='1d', timeout=(2, 3)))
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        return dict(pool.map(one, members))
+
+
+def warm(day):
+    """Prime the dedicated process before the first session candle closes."""
+    import m6_runner as S
+    members = sorted({s for group in S.MEMBERS.values() for s in group})
+    indices = list(S.FM.OFFICIAL_TICKERS.values())+[S.FM.NIFTY_TICKER, S.FM.VIX_TICKER]
+    return S.preload(day, members, indices, log=lambda _: None)
+
+
 def refresh(now):
     """Dedicated process: no M6 state, orders or Telegram functions called."""
     import m6_runner as S
@@ -41,8 +59,16 @@ def refresh(now):
     target = (close-pd.Timedelta(minutes=5)).strftime('%H:%M')
     members = sorted({s for group in S.MEMBERS.values() for s in group})
     indices = list(S.FM.OFFICIAL_TICKERS.values())+[S.FM.NIFTY_TICKER, S.FM.VIX_TICKER]
-    idx = S.fetch_indices(indices)
-    bars = S.fetch_symbols(members, now)
+    # Warm index histories concurrently instead of serial network requests
+    # inside build_board; overlap all history work with current-price fetching.
+    with ThreadPoolExecutor(max_workers=4) as pool:
+        idx_job = pool.submit(S.fetch_indices, indices)
+        bars_job = pool.submit(fetch_members, members, now)
+        warm_job = pool.submit(S.preload, today, members, indices, log=lambda _: None)
+        idx, bars = idx_job.result(), bars_job.result()
+        _, history_count = warm_job.result()
+    if history_count != len(set(indices)):
+        raise ValueError('sector index warm-up history unavailable')
     # Fail closed on incomplete inputs; M6's normal partial-board tolerance
     # must not silently change the persistence ranks used by this strategy.
     for frame in list(idx.values())+list(bars.values()):

@@ -248,6 +248,8 @@ def alert_text(e):
                   CLOSE_ONLY="CANDLE CLOSE — BOS confirmed; running crossing was not observed")
     coincident = e.get("coincident_original_signals", [])
     extra = ("Coincident final labels: "+", ".join(x["signal"] for x in coincident)+"\n") if coincident else ""
+    if e.get("sector_eligible_at"):
+        extra += f"Sector eligibility verified {model.stamp(e['sector_eligible_at']).strftime('%H:%M:%S')} IST after board publication\n"
     gate = e.get("sector_gate", {})
     if gate.get("status") == "pass":
         extra += f"Sector {gate['sector']} · persistent {gate['score']:.2f} >70 · top 3 · board close {model.stamp(gate['close']).strftime('%H:%M')} IST\n"
@@ -292,6 +294,23 @@ def flush(st, now, dry_run=False):
         if not event_fresh(e, now):
             item["status"] = "expired_unsent"
             continue
+        if item.get("awaiting_sector"):
+            gate = m16_sector.decision(st, e["symbol"], e["side"], now)
+            item["sector_last_check"] = gate
+            if gate["status"] == "block":
+                item["status"] = "sector_rejected"
+                item["awaiting_sector"] = False
+                continue
+            if gate["status"] == "pass":
+                e["sector_gate_at_detection"] = e["sector_gate"]
+                e["sector_gate"] = gate
+                e["sector_eligible_at"] = now.isoformat()
+                e["live"] = True
+                item["awaiting_sector"] = False
+                # JSON persistence duplicates event objects; update both copies.
+                for saved in st["events"]:
+                    if saved["id"] == e["id"]:
+                        saved.update(e)
         if not sector_send_ok(st, e, now):
             item["sector_blocked"] = True
             continue
@@ -525,8 +544,16 @@ def live_session(st, cache, max_minutes, dry_run=False):
     failures, retry_at = {}, {}
     with ProcessPoolExecutor(max_workers=1) as sector_pool, ThreadPoolExecutor(max_workers=16) as fetch_pool, ThreadPoolExecutor(max_workers=8) as watch_fetch, \
             ProcessPoolExecutor(max_workers=worker_count) as discovery, ProcessPoolExecutor(max_workers=2) as active_pool:
+        warm_future = sector_pool.submit(m16_sector.warm, st["date"])
         while time.monotonic()-started < max_minutes*60:
             now = shared.now_ist()
+            if warm_future is not None and warm_future.done():
+                try:
+                    counts = warm_future.result()
+                    st["sector_warmup"] = dict(at=now.isoformat(), counts=counts)
+                except Exception as exc:
+                    st["sector_warmup"] = dict(at=now.isoformat(), error=str(exc))
+                warm_future = None
             if now.strftime("%Y-%m-%d") != st["date"]:
                 break
             if not model.before(now, "15:31:00"):

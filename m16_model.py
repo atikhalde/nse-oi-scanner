@@ -114,6 +114,7 @@ def emit(st, setup, kind, bar_time, price, now, live):
            f"{setup.get('bos')}:{kind}:{stamp(bar_time).isoformat()}")
     if any(e["id"] == key for e in st["events"]):
         return
+    timely = bool(live)
     gate = m16_sector.decision(st, setup['symbol'], setup['side'], now)
     # Failure notices are risk updates, not new entries.
     risk_update = kind in {'CLOSE_FAILED', 'CLOSE_UNAVAILABLE'}
@@ -130,8 +131,13 @@ def emit(st, setup, kind, bar_time, price, now, live):
                  bos=setup.get("bos"), pullback=setup.get("pullback"), seed=setup["signal_bar"],
                  signal=setup["signal"], rally=setup.get("rally_evidence", {}), live=bool(live), sector_gate=gate)
     st["events"].append(event)
-    if live:
-        st["outbox"][key] = dict(event=event, status="pending")
+    # A close can arrive before the sector worker publishes that same close.
+    # Retain only timely close candidates for the existing 30s delivery budget;
+    # never promote historical backfill or a blocked/running detection.
+    wait_sector = (timely and gate['status'] == 'unknown' and
+                   kind in {'CLOSE_ONLY', 'CLOSE_CONFIRMED', 'DIRECT_BOS_CONFIRMED'})
+    if live or wait_sector:
+        st["outbox"][key] = dict(event=event, status="pending", awaiting_sector=wait_sector)
 
 
 def direct_original_bos(st, key, bar, context, now, max_lag=30):
