@@ -1,0 +1,102 @@
+day,model,sym,side,sig,code,time,min,entry,rank,cls,taken,ghost,skip_why,breadth,daypct,sec,sec_bullq,sec_bearq,sec_pb,sec_pw,held,tilt,regime,cf_net_s,cf_net_p,cf_r_s,cf_r_p,cf_exit_s,cf_net,cf_r,cf_exit,mfe_r,mae_r,mfe30_r,mfe60_r,eod_pct,bear_close,day_regime
+2026-11-25,M6,SBICARD,BUY,BUY-EX17,102,09:30,570,593.65,,BREAKOUT,1,0,,0.606,3.217,FIN,0,0,0,0,0,-4.4,,-433.0,,-0.48,,OPEN,-422,-0.44,OPEN,0.45,0.62,0.45,0.45,-0.78,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,NESTLEIND,BUY,BUY-EX,101,09:50,590,1331.3,,CONTINUATION,1,0,,0.606,1.945,FMCG,1,0,1,0,1,-4.4,,766.0,,1.02,,OPEN,975,1.34,OPEN,1.34,0.29,0.06,0.3,2.04,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,HINDUNILVR,BUY,BUY-EX7,106,09:55,595,2053.4,,PULLBACK,1,0,,0.606,1.699,FMCG,1,0,1,0,1,-4.4,,1012.0,,3.71,,100% trail 12:55,924,3.71,100% trail 12:55,7.79,0.53,2.69,2.69,4.31,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,ITC,BUY,BUY-EX,101,09:55,595,306.65,,BREAKOUT,1,0,,0.606,1.877,FMCG,1,0,1,0,1,-4.4,,437.0,,0.49,,100% trail 12:40,353,0.49,100% trail 12:40,1.04,0.32,0.3,0.64,0.85,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,GODREJCP,BUY,BUY-EX5,104,10:05,605,932.85,,BREAKOUT,1,0,,0.606,2.253,FMCG,1,0,1,0,1,-4.4,,313.0,,0.54,,100% trail 12:45,225,0.54,100% trail 12:45,2.76,0.61,0.67,0.86,3.23,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,BAJFINANCE,BUY,BUY-EX5,104,11:00,660,1137.1,,BREAKOUT,1,0,,0.606,3.797,FIN,0,0,0,0,0,-4.4,,-540.0,,-0.68,,OPEN,-277,-0.31,OPEN,0.59,0.81,0.46,0.49,-0.51,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,IREDA,SELL,SELL-EX8,208,09:30,570,128.51,,,0,0,sector FIN not bear-qualified (bull 75/bear 3),0.606,-2.791,FIN,0,0,0,0,0,-4.4,,,,,,,897,1.07,100% trail 14:10,1.34,0.15,0.32,0.36,2.93,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,BAJAJFINSV,BUY,BUY-EX,101,09:30,570,1915.3,,,0,0,"lags own sector (stock +1.87% vs FIN +2.55%; lag +0.677pp, tolerance 0.05pp)",0.606,1.872,FIN,0,0,0,0,0,-4.4,,,,,,,1349,2.48,100% trail 13:35,3.35,0.26,0.55,0.56,0.51,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,RECLTD,BUY,BUY-EX6,105,09:30,570,296.4,,,0,0,"lags own sector (stock +1.18% vs FIN +2.55%; lag +1.371pp, tolerance 0.05pp)",0.606,1.178,FIN,0,0,0,0,0,-4.4,,,,,,,-475,-1.0,100% SL 10:00,1.62,1.26,0.13,0.13,0.88,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,LICHSGFIN,BUY,BUY-EX7,106,09:35,575,618.45,,,0,0,"lags own sector (stock +2.05% vs FIN +2.46%; lag +0.402pp, tolerance 0.05pp)",0.606,2.054,FIN,0,0,0,0,0,-4.4,,,,,,,-613,-1.0,100% SL 10:25,0.15,3.2,0.15,0.15,-3.31,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,MUTHOOTFIN,BUY,BUY-EX17,102,09:35,575,2565.9,,,0,0,"lags own sector (stock +0.89% vs FIN +2.46%; lag +1.567pp, tolerance 0.05pp)",0.606,0.889,FIN,0,0,0,0,0,-4.4,,,,,,,-936,-1.0,100% SL 12:50,0.15,1.5,0.15,0.15,-0.64,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,HDFCLIFE,BUY,BUY-EX17,102,09:30,570,,,,0,0,discovered late (09:30 < 09:40) — not alerted,0.606,,INSURANCE,0,0,0,0,0,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,BRITANNIA,BUY,BUY-EX17,102,09:35,575,,,,0,0,discovered late (09:35 < 09:50) — not alerted,0.606,,FMCG,1,0,1,0,1,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,COLPAL,BUY,BUY-EX17,102,09:30,570,,,,0,0,discovered late (09:30 < 09:50) — not alerted,0.606,,FMCG,1,0,1,0,1,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,DABUR,BUY,BUY-EX,101,09:35,575,,,,0,0,discovered late (09:35 < 09:50) — not alerted,0.606,,FMCG,1,0,1,0,1,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,KAYNES,SELL,SELL-EX1,201,09:30,570,,,,0,0,discovered late (09:30 < 09:50) — not alerted,0.606,,CAPGOODS,0,0,0,1,0,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,TATACONSUM,BUY,BUY-EX,101,09:30,570,,,,0,0,discovered late (09:30 < 09:50) — not alerted,0.606,,FMCG,1,0,1,0,1,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,CUMMINSIND,BUY,BUY-EX7,106,09:35,575,,,,0,0,discovered late (09:35 < 09:50) — not alerted,0.606,,CAPGOODS,0,0,0,1,0,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,PATANJALI,BUY,ENTRY BUY,90,09:30,570,,,,0,0,discovered late (09:30 < 09:50) — not alerted,0.606,,FMCG,1,0,1,0,1,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,CUMMINSIND,BUY,ENTRY BUY,90,09:35,575,,,,0,0,discovered late (09:35 < 09:55) — not alerted,0.606,,CAPGOODS,0,0,0,1,0,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,CUMMINSIND,SELL,SELL-EX1,201,09:55,595,4052.5,,,0,0,"lags own sector (stock -0.01% vs CAPGOODS -1.10%; lag +1.091pp, tolerance 0.05pp",0.606,-0.007,CAPGOODS,0,0,0,1,0,-4.4,,,,,,,-578,-1.0,100% SL 11:15,0.28,1.11,0.28,0.28,-0.36,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,LICHSGFIN,BUY,ENTRY BUY,90,09:35,575,,,,0,0,discovered late (09:35 < 09:55) — not alerted,0.606,,FIN,0,0,0,0,0,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,MUTHOOTFIN,BUY,ENTRY BUY,90,09:35,575,,,,0,0,discovered late (09:35 < 09:55) — not alerted,0.606,,FIN,0,0,0,0,0,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,PATANJALI,SELL,SELL-EX6,206,09:50,590,,,,0,0,discovered late (09:50 < 09:55) — not alerted,0.606,,FMCG,1,0,1,0,1,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,VBL,BUY,BUY-EX5,104,09:55,595,428.55,,,0,0,"lags own sector (stock +0.33% vs FMCG +1.65%; lag +1.322pp, tolerance 0.05pp)",0.606,0.328,FMCG,1,0,1,0,1,-4.4,,,,,,,407,1.08,100% trail 12:55,2.18,0.37,1.51,1.95,2.0,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,KEI,SELL,SELL-EX15,215,10:05,605,3735.3,,,0,0,big move at 09:15 needs 2 follow-through closes — no alert,0.606,-1.718,CAPGOODS,0,0,0,1,0,-4.4,,,,,,,793,1.44,100% trail 14:50,1.87,0.44,0.09,0.09,2.23,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,GODFRYPHLP,BUY,BUY-EX7,106,10:10,610,1763.9,,,0,0,"lags own sector (stock +0.97% vs FMCG +1.91%; lag +0.941pp, tolerance 0.05pp)",0.606,0.973,FMCG,1,0,1,0,1,-4.4,,,,,,,21,0.31,100% trail 11:25,1.04,1.31,0.88,1.04,-0.14,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,CUMMINSIND,SELL,SELL-EX5,205,09:55,595,,,,0,0,discovered late (09:55 < 10:15) — not alerted,0.606,,CAPGOODS,0,0,0,1,0,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,JINDALSTEL,SELL,SELL-EX12,212,10:10,610,,,,0,0,discovered late (10:10 < 10:15) — not alerted,0.606,,MET,0,1,0,1,1,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,TATASTEEL,BUY,BUY-EX17,102,09:55,595,,,,0,0,discovered late (09:55 < 10:15) — not alerted,0.606,,MET,0,1,0,1,1,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,RADICO,BUY,BUY-EX,101,10:25,625,4721.0,,,0,0,"lags own sector (stock +1.82% vs FMCG +2.21%; lag +0.391pp, tolerance 0.05pp)",0.606,1.822,FMCG,1,0,1,0,1,-4.4,,,,,,,-249,-0.3,OPEN,0.34,0.43,0.34,0.34,-0.47,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,GODREJPROP,SELL,SELL-EX1,201,09:35,575,,,,0,0,discovered late (09:35 < 10:35) — not alerted,0.606,,REALTY,0,0,0,0,0,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,DLF,BUY,ENTRY BUY,90,09:30,570,,,,0,0,discovered late (09:30 < 10:35) — not alerted,0.606,,REALTY,0,0,0,0,0,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,DLF,SELL,NORMAL SELL,280,09:45,585,,,,0,0,discovered late (09:45 < 10:35) — not alerted,0.606,,REALTY,0,0,0,0,0,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,LODHA,BUY,ENTRY BUY,90,09:30,570,,,,0,0,discovered late (09:30 < 10:35) — not alerted,0.606,,REALTY,0,0,0,0,0,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,OBEROIRLTY,SELL,SELL-EX8,208,09:40,580,,,,0,0,discovered late (09:40 < 10:35) — not alerted,0.606,,REALTY,0,0,0,0,0,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,PRESTIGE,SELL,SELL-EX8,208,09:40,580,,,,0,0,discovered late (09:40 < 10:35) — not alerted,0.606,,REALTY,0,0,0,0,0,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,PFC,BUY,BUY-EX12,111,10:35,635,330.3,,,0,0,"lags own sector (stock +1.87% vs FIN +2.71%; lag +0.843pp, tolerance 0.05pp)",0.606,1.866,FIN,0,0,0,0,0,-4.4,,,,,,,385,0.93,100% trail 11:20,1.99,0.27,1.23,1.31,1.06,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,PHOENIXLTD,SELL,SELL-EX5,205,09:55,595,,,,0,0,discovered late (09:55 < 10:35) — not alerted,0.606,,REALTY,0,0,0,0,0,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,DIXON,SELL,SELL-EX2,202,09:30,570,,,,0,0,discovered late (09:30 < 10:45) — not alerted,0.606,,CDUR,0,0,0,0,0,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,HAVELLS,SELL,SELL-EX8,208,10:00,600,,,,0,0,discovered late (10:00 < 10:45) — not alerted,0.606,,CDUR,0,0,0,0,0,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,KALYANKJIL,SELL,SELL-EX2,202,09:30,570,,,,0,0,discovered late (09:30 < 10:45) — not alerted,0.606,,CDUR,0,0,0,0,0,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,AMBER,SELL,SELL-EX5,205,09:35,575,,,,0,0,discovered late (09:35 < 10:45) — not alerted,0.606,,CDUR,0,0,0,0,0,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,AMBER,BUY,BUY-EX4,103,10:15,615,,,,0,0,discovered late (10:15 < 10:45) — not alerted,0.606,,CDUR,0,0,0,0,0,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,ABB,BUY,BUY-EX12,111,10:40,640,,,,0,0,discovered late (10:40 < 10:45) — not alerted,0.606,,CAPGOODS,0,0,0,1,0,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,BLUESTARCO,BUY,BUY-EX7,106,10:40,640,,,,0,0,discovered late (10:40 < 10:45) — not alerted,0.606,,CDUR,0,0,0,0,0,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,VOLTAS,BUY,BUY-EX17,102,09:50,590,,,,0,0,discovered late (09:50 < 10:45) — not alerted,0.606,,CDUR,0,0,0,0,0,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,PGEL,SELL,NORMAL SELL,280,10:00,600,,,,0,0,discovered late (10:00 < 10:55) — not alerted,0.606,,CDUR,0,0,0,0,0,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,AXISBANK,BUY,BUY-EX5,104,10:35,635,,,,0,0,discovered late (10:35 < 11:10) — not alerted,0.606,,BANK,0,0,0,0,0,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,AUBANK,BUY,BUY-EX,101,09:50,590,,,,0,0,discovered late (09:50 < 11:10) — not alerted,0.606,,BANK,0,0,0,0,0,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,HDFCBANK,BUY,BUY-EX17,102,11:00,660,,,,0,0,discovered late (11:00 < 11:10) — not alerted,0.606,,BANK,0,0,0,0,0,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,ICICIBANK,BUY,BUY-EX17,102,09:50,590,,,,0,0,discovered late (09:50 < 11:10) — not alerted,0.606,,BANK,0,0,0,0,0,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,ADANIGREEN,BUY,ENTRY BUY,90,09:30,570,,,,0,0,discovered late (09:30 < 11:25) — not alerted,0.606,,GREEN,0,0,0,0,0,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,ADANIGREEN,SELL,SELL-EX8,208,09:55,595,,,,0,0,discovered late (09:55 < 11:25) — not alerted,0.606,,GREEN,0,0,0,0,0,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,INOXWIND,SELL,SELL-EX12,212,09:45,585,,,,0,0,discovered late (09:45 < 11:25) — not alerted,0.606,,GREEN,0,0,0,0,0,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,PREMIERENE,BUY,BUY-EX9,108,09:30,570,,,,0,0,discovered late (09:30 < 11:25) — not alerted,0.606,,GREEN,0,0,0,0,0,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,WAAREEENER,SELL,SELL-EX8,208,09:50,590,,,,0,0,discovered late (09:50 < 11:25) — not alerted,0.606,,GREEN,0,0,0,0,0,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,BANDHANBNK,SELL,SELL-EX15,215,11:20,680,,,,0,0,discovered late (11:20 < 11:55) — not alerted,0.606,,BANK,0,0,0,0,0,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,HINDALCO,BUY,BUY-EX9,108,11:05,665,,,,0,0,discovered late (11:05 < 12:05) — not alerted,0.606,,MET,0,1,0,1,1,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,JSWSTEEL,SELL,SELL-EX1,201,12:00,720,,,,0,0,discovered late (12:00 < 12:05) — not alerted,0.606,,MET,0,1,0,1,1,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,SAIL,BUY,BUY-EX4,103,10:35,635,,,,0,0,discovered late (10:35 < 12:05) — not alerted,0.606,,MET,0,1,0,1,1,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,TATASTEEL,BUY,BUY-EX9,108,09:55,595,,,,0,0,discovered late (09:55 < 12:05) — not alerted,0.606,,MET,0,1,0,1,1,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,TATASTEEL,SELL,SELL-EX1,201,12:00,720,,,,0,0,discovered late (12:00 < 12:05) — not alerted,0.606,,MET,0,1,0,1,1,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,VEDL,BUY,BUY-EX9,108,10:55,655,,,,0,0,discovered late (10:55 < 12:05) — not alerted,0.606,,MET,0,1,0,1,1,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,BHARTIARTL,BUY,BUY-EX9,108,11:15,675,,,,0,0,discovered late (11:15 < 12:25) — not alerted,0.606,,TELECOM,0,0,0,0,0,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,INDUSTOWER,SELL,SELL-EX1,201,11:50,710,,,,0,0,discovered late (11:50 < 12:25) — not alerted,0.606,,TELECOM,0,0,0,0,0,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,BHARTIARTL,SELL,SELL-EX8,208,09:35,575,,,,0,0,discovered late (09:35 < 12:35) — not alerted,0.606,,TELECOM,0,0,0,0,0,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,ITC,BUY,BUY-EX,101,09:55,595,,,,0,0,discovered late (09:55 < 12:40) — not alerted,0.606,,FMCG,1,0,1,0,1,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,GODREJCP,BUY,BUY-EX5,104,10:05,605,,,,0,0,discovered late (10:05 < 12:45) — not alerted,0.606,,FMCG,1,0,1,0,1,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,HINDUNILVR,BUY,BUY-EX7,106,09:55,595,,,,0,0,discovered late (09:55 < 12:55) — not alerted,0.606,,FMCG,1,0,1,0,1,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,SIEMENS,SELL,SELL-EX8,208,09:50,590,,,,0,0,discovered late (09:50 < 13:15) — not alerted,0.606,,CAPGOODS,0,0,0,1,0,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,BIOCON,BUY,BUY-EX17,102,10:50,650,,,,0,0,discovered late (10:50 < 13:30) — not alerted,0.606,,PHA,1,0,1,0,1,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,AUROPHARMA,BUY,BUY-EX,101,09:30,570,,,,0,0,discovered late (09:30 < 13:30) — not alerted,0.606,,PHA,1,0,1,0,1,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,CIPLA,BUY,BUY-EX,101,09:45,585,,,,0,0,discovered late (09:45 < 13:30) — not alerted,0.606,,PHA,1,0,1,0,1,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,DIVISLAB,BUY,BUY-EX17,102,09:50,590,,,,0,0,discovered late (09:50 < 13:30) — not alerted,0.606,,PHA,1,0,1,0,1,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,GLENMARK,BUY,BUY-EX,101,10:00,600,,,,0,0,discovered late (10:00 < 13:30) — not alerted,0.606,,PHA,1,0,1,0,1,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,TORNTPHARM,BUY,BUY-EX7,106,11:00,660,,,,0,0,discovered late (11:00 < 13:30) — not alerted,0.606,,PHA,1,0,1,0,1,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,ZYDUSLIFE,BUY,BUY-EX,101,09:50,590,,,,0,0,discovered late (09:50 < 13:30) — not alerted,0.606,,PHA,1,0,1,0,1,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,ALKEM,BUY,BUY-EX4,103,10:30,630,,,,0,0,discovered late (10:30 < 13:30) — not alerted,0.606,,PHA,1,0,1,0,1,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,DRREDDY,BUY,BUY-EX4,103,10:10,610,,,,0,0,discovered late (10:10 < 13:30) — not alerted,0.606,,PHA,1,0,1,0,1,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,SUNPHARMA,BUY,BUY-EX4,103,10:45,645,,,,0,0,discovered late (10:45 < 13:30) — not alerted,0.606,,PHA,1,0,1,0,1,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,PAGEIND,BUY,BUY-EX17,102,09:40,580,,,,0,0,discovered late (09:40 < 14:50) — not alerted,0.606,,CONSUMPTION,1,0,1,0,1,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,TRENT,BUY,BUY-EX4,103,10:20,620,,,,0,0,discovered late (10:20 < 14:50) — not alerted,0.606,,CONSUMPTION,1,0,1,0,1,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,VMM,SELL,SELL-EX5,205,09:55,595,,,,0,0,discovered late (09:55 < 14:50) — not alerted,0.606,,CONSUMPTION,1,0,1,0,1,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,APLAPOLLO,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.606,,MET,0,1,0,1,1,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,GODREJCP,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.606,,FMCG,1,0,1,0,1,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,HINDALCO,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.606,,MET,0,1,0,1,1,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,HINDUNILVR,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.606,,FMCG,1,0,1,0,1,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,HINDZINC,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.606,,MET,0,1,0,1,1,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,JINDALSTEL,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.606,,MET,0,1,0,1,1,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,JSWSTEEL,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.606,,MET,0,1,0,1,1,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,MARICO,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.606,,FMCG,1,0,1,0,1,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,NATIONALUM,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.606,,MET,0,1,0,1,1,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,NESTLEIND,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.606,,FMCG,1,0,1,0,1,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,NMDC,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.606,,MET,0,1,0,1,1,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,RADICO,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.606,,FMCG,1,0,1,0,1,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,SAIL,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.606,,MET,0,1,0,1,1,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,TATASTEEL,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.606,,MET,0,1,0,1,1,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,VBL,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.606,,FMCG,1,0,1,0,1,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,VEDL,,—,,15:14,914,,,,0,0,stale bar 15:14 (361s > 120s) — not alerted,0.606,,MET,0,1,0,1,1,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
+2026-11-25,M6,VMM,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.606,,CONSUMPTION,1,0,1,0,1,-4.4,,,,,,,,,,,,,,,0.565,V-REVERSAL / bear-trap
