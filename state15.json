@@ -3,13 +3,13 @@
   "market": {
     "dir_state": 1,
     "label": "NEUTRAL",
-    "conf": 48,
+    "conf": 66,
     "regime": "TRANSITION"
   },
   "sector": {
-    "name": "WAIT",
-    "side": 0,
-    "reason": "WAIT \u2014 market TRANSITION conf 48"
+    "name": "FMCG",
+    "side": 1,
+    "reason": "PERSIST + FMCG qualified (score 97)"
   },
   "alerts": {},
   "sent": {
