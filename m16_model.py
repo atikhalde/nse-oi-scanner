@@ -1,6 +1,7 @@
-"""M16 causal five-minute pullback/BOS state machine. No sector filters/orders."""
+"""M16 causal five-minute pullback/BOS state machine. Persistence-gated alerts; no orders."""
 from __future__ import annotations
 import pandas as pd
+import m16_sector
 
 IST = "Asia/Kolkata"
 TERMINAL = {"confirmed", "failed", "invalid", "expired"}
@@ -113,10 +114,21 @@ def emit(st, setup, kind, bar_time, price, now, live):
            f"{setup.get('bos')}:{kind}:{stamp(bar_time).isoformat()}")
     if any(e["id"] == key for e in st["events"]):
         return
+    gate = m16_sector.decision(st, setup['symbol'], setup['side'], now)
+    # Failure notices are risk updates, not new entries.
+    risk_update = kind in {'CLOSE_FAILED', 'CLOSE_UNAVAILABLE'}
+    prior_eligible_running = any(e['symbol'] == setup['symbol'] and e['side'] == setup['side']
+                                 and e['bar'] == stamp(bar_time).isoformat()
+                                 and e['kind'] == 'RUNNING_BREAK' and e.get('live')
+                                 for e in st['events'])
+    if st.get('sector_gate_required') and risk_update:
+        live = live and prior_eligible_running
+    else:
+        live = live and gate['status'] in {'pass', 'disabled'}
     event = dict(id=key, symbol=setup["symbol"], side=setup["side"], kind=kind,
                  bar=stamp(bar_time).isoformat(), observed=stamp(now).isoformat(), price=float(price),
                  bos=setup.get("bos"), pullback=setup.get("pullback"), seed=setup["signal_bar"],
-                 signal=setup["signal"], rally=setup.get("rally_evidence", {}), live=bool(live))
+                 signal=setup["signal"], rally=setup.get("rally_evidence", {}), live=bool(live), sector_gate=gate)
     st["events"].append(event)
     if live:
         st["outbox"][key] = dict(event=event, status="pending")

@@ -252,3 +252,30 @@ are historical experiments only, not current filters.
 
 Replay saved labels/EMA values (no Telegram, no P&L reconstruction):
 `python m16_backtest.py --audit activity_M16_2026-11-25.txt --output results/m16_backtest_normal_2026-11-25.json`
+
+### Approved persistence-only sector gate
+
+Production M16 requires its home sector to rank in the directional persistent
+**top 3** with score **strictly >70**. BUY uses persist_bull; SELL persist_bear.
+This uses M6's board engine and sector map, not its full entry_ok gate, stock
+composite top-5, leadership tolerance, flow qualification, or follow-through rules.
+NSE gainers/losers filtering remains removed. M6 itself is unchanged.
+
+A dedicated process refreshes the current completed-candle board using Yahoo
+index/basket prices and cached prior history. It never calls M6 trading/state or
+Telegram functions. Complete current inputs and all 30 sectors are required.
+Missing/stale boards fail closed and enter the existing session-deduplicated
+monitoring-health notification path. Failures retry every five seconds; active
+stock polling remains best-effort one second and does not wait on sector work.
+Snapshots and per-event gate evidence persist in the M16 full saved audit.
+
+At a running breakout only an already-received board for the most recent closed
+candle may be used. A new close invalidates the previous board immediately: no
+future candle board is backdated to an earlier running breakout. Entries and
+confirmations require eligibility; failure/unavailable-close updates remain risk
+notices, not gated new entries. Send-time guards recheck freshness and eligibility
+between destinations. Pending pre-gate alerts cannot bypass this requirement.
+
+The supplied M6 audit comparison is a candle-close sensitivity only: 30 technical
+candidates -> 10 persistence-qualified (versus 7 with full M6 sector rules).
+This does not imply 10 real-time running alerts or improved realized profits.

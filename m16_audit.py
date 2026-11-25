@@ -17,6 +17,7 @@ def sections(st):
     coverage = [f"Date: {st.get('date', '?')} (IST) | Mode: {st.get('mode', 'feed-polled observations; historical events are not live alerts')}",
                 f"Original tracked signals: {len(setups)}; continuation observations: {len(events)}",
                 f"Setup phases: {dict(Counter(s.get('phase', '?') for s in setups.values()))}",
+                f"Persistence-only sector gate required: {st.get('sector_gate_required', False)}; decisions: {dict(Counter(e.get('sector_gate', {}).get('status', 'legacy') for e in events))}; snapshots: {len(st.get('sector_snapshots', []))}",
                 f"Event types: {dict(Counter(e.get('kind', '?') for e in events))}",
                 f"Recorded completed candles: {sum(len(b) for b in bars.values())} across {len(bars)} symbols.",
                 f"Live eligible events: {sum(bool(e.get('live')) for e in events)}; historical only: {sum(not bool(e.get('live')) for e in events)}",

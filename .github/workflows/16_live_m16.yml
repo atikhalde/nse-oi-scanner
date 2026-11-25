@@ -55,7 +55,7 @@ jobs:
         if: steps.market.outputs.regular_session == 'true' || inputs.mode == 'dry-run' || inputs.mode == 'test-alert' || inputs.mode == 'feed-probe'
       - name: M16 offline regressions
         if: steps.market.outputs.regular_session == 'true' || inputs.mode == 'dry-run' || inputs.mode == 'test-alert' || inputs.mode == 'feed-probe'
-        run: python -m unittest -v test_m16_rally test_m16_calendar test_m16_feed test_m16_runner test_m16_audit
+        run: python -m unittest -v test_m16_sector test_m16_rally test_m16_calendar test_m16_feed test_m16_runner test_m16_audit
       - name: M16 dedicated session
         if: steps.market.outputs.regular_session == 'true' || inputs.mode == 'dry-run' || inputs.mode == 'test-alert' || inputs.mode == 'feed-probe'
         env:

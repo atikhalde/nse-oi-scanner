@@ -434,7 +434,7 @@ class RunnerTests(unittest.TestCase):
         def sleep(_):
             clock[0] = next(steps)
             elapsed[0] += 2.
-        with patch.object(R, 'ThreadPoolExecutor', ImmediateExecutor), patch.object(R, 'ProcessPoolExecutor', ImmediateExecutor), patch.object(
+        with patch.object(R.m16_sector, 'refresh', side_effect=ValueError('offline test')), patch.object(R.m16_sector, 'decision', return_value={'status': 'pass'}), patch.object(R, 'ThreadPoolExecutor', ImmediateExecutor), patch.object(R, 'ProcessPoolExecutor', ImmediateExecutor), patch.object(
             R.shared, 'now_ist', side_effect=lambda: clock[0]), patch.object(R, 'timed_fetch', side_effect=fetch), patch.object(
             R, 'analyze', side_effect=analyze), patch.object(R.shared.L, 'SYMS', ['AXISBANK']), patch.object(
             R.time, 'sleep', side_effect=sleep), patch.object(R.time, 'monotonic', side_effect=lambda: elapsed[0]), patch.object(R, 'save'):
