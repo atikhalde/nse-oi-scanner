@@ -1,6 +1,7 @@
-"""M16 causal five-minute pullback/BOS state machine. No sector filters/orders."""
+"""M16 causal five-minute pullback/BOS state machine. Persistence-gated alerts; no orders."""
 from __future__ import annotations
 import pandas as pd
+import m16_sector
 
 IST = "Asia/Kolkata"
 TERMINAL = {"confirmed", "failed", "invalid", "expired"}
@@ -66,6 +67,13 @@ def seed(st, symbol, code, name, bar, context):
         return key
     buy = code < 200
     side = "BUY" if buy else "SELL"
+    context = context.copy()
+    if "dt" in context.columns:
+        context["dt"] = context["dt"].map(stamp)
+        context = context[(context["dt"] <= t) & (context["dt"].dt.date == t.date())]
+        context = context.sort_values("dt").drop_duplicates("dt")
+    if context.empty:
+        context = pd.DataFrame([bar])
     tail = context.tail(5)
     anchor = float(tail["low"].min() if buy else tail["high"].max())
     peak = float(bar["high"] if buy else bar["low"])
@@ -77,7 +85,25 @@ def seed(st, symbol, code, name, bar, context):
     if not ema_holds(bar, 1 if buy else -1):
         setup.update(phase="invalid", invalid_reason="original signal close violates EMA9/EMA10 or EMA data missing")
     else:
-        setup["rally_trail"] = [{k: float(bar[k]) for k in ("close", "ema9", "ema10")}]
+        # Historical context proves an existing rally; it never arms a
+        # pre-signal pullback or bypasses EMA continuity after tracking begins.
+        prior = context.copy()
+        if {"dt", "close", "ema9", "ema10"}.issubset(prior.columns):
+            prior["dt"] = prior["dt"].map(stamp)
+            prior = prior[(prior["dt"] <= t) & (prior["dt"].dt.date == t.date())]
+            prior = prior.sort_values("dt").drop_duplicates("dt").tail(RALLY_WINDOW)
+            # Only a contiguous suffix ending at the signal can prove its rally.
+            if len(prior):
+                groups = prior["dt"].diff().ne(pd.Timedelta(minutes=5)).cumsum()
+                prior = prior[groups == groups.iloc[-1]]
+                if prior.iloc[-1]["dt"] != t:
+                    prior = prior.iloc[:0]
+            setup["rally_trail"] = [{k: float(row[k]) for k in ("close", "ema9", "ema10")}
+                                    for _, row in prior.iterrows()]
+        if not setup["rally_trail"]:
+            setup["rally_trail"] = [{k: float(bar[k]) for k in ("close", "ema9", "ema10")}]
+        setup["rally_evidence"] = rally_metrics(setup["rally_trail"], 1 if buy else -1)
+        setup["rally_context_start"] = prior.iloc[0]["dt"].isoformat() if "prior" in locals() and len(prior) and "dt" in prior.columns else t.isoformat()
     return key
 
 
@@ -88,10 +114,21 @@ def emit(st, setup, kind, bar_time, price, now, live):
            f"{setup.get('bos')}:{kind}:{stamp(bar_time).isoformat()}")
     if any(e["id"] == key for e in st["events"]):
         return
+    gate = m16_sector.decision(st, setup['symbol'], setup['side'], now)
+    # Failure notices are risk updates, not new entries.
+    risk_update = kind in {'CLOSE_FAILED', 'CLOSE_UNAVAILABLE'}
+    prior_eligible_running = any(e['symbol'] == setup['symbol'] and e['side'] == setup['side']
+                                 and e['bar'] == stamp(bar_time).isoformat()
+                                 and e['kind'] == 'RUNNING_BREAK' and e.get('live')
+                                 for e in st['events'])
+    if st.get('sector_gate_required') and risk_update:
+        live = live and prior_eligible_running
+    else:
+        live = live and gate['status'] in {'pass', 'disabled'}
     event = dict(id=key, symbol=setup["symbol"], side=setup["side"], kind=kind,
                  bar=stamp(bar_time).isoformat(), observed=stamp(now).isoformat(), price=float(price),
                  bos=setup.get("bos"), pullback=setup.get("pullback"), seed=setup["signal_bar"],
-                 signal=setup["signal"], rally=setup.get("rally_evidence", {}), live=bool(live))
+                 signal=setup["signal"], rally=setup.get("rally_evidence", {}), live=bool(live), sector_gate=gate)
     st["events"].append(event)
     if live:
         st["outbox"][key] = dict(event=event, status="pending")

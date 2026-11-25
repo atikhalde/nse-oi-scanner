@@ -22,6 +22,7 @@ import telegram_bot as tg
 import m16_model as model
 import m16_feed
 import m16_calendar
+import m16_sector
 
 ROOT = Path(__file__).resolve().parent
 STATE = ROOT / "state16.json"
@@ -247,6 +248,9 @@ def alert_text(e):
                   CLOSE_ONLY="CANDLE CLOSE — BOS confirmed; running crossing was not observed")
     coincident = e.get("coincident_original_signals", [])
     extra = ("Coincident final labels: "+", ".join(x["signal"] for x in coincident)+"\n") if coincident else ""
+    gate = e.get("sector_gate", {})
+    if gate.get("status") == "pass":
+        extra += f"Sector {gate['sector']} · persistent {gate['score']:.2f} >70 · top 3 · board close {model.stamp(gate['close']).strftime('%H:%M')} IST\n"
     return (f"M16 · {labels.get(e['kind'], e['kind'])}\n{e['symbol']} {e['side']} @ {e['price']:.2f}\n"
             f"BOS {e['bos']:.2f} · pullback {e['pullback']}\n"
             f"Original {e['signal']} candle {model.stamp(e['seed']).strftime('%H:%M')}\n"
@@ -266,6 +270,14 @@ def event_fresh(event, now):
     return 0 <= (now-end).total_seconds() <= MAX_LAG
 
 
+def sector_send_ok(st, event, now):
+    if not st.get("sector_gate_required") or event["kind"] in {"CLOSE_FAILED", "CLOSE_UNAVAILABLE"}:
+        return True
+    # Never resurrect an old pre-gate outbox item or a failed detection.
+    return (event.get("sector_gate", {}).get("status") == "pass" and
+            m16_sector.decision(st, event["symbol"], event["side"], now)["status"] == "pass")
+
+
 def flush(st, now, dry_run=False):
     """Durable per-event outbox. Uncertain crash sends are not blindly repeated."""
     batch_started = time.monotonic()
@@ -280,6 +292,9 @@ def flush(st, now, dry_run=False):
         if not event_fresh(e, now):
             item["status"] = "expired_unsent"
             continue
+        if not sector_send_ok(st, e, now):
+            item["sector_blocked"] = True
+            continue
         if dry_run:
             print("[DRY] " + alert_text(e))
             item["status"] = "dry_run"
@@ -288,10 +303,12 @@ def flush(st, now, dry_run=False):
         ledger = item.setdefault("deliveries", {})
         # Recheck between bot sends too: a slow/failing first bot must not
         # make the mirror send an already-closed "running candle" alert.
+        def can_send():
+            current = batch_now + pd.Timedelta(seconds=time.monotonic()-batch_started)
+            return event_fresh(e, current) and sector_send_ok(st, e, current)
         delivered = deliver_targets(st, ledger, lambda token, chat:
                                     tg.send_message_to(token, chat, html.escape(alert_text(e))),
-                                    can_send=lambda: event_fresh(e, batch_now +
-                                        pd.Timedelta(seconds=time.monotonic()-batch_started)))
+                                    can_send=can_send)
         item["status"] = "sent" if delivered else "failed"
         if item["status"] == "failed":
             item["retry_after"] = (model.stamp(now) + pd.Timedelta(seconds=3)).isoformat()
@@ -422,7 +439,9 @@ def notify_health(st, now, dry_run=False):
             if not model.before(now, "11:00:00") and discovery_missing: reasons.append("morning discovery incomplete")
             details[sym] = dict(reasons=reasons, latest=latest, cursor=cursor, expected=expected.isoformat())
     st["monitoring_health"] = dict(at=now.isoformat(), affected=bad, watched=watched_symbols, details=details)
-    status = "degraded" if bad else "healthy"
+    sector_unknown = st.get("sector_gate_required") and model.before(now, "12:35:00") and m16_sector.decision(st, "__HEALTH__", "BUY", now).get("reason") in {"sector board unavailable", "sector board stale"}
+    st["monitoring_health"]["sector_gate_unavailable"] = bool(sector_unknown)
+    status = "degraded" if bad or sector_unknown else "healthy"
     old = st.get("health_notice", {})
     # Session-scoped, persisted dedupe: never repeat operational notices,
     # even after recovery/degradation flapping or a workflow restart.
@@ -438,6 +457,8 @@ def notify_health(st, now, dry_run=False):
             "Live alerts may be missed or delayed; stale entries will NOT be sent. "
             "Polling is not tick-time execution.") if bad else (
             "M16 feed monitoring healthy on latest poll; polling latency still applies.")
+    if sector_unknown:
+        text = "M16 sector board missing/stale: entry alerts blocked until current persistence data is available. " + text
     if bad:
         text += "\n" + "\n".join(
             f"{sym}: {', '.join(details[sym]['reasons'])[:180]}; latest={details[sym]['latest']}; cursor={details[sym]['cursor']}"
@@ -492,6 +513,8 @@ def live_session(st, cache, max_minutes, dry_run=False):
     if m16_calendar.session_status(shared.now_ist())[0] == "closed":
         print("M16 market closed; no regular-session monitoring")
         return
+    st["sector_gate_required"] = True
+    sector_future, sector_retry = None, 0.0
     started, last_save = time.monotonic(), 0.0
     poll = max(1., float(os.getenv("M16_POLL_SECONDS", "1")))
     last_discovery, fetches, engines, latest, requested = None, {}, {}, {}, {}
@@ -500,7 +523,7 @@ def live_session(st, cache, max_minutes, dry_run=False):
     outage_since = None
     (ROOT / ".m16-unhealthy").unlink(missing_ok=True) if not dry_run else None
     failures, retry_at = {}, {}
-    with ThreadPoolExecutor(max_workers=16) as fetch_pool, ThreadPoolExecutor(max_workers=8) as watch_fetch, \
+    with ProcessPoolExecutor(max_workers=1) as sector_pool, ThreadPoolExecutor(max_workers=16) as fetch_pool, ThreadPoolExecutor(max_workers=8) as watch_fetch, \
             ProcessPoolExecutor(max_workers=worker_count) as discovery, ProcessPoolExecutor(max_workers=2) as active_pool:
         while time.monotonic()-started < max_minutes*60:
             now = shared.now_ist()
@@ -513,6 +536,19 @@ def live_session(st, cache, max_minutes, dry_run=False):
             if model.before(now, "09:15:00"):
                 time.sleep(.5)
                 continue
+            if sector_future is not None and sector_future.done():
+                try:
+                    snapshot = sector_future.result()
+                    st.setdefault("sector_snapshots", []).append(snapshot)
+                    st["sector_health"] = dict(ok=True, at=now.isoformat())
+                except Exception as exc:
+                    st["sector_health"] = dict(ok=False, reason=str(exc), at=now.isoformat())
+                sector_future = None
+            current_board = st.get("sector_snapshots", [])
+            ready = current_board and model.stamp(current_board[-1]["close"]) == model.stamp(now).floor("5min")
+            if sector_future is None and not ready and time.monotonic() >= sector_retry and model.before(now, "12:35:00"):
+                sector_future = sector_pool.submit(m16_sector.refresh, now)
+                sector_retry = time.monotonic()+5
             active = {s["symbol"] for s in st["setups"].values() if s["phase"] not in model.TERMINAL}
             bucket = (model.stamp(now)-pd.Timedelta(seconds=1)).floor("5min")
             scan = last_discovery != bucket and model.before(now, "11:00:00")
@@ -689,6 +725,7 @@ def main():
     st = load(now.strftime("%Y-%m-%d"))
     if st.get("eod_done"):
         return
+    st["sector_gate_required"] = True
     cache = {sym: shared.symbol_history(sym, st["date"]) for sym in shared.L.SYMS}
     st["history_health"] = {sym: bool(rec.get("ok")) for sym, rec in cache.items()}
     missing_history = [sym for sym, rec in cache.items() if not rec.get("ok")]
@@ -703,6 +740,10 @@ def main():
         save(st, args.dry_run)
         live_session(st, cache, args.max_runtime_min, args.dry_run)
     else:
+        try:
+            st.setdefault("sector_snapshots", []).append(m16_sector.refresh(shared.now_ist()))
+        except Exception as exc:
+            st["sector_health"] = dict(ok=False, reason=str(exc))
         bars_map = {}
         chosen = list(shared.L.SYMS[:max(1, int(os.getenv("M16_DRY_RUN_SYMBOLS", "3")))]) if args.dry_run else list(shared.L.SYMS)
         with ThreadPoolExecutor(max_workers=8) as pool:

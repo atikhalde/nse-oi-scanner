@@ -7,7 +7,7 @@ M16 is an **alerts-only** model. It does not place orders or reuse M2/M6 trade l
 1. Evaluate the existing master indicator causally, with **all exception switches enabled**, including BUY EX10/EX11. Track all final chart-label normal/EX BUY/SELL codes. Scanner-table previews 90/290 are excluded. Do not apply M2's trade-quality, OI, early-EX or open-position selection gates.
 2. The initial signal must be **confirmed strictly before 11:00**. Thus a 10:50 candle confirmed at 10:55 qualifies; a 10:55 candle confirmed at 11:00 does not. Only completed candles create seeds.
 3. Each original label creates an independently tracked seed. The BUY anchor is the lowest low of the last five available session candles through the seed candle; the SELL anchor is the highest high. This is an explicit causal approximation, not a claim to reproduce a TradingView drawing's proprietary swing algorithm.
-4. Track the favorable rally extreme following the seed, but **do not qualify sideways action as a rally**. At the pre-pullback extreme, the last up-to-six completed candles (beginning no earlier than the seed) must contain at least three candles and two directional close-to-close advances, at least 0.3% net progress in the trade direction, directional efficiency >=0.65 (net progress / sum of absolute close changes), and both EMA9 and EMA10 sloping in the trade direction across that window. Store this evidence at the extreme, before the pullback—not using the later breakout. Also require at least 0.1% progress from signal close to the favorable extreme. These are explicit starting parameters, not a profitability-tested definition.
+4. Track the favorable rally extreme following the seed, but **do not qualify sideways action as a rally**. At the pre-pullback extreme, the last up-to-six completed candles (which may begin before the final signal, using only already-completed current-session candles) must contain at least three candles and two directional close-to-close advances, at least 0.3% net progress in the trade direction, directional efficiency >=0.65 (net progress / sum of absolute close changes), and both EMA9 and EMA10 sloping in the trade direction across that window. Store this evidence at the extreme, before the pullback—not using the later breakout. Also require at least 0.1% progress from signal close to the favorable extreme. These are explicit starting parameters, not a profitability-tested definition.
 
    **EMA continuity:** from the original signal candle through the BOS confirmation candle, BUY closes must remain at or above **both EMA9 and EMA10**. SELL closes must remain at or below **both**. A close through either EMA permanently invalidates that seed; touching/crossing with a wick or closing exactly on an EMA is allowed. Missing EMA data or a missing completed candle fails closed, because continuity cannot be verified. A provisional running breakout whose candle violates this rule receives `CLOSE_FAILED`, not confirmation.
 
@@ -236,3 +236,46 @@ Optional Dhan fallback and per-episode repeated bot notices from the concurrent
 main changes are intentionally not enabled: the user requested Yahoo-only data
 and no repeated operational warnings. Once-per-session dedupe remains in force.
 Validation after reconciliation: 87 M16 tests and the full M6 runner regression.
+
+### Pre-signal rally context (no gainers/losers filter)
+
+A final signal starts tracking. Rally evidence may use up to six contiguous
+completed current-session candles before/through that signal. Normal pullback
+and BOS must follow tracking; the authorized direct-original-BOS exception stays.
+Future context and preview labels remain excluded.
+
+The NSE top gainers/losers gate was removed at the user's request. Neither All
+Securities nor F&O rankings restrict normal M16 alerts; there is no NSE movers
+fetch dependency. Yahoo prices, freshness checks, timing windows and separate
+M16 Telegram destinations are unchanged. Older EOD comparison reports in results/
+are historical experiments only, not current filters.
+
+Replay saved labels/EMA values (no Telegram, no P&L reconstruction):
+`python m16_backtest.py --audit activity_M16_2026-11-25.txt --output results/m16_backtest_normal_2026-11-25.json`
+
+### Approved persistence-only sector gate
+
+Production M16 requires its home sector to rank in the directional persistent
+**top 3** with score **strictly >70**. BUY uses persist_bull; SELL persist_bear.
+This uses M6's board engine and sector map, not its full entry_ok gate, stock
+composite top-5, leadership tolerance, flow qualification, or follow-through rules.
+NSE gainers/losers filtering remains removed. M6 itself is unchanged.
+
+A dedicated process refreshes the current completed-candle board using Yahoo
+index/basket prices and cached prior history. It never calls M6 trading/state or
+Telegram functions. Complete current inputs and all 30 sectors are required.
+Missing/stale boards fail closed and enter the existing session-deduplicated
+monitoring-health notification path. Failures retry every five seconds; active
+stock polling remains best-effort one second and does not wait on sector work.
+Snapshots and per-event gate evidence persist in the M16 full saved audit.
+
+At a running breakout only an already-received board for the most recent closed
+candle may be used. A new close invalidates the previous board immediately: no
+future candle board is backdated to an earlier running breakout. Entries and
+confirmations require eligibility; failure/unavailable-close updates remain risk
+notices, not gated new entries. Send-time guards recheck freshness and eligibility
+between destinations. Pending pre-gate alerts cannot bypass this requirement.
+
+The supplied M6 audit comparison is a candle-close sensitivity only: 30 technical
+candidates -> 10 persistence-qualified (versus 7 with full M6 sector rules).
+This does not imply 10 real-time running alerts or improved realized profits.
