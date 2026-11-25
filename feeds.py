@@ -218,7 +218,7 @@ def _retry_after_seconds(value):
         return None
 
 
-def fetch_bars_yahoo(symbol, rng="1d", interval="5m", raise_errors=False):
+def fetch_bars_yahoo(symbol, rng="1d", interval="5m", raise_errors=False, on_error=None, timeout=None):
     """Yahoo chart bars via the shared cookie/crumb session.
 
     interval: "5m" (default, M1–M6 live path), "1m" (09:15 volume repair) or
@@ -228,6 +228,11 @@ def fetch_bars_yahoo(symbol, rng="1d", interval="5m", raise_errors=False):
     host, category and Retry-After. This is used by M16's circuit breaker.
     Other callers retain the historical return-None behavior.
     """
+    def report(err):
+        if on_error is not None:
+            on_error(dict(host=err.host, reason=err.category, http_status=err.status,
+                          retry_after=err.retry_after))
+
     ticker = _yahoo_ticker(symbol)
     with _STATS_LOCK:
         _FEED_STATS["yahoo_calls"] += 1
@@ -243,13 +248,14 @@ def fetch_bars_yahoo(symbol, rng="1d", interval="5m", raise_errors=False):
                 url = f"https://{host}/v8/finance/chart/{ticker}?interval={interval}&range={rng}"
                 if crumb:
                     url += f"&crumb={requests.utils.quote(crumb)}"
-                r = sess.get(url, timeout=YAHOO_TIMEOUT)
+                r = sess.get(url, timeout=timeout or YAHOO_TIMEOUT)
                 status = r.status_code
                 retry_after = _retry_after_seconds(r.headers.get("Retry-After"))
 
                 if status in (401, 403):
                     err = YahooFetchError(symbol, host, "cookie/crumb rejected", status, retry_after)
                     last_error = err
+                    report(err)
                     invalidate_yahoo_session(sess)
                     print(f"yahoo {symbol}: HTTP {status} on {host}; re-handshaking")
                     if not auth_retry_used:
@@ -262,6 +268,7 @@ def fetch_bars_yahoo(symbol, rng="1d", interval="5m", raise_errors=False):
                 if status == 429:
                     err = YahooFetchError(symbol, host, "rate limited", status, retry_after)
                     last_error = err
+                    report(err)
                     print(f"yahoo {symbol}: HTTP 429 on {host}; no immediate second-host retry")
                     if raise_errors:
                         raise err
@@ -270,6 +277,7 @@ def fetch_bars_yahoo(symbol, rng="1d", interval="5m", raise_errors=False):
                 if status == 404:
                     err = YahooFetchError(symbol, host, "chart endpoint not found", status, retry_after)
                     last_error = err
+                    report(err)
                     print(f"yahoo {symbol}: HTTP 404 on {host}; trying next host")
                     break  # try the other host
 
@@ -279,6 +287,7 @@ def fetch_bars_yahoo(symbol, rng="1d", interval="5m", raise_errors=False):
                 if not ts:
                     err = YahooFetchError(symbol, host, "empty response / no timestamps", status, retry_after)
                     last_error = err
+                    report(err)
                     print(f"yahoo {symbol}: empty response on {host}; trying next host")
                     if raise_errors and host == hosts[-1]:
                         raise err
@@ -306,6 +315,7 @@ def fetch_bars_yahoo(symbol, rng="1d", interval="5m", raise_errors=False):
                     getattr(getattr(e, "response", None), "headers", {}).get("Retry-After"))
                 err = YahooFetchError(symbol, host, f"{type(e).__name__}: {e}", status, retry_after)
                 last_error = err
+                report(err)
                 print(f"yahoo {symbol}: {type(e).__name__}: {e}; trying next host")
                 if raise_errors and (status == 429 or host == hosts[-1]):
                     raise err

@@ -32,18 +32,8 @@ jobs:
       M16_CHAT_ID: ${{ secrets.M16_CHAT_ID }}
       M16_BOT_TOKEN_2: ${{ secrets.M16_BOT_TOKEN_2 }}
       M16_CHAT_ID_2: ${{ secrets.M16_CHAT_ID_2 }}
-      DHAN_TOKEN: ${{ secrets.DHAN_TOKEN }}
       M16_POLL_SECONDS: "1"
       M16_ENGINE_WORKERS: "4"
-      M16_YAHOO_MAX_CONCURRENT: "4"
-      M16_YAHOO_MIN_INTERVAL: "0.25"
-      M16_YAHOO_BACKOFF_SECONDS: "30"
-      M16_YAHOO_MAX_BACKOFF_SECONDS: "300"
-      M16_YAHOO_TRIP_AFTER: "3"
-      M16_DHAN_PREFER_SECONDS: "120"
-      M16_RECOVERY_DEADLINE: "11:15:00"
-      M16_RECOVERY_MAX_ATTEMPTS: "2"
-      M16_RECOVERY_INTERVAL_SECONDS: "300"
       M16_UNHEALTHY_EXIT_SECONDS: "300"
       M16_MAX_SESSION_STARTS: "12"
       M16_DRY_RUN_SYMBOLS: "3"
@@ -78,6 +68,17 @@ jobs:
             once) python -u m16_runner.py --once ;;
             *) python -u m16_runner.py --session --max-runtime-min 110 ;;
           esac
+      - name: Upload M16 diagnostic snapshot even after failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: m16-diagnostics-${{ github.run_id }}
+          path: |
+            state16.json
+            activity_M16_*.txt
+            audit_M16_*.pdf
+          if-no-files-found: ignore
+          retention-days: 7
       - name: Preserve M16 state and review
         if: always() && inputs.mode != 'dry-run' && inputs.mode != 'test-alert' && inputs.mode != 'feed-probe'
         run: |

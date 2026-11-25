@@ -71,6 +71,28 @@ class CalendarTests(unittest.TestCase):
         send.assert_not_called()
         self.assertNotIn('health_notice', st)
 
+    def test_probe_cli_does_not_load_or_modify_live_state(self):
+        with patch('sys.argv', ['m16_runner.py', '--feed-probe']), patch.object(
+                R, 'feed_probe', return_value=[]) as probe, patch.object(R, 'load') as load, patch.object(
+                R, 'save') as save, patch.object(R, 'credentials') as creds:
+            R.main()
+        probe.assert_called_once()
+        load.assert_not_called()
+        save.assert_not_called()
+        creds.assert_not_called()
+
+    def test_supervised_session_restart_cap_prevents_another_session(self):
+        st = M.fresh_state('2026-11-25')
+        st['session_starts'] = 1
+        with patch('sys.argv', ['m16_runner.py', '--session']), patch.dict(
+                'os.environ', {'M16_MAX_SESSION_STARTS': '1'}), patch.object(
+                R.shared, 'now_ist', return_value=at(st['date'])), patch.object(
+                R, 'credentials'), patch.object(R, 'load', return_value=st), patch.object(
+                R.shared.L, 'SYMS', []), patch.object(R, 'live_session') as live:
+            with self.assertRaisesRegex(SystemExit, 'restart cap'):
+                R.main()
+        live.assert_not_called()
+
     def test_manual_bot_test_allowed_on_holiday(self):
         with patch('sys.argv', ['m16_runner.py', '--test-alert']), patch.object(
                 R, 'test_alert', return_value=True) as send:

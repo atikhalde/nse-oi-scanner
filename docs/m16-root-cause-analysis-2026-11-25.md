@@ -1,5 +1,10 @@
 # M16 root-cause analysis — 25 Nov 2026
 
+> Historical analysis draft preserved from concurrent main changes. Specific
+> rate-limiting/authentication claims below are hypotheses, not established by
+> the saved audit. For the measured findings and current Yahoo-only recovery
+> design, see `m16-2026-11-25-review.md` and `m16-continuation.md`.
+
 ## Bottom line
 
 **M16 is not failing because of Telegram, its bot secrets, or an absence of original signals.** It is failing because the long-lived M16 runner loses its Yahoo market-data path, then keeps hammering the blocked/rate-limited endpoint without a circuit breaker. M16 deliberately refuses to alert on bars observed more than 30 seconds after their candle close, so every later recovery is audit-only and produces no outbox item.
