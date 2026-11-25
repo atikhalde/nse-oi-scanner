@@ -102,7 +102,7 @@ The PDF contains:
 
 A missing/older journal is labelled unavailable. Future deployment cannot reconstruct earlier unrecorded intrabar observations. No sector/persistent analysis is invented because M16 has no sector gates. It is not a broker trade ledger, order-execution report or simulated SL/target strategy.
 
-The GitHub session runs in shifts (324-minute maximum per invocation, persisted state followed by a handoff when needed) to stay below hosted-runner runtime limits. Backup schedules cover the afternoon; a 15:35 IST backup can retry EOD delivery. The runner accepts weekday starts until 15:40 IST for EOD retries. Successful collection still depends on the workflow actually running and the feed publishing data. The workflow preserves PDF, TXT and M16 state artifacts only.
+The GitHub session runs in 225-minute supervised shifts (persisted state followed by a handoff when needed) to stay below hosted-runner runtime limits. Backup schedules cover the afternoon; a 15:35 IST backup can retry EOD delivery. The runner accepts weekday starts until 15:40 IST for EOD retries. Successful collection still depends on the workflow actually running and the feed publishing data. The workflow preserves PDF, TXT and M16 state artifacts only.
 
 ## AXISBANK reference check
 
@@ -225,7 +225,7 @@ service; the running job's console supplies intraday progress.
 
 ### Concurrent-main merge reconciliation
 
-The merged workflow retains supervised 110-minute shifts, a 12-start daily cap,
+The workflow uses supervised 225-minute shifts (240-minute job timeout), a 12-start daily cap,
 a read-only `--feed-probe`, isolated probe/dry-run concurrency groups, and
 a five-minute sustained widespread-outage watchdog requesting a new supervised
 runner. A reported HTTP Retry-After extends the M16 rate-limit cooldown. The shared
@@ -290,3 +290,13 @@ are audited. Sector histories prewarm in the dedicated process, and concurrent
 index/member fetching uses an explicit Yahoo-only member path, never Dhan.
 See `docs/m16-preflight-sector-reliability.md` for tested scenarios and external
 connectivity checks that remain unverified.
+
+
+### Morning entry-window coverage
+
+A normal 09:00 IST start now uses a 225-minute scanner runtime and a 240-minute
+job timeout. This avoids the previous planned handoff around 10:50 during active
+entries and keeps that first normal shift through the 12:30 BOS cutoff. Startup
+latency, workflow delays, early failures and feed outages can still create gaps;
+this change is not a no-missed-alert guarantee. Later recovery/handoff and the
+15:35 EOD retry remain enabled. No trading or sector thresholds change.
