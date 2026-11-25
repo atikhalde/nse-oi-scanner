@@ -1,17 +1,82 @@
 {
   "session": "2026-11-25",
   "market": {
-    "dir_state": 0,
-    "label": "NEUTRAL",
-    "conf": 87,
-    "regime": "TRANSITION"
+    "dir_state": 1,
+    "label": "BULL",
+    "conf": 58,
+    "regime": "TREND UP"
   },
   "sector": {
-    "name": "WAIT",
-    "side": 0,
-    "reason": "WAIT \u2014 market TRANSITION conf 87"
+    "name": "FMCG",
+    "side": 1,
+    "reason": "PERSIST + FMCG qualified (score 79)"
   },
   "alerts": {},
-  "sent": {},
-  "positions": {}
+  "sent": {
+    "HINDUNILVR": {
+      "code": 106,
+      "name": "BUY-EX7",
+      "time": "09:55",
+      "price": 2053.4
+    },
+    "ITC": {
+      "code": 101,
+      "name": "BUY-EX",
+      "time": "09:55",
+      "price": 306.65
+    },
+    "VBL": {
+      "code": 104,
+      "name": "BUY-EX5",
+      "time": "09:55",
+      "price": 428.55
+    }
+  },
+  "positions": {
+    "HINDUNILVR": {
+      "side": "BUY",
+      "entry": 2053.4,
+      "sl": 2044.32,
+      "entry_ema9": 2044.7317532839686,
+      "t1": 2062.48,
+      "t2": 2071.56,
+      "t3": 2080.64,
+      "entry_bar": "2026-11-25T09:55:00+05:30",
+      "last_bar": "2026-11-25T09:55:00+05:30"
+    },
+    "ITC": {
+      "side": "BUY",
+      "entry": 306.65,
+      "sl": 304.62,
+      "entry_ema9": 304.68535704516825,
+      "t1": 308.68,
+      "t2": 310.71,
+      "t3": 312.74,
+      "entry_bar": "2026-11-25T09:55:00+05:30",
+      "last_bar": "2026-11-25T09:55:00+05:30"
+    },
+    "VBL": {
+      "side": "BUY",
+      "entry": 428.55,
+      "sl": 426.51,
+      "entry_ema9": 426.5989619720764,
+      "t1": 430.59,
+      "t2": 432.63,
+      "t3": 434.67,
+      "entry_bar": "2026-11-25T09:55:00+05:30",
+      "last_bar": "2026-11-25T09:55:00+05:30"
+    }
+  },
+  "feed": {
+    "yahoo_calls": 59,
+    "dhan_calls": 0,
+    "fallback": null,
+    "last_source": "yahoo",
+    "history_calls": 11,
+    "symbols": 68,
+    "sources": {
+      "yahoo": 57,
+      "history": 11
+    }
+  }
 }
