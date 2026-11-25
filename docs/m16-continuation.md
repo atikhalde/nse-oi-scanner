@@ -279,3 +279,14 @@ between destinations. Pending pre-gate alerts cannot bypass this requirement.
 The supplied M6 audit comparison is a candle-close sensitivity only: 30 technical
 candidates -> 10 persistence-qualified (versus 7 with full M6 sector rules).
 This does not imply 10 real-time running alerts or improved realized profits.
+
+#### Close/sector publication race hardening
+
+Fresh close-confirmation candidates may wait in the durable outbox for their
+current sector board, but only within the original 30-second freshness budget.
+This is not retroactive running-breakout eligibility: unknown-gate running
+crosses are never replayed. Both detection-time and later verification timestamps
+are audited. Sector histories prewarm in the dedicated process, and concurrent
+index/member fetching uses an explicit Yahoo-only member path, never Dhan.
+See `docs/m16-preflight-sector-reliability.md` for tested scenarios and external
+connectivity checks that remain unverified.
