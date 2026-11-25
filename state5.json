@@ -128,7 +128,7 @@
     {
      "key": "ENTRY",
      "time": "10:00",
-     "price": 1190.0999755859375
+     "price": 1190.1
     },
     {
      "key": "TRAIL_ON",
@@ -141,8 +141,7 @@
      "price": 1164.1328044189454
     }
    ],
-   "spurt_rank": 135,
-   "movers20": true
+   "spurt_rank": 135
   },
   "ADANIENSOL": {
    "symbol": "ADANIENSOL",
@@ -190,8 +189,7 @@
      "price": 1436.0
     }
    ],
-   "spurt_rank": 100,
-   "movers20": true
+   "spurt_rank": 100
   },
   "ADANIPOWER": {
    "symbol": "ADANIPOWER",
@@ -231,11 +229,10 @@
     {
      "key": "ENTRY",
      "time": "10:10",
-     "price": 206.6300048828125
+     "price": 206.63
     }
    ],
-   "spurt_rank": 139,
-   "movers20": true
+   "spurt_rank": 139
   },
   "ALKEM": {
    "symbol": "ALKEM",
@@ -283,8 +280,7 @@
      "price": 5074.9848
     }
    ],
-   "spurt_rank": 183,
-   "movers20": true
+   "spurt_rank": 183
   },
   "AMBER": {
    "symbol": "AMBER",
@@ -327,8 +323,7 @@
      "price": 6910.0
     }
    ],
-   "spurt_rank": 97,
-   "movers20": true
+   "spurt_rank": 97
   },
   "ANGELONE": {
    "symbol": "ANGELONE",
@@ -368,11 +363,10 @@
     {
      "key": "ENTRY",
      "time": "10:10",
-     "price": 346.29998779296875
+     "price": 346.3
     }
    ],
-   "spurt_rank": 194,
-   "movers20": true
+   "spurt_rank": 194
   },
   "APOLLOHOSP": {
    "symbol": "APOLLOHOSP",
@@ -420,8 +414,7 @@
      "price": 9339.3675
     }
    ],
-   "spurt_rank": 163,
-   "movers20": true
+   "spurt_rank": 163
   },
   "ASIANPAINT": {
    "symbol": "ASIANPAINT",
@@ -469,10 +462,62 @@
      "price": 2602.3793223632815
     }
    ],
-   "spurt_rank": 172,
-   "movers20": true
+   "spurt_rank": 172
   },
   "BEL": {
+   "symbol": "BEL",
+   "side": "BUY",
+   "time": "10:45",
+   "signal": "BUY-EX4",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 399.6,
+   "sl": 396.77,
+   "sl_anchor": "pivot",
+   "risk_pts": 2.83,
+   "risk_pct": 0.708,
+   "risk_rs": 354.0,
+   "qty": 125,
+   "qty_full": 125,
+   "qty_capped": false,
+   "capital": 49950.0,
+   "tp1": 679.71,
+   "tp2": 679.71,
+   "trail_armed": true,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "trail 13:15",
+     125,
+     401.41970000000003,
+     "13:15"
+    ]
+   ],
+   "exit_text": "100% trail 13:15",
+   "leg2_time": "13:15",
+   "pnl": 227.0,
+   "r_total": 0.64,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "10:45",
+     "price": 399.6
+    },
+    {
+     "key": "TRAIL_ON",
+     "time": "11:15",
+     "price": 403.8500061035156
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "13:15",
+     "price": 401.41970000000003
+    }
+   ],
+   "spurt_rank": 145
+  },
+  "BEL#2": {
    "symbol": "BEL",
    "side": "BUY",
    "time": "10:45",
@@ -523,7 +568,7 @@
      "price": 401.41970000000003
     }
    ],
-   "spurt_rank": 145,
+   "spurt_rank": 129,
    "movers20": true
   }
  },
@@ -536,7 +581,16 @@
   "ANGELONE:ENTRY",
   "APOLLOHOSP:ENTRY",
   "ASIANPAINT:ENTRY",
-  "BEL:ENTRY"
+  "BEL:ENTRY",
+  "360ONE:TRAIL_ON",
+  "360ONE:EXIT_SL",
+  "ADANIENSOL:TRAIL_ON",
+  "ALKEM:EXIT_SL",
+  "APOLLOHOSP:EXIT_SL",
+  "ASIANPAINT:EXIT_SL",
+  "BEL:TRAIL_ON",
+  "BEL:EXIT_SL",
+  "BEL#2:ENTRY"
  ],
  "gate": {
   "spurts": {
