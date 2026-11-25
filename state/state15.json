@@ -2,14 +2,14 @@
   "session": "2026-11-25",
   "market": {
     "dir_state": 1,
-    "label": "BULL",
-    "conf": 46,
-    "regime": "TRANSITION"
+    "label": "STRONG BULL",
+    "conf": 99,
+    "regime": "TREND UP"
   },
   "sector": {
-    "name": "WAIT",
-    "side": 0,
-    "reason": "WAIT \u2014 market TRANSITION conf 46"
+    "name": "FMCG",
+    "side": 1,
+    "reason": "PERSIST + FMCG qualified (score 95)"
   },
   "alerts": {},
   "sent": {
@@ -42,7 +42,7 @@
       "t2": 2071.56,
       "t3": 2080.64,
       "entry_bar": "2026-11-25T09:55:00+05:30",
-      "last_bar": "2026-11-25T10:10:00+05:30"
+      "last_bar": "2026-11-25T10:25:00+05:30"
     },
     "ITC": {
       "side": "BUY",
@@ -53,7 +53,7 @@
       "t2": 310.71,
       "t3": 312.74,
       "entry_bar": "2026-11-25T09:55:00+05:30",
-      "last_bar": "2026-11-25T10:10:00+05:30"
+      "last_bar": "2026-11-25T10:25:00+05:30"
     },
     "VBL": {
       "side": "BUY",
@@ -64,18 +64,18 @@
       "t2": 432.63,
       "t3": 434.67,
       "entry_bar": "2026-11-25T09:55:00+05:30",
-      "last_bar": "2026-11-25T10:10:00+05:30"
+      "last_bar": "2026-11-25T10:25:00+05:30"
     }
   },
   "feed": {
-    "yahoo_calls": 59,
+    "yahoo_calls": 62,
     "dhan_calls": 0,
     "fallback": null,
     "last_source": "yahoo",
     "history_calls": 11,
-    "symbols": 68,
+    "symbols": 71,
     "sources": {
-      "yahoo": 57,
+      "yahoo": 60,
       "history": 11
     }
   }
