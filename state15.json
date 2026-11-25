@@ -2,14 +2,14 @@
   "session": "2026-11-25",
   "market": {
     "dir_state": 1,
-    "label": "STRONG BULL",
-    "conf": 99,
+    "label": "NEUTRAL",
+    "conf": 65,
     "regime": "TREND UP"
   },
   "sector": {
     "name": "FMCG",
     "side": 1,
-    "reason": "PERSIST + FMCG qualified (score 95)"
+    "reason": "PERSIST + FMCG persistent (score 95)"
   },
   "alerts": {},
   "sent": {
@@ -42,7 +42,7 @@
       "t2": 2071.56,
       "t3": 2080.64,
       "entry_bar": "2026-11-25T09:55:00+05:30",
-      "last_bar": "2026-11-25T12:25:00+05:30"
+      "last_bar": "2026-11-25T12:40:00+05:30"
     }
   },
   "feed": {
