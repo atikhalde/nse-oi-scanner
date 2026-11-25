@@ -1,0 +1,282 @@
+{
+  "AUDIT_BOARD": {
+    "default": "1",
+    "effective": "1"
+  },
+  "AUDIT_BOARD_EVERY_MIN": {
+    "default": "5",
+    "effective": "5"
+  },
+  "AUDIT_BOARD_FROM": {
+    "default": "09:20",
+    "effective": "09:20"
+  },
+  "AUDIT_BOARD_PERIOD": {
+    "default": "1d",
+    "effective": "1d"
+  },
+  "AUDIT_BOARD_TO": {
+    "default": "15:15",
+    "effective": "15:15"
+  },
+  "AUDIT_DIR": {
+    "default": "reports",
+    "effective": "reports"
+  },
+  "BREAKEVEN_AFTER_T1": {
+    "default": "1",
+    "effective": "1"
+  },
+  "COST_BPS": {
+    "default": "5",
+    "effective": "5"
+  },
+  "COST_MIN": {
+    "default": "20",
+    "effective": "20"
+  },
+  "DIVERGENCE_SHORT": {
+    "default": "0",
+    "effective": "0"
+  },
+  "DIVERGE_MIN_PERSIST": {
+    "default": "65",
+    "effective": "65"
+  },
+  "DUAL_PICK": {
+    "default": "1",
+    "effective": "1"
+  },
+  "ENTRY_MIN_RANK": {
+    "default": "40",
+    "effective": "40"
+  },
+  "ENTRY_RANK_BAND": {
+    "default": "0.75",
+    "effective": "0.75"
+  },
+  "EOD_AUDIT": {
+    "default": "1",
+    "effective": "1"
+  },
+  "EOD_MAX_CHARS": {
+    "default": "3800",
+    "effective": "3800"
+  },
+  "EOD_REPORT": {
+    "default": "1",
+    "effective": "1"
+  },
+  "EXIT_EMA9_BUFFER_PCT": {
+    "default": "0.10",
+    "effective": "0.10"
+  },
+  "EXIT_EMA9_BUFFER_R": {
+    "default": "0.25",
+    "effective": "0.25"
+  },
+  "LATE_LEADER_ENTRY": {
+    "default": "1",
+    "effective": "1"
+  },
+  "LATE_LEADER_REBASE": {
+    "default": "1",
+    "effective": "1"
+  },
+  "MARKET_CONF_DELTA": {
+    "default": "10",
+    "effective": "10"
+  },
+  "MAX_ENTRIES_PER_PICK": {
+    "default": "0",
+    "effective": "0"
+  },
+  "MIN_TARGET_PCT": {
+    "default": "0.10",
+    "effective": "0.10"
+  },
+  "MIN_TARGET_R": {
+    "default": "0.5",
+    "effective": "0.5"
+  },
+  "NAME_RANK": {
+    "default": "combined",
+    "effective": "combined"
+  },
+  "OI_FILTER": {
+    "default": "annotate",
+    "effective": "annotate"
+  },
+  "PICK_CATCHUP": {
+    "default": "1",
+    "effective": "1"
+  },
+  "PICK_CONF_SCALED_FLOOR": {
+    "default": "0",
+    "effective": "0"
+  },
+  "PICK_LOWCONF_MIN_PERSIST": {
+    "default": "65",
+    "effective": "65"
+  },
+  "PICK_MIN_PERSIST": {
+    "default": "50",
+    "effective": "50"
+  },
+  "PICK_RS_MARGIN": {
+    "default": "0.05",
+    "effective": "0.05"
+  },
+  "PICK_STICKY_LOG": {
+    "default": "0",
+    "effective": "0"
+  },
+  "PICK_STICKY_MARGIN": {
+    "default": "5",
+    "effective": "5"
+  },
+  "RANK_BY_SECTOR_LEAD": {
+    "default": "1",
+    "effective": "1"
+  },
+  "SCAN1M_EARLY_FROM": {
+    "default": "09:30",
+    "effective": "09:30"
+  },
+  "SCAN5M_LEADER_CATCHUP": {
+    "default": "1",
+    "effective": "1"
+  },
+  "SCAN5M_LEADER_MAX_MINUTES": {
+    "default": "40",
+    "effective": "40"
+  },
+  "SCAN5M_LEADER_MAX_R": {
+    "default": "2.0",
+    "effective": "2.0"
+  },
+  "SCAN5M_REQUIRE_TARGET": {
+    "default": "1",
+    "effective": "1"
+  },
+  "SCREEN_BOT": {
+    "default": "1",
+    "effective": "1"
+  },
+  "SCREEN_CAP_PER_SECTOR": {
+    "default": "2",
+    "effective": "2"
+  },
+  "SCREEN_COOLDOWN_MIN": {
+    "default": "45",
+    "effective": "45"
+  },
+  "SCREEN_COUNTER_PERSIST": {
+    "default": "90",
+    "effective": "90"
+  },
+  "SCREEN_EARLY": {
+    "default": "1",
+    "effective": "1"
+  },
+  "SCREEN_FAILOVER": {
+    "default": "1",
+    "effective": "1"
+  },
+  "SCREEN_LAST_ENTRY": {
+    "default": "14:30",
+    "effective": "14:30"
+  },
+  "SCREEN_LEAD_MAX": {
+    "default": "2.0",
+    "effective": "2.0"
+  },
+  "SCREEN_MAX_DAY": {
+    "default": "6",
+    "effective": "6"
+  },
+  "SCREEN_MIN_SCORE": {
+    "default": "55",
+    "effective": "55"
+  },
+  "SCREEN_NEAR_HIGH_PCT": {
+    "default": "0.20",
+    "effective": "0.20"
+  },
+  "SCREEN_PERSIST_MIN": {
+    "default": "78",
+    "effective": "78"
+  },
+  "SCREEN_RUN_MAX_R": {
+    "default": "5.0",
+    "effective": "5.0"
+  },
+  "SCREEN_SLOPE_BARS": {
+    "default": "3",
+    "effective": "3"
+  },
+  "SCREEN_SLOPE_MIN": {
+    "default": "0",
+    "effective": "0"
+  },
+  "SCREEN_STRENGTH_MIN": {
+    "default": "55",
+    "effective": "55"
+  },
+  "SCREEN_STRUCTURE_MIN": {
+    "default": "60",
+    "effective": "60"
+  },
+  "SECTOR_EXTRA_MAX": {
+    "default": "1",
+    "effective": "1"
+  },
+  "SECTOR_FOLLOW": {
+    "default": "1",
+    "effective": "1"
+  },
+  "SECTOR_FOLLOW_EXTRAS": {
+    "default": "1",
+    "effective": "1"
+  },
+  "SECTOR_FOLLOW_MAX": {
+    "default": "2",
+    "effective": "2"
+  },
+  "SECTOR_FOLLOW_MIN_PERSIST": {
+    "default": "75",
+    "effective": "75"
+  },
+  "SECTOR_FOLLOW_ON_WEAK": {
+    "default": "0",
+    "effective": "0"
+  },
+  "SECTOR_FOLLOW_WEAK_MIN_PERSIST": {
+    "default": "85",
+    "effective": "85"
+  },
+  "SECTOR_MAX_LAG_BARS": {
+    "default": "2",
+    "effective": "2"
+  },
+  "SECTOR_TOP_N": {
+    "default": "5",
+    "effective": "5"
+  },
+  "TARGET_FALLBACK": {
+    "default": "1",
+    "effective": "1"
+  },
+  "TRADE_CAPITAL": {
+    "default": "100000",
+    "effective": "100000"
+  },
+  "TRIPLE_MIN_PERSIST": {
+    "default": "85",
+    "effective": "85"
+  },
+  "TRIPLE_PICK": {
+    "default": "1",
+    "effective": "1"
+  }
+}
