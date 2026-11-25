@@ -158,12 +158,16 @@ def _yahoo_ticker(symbol: str) -> str:
     return f"{s}.NS"
 
 
-def fetch_bars_yahoo(symbol, rng="1d", interval="5m"):
+def fetch_bars_yahoo(symbol, rng="1d", interval="5m", on_error=None, timeout=None):
     """Yahoo chart bars via the shared cookie/crumb session.
 
     interval: "5m" (default, M1–M6 live path), "1m" (09:15 volume repair) or
     "1d" (daily context). Returns [dt, open, high, low, close, volume] or None.
     """
+    def report(host, reason, status=None):
+        if on_error is not None:
+            on_error(dict(host=host, reason=reason, http_status=status))
+
     ticker = _yahoo_ticker(symbol)
     with _STATS_LOCK:
         _FEED_STATS["yahoo_calls"] += 1
@@ -175,7 +179,9 @@ def fetch_bars_yahoo(symbol, rng="1d", interval="5m"):
             url = f"https://{host}/v8/finance/chart/{ticker}?interval={interval}&range={rng}"
             if crumb:
                 url += f"&crumb={requests.utils.quote(crumb)}"
-            r = sess.get(url, timeout=YAHOO_TIMEOUT)
+            r = sess.get(url, timeout=timeout or YAHOO_TIMEOUT)
+            if r.status_code >= 400:
+                report(host, "HTTP error", r.status_code)
             if r.status_code in (401, 403):
                 # Crumb/cookie rejected — invalidate this session once and retry.
                 print(f"yahoo {symbol}: HTTP {r.status_code} on {host}; re-handshaking")
@@ -190,6 +196,7 @@ def fetch_bars_yahoo(symbol, rng="1d", interval="5m"):
             j = r.json()["chart"]["result"][0]
             ts = j.get("timestamp")
             if not ts:
+                report(host, "no chart timestamps")
                 return None
             q = j["indicators"]["quote"][0]
             vol = q.get("volume")
@@ -207,6 +214,7 @@ def fetch_bars_yahoo(symbol, rng="1d", interval="5m"):
         except Exception as e:
             # Include the exception type: a silent bare message hid a NameError
             # in _yahoo_session for days while every symbol returned None.
+            report(host, type(e).__name__)
             print(f"yahoo {symbol}: {type(e).__name__}: {e}; retrying (no wait)")
     return None
 

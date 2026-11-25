@@ -366,10 +366,23 @@ def record_feed_failure(st, symbol, now, reason):
     count = previous.get("failure_count", 0) + 1
     first = previous.get("first_failure", now.isoformat()) if not previous.get("ok", True) else now.isoformat()
     health[symbol] = dict(ok=False, at=now.isoformat(), first_failure=first,
-                          failure_count=count, reason=reason)
+                          failure_count=count, reason=reason,
+                          last_success=previous.get("last_success", previous.get("at") if previous.get("ok") else None))
+    episodes = st.setdefault("feed_outages", {}).setdefault(symbol, [])
+    if not episodes or episodes[-1].get("recovered_at"):
+        episodes.append(dict(start=first, count=0))
+    episodes[-1].update(last_failure=now.isoformat(), count=episodes[-1]["count"]+1, reason=reason)
     # Persist counts without flooding the audit and evicting outage evidence.
-    if previous.get("ok", True) or previous.get("reason") != reason:
+    if previous.get("ok", True) or previous.get("reason") != reason or count % 60 == 0:
         st["diagnostics"].append(dict(at=now.isoformat(), symbol=symbol, reason=reason))
+
+
+def record_feed_success(st, symbol, now, metadata):
+    episodes = st.get("feed_outages", {}).get(symbol, [])
+    if episodes and not episodes[-1].get("recovered_at"):
+        episodes[-1]["recovered_at"] = now.isoformat()
+    st.setdefault("feed_health", {})[symbol] = dict(
+        **metadata, at=now.isoformat(), last_success=now.isoformat(), ok=True)
 
 
 def notify_health(st, now, dry_run=False):
@@ -380,11 +393,12 @@ def notify_health(st, now, dry_run=False):
     if model.stamp(now).strftime("%H:%M:%S") < "09:20:30":
         return
     health = st.get("feed_health", {})
-    bad = []
+    bad, details = [], {}
     for sym in shared.L.SYMS:
         rec = health.get(sym, {})
         # Symbols no longer scheduled after discovery are not falsely called stale.
-        watched = model.before(now, "11:00:00") or any(
+        discovery_missing = not st.get("cursors", {}).get(sym) or model.stamp(st["cursors"][sym]).strftime("%H:%M") < "10:50"
+        watched = model.before(now, "11:00:00") or discovery_missing or any(
             x["symbol"] == sym for x in st["setups"].values())
         expected = (model.stamp(now)-pd.Timedelta(seconds=30)).floor("5min")-pd.Timedelta(minutes=5)
         latest = rec.get("latest")
@@ -395,8 +409,17 @@ def notify_health(st, now, dry_run=False):
         analysis_bad = (sym in st.get("history_health", {}) and
                         expected.strftime("%H:%M") >= "09:15" and
                         (not cursor or model.stamp(cursor) < expected))
-        if watched and (not rec.get("ok") or stale or history_bad or analysis_bad):
+        if watched and (not rec.get("ok") or stale or history_bad or analysis_bad or
+                        (not model.before(now, "11:00:00") and discovery_missing)):
             bad.append(sym)
+            reasons = []
+            if not rec.get("ok"): reasons.append(rec.get("reason", "no usable response"))
+            elif stale: reasons.append("stale candle coverage")
+            if history_bad: reasons.append("indicator history unavailable")
+            if analysis_bad: reasons.append("analysis cursor behind expected close")
+            if not model.before(now, "11:00:00") and discovery_missing: reasons.append("morning discovery incomplete")
+            details[sym] = dict(reasons=reasons, latest=latest, cursor=cursor, expected=expected.isoformat())
+    st["monitoring_health"] = dict(at=now.isoformat(), affected=bad, details=details)
     status = "degraded" if bad else "healthy"
     old = st.get("health_notice", {})
     # Session-scoped, persisted dedupe: never repeat operational notices,
@@ -413,6 +436,10 @@ def notify_health(st, now, dry_run=False):
             "Live alerts may be missed or delayed; stale entries will NOT be sent. "
             "Polling is not tick-time execution.") if bad else (
             "M16 feed monitoring healthy on latest poll; polling latency still applies.")
+    if bad:
+        text += "\n" + "\n".join(
+            f"{sym}: {', '.join(details[sym]['reasons'])[:180]}; latest={details[sym]['latest']}; cursor={details[sym]['cursor']}"
+            for sym in bad[:3])
     # Preserve successful destinations when retrying a partial send.
     ledger = notice.setdefault("deliveries", old.get("deliveries", {})
                                if old.get("status") == status else {})
@@ -429,6 +456,8 @@ def timed_fetch(sym):
     # closed cannot prove finality merely by returning AFTER the close.
     started = shared.now_ist()
     bars, health = m16_feed.fetch(sym, shared.L.SID.get(sym), started)
+    health["received_at"] = shared.now_ist().isoformat()
+    health["request_started"] = started.isoformat()
     bars.attrs["m16_feed"] = health
     return bars, started
 
@@ -437,6 +466,19 @@ def needs_discovery_refresh(cached, target):
     """A pre-close snapshot is not final merely because the loop clock advanced."""
     closed = shared._closed_bars(cached[0], cached[1]) if cached else None
     return closed is None or closed.empty or model.stamp(closed.iloc[-1]["dt"]) < target
+
+
+def discovery_retries(symbols, latest, now):
+    if not model.before(now, "11:00:00"):
+        return set()
+    target = (model.stamp(now)-pd.Timedelta(seconds=1)).floor("5min")-pd.Timedelta(minutes=5)
+    return {sym for sym in symbols if needs_discovery_refresh(latest.get(sym), target)}
+
+
+def running_snapshot_usable(bars, started, observed):
+    receipt = model.stamp(bars.attrs.get("m16_feed", {}).get("received_at", started))
+    return (0 <= (model.stamp(observed)-receipt).total_seconds() <= 5 and
+            0 <= (receipt-model.stamp(started)).total_seconds() <= MAX_LAG)
 
 
 def live_session(st, cache, max_minutes, dry_run=False):
@@ -452,7 +494,8 @@ def live_session(st, cache, max_minutes, dry_run=False):
     poll = max(1., float(os.getenv("M16_POLL_SECONDS", "1")))
     last_discovery, fetches, engines, latest, requested = None, {}, {}, {}, {}
     worker_count = max(1, int(os.getenv("M16_ENGINE_WORKERS", "4")))
-    next_health = 0.0
+    next_health, next_heartbeat = 0.0, 0.0
+    failures, retry_at = {}, {}
     with ThreadPoolExecutor(max_workers=16) as fetch_pool, ThreadPoolExecutor(max_workers=8) as watch_fetch, \
             ProcessPoolExecutor(max_workers=worker_count) as discovery, ProcessPoolExecutor(max_workers=2) as active_pool:
         while time.monotonic()-started < max_minutes*60:
@@ -475,12 +518,7 @@ def live_session(st, cache, max_minutes, dry_run=False):
             # Re-fetch missing/late discovery bars during the freshness budget.
             # A batch arriving with yesterday's/previous candle's data must not
             # silently lose a morning signal until the next full discovery.
-            if model.before(now, "11:00:00") and (model.stamp(now)-bucket).total_seconds() <= MAX_LAG:
-                target = bucket-pd.Timedelta(minutes=5)
-                for sym in shared.L.SYMS:
-                    cached = latest.get(sym)
-                    if needs_discovery_refresh(cached, target):
-                        symbols.add(sym)
+            symbols.update(discovery_retries(shared.L.SYMS, latest, now))
             # Terminal/expired seeds stay under slower observation for the
             # full-day research audit, without creating new entries.
             audit_symbols = {s["symbol"] for s in st["setups"].values()}
@@ -494,7 +532,7 @@ def live_session(st, cache, max_minutes, dry_run=False):
             busy_fetch = set(fetches.values())
             for sym in sorted(symbols, key=lambda s: (s not in active, s)):
                 interval = poll if sym in active else (30. if sym in audit_symbols or not model.before(now, "11:00:00") else max(5., poll))
-                if sym not in busy_fetch and time.monotonic()-requested.get(sym, -1e10) >= interval:
+                if sym not in busy_fetch and time.monotonic() >= retry_at.get(sym, 0) and time.monotonic()-requested.get(sym, -1e10) >= interval:
                     executor = watch_fetch if sym in active else fetch_pool
                     fetches[executor.submit(timed_fetch, sym)] = sym
                     requested[sym] = time.monotonic()
@@ -507,12 +545,15 @@ def live_session(st, cache, max_minutes, dry_run=False):
                     bars = normalize(raw, st["date"])
                     if bars is not None and not bars.empty:
                         latest[sym] = (bars, received)
-                        st.setdefault("feed_health", {})[sym] = dict(
-                            **raw.attrs.get("m16_feed", {}), at=now.isoformat(), ok=True)
+                        failures.pop(sym, None)
+                        retry_at.pop(sym, None)
+                        record_feed_success(st, sym, now, raw.attrs.get("m16_feed", {}))
                     else:
                         raise ValueError("current-session feed unavailable")
                 except Exception as exc:
                     record_feed_failure(st, sym, now, str(exc))
+                    failures[sym] = failures.get(sym, 0)+1
+                    retry_at[sym] = time.monotonic()+min(30, 2**min(failures[sym], 5))
             for future in list(engines):
                 if not future.done():
                     continue
@@ -525,7 +566,7 @@ def live_session(st, cache, max_minutes, dry_run=False):
             busy_engine = set(engines.values())
             for sym, (bars, received) in latest.items():
                 observed = shared.now_ist()
-                if (observed-received).total_seconds() <= 5:
+                if running_snapshot_usable(bars, received, observed):
                     observe_running(st, sym, bars, observed)
                 # Completion is judged at REQUEST START, not the later loop
                 # clock. A cached forming candle must never become a final
@@ -544,6 +585,12 @@ def live_session(st, cache, max_minutes, dry_run=False):
             if time.monotonic() >= next_health:
                 notify_health(st, now, dry_run)
                 next_health = time.monotonic() + 30
+            if time.monotonic() >= next_heartbeat:
+                print("M16 progress " + json.dumps(dict(at=now.isoformat(),
+                    processed_symbols=len(st["cursors"]), setups=len(st["setups"]),
+                    events=len(st["events"]), pending_fetches=len(fetches), pending_engines=len(engines),
+                    unhealthy=len(st.get("monitoring_health", {}).get("affected", [])))))
+                next_heartbeat = time.monotonic()+60
             expire_setups(st, shared.now_ist())
             trim_diagnostics(st)
             if time.monotonic()-last_save >= 2:

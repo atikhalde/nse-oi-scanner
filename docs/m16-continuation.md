@@ -199,3 +199,26 @@ problems, not guessed holidays. Special/Muhurat sessions outside the regular
 Startup health checks also wait until 09:20:30 IST: the first five-minute candle
 closes at 09:20, with the normal 30-second publication allowance. Lack of a
 completed candle at 09:16 is not a legitimate initial analysis failure.
+
+### 25 November outage recovery
+
+See `docs/m16-2026-11-25-review.md` for measured incident timings and limits.
+M16 still uses the shared Yahoo fetcher, now with optional sanitized diagnostics
+and M16-only shorter request timeouts. Other callers retain their existing
+transport defaults. On empty/stale one-day results M16 tries five days, filters
+to today's aligned five-minute candles, and applies the same freshness budget.
+Unaligned trailing quote timestamps do not certify candle coverage.
+
+Persistent empty responses can invalidate M16's cached Yahoo session at most
+once per two minutes; HTTP 429 instead triggers a shared 30-second cooldown.
+Per-symbol failure retries back off up to 30 seconds. Missing discovery continues
+retrying after a candle's first 30 seconds, but delayed entries are still never
+backdated. Receipt recency (five seconds) and request duration (at most 30 seconds)
+are separate from the request-start completed-candle watermark.
+
+Outage start/recovery episodes, sampled ongoing failures, current health reasons
+and minute progress counters are retained. Once-per-session bot notice dedupe
+remains intact. Missing discovery cannot become healthy just because 11:00 passed
+without any tracked seeds. End-of-job artifacts preserve diagnostic state even
+if pushing the Git state fails. Artifact upload is not a live intraday snapshot
+service; the running job's console supplies intraday progress.

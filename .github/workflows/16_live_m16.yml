@@ -66,6 +66,17 @@ jobs:
             once) python -u m16_runner.py --once ;;
             *) python -u m16_runner.py --session --max-runtime-min 324 ;;
           esac
+      - name: Upload M16 diagnostic snapshot even after failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: m16-diagnostics-${{ github.run_id }}
+          path: |
+            state16.json
+            activity_M16_*.txt
+            audit_M16_*.pdf
+          if-no-files-found: ignore
+          retention-days: 7
       - name: Preserve M16 state and review
         if: always()
         run: |
