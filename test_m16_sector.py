@@ -63,7 +63,7 @@ class SectorTests(unittest.TestCase):
         frame = pd.DataFrame([bar('09:50')])
         indices = list(R.shared.FM.OFFICIAL_TICKERS.values())+[R.shared.FM.NIFTY_TICKER,R.shared.FM.VIX_TICKER]
         members = {s for group in R.shared.MEMBERS.values() for s in group}
-        board = SimpleNamespace(sectors={str(i): dict(persist_bull=np.float64(75),persist_bear=np.float64(25)) for i in range(30)})
+        board = SimpleNamespace(sectors={sec: dict(persist_bull=np.float64(75),persist_bear=np.float64(25)) for sec in set(R.shared.FM.OFFICIAL_TICKERS)|set(R.shared.MEMBERS)})
         with patch.object(R.shared,'preload',return_value=(len(members),len(set(indices)))), patch.object(R.shared,'fetch_indices',return_value={s:frame for s in indices}), patch.object(
                 G,'fetch_members',return_value={s:frame for s in members}), patch.object(
                 R.shared,'symbol_history',return_value={'ok':True}), patch.object(
@@ -166,3 +166,71 @@ class SectorTests(unittest.TestCase):
     def test_sector_probe_failure_is_explicit(self):
         with patch.object(R.shared,'now_ist',return_value=at('10:00')), patch.object(G,'refresh',side_effect=ValueError('TEST latest=none')):
             self.assertFalse(R.sector_probe())
+
+    def test_missing_sector_never_silently_promotes_known_third(self):
+        st=state(71)
+        st['sector_snapshots'][0]['missing_sectors']=['INSURANCE']
+        verdict=G.decision(st,'AXISBANK','BUY',at('09:55:02'))
+        self.assertEqual(verdict['status'],'unknown')
+        self.assertEqual(verdict['known_rank'],3)
+        self.assertEqual(verdict['worst_rank'],4)
+        st['sector_snapshots'][0]['sectors']['BANK']['persist_bull']=85
+        verdict=G.decision(st,'AXISBANK','BUY',at('09:55:02'))
+        self.assertEqual(verdict['status'],'pass')
+        self.assertEqual(verdict['worst_rank'],3)
+
+    def test_affected_sector_itself_is_unknown(self):
+        st=state()
+        st['sector_snapshots'][0]['missing_sectors']=['INSURANCE']
+        self.assertEqual(G.decision(st,'ICICIPRULI','BUY',at('09:55:02'))['status'],'unknown')
+
+    def test_guaranteed_pass_survives_every_possible_unknown_score(self):
+        import copy
+        for side,key in [('BUY','persist_bull'),('SELL','persist_bear')]:
+            for known_score in (69,70,71,85,99):
+                partial=state()
+                partial['sector_snapshots'][0]['sectors']['BANK'][key]=known_score
+                partial['sector_snapshots'][0]['missing_sectors']=['UNKNOWN']
+                verdict=G.decision(partial,'AXISBANK',side,at('09:55:02'))
+                if verdict['status']!='pass': continue
+                for unknown_score in (0,70,71,85,99,100):
+                    full=copy.deepcopy(partial)
+                    full['sector_snapshots'][0]['missing_sectors']=[]
+                    full['sector_snapshots'][0]['sectors']['UNKNOWN']=dict(persist_bull=unknown_score,persist_bear=unknown_score)
+                    self.assertEqual(G.decision(full,'AXISBANK',side,at('09:55:02'))['status'],'pass')
+
+    def test_missing_icicipruli_excludes_whole_insurance_not_entire_board(self):
+        import pandas as pd
+        from types import SimpleNamespace
+        frame=pd.DataFrame([bar('09:50')])
+        indices=list(R.shared.FM.OFFICIAL_TICKERS.values())+[R.shared.FM.NIFTY_TICKER,R.shared.FM.VIX_TICKER]
+        members={s for group in R.shared.MEMBERS.values() for s in group}
+        expected=(set(R.shared.FM.OFFICIAL_TICKERS)|set(R.shared.MEMBERS))-{'INSURANCE'}
+        def build(close,today,bars,idx,history):
+            self.assertFalse(set(R.shared.MEMBERS['INSURANCE']) & set(bars))
+            R.shared._SYNTH_Y_CACHE[('INSURANCE',today)]={'test':'incomplete'}
+            return SimpleNamespace(sectors={sec:dict(persist_bull=80,persist_bear=20) for sec in expected}), '17 official / 12 synthetic'
+        with patch.object(R.shared,'preload',return_value=(len(members),len(set(indices)))), patch.object(
+                R.shared,'fetch_indices',return_value={s:frame for s in indices}), patch.object(
+                G,'fetch_members',return_value={s:frame for s in members if s!='ICICIPRULI'}), patch.object(
+                R.shared,'symbol_history',return_value={'ok':True}), patch.object(R.shared,'build_board',side_effect=build):
+            result=G.refresh(at('09:55:02'))
+        self.assertEqual(len(result['sectors']),29)
+        self.assertEqual(result['missing_members'],['ICICIPRULI'])
+        self.assertEqual(result['missing_sectors'],['INSURANCE'])
+        self.assertFalse(result['complete'])
+        self.assertNotIn(('INSURANCE',at('09:55:02').strftime('%Y-%m-%d')),R.shared._SYNTH_Y_CACHE)
+
+    def test_real_engine_other_persistence_scores_do_not_depend_on_missing_sector(self):
+        import numpy as np
+        n=18
+        def inputs(offset):
+            c=np.linspace(100+offset,105+offset,n)
+            return dict(o=c-.1,h=c+.5,l=c-.5,c=c,c_full=np.concatenate([np.linspace(98,100,30),c]),
+                        prev_close=100.,day_open=c[0],or_high=max(c[:6])+.5,or_low=min(c[:6])-.5)
+        all_inputs={s:inputs(i) for i,s in enumerate(['BANK','FMCG','PHA','INSURANCE'])}
+        full=R.shared.FM.compute_board(all_inputs,dict(n_intra=np.linspace(0,1,n)),15.,90)['sectors']
+        partial=R.shared.FM.compute_board({s:v for s,v in all_inputs.items() if s!='INSURANCE'},dict(n_intra=np.linspace(0,1,n)),15.,90)['sectors']
+        for s in partial:
+            self.assertEqual(partial[s]['persist_bull'],full[s]['persist_bull'])
+            self.assertEqual(partial[s]['persist_bear'],full[s]['persist_bear'])
