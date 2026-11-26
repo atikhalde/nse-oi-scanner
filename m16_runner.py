@@ -423,6 +423,17 @@ def cycle(st, now, bars_map, cache, pool=None, dry_run=False):
     save(st, dry_run)
 
 
+def provider_throttled(reason):
+    """True when a failure is provider-wide rate limiting, not symbol data.
+
+    A 429/cooldown is global: retrying the other 200+ symbols cannot fix it and
+    only deepens the cooldown. Symbol-level gaps (missing candle, empty body,
+    stale publication) stay per-symbol.
+    """
+    text = str(reason or "").lower()
+    return any(token in text for token in ("429", "cooldown", "rate_limited", "too many requests"))
+
+
 def record_feed_failure(st, symbol, now, reason):
     health = st.setdefault("feed_health", {})
     previous = health.get(symbol, {})
@@ -492,6 +503,9 @@ def notify_health(st, now, dry_run=False):
     st["monitoring_health"]["sector_gate_unavailable"] = bool(sector_unknown)
     partial_sectors = (st.get("sector_snapshots") or [{}])[-1].get("missing_sectors", []) if st.get("sector_gate_required") and model.before(now, "12:35:00") else []
     st["monitoring_health"]["missing_sectors"] = partial_sectors
+    throttle = st.get("provider_throttle") or {}
+    st["monitoring_health"]["provider_throttled"] = bool(
+        throttle.get("at") and (model.stamp(now)-model.stamp(throttle["at"])).total_seconds() <= 300)
     status = "degraded" if bad or sector_unknown or partial_sectors else "healthy"
     old = st.get("health_notice", {})
     # Session-scoped, persisted dedupe: never repeat operational notices,
@@ -620,6 +634,15 @@ def live_session(st, cache, max_minutes, dry_run=False):
     next_health, next_heartbeat = 0.0, 0.0
     open_wave_started = None
     outage_since = None
+    # Provider-wide throttling (HTTP 429 / shared cooldown) is handled as one
+    # global pause. Hammering the universe during a cooldown, escalating every
+    # symbol's backoff and then requesting a restart is what cost 2026-11-26:
+    # 14 automatic restarts, first usable discovery at 09:46 and no sector
+    # board until 11:25.
+    provider_pause_until, provider_pause_since, provider_pause_streak = 0.0, None, 0
+    provider_pause_base = max(1., float(os.getenv("M16_PROVIDER_PAUSE_SECONDS", "10")))
+    provider_pause_cap = max(provider_pause_base, float(os.getenv("M16_PROVIDER_MAX_PAUSE_SECONDS", "120")))
+    provider_max_wait = max(60., float(os.getenv("M16_PROVIDER_MAX_WAIT_SECONDS", "1500")))
     (ROOT / ".m16-unhealthy").unlink(missing_ok=True) if not dry_run else None
     failures, retry_at = {}, {}
     fetch_lanes = {}
@@ -701,7 +724,8 @@ def live_session(st, cache, max_minutes, dry_run=False):
             board_complete = bool(has_close_board and current_board[-1].get("complete", True))
             need_sector = (not has_close_board) or (not board_complete and close_age <= MAX_LAG)
             if (sector_future is None and first_close_ready and need_sector and close_age >= 1.0
-                    and time.monotonic() >= sector_retry and model.before(now, "12:35:00")):
+                    and time.monotonic() >= sector_retry and time.monotonic() >= provider_pause_until
+                    and model.before(now, "12:35:00")):
                 target_bar = current_close - pd.Timedelta(minutes=5)
                 sector_bars = {sym: item[0] for sym, item in latest.items()
                                if sym in basket_members and not needs_discovery_refresh(item, target_bar)}
@@ -750,7 +774,8 @@ def live_session(st, cache, max_minutes, dry_run=False):
             # Admit only work that can run now. Do not hide an entire universe
             # in executor FIFO queues ahead of later urgent candle/quote work.
             clock = time.monotonic()
-            eligible = {sym for sym in symbols if clock >= retry_at.get(sym, 0) and
+            provider_paused = clock < provider_pause_until
+            eligible = {sym for sym in symbols if not provider_paused and clock >= retry_at.get(sym, 0) and
                         clock-requested.get(sym, -1e10) >= (poll if sym in fast else max(5., poll))}
             for sym in fetch_candidates(eligible, fast, active, requested, busy_fetch, fetch_lanes, basket_members):
                 executor = watch_fetch if sym in fast else fetch_pool
@@ -770,11 +795,33 @@ def live_session(st, cache, max_minutes, dry_run=False):
                         latest[sym] = (bars, received)
                         failures.pop(sym, None)
                         retry_at.pop(sym, None)
+                        provider_pause_streak, provider_pause_since = 0, None
                         record_feed_success(st, sym, now, raw.attrs.get("m16_feed", {}))
                     else:
                         raise ValueError("current-session feed unavailable")
                 except Exception as exc:
-                    record_feed_failure(st, sym, now, str(exc))
+                    reason = str(exc)
+                    record_feed_failure(st, sym, now, reason)
+                    if provider_throttled(reason):
+                        # Pause the whole request stream instead of replaying a
+                        # 210-symbol wave into an active provider cooldown.
+                        # Escalate once per pause window: every in-flight symbol
+                        # of the same wave must not multiply the backoff.
+                        mono = time.monotonic()
+                        if mono >= provider_pause_until:
+                            provider_pause_streak += 1
+                            pause = min(provider_pause_cap,
+                                        provider_pause_base * 2 ** min(provider_pause_streak - 1, 4))
+                        else:
+                            pause = provider_pause_until - mono
+                        provider_pause_since = mono if provider_pause_since is None else provider_pause_since
+                        provider_pause_until = max(provider_pause_until, mono + pause)
+                        st["provider_throttle"] = dict(
+                            at=now.isoformat(), streak=provider_pause_streak,
+                            pause_seconds=round(pause, 3), reason=reason[:200],
+                        )
+                        retry_at[sym] = provider_pause_until
+                        continue
                     failures[sym] = failures.get(sym, 0)+1
                     max_backoff = 5 if not model.before(now, "15:30:00") else 30
                     retry_at[sym] = time.monotonic()+min(max_backoff, 2**min(failures[sym], 5))
@@ -821,6 +868,18 @@ def live_session(st, cache, max_minutes, dry_run=False):
                     bad = monitored.get("affected", [])
                     widespread = len(watched) >= 3 and len(bad)/len(watched) >= .8
                     outage_since = (clock if outage_since is None else outage_since) if widespread and model.before(now, "15:20:00") else None
+                    # A provider cooldown is not a stuck session. Restarting
+                    # replays the same opening wave into the throttle and clears
+                    # the in-process cooldown clock, which is exactly how
+                    # 2026-11-26 burned 14 automatic starts before the first
+                    # usable candle at 09:46. Wait it out in-process; only ask
+                    # for a supervised restart if the throttle outlasts the
+                    # provider budget.
+                    provider_waiting = (provider_pause_since is not None and
+                                        clock - provider_pause_since < provider_max_wait and
+                                        (clock < provider_pause_until or provider_pause_streak > 0))
+                    if outage_since is not None and provider_waiting:
+                        outage_since = clock
                     if outage_since is not None and clock-outage_since >= float(os.getenv("M16_UNHEALTHY_EXIT_SECONDS", "300")):
                         save(st, dry_run)
                         if not dry_run:
@@ -837,6 +896,7 @@ def live_session(st, cache, max_minutes, dry_run=False):
                     events=len(st["events"]), pending_fetches=len(fetches), pending_engines=len(engines),
                     unhealthy=len(st.get("monitoring_health", {}).get("affected", [])),
                     yahoo_budget=st["yahoo_budget"],
+                    provider_throttle=st.get("provider_throttle"),
                     sector_health=st.get("sector_health"),
                     cursor_times=pd.Series(list(st["cursors"].values()), dtype=str).str.slice(11,16).value_counts().to_dict())))
                 next_heartbeat = time.monotonic()+60
