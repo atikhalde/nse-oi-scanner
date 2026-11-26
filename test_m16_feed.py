@@ -265,6 +265,51 @@ class FeedTests(unittest.TestCase):
                                      {i: False for i in range(16)}))
         self.assertEqual(got, [])
 
+    def test_closing_window_omitted_1515_and_1520_bars_do_not_fail_feed_or_health(self):
+        # Yahoo omits 15:15 on ~35-80% of NSE equities and 15:20 on ~98% before
+        # publishing 15:25 after 15:30 IST.
+        only_1510 = frame('15:10')
+        jump_to_1525 = pd.concat([frame('15:10'), frame('15:25')], ignore_index=True)
+        t_1520 = pd.Timestamp('2026-11-23 15:20:35', tz='Asia/Kolkata')
+        t_1526 = pd.Timestamp('2026-11-23 15:26:00', tz='Asia/Kolkata')
+        t_1530_early = pd.Timestamp('2026-11-23 15:30:10', tz='Asia/Kolkata')
+        t_1530_due = pd.Timestamp('2026-11-23 15:30:35', tz='Asia/Kolkata')
+        t_1536 = pd.Timestamp('2026-11-23 15:36:00', tz='Asia/Kolkata')
+        self.assertEqual(F.current_bars(only_1510, t_1520).iloc[-1]['dt'].strftime('%H:%M'), '15:10')
+        self.assertEqual(F.current_bars(only_1510, t_1526).iloc[-1]['dt'].strftime('%H:%M'), '15:10')
+        self.assertEqual(F.current_bars(jump_to_1525, t_1530_early).iloc[-1]['dt'].strftime('%H:%M'), '15:25')
+        self.assertEqual(F.current_bars(jump_to_1525, t_1530_due).iloc[-1]['dt'].strftime('%H:%M'), '15:25')
+        with self.assertRaisesRegex(ValueError, 'missing completed'):
+            F.current_bars(frame('15:05'), t_1526)
+        with self.assertRaisesRegex(ValueError, 'missing completed'):
+            F.current_bars(only_1510, t_1530_due)
+        st = M.fresh_state('2026-11-23')
+        st['setups']['TEST:seed'] = dict(id='TEST:seed', symbol='TEST', phase='invalid')
+        st['history_health'] = {'TEST': True}
+        st['cursors']['TEST'] = only_1510.iloc[-1]['dt'].isoformat()
+        st['feed_health'] = {'TEST': dict(ok=True, at=t_1520.isoformat(), latest=only_1510.iloc[-1]['dt'].isoformat())}
+        with patch.object(R.shared.L, 'SYMS', ['TEST']):
+            R.notify_health(st, t_1526, dry_run=True)
+            self.assertEqual(st['health_notice']['status'], 'healthy')
+            st['cursors']['TEST'] = jump_to_1525.iloc[-1]['dt'].isoformat()
+            st['feed_health']['TEST']['latest'] = jump_to_1525.iloc[-1]['dt'].isoformat()
+            R.notify_health(st, t_1536, dry_run=True)
+            self.assertEqual(st['health_notice']['status'], 'healthy')
+
+    def test_stale_nonempty_1d_and_symbol_backoff_do_not_double_range_requests(self):
+        with patch.object(F.feeds, 'fetch_bars_yahoo', return_value=frame('09:30')) as fetch:
+            with self.assertRaisesRegex(ValueError, 'stale'):
+                F.fetch('TEST', None, NOW)
+        self.assertEqual(fetch.call_count, 1)
+        def backed_off(*args, **kwargs):
+            kwargs['on_error'](dict(host='shared-m16-symbol', reason='empty response backoff',
+                                    http_status=None, retry_after=120.0))
+            return None
+        with patch.object(F.feeds, 'fetch_bars_yahoo', side_effect=backed_off) as fetch:
+            with self.assertRaisesRegex(ValueError, 'empty response backoff'):
+                F.fetch('ICICIPRULI', None, NOW)
+        self.assertEqual(fetch.call_count, 1)
+
 
 if __name__ == '__main__':
     unittest.main()

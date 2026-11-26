@@ -691,6 +691,70 @@ class MirrorTests(unittest.TestCase):
         self.assertTrue(st['sector_snapshots'][0]['complete'])
         self.assertEqual(len(st['sector_snapshots'][0]['sectors']), 2)
 
+    def test_closing_gap_audit_throttle_and_eod_final_bar_grace(self):
+        from concurrent.futures import Future
+        class ImmediateExecutor:
+            def __init__(self, **kw):
+                pass
+            def __enter__(self):
+                return self
+            def __exit__(self, *args):
+                pass
+            def submit(self, fn, *args):
+                f = Future()
+                try:
+                    f.set_result(fn(*args))
+                except Exception as exc:
+                    f.set_exception(exc)
+                return f
+        bars_1510 = R.normalize(pd.DataFrame([bar('15:10')]), DAY)
+        bars_1525 = R.normalize(pd.DataFrame([bar('15:10'), bar('15:25')]), DAY)
+        # Once checked after 35s into 15:20 or 15:25 bucket, omitted 15:15/15:20
+        # must not spin-poll every 5s, while 15:30:01 resumes polling for 15:25.
+        self.assertTrue(R.needs_audit_refresh((bars_1510, at('15:20:05')), at('15:15'), at('15:20:10')))
+        self.assertFalse(R.needs_audit_refresh((bars_1510, at('15:20:40')), at('15:15'), at('15:22:00')))
+        self.assertFalse(R.needs_audit_refresh((bars_1510, at('15:25:40')), at('15:20'), at('15:28:00')))
+        self.assertTrue(R.needs_audit_refresh((bars_1510, at('15:25:40')), at('15:25'), at('15:30:05')))
+        # Live session waits past 15:31:00 (up to 15:32:30) for slow-publishing
+        # 15:25 closing bars before writing the EOD report, and marks post-cutoff
+        # sector_health inactive rather than echoing stale pre-cutoff errors.
+        st, _ = armed()
+        st['setups'][next(iter(st['setups']))]['phase'] = 'expired'
+        st['cursors']['AXISBANK'] = at('15:10').isoformat()
+        st['sector_health'] = dict(ok=False, reason='stale error at 12:35')
+        clock, elapsed = [at('15:31:05')], [0.]
+        steps = iter([at('15:31:20'), at('15:31:25')])
+        def fetch(sym):
+            if clock[0] < at('15:31:15'):
+                raise ValueError('15:25 not published yet')
+            return bars_1525, clock[0]
+        def analyze(job):
+            return job[0], [(bar('15:25'), None, '', {})]
+        def sleep(_):
+            clock[0] = next(steps)
+            elapsed[0] += 6.
+        finished_cursors = {}
+        def record_finish(state, dry_run=False):
+            finished_cursors.update(state['cursors'])
+            state['eod_done'] = True
+        with patch.object(R.m16_sector, 'warm', return_value=(63, 19)), patch.object(
+                R, 'ThreadPoolExecutor', ImmediateExecutor), patch.object(
+                R, 'ProcessPoolExecutor', ImmediateExecutor), patch.object(
+                R.shared, 'now_ist', side_effect=lambda: clock[0]), patch.object(
+                R.shared.L, 'SYMS', ['AXISBANK']), patch.object(
+                R, 'timed_fetch', side_effect=fetch), patch.object(
+                R, 'analyze', side_effect=analyze), patch.object(
+                R, 'notify_health'), patch.object(
+                R, 'finish', side_effect=record_finish) as fin, patch.object(
+                R.time, 'sleep', side_effect=sleep), patch.object(
+                R.time, 'monotonic', side_effect=lambda: elapsed[0]), patch.object(R, 'save'):
+            R.live_session(st, {'AXISBANK': {'ok': True}}, 5, dry_run=False)
+        fin.assert_called_once()
+        self.assertEqual(finished_cursors['AXISBANK'], at('15:25').isoformat())
+        self.assertIn(at('15:25').isoformat(), st['audit_bars']['AXISBANK'])
+        self.assertEqual(st['sector_health']['phase'], 'post_cutoff')
+        self.assertFalse(st['sector_health']['active'])
+
 
 if __name__ == '__main__':
     unittest.main()

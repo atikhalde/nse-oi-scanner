@@ -468,7 +468,7 @@ def notify_health(st, now, dry_run=False):
             x["symbol"] == sym for x in st["setups"].values())
         if watched:
             watched_symbols.append(sym)
-        expected = (model.stamp(now)-pd.Timedelta(seconds=30)).floor("5min")-pd.Timedelta(minutes=5)
+        expected = m16_feed.required_closed_bar(now)
         latest = rec.get("latest")
         stale = (model.stamp(latest) < expected) if latest else (
             not rec.get("at") or (model.stamp(now)-model.stamp(rec["at"])).total_seconds() > 90)
@@ -557,6 +557,21 @@ def needs_discovery_refresh(cached, target):
     return closed is None or closed.empty or model.stamp(closed.iloc[-1]["dt"]) < target
 
 
+def needs_audit_refresh(cached, target, now):
+    """Refresh post-cutoff audit symbols without spin-polling Yahoo's omitted 15:15/15:20 bars."""
+    if not needs_discovery_refresh(cached, target):
+        return False
+    clock = model.stamp(now)
+    day = clock.normalize()
+    closing_gap_start = day + pd.Timedelta(hours=15, minutes=15)
+    closing_final = day + pd.Timedelta(hours=15, minutes=25)
+    if closing_gap_start <= model.stamp(target) < closing_final and cached:
+        grace_done = clock.floor("5min") + pd.Timedelta(seconds=35)
+        if model.stamp(cached[1]) >= grace_done:
+            return False
+    return True
+
+
 def discovery_retries(symbols, latest, now):
     if not model.before(now, "11:00:00"):
         return set()
@@ -625,9 +640,32 @@ def live_session(st, cache, max_minutes, dry_run=False):
             if now.strftime("%Y-%m-%d") != st["date"]:
                 break
             if not model.before(now, "15:31:00"):
-                expire_setups(st, now)
-                finish(st, dry_run)
-                break
+                for future in [f for f in list(engines) if f.done()]:
+                    sym = engines.pop(future, None)
+                    try:
+                        _, rows = future.result()
+                        apply(st, sym, rows, shared.now_ist())
+                    except Exception as exc:
+                        st["diagnostics"].append(dict(at=now.isoformat(), symbol=sym, reason=f"engine: {exc}"))
+                audit_symbols = {s["symbol"] for s in st["setups"].values() if s["symbol"] not in dormant}
+                final_bar = model.stamp(now).normalize() + pd.Timedelta(hours=15, minutes=25)
+                missing_close_bars = {
+                    sym for sym in audit_symbols
+                    if not st["cursors"].get(sym) or model.stamp(st["cursors"][sym]) < final_bar
+                }
+                if dry_run or not model.before(now, "15:32:30") or (not missing_close_bars and not fetches and not engines):
+                    for future, sym in list(engines.items()):
+                        engines.pop(future, None)
+                        try:
+                            _, rows = future.result(timeout=5)
+                            apply(st, sym, rows, shared.now_ist())
+                        except Exception as exc:
+                            st["diagnostics"].append(dict(at=now.isoformat(), symbol=sym, reason=f"engine: {exc}"))
+                    expire_setups(st, now)
+                    trim_diagnostics(st)
+                    save(st, dry_run)
+                    finish(st, dry_run)
+                    break
             if model.before(now, "09:15:00"):
                 time.sleep(.5)
                 continue
@@ -641,7 +679,7 @@ def live_session(st, cache, max_minutes, dry_run=False):
                     else:
                         boards.append(snapshot)
                     st["sector_health"] = dict(
-                        ok=True, complete=snapshot.get("complete", True),
+                        ok=True, active=True, complete=snapshot.get("complete", True),
                         missing_sectors=snapshot.get("missing_sectors", []),
                         dormant_members=snapshot.get("dormant_members", []),
                         at=now.isoformat(),
@@ -650,7 +688,7 @@ def live_session(st, cache, max_minutes, dry_run=False):
                     reason = str(exc)
                     if reason != st.get("sector_health", {}).get("reason"):
                         print("M16 sector refresh unavailable: "+reason)
-                    st["sector_health"] = dict(ok=False, reason=reason, at=now.isoformat())
+                    st["sector_health"] = dict(ok=False, active=True, reason=reason, at=now.isoformat())
                 sector_future = None
             current_close = model.stamp(now).floor("5min")
             close_age = (model.stamp(now) - current_close).total_seconds()
@@ -666,6 +704,13 @@ def live_session(st, cache, max_minutes, dry_run=False):
                 sector_future = (sector_pool.submit(m16_sector.refresh, now, sector_bars)
                                  if sector_bars else sector_pool.submit(m16_sector.refresh, now))
                 sector_retry = time.monotonic() + (2.5 if has_close_board else 2.0)
+            elif sector_future is None and not model.before(now, "12:35:00") and st.get("sector_health", {}).get("phase") != "post_cutoff":
+                st["sector_health"] = dict(
+                    ok=True, active=False, phase="post_cutoff",
+                    snapshots=len(current_board),
+                    last_close=current_board[-1]["close"] if current_board else None,
+                    at=now.isoformat(),
+                )
             active = {s["symbol"] for s in st["setups"].values() if s["phase"] not in model.TERMINAL}
             fast = {s["symbol"] for s in st["setups"].values() if s["phase"] in {"armed", "intrabar"}}
             bucket = (model.stamp(now)-pd.Timedelta(seconds=1)).floor("5min")
@@ -680,10 +725,11 @@ def live_session(st, cache, max_minutes, dry_run=False):
             # Terminal/expired seeds stay under slower observation for the
             # full-day research audit, without creating new entries.
             audit_symbols = {s["symbol"] for s in st["setups"].values() if s["symbol"] not in dormant}
-            target = (model.stamp(now)-pd.Timedelta(seconds=1)).floor("5min")-pd.Timedelta(minutes=5)
+            day_last_bar = model.stamp(now).normalize() + pd.Timedelta(hours=15, minutes=25)
+            target = min((model.stamp(now)-pd.Timedelta(seconds=1)).floor("5min")-pd.Timedelta(minutes=5), day_last_bar)
             # Rally validation and EOD collection consume completed candles;
             # only armed/running setups need best-effort 1s quote monitoring.
-            symbols |= fast | {sym for sym in audit_symbols if needs_discovery_refresh(latest.get(sym), target)}
+            symbols |= fast | {sym for sym in audit_symbols if needs_audit_refresh(latest.get(sym), target, now)}
             if model.before(now, "12:35:00"):
                 symbols |= {sym for sym in basket_members if needs_discovery_refresh(latest.get(sym), target)}
             # Recover missed morning discovery even after the seed cutoff.
@@ -722,7 +768,8 @@ def live_session(st, cache, max_minutes, dry_run=False):
                 except Exception as exc:
                     record_feed_failure(st, sym, now, str(exc))
                     failures[sym] = failures.get(sym, 0)+1
-                    retry_at[sym] = time.monotonic()+min(30, 2**min(failures[sym], 5))
+                    max_backoff = 5 if not model.before(now, "15:30:00") else 30
+                    retry_at[sym] = time.monotonic()+min(max_backoff, 2**min(failures[sym], 5))
             for future in list(engines):
                 if not future.done():
                     continue
@@ -759,7 +806,7 @@ def live_session(st, cache, max_minutes, dry_run=False):
                 bad = monitored.get("affected", [])
                 widespread = len(watched) >= 3 and len(bad)/len(watched) >= .8
                 clock = time.monotonic()
-                outage_since = (clock if outage_since is None else outage_since) if widespread else None
+                outage_since = (clock if outage_since is None else outage_since) if widespread and model.before(now, "15:20:00") else None
                 if outage_since is not None and clock-outage_since >= float(os.getenv("M16_UNHEALTHY_EXIT_SECONDS", "300")):
                     save(st, dry_run)
                     if not dry_run:
@@ -891,6 +938,8 @@ def main():
     cache = {sym: shared.symbol_history(sym, st["date"]) for sym in shared.L.SYMS}
     dormant = sorted(inactive_symbols(cache))
     st["inactive_symbols"] = dormant
+    for sym in dormant:
+        st.get("feed_health", {}).pop(sym, None)
     if dormant:
         print(f"M16 dormant symbols excluded from live polling ({len(dormant)}): {', '.join(dormant)}")
     st["history_health"] = {sym: bool(rec.get("ok")) for sym, rec in cache.items() if sym not in dormant}
@@ -903,10 +952,19 @@ def main():
         save(st, args.dry_run)
         live_session(st, cache, args.max_runtime_min, args.dry_run)
     else:
-        try:
-            st.setdefault("sector_snapshots", []).append(m16_sector.refresh(shared.now_ist()))
-        except Exception as exc:
-            st["sector_health"] = dict(ok=False, reason=str(exc))
+        if model.before(now, "12:35:00"):
+            try:
+                st.setdefault("sector_snapshots", []).append(m16_sector.refresh(shared.now_ist()))
+            except Exception as exc:
+                st["sector_health"] = dict(ok=False, active=True, reason=str(exc))
+        else:
+            boards = st.get("sector_snapshots", [])
+            st["sector_health"] = dict(
+                ok=True, active=False, phase="post_cutoff",
+                snapshots=len(boards),
+                last_close=boards[-1]["close"] if boards else None,
+                at=now.isoformat(),
+            )
         bars_map = {}
         active_syms = [s for s in shared.L.SYMS if s not in dormant]
         chosen = active_syms[:max(1, int(os.getenv("M16_DRY_RUN_SYMBOLS", "3")))] if args.dry_run else active_syms
