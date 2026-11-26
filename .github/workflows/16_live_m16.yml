@@ -159,7 +159,7 @@ jobs:
           MODE: ${{ inputs.mode || 'session' }}
         run: |
           IST=$((10#$(date -u +%H) * 60 + 10#$(date -u +%M) + 330)); IST=$((IST % 1440))
-          if [ "$MODE" = "session" ] && [ "$IST" -ge 555 ] && [ "$IST" -lt 933 ]; then
+          if [ "$MODE" = "session" ] && [ "$IST" -ge 555 ] && [ "$IST" -lt 938 ]; then
             read -r STARTS DONE < <(python3 - <<'PY'
           import datetime, json
           import m16_calendar as cal

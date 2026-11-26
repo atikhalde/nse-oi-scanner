@@ -755,6 +755,91 @@ class MirrorTests(unittest.TestCase):
         self.assertEqual(st['sector_health']['phase'], 'post_cutoff')
         self.assertFalse(st['sector_health']['active'])
 
+    def test_startup_in_flight_wave_defers_false_degraded_notice(self):
+        from concurrent.futures import Future
+        pending_fetches = []
+        class DeferredFetchPool:
+            def __init__(self, **kw): pass
+            def __enter__(self): return self
+            def __exit__(self, *args): pass
+            def submit(self, fn, *args):
+                f = Future()
+                pending_fetches.append((f, fn, args))
+                return f
+        class ImmediatePool:
+            def __init__(self, **kw): pass
+            def __enter__(self): return self
+            def __exit__(self, *args): pass
+            def submit(self, fn, *args):
+                f = Future()
+                f.set_result(fn(*args))
+                return f
+        st = M.fresh_state(DAY)
+        st['history_health'] = {'AXISBANK': True}
+        clock, elapsed = [at('09:46:14')], [0.]
+        candle = bar('09:40')
+        frame = R.normalize(pd.DataFrame([candle]), DAY)
+        frame.attrs['m16_feed'] = dict(latest=candle['dt'])
+        def fetch(sym):
+            return frame, clock[0]
+        def analyze(job):
+            return job[0], [(candle, None, '', {})]
+        def sleep(_):
+            while pending_fetches:
+                f, fn, args = pending_fetches.pop(0)
+                f.set_result(fn(*args))
+            elapsed[0] += 3.
+            if elapsed[0] >= 9.:
+                elapsed[0] = 70.
+        board = dict(close=at('09:45').isoformat(), observed=at('09:46:14').isoformat(),
+                     sectors={'BANK': dict(persist_bull=80., persist_bear=20.)},
+                     meta='ok', complete=True, missing_sectors=[])
+        with patch.object(R.m16_sector, 'warm', return_value=(63, 19)), patch.object(
+                R.m16_sector, 'refresh', return_value=board), patch.object(
+                R.m16_sector, 'decision', return_value={'status': 'pass', 'sector': 'BANK', 'score': 80., 'close': at('09:45').isoformat()}), patch.object(
+                R, 'ThreadPoolExecutor', DeferredFetchPool), patch.object(
+                R, 'ProcessPoolExecutor', ImmediatePool), patch.object(
+                R.shared, 'now_ist', side_effect=lambda: clock[0]), patch.object(
+                R.shared.L, 'SYMS', ['AXISBANK']), patch.object(
+                R, 'timed_fetch', side_effect=fetch), patch.object(
+                R, 'analyze', side_effect=analyze), patch.object(
+                R.time, 'sleep', side_effect=sleep), patch.object(
+                R.time, 'monotonic', side_effect=lambda: elapsed[0]), patch.object(R, 'save'):
+            R.live_session(st, {'AXISBANK': {'ok': True}}, 1, dry_run=True)
+        self.assertNotIn('degraded', st.get('health_notices', {}))
+        self.assertEqual(st['health_notice']['status'], 'healthy')
+
+    def test_runtime_expiry_during_eod_grace_still_finishes_report(self):
+        from concurrent.futures import Future
+        class ImmediateExecutor:
+            def __init__(self, **kw): pass
+            def __enter__(self): return self
+            def __exit__(self, *args): pass
+            def submit(self, fn, *args):
+                f = Future()
+                f.set_result(fn(*args))
+                return f
+        st, _ = armed()
+        st['cursors']['AXISBANK'] = at('15:10').isoformat()
+        clock, elapsed = [at('15:31:10')], [0.]
+        only_1510 = R.normalize(pd.DataFrame([bar('15:10')]), DAY)
+        def sleep(_):
+            # Simulate max_minutes expiring at 15:31:20 before 15:32:30 deadline
+            clock[0] = at('15:31:20')
+            elapsed[0] = 400.
+        with patch.object(R.m16_sector, 'warm', return_value=(63, 19)), patch.object(
+                R, 'ThreadPoolExecutor', ImmediateExecutor), patch.object(
+                R, 'ProcessPoolExecutor', ImmediateExecutor), patch.object(
+                R.shared, 'now_ist', side_effect=lambda: clock[0]), patch.object(
+                R.shared.L, 'SYMS', ['AXISBANK']), patch.object(
+                R, 'timed_fetch', return_value=(only_1510, at('15:31:10'))), patch.object(
+                R, 'notify_health'), patch.object(
+                R, 'finish') as fin, patch.object(
+                R.time, 'sleep', side_effect=sleep), patch.object(
+                R.time, 'monotonic', side_effect=lambda: elapsed[0]), patch.object(R, 'save'):
+            R.live_session(st, {'AXISBANK': {'ok': True}}, 1, dry_run=False)
+        fin.assert_called_once_with(st, False)
+
 
 if __name__ == '__main__':
     unittest.main()
