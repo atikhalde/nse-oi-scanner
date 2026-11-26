@@ -1126,5 +1126,85 @@ class LateDiscoveryTests(unittest.TestCase):
         self.assertFalse(R.event_fresh(e, at('09:58:00')))
 
 
+class OperationalHygieneTests(unittest.TestCase):
+    def test_sector_pool_has_a_spare_worker_so_warmup_cannot_block_the_board(self):
+        from concurrent.futures import Future
+        seen = []
+
+        class ImmediateExecutor:
+            def __init__(self, **kw):
+                seen.append(kw.get('max_workers'))
+            def __enter__(self): return self
+            def __exit__(self, *args): pass
+            def submit(self, fn, *args):
+                f = Future()
+                try:
+                    f.set_result(fn(*args))
+                except Exception as exc:
+                    f.set_exception(exc)
+                return f
+
+        st = M.fresh_state(DAY)
+        elapsed = [0.]
+        board = dict(close=at("09:25:00").isoformat(), observed=at("09:25:02").isoformat(),
+                     sectors={"BANK": dict(persist_bull=90, persist_bear=10)},
+                     complete=True, missing_sectors=[], missing_members=[])
+        with patch.dict(os.environ, {"M16_SECTOR_WORKERS": "2"}), patch.object(
+                R.m16_sector, "warm", return_value=(1, 19)), patch.object(
+                R.m16_sector, "refresh", return_value=board), patch.object(
+                R, "ThreadPoolExecutor", ImmediateExecutor), patch.object(
+                R, "ProcessPoolExecutor", ImmediateExecutor), patch.object(
+                R.shared, "now_ist", return_value=at("09:25:00")), patch.object(
+                R.shared.L, "SYMS", ["AXISBANK"]), patch.object(
+                R, "timed_fetch", return_value=(R.normalize(pd.DataFrame([bar("09:15")]), DAY), at("09:25:00"))), patch.object(
+                R, "analyze", return_value=("AXISBANK", [])), patch.object(
+                R.time, "sleep", side_effect=lambda _: elapsed.__setitem__(0, elapsed[0] + 0.5)), patch.object(
+                R.time, "monotonic", side_effect=lambda: elapsed[0]), patch.object(R, "save"):
+            R.live_session(st, {"AXISBANK": {"ok": True}}, 0.02, dry_run=True)
+        self.assertIn(2, seen)
+        self.assertNotIn(1, seen)
+
+    def test_health_notice_names_the_provider_throttle(self):
+        st = M.fresh_state(DAY)
+        st["provider_throttle"] = dict(at=at("09:59:00").isoformat(), streak=2, pause_seconds=20,
+                                       reason="no usable M16 feed: yahoo: HTTP 429 shared cooldown")
+        st["feed_health"] = {"AXISBANK": dict(ok=False, at=at("09:59:30").isoformat(),
+                                              first_failure=at("09:59:00").isoformat(),
+                                              failure_count=4, reason="HTTP 429 shared cooldown")}
+        captured = {}
+
+        def capture(token, chat, text):
+            captured["text"] = text
+            return True
+
+        with patch.object(R, "telegram_targets", return_value=[("token", "chat")]), patch.object(
+                R.tg, "send_message_to", side_effect=capture), patch.object(R, "save"):
+            R.notify_health(st, at("10:00:00"), dry_run=False)
+        self.assertIn("Provider rate limit", captured["text"])
+        self.assertTrue(captured["text"].startswith("M16 FEED DEGRADED"))
+
+    def test_readiness_check_flags_schedule_and_gate_drift(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / ".github/workflows").mkdir(parents=True)
+            real = (Path(__file__).parent / ".github/workflows/16_live_m16.yml").read_text()
+            drifted = real.replace('cron: "25 3 * * 1-5"', 'cron: "30 3 * * 1-5"').replace(
+                'hhmm < "08:55"', 'hhmm < "09:00"')
+            (root / ".github/workflows/16_live_m16.yml").write_text(drifted)
+            state = root / "state16.json"
+            state.write_text(json.dumps(dict(M.fresh_state("2026-11-26"), eod_done=True)))
+            captured = {}
+            with patch.object(R, "ROOT", root), patch.object(R, "STATE", state), patch.object(
+                    R.shared.L, "SYMS", ["AXISBANK"]), patch.object(
+                    R.shared, "MEMBERS", {"BANK": ["AXISBANK"]}), patch.object(
+                    R.shared, "symbol_history", return_value={"ok": True, "last_day": "2026-11-26"}), patch(
+                    "builtins.print", side_effect=lambda *a, **k: captured.setdefault("out", a[0] if a else "")):
+                self.assertFalse(R.readiness_check("2026-11-27"))
+            report = json.loads(captured["out"])
+            issues = " ".join(report["workflow"]["issues"])
+            self.assertIn("cron", issues)
+            self.assertIn("08:55-15:40", issues)
+
+
 if __name__ == '__main__':
     unittest.main()

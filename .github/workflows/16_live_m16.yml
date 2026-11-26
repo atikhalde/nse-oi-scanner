@@ -44,8 +44,18 @@ jobs:
       M16_CHAT_ID_2: ${{ secrets.M16_CHAT_ID_2 }}
       M16_POLL_SECONDS: "1"
       M16_YAHOO_COORDINATE: "1"
-      M16_YAHOO_REQUEST_INTERVAL: "0.04"
+      # 10 requests/s instead of 25/s: a 210-symbol 09:20 pass still finishes in
+      # ~21s (inside the 30s close budget, and late arrivals now become DELAYED
+      # alerts), while the opening burst no longer trips Yahoo's 429 cooldown.
+      M16_YAHOO_REQUEST_INTERVAL: "0.10"
       M16_ENGINE_WORKERS: "4"
+      M16_SECTOR_WORKERS: "2"
+      # Delayed re-entry policy: a close-confirmed BOS found up to 15 min late
+      # still alerts (priced at discovery, labelled DELAYED) while price is
+      # within 0.75% of the frozen BOS and the sector board passes.
+      M16_LATE_ALERTS: "1"
+      M16_LATE_WINDOW_MIN: "15"
+      M16_LATE_MAX_EXTENSION_PCT: "0.75"
       M16_UNHEALTHY_EXIT_SECONDS: "300"
       M16_MAX_SESSION_STARTS: "16"
       M16_AUTOMATIC_SESSION: ${{ inputs.manual_recovery && '0' || '1' }}
