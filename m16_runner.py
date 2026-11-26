@@ -249,6 +249,7 @@ def apply(st, symbol, rows, now):
                                  "tracked final label" if key else "preview/unsupported code or outside seed window")))
         record_transitions(st, previous, now, "closed candle "+bar["dt"])
         st["cursors"][symbol] = bar["dt"]
+    queue_late_entries(st, symbol, rows, now)
 
 
 def observe_running(st, symbol, bars, now):
@@ -280,7 +281,17 @@ def alert_text(e):
         extra += f"Incomplete sectors: {', '.join(gate['missing_sectors'])}; guaranteed worst-case rank {gate['worst_rank']}/3\n"
     if gate.get("status") == "pass":
         extra += f"Sector {gate['sector']} · persistent {gate['score']:.2f} >70 · top 3 · board close {model.stamp(gate['close']).strftime('%H:%M')} IST\n"
-    return (f"M16 · {labels.get(e['kind'], e['kind'])}\n{e['symbol']} {e['side']} @ {e['price']:.2f}\n"
+    late = e.get("late") or {}
+    if late:
+        extra += (f"Delayed discovery: breakout candle closed {late['delay_minutes']:.1f} min before "
+                  f"detection; price {late['extension_pct']:.2f}% beyond BOS "
+                  f"(BOS close {late['original_price']:.2f}). Entry level is the discovery price, "
+                  "not the BOS close.\n")
+        header = (f"M16 · DELAYED — {labels.get(e['kind'], e['kind'])} "
+                  f"(found {late['delay_minutes']:.1f} min late)")
+    else:
+        header = f"M16 · {labels.get(e['kind'], e['kind'])}"
+    return (f"{header}\n{e['symbol']} {e['side']} @ {e['price']:.2f}\n"
             f"BOS {e['bos']:.2f} · pullback {e['pullback']}\n"
             f"Original {e['signal']} candle {model.stamp(e['seed']).strftime('%H:%M')}\n"
             f"Breakout candle {model.stamp(e['bar']).strftime('%H:%M')} · observed {model.stamp(e['observed']).strftime('%H:%M:%S')} IST\n"
@@ -293,6 +304,11 @@ def event_fresh(event, now):
     age = (now-model.stamp(event["observed"])).total_seconds()
     if now.strftime("%Y-%m-%d") != start.strftime("%Y-%m-%d") or not 0 <= age <= MAX_LAG:
         return False
+    # A delayed re-entry is fresh from the moment we discovered it; the staleness
+    # of the BOS candle itself is bounded by late_entry_candidate, and the send
+    # still has to happen inside the same 30s observation budget.
+    if event.get("late"):
+        return event["kind"] != "RUNNING_BREAK" and model.before(now, "12:30:00")
     end = start+pd.Timedelta(minutes=5)
     if event["kind"] == "RUNNING_BREAK":
         return start <= now < end  # NEVER send a provisional alert after close
@@ -432,6 +448,82 @@ def provider_throttled(reason):
     """
     text = str(reason or "").lower()
     return any(token in text for token in ("429", "cooldown", "rate_limited", "too many requests"))
+
+
+def late_alert_window_seconds():
+    """How stale a BOS close may be and still count as a tradable late entry."""
+    return max(0., float(os.getenv("M16_LATE_WINDOW_MIN", "15"))) * 60.
+
+
+def late_alert_max_extension_pct():
+    """Maximum distance beyond the frozen BOS that still counts as 'at the level'."""
+    return max(0., float(os.getenv("M16_LATE_MAX_EXTENSION_PCT", "0.75")))
+
+
+def late_entry_candidate(st, event, now, discovery_price):
+    """Price an alert at the discovery candle for a BOS found minutes late.
+
+    The 30s freshness rule exists so a stale alert is never dressed up as a
+    fresh one. It also threw away 2026-11-26's best signals: 8 of the 14
+    backfilled ones were only 1.3-2.5 minutes late with price still at the
+    frozen BOS (PRESTIGE closed +6.31%, HCLTECH +3.64%, MCX +3.51% from the
+    discovery price). A delayed alert is allowed only when all of the
+    following hold, and it is always labelled as delayed:
+      * close-confirmed kind (never provisional RUNNING_BREAK, never CLOSE_FAILED)
+      * 30s < delay <= M16_LATE_WINDOW_MIN (default 15 min)
+      * still before the 12:30 confirmation cutoff
+      * price on the trade side of the BOS and at most
+        M16_LATE_MAX_EXTENSION_PCT (default 0.75 %) away from it
+      * the sector board validates the sector at that moment (no guessing)
+    """
+    if st.get("mode") == "offline_replay" or os.getenv("M16_LATE_ALERTS", "1") == "0":
+        return None
+    if event.get("kind") not in {"CLOSE_CONFIRMED", "CLOSE_ONLY", "DIRECT_BOS_CONFIRMED"}:
+        return None
+    if event.get("live") or event.get("late") or not event.get("bos") or not discovery_price:
+        return None
+    close_time = model.stamp(event["bar"]) + pd.Timedelta(minutes=5)
+    delay = (model.stamp(now) - close_time).total_seconds()
+    if delay <= MAX_LAG or delay > late_alert_window_seconds():
+        return None
+    if not model.before(now, "12:30:00"):
+        return None
+    sign = 1 if event["side"] == "BUY" else -1
+    try:
+        extension = sign * (float(discovery_price) - float(event["bos"])) / float(event["bos"]) * 100.
+    except (TypeError, ValueError, ZeroDivisionError):
+        return None
+    if extension <= 0 or extension > late_alert_max_extension_pct():
+        return None
+    gate = m16_sector.decision(st, event["symbol"], event["side"], now)
+    if gate.get("status") not in {"pass", "disabled"}:
+        return None
+    return dict(delay_seconds=round(delay, 1), delay_minutes=round(delay / 60., 2),
+                extension_pct=round(extension, 3), discovery_price=float(discovery_price),
+                original_price=float(event["price"]), gate=gate)
+
+
+def queue_late_entries(st, symbol, rows, now):
+    """Queue a clearly-labelled delayed alert for a BOS discovered late."""
+    if not rows:
+        return
+    try:
+        discovery_price = float(rows[-1][0]["close"])
+    except (TypeError, KeyError, IndexError):
+        return
+    for event in st["events"]:
+        if event.get("symbol") != symbol or event["id"] in st["outbox"]:
+            continue
+        info = late_entry_candidate(st, event, now, discovery_price)
+        if not info:
+            continue
+        gate = info.pop("gate")
+        event.update(late=info, sector_gate=gate,
+                     sector_eligible_at=now.isoformat() if gate.get("status") == "pass" else None,
+                     price=info["discovery_price"])
+        st["outbox"][event["id"]] = dict(event=event, status="pending")
+        print(f"M16 delayed alert queued: {symbol} {event['side']} {event['kind']} "
+              f"({info['delay_minutes']:.1f} min late, {info['extension_pct']:.2f}% beyond BOS)")
 
 
 def record_feed_failure(st, symbol, now, reason):

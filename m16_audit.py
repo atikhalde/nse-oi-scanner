@@ -25,6 +25,8 @@ def sections(st):
                 f"Event types: {dict(Counter(e.get('kind', '?') for e in events))}",
                 f"Recorded completed candles: {sum(len(b) for b in bars.values())} across {len(bars)} symbols.",
                 f"Live eligible events: {sum(bool(e.get('live')) for e in events)}; historical only: {sum(not bool(e.get('live')) for e in events)}",
+                f"Delayed re-entry alerts (BOS found late, priced at discovery): {sum(bool(e.get('late')) for e in events)}"
+                + (f" | delays {dict(Counter(round(e['late']['delay_minutes'], 1) for e in events if e.get('late')))}" if any(e.get('late') for e in events) else ""),
                 f"Monitoring last checked: {st.get('monitoring_health', {}).get('at', st.get('health_notice', {}).get('checked_at', '?'))}; affected symbols: {len(st.get('monitoring_health', {}).get('affected', st.get('health_notice', {}).get('affected', [])))}",
                 f"Provider results (latest response, not a latency guarantee): {provider_counts}{dormant_note}; full per-symbol details in appendix",
                 "Late backfill cannot reconstruct missed intrabar crossings; wall-clock-expired setups may remain expired, so historical matches are not a complete opportunity count.",
@@ -42,6 +44,7 @@ def sections(st):
         'Fib 0.236-0.382 band or EMA9/10 wick touch; freeze prior extreme as BOS. >50% retracement invalidates. Live alerts require M6 sector persistence >70 and directional top-3 rank on the current 5m board (no M6 composite/leadership/top-five stock filters).',
         'RUNNING_BREAK is provisional. CLOSE_CONFIRMED and CLOSE_FAILED describe the SAME candle. CLOSE_ONLY means no intrabar crossing was observed.',
         'DIRECT_BOS_CONFIRMED: the original final indicator label itself occurs on a qualifying BOS close. Prior price-pattern evidence, not a fabricated earlier indicator signal; no second pullback required.',
+        'DELAYED re-entry: when a close-confirmed BOS is first discovered 30s-15min late and price is still within 0.75% of the frozen BOS, the alert is sent priced at the discovery candle and labelled DELAYED. Provisional RUNNING_BREAK alerts are never delayed-issued.',
         'Delayed feed, computation, Telegram and GitHub scheduling can add latency. Poll cadence is not a zero-delay market-data guarantee.',
         'Complete recorded values are in the appendix, including per-bot delivery identifiers (hashes, never credentials).']
     signals = []
