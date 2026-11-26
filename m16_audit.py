@@ -110,7 +110,7 @@ def build_pdf(st, path):
     from reportlab.lib.styles import ParagraphStyle
     from reportlab.pdfbase import pdfmetrics
     from reportlab.pdfbase.ttfonts import TTFont
-    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, PageBreak
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, Preformatted, Spacer, PageBreak
 
     font = 'Helvetica'
     for candidate in ('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', '/usr/share/fonts/truetype/liberation2/LiberationSans-Regular.ttf'):
@@ -119,16 +119,41 @@ def build_pdf(st, path):
             if font not in pdfmetrics.getRegisteredFontNames():
                 pdfmetrics.registerFont(TTFont(font, candidate))
             break
+    printable_w = A4[0] - 72
     normal = ParagraphStyle('audit', fontName=font, fontSize=8, leading=11, spaceAfter=3, wordWrap='CJK')
     heading = ParagraphStyle('heading', parent=normal, fontSize=13, leading=17, spaceAfter=10, textColor=colors.HexColor('#164e63'))
     title = ParagraphStyle('title', parent=heading, fontSize=18, leading=24, alignment=TA_CENTER)
-    small = ParagraphStyle('appendix', parent=normal, fontSize=7, leading=9)
+    appendix_pre = ParagraphStyle('appendix_pre', fontName=font, fontSize=6.5, leading=8, spaceAfter=0)
     story = [Paragraph('M16 FULL-DAY CONTINUATION AUDIT', title),
              Paragraph(escape(str(st.get('date', '?'))) + ' - IST', normal), Spacer(1, 10)]
     for i, (name, lines) in enumerate(sections(st)):
         if i:
             story.append(PageBreak())
         story.append(Paragraph(escape(name), heading))
+        if i == 11:
+            # Render the full saved-state dump in bounded Preformatted blocks so
+            # 150k+ appendix lines build in ~5s instead of ~105s with zero truncation.
+            wrapped = []
+            for line in lines:
+                for physical in str(line).splitlines() or ['']:
+                    for part in textwrap.wrap(physical, width=110, replace_whitespace=False, drop_whitespace=False) or [' ']:
+                        text = ''.join(c if ord(c) >= 32 or c == '\t' else ' ' for c in part).expandtabs(4)
+                        if font == 'Helvetica':
+                            text = text.encode('cp1252', errors='replace').decode('cp1252')
+                        if len(text) <= 80 or pdfmetrics.stringWidth(text, font, 6.5) <= printable_w:
+                            wrapped.append(text)
+                        else:
+                            buf = ''
+                            for ch in text:
+                                if buf and pdfmetrics.stringWidth(buf + ch, font, 6.5) > printable_w:
+                                    wrapped.append(buf)
+                                    buf = ch
+                                else:
+                                    buf += ch
+                            wrapped.append(buf or ' ')
+            for k in range(0, len(wrapped), 55):
+                story.append(Preformatted('\n'.join(wrapped[k:k + 55]), appendix_pre))
+            continue
         for line in lines:
             # Bounded flowables prevent LayoutError from extremely long keys,
             # diagnostics or a large nested saved-state string. No truncation.
@@ -137,7 +162,7 @@ def build_pdf(st, path):
                     text = ''.join(c if ord(c) >= 32 or c == '\t' else ' ' for c in part)
                     if font == 'Helvetica':
                         text = text.encode('cp1252', errors='replace').decode('cp1252')
-                    story.append(Paragraph(escape(text).replace('  ', '&nbsp; '), small if i == 11 else normal))
+                    story.append(Paragraph(escape(text).replace('  ', '&nbsp; '), normal))
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     def footer(canvas, doc):

@@ -618,6 +618,7 @@ def live_session(st, cache, max_minutes, dry_run=False):
     last_discovery, fetches, engines, latest, requested = None, {}, {}, {}, {}
     worker_count = max(1, int(os.getenv("M16_ENGINE_WORKERS", "4")))
     next_health, next_heartbeat = 0.0, 0.0
+    open_wave_started = None
     outage_since = None
     (ROOT / ".m16-unhealthy").unlink(missing_ok=True) if not dry_run else None
     failures, retry_at = {}, {}
@@ -669,6 +670,8 @@ def live_session(st, cache, max_minutes, dry_run=False):
             if model.before(now, "09:15:00"):
                 time.sleep(.5)
                 continue
+            if open_wave_started is None and not model.before(now, "09:20:00"):
+                open_wave_started = time.monotonic()
             if sector_future is not None and sector_future.done():
                 try:
                     snapshot = sector_future.result()
@@ -800,21 +803,27 @@ def live_session(st, cache, max_minutes, dry_run=False):
                 engines[executor.submit(analyze, (sym, bars, worker_cache, cursor, received))] = sym
             flush(st, shared.now_ist(), dry_run)
             if time.monotonic() >= next_health:
-                notify_health(st, now, dry_run)
-                monitored = st.get("monitoring_health", {})
-                watched = monitored.get("watched", [])
-                bad = monitored.get("affected", [])
-                widespread = len(watched) >= 3 and len(bad)/len(watched) >= .8
+                startup_grace = float(os.getenv("M16_STARTUP_HEALTH_GRACE_SECONDS", "75"))
                 clock = time.monotonic()
-                outage_since = (clock if outage_since is None else outage_since) if widespread and model.before(now, "15:20:00") else None
-                if outage_since is not None and clock-outage_since >= float(os.getenv("M16_UNHEALTHY_EXIT_SECONDS", "300")):
-                    save(st, dry_run)
-                    if not dry_run:
-                        (ROOT / ".m16-unhealthy").write_text(now.isoformat())
-                    for pending in list(engines)+list(fetches):
-                        pending.cancel()
-                    raise SystemExit("M16 sustained widespread outage; requesting supervised restart")
-                next_health = time.monotonic() + 30
+                in_flight = bool(fetches or engines or sector_future is not None)
+                wave_age = clock - (open_wave_started if open_wave_started is not None else started)
+                if in_flight and (clock - started < startup_grace or (open_wave_started is not None and wave_age < startup_grace)):
+                    next_health = clock + 2
+                else:
+                    notify_health(st, now, dry_run)
+                    monitored = st.get("monitoring_health", {})
+                    watched = monitored.get("watched", [])
+                    bad = monitored.get("affected", [])
+                    widespread = len(watched) >= 3 and len(bad)/len(watched) >= .8
+                    outage_since = (clock if outage_since is None else outage_since) if widespread and model.before(now, "15:20:00") else None
+                    if outage_since is not None and clock-outage_since >= float(os.getenv("M16_UNHEALTHY_EXIT_SECONDS", "300")):
+                        save(st, dry_run)
+                        if not dry_run:
+                            (ROOT / ".m16-unhealthy").write_text(now.isoformat())
+                        for pending in list(engines)+list(fetches):
+                            pending.cancel()
+                        raise SystemExit("M16 sustained widespread outage; requesting supervised restart")
+                    next_health = clock + 30
             if time.monotonic() >= next_heartbeat:
                 import m16_transport
                 st["yahoo_budget"] = m16_transport.status()
@@ -832,6 +841,19 @@ def live_session(st, cache, max_minutes, dry_run=False):
                 save(st, dry_run)
                 last_save = time.monotonic()
             time.sleep(.1)
+        end_now = shared.now_ist()
+        if end_now.strftime("%Y-%m-%d") == st["date"] and not model.before(end_now, "15:31:00") and not st.get("eod_done"):
+            for future, sym in list(engines.items()):
+                engines.pop(future, None)
+                try:
+                    _, rows = future.result(timeout=5)
+                    apply(st, sym, rows, shared.now_ist())
+                except Exception as exc:
+                    st["diagnostics"].append(dict(at=end_now.isoformat(), symbol=sym, reason=f"engine: {exc}"))
+            expire_setups(st, end_now)
+            trim_diagnostics(st)
+            save(st, dry_run)
+            finish(st, dry_run)
         save(st, dry_run)
         for future in list(engines) + list(fetches):
             future.cancel()
@@ -973,7 +995,9 @@ def main():
             for future in as_completed(pending):
                 sym = pending[future]
                 try:
-                    bars_map[sym], _ = future.result()
+                    raw, _ = future.result()
+                    bars_map[sym] = raw
+                    record_feed_success(st, sym, shared.now_ist(), raw.attrs.get("m16_feed", {}))
                 except Exception as exc:
                     record_feed_failure(st, sym, shared.now_ist(), str(exc))
         cycle(st, now, bars_map, cache, dry_run=args.dry_run)

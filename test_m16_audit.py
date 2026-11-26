@@ -108,6 +108,23 @@ class AuditTests(unittest.TestCase):
         self.assertNotIn("'unusable'", sec1)
         self.assertIn("dormant excluded: ['ICICIPRULI']", sec1)
 
+    def test_large_appendix_pdf_builds_fast_with_wide_unicode_lines(self):
+        import time
+        st = M.fresh_state(DAY)
+        st['audit_bars'] = {
+            f'SYM{i}': {f'2026-11-20T09:{15 + (j % 40):02d}:00+05:30': bar('09:30') for j in range(30)}
+            for i in range(40)
+        }
+        st['diagnostics'].append(dict(reason='M&M ₹ <> & \t ' + ('W' * 600)))
+        with tempfile.TemporaryDirectory() as tmp:
+            t0 = time.monotonic()
+            out = A.build_pdf(st, Path(tmp) / 'large.pdf')
+            elapsed = time.monotonic() - t0
+            raw = out.read_bytes()
+            self.assertTrue(raw.startswith(b'%PDF-'))
+            self.assertIn(b'%%EOF', raw[-256:])
+            self.assertLess(elapsed, 15.0)
+
 
 if __name__ == '__main__':
     unittest.main()
