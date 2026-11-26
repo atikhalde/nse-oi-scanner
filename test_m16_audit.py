@@ -96,6 +96,18 @@ class AuditTests(unittest.TestCase):
             self.assertTrue(doc.call_args.args[2].endswith('.pdf'))
             self.assertTrue(st['diagnostics'])
 
+    def test_dormant_symbols_excluded_from_provider_summary(self):
+        st = M.fresh_state(DAY)
+        st['inactive_symbols'] = ['ICICIPRULI']
+        st['feed_health'] = {
+            'AXISBANK': dict(ok=True),
+            'ICICIPRULI': dict(ok=False, reason='empty response'),
+        }
+        sec1 = '\n'.join(dict(A.sections(st))['1. Executive summary and coverage'])
+        self.assertIn("{'usable': 1}", sec1)
+        self.assertNotIn("'unusable'", sec1)
+        self.assertIn("dormant excluded: ['ICICIPRULI']", sec1)
+
 
 if __name__ == '__main__':
     unittest.main()

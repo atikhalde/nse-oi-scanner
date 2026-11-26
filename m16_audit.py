@@ -14,6 +14,10 @@ def sections(st):
     setups = st.get('setups', {})
     events = st.get('events', [])
     bars = st.get('audit_bars', {})
+    dormant = set(st.get('inactive_symbols', []))
+    provider_counts = dict(Counter('usable' if x.get('ok') else 'unusable'
+                                   for sym, x in st.get('feed_health', {}).items() if sym not in dormant))
+    dormant_note = f"; dormant excluded: {sorted(dormant)}" if dormant else ""
     coverage = [f"Date: {st.get('date', '?')} (IST) | Mode: {st.get('mode', 'feed-polled observations; historical events are not live alerts')}",
                 f"Original tracked signals: {len(setups)}; continuation observations: {len(events)}",
                 f"Setup phases: {dict(Counter(s.get('phase', '?') for s in setups.values()))}",
@@ -22,7 +26,7 @@ def sections(st):
                 f"Recorded completed candles: {sum(len(b) for b in bars.values())} across {len(bars)} symbols.",
                 f"Live eligible events: {sum(bool(e.get('live')) for e in events)}; historical only: {sum(not bool(e.get('live')) for e in events)}",
                 f"Monitoring last checked: {st.get('monitoring_health', {}).get('at', st.get('health_notice', {}).get('checked_at', '?'))}; affected symbols: {len(st.get('monitoring_health', {}).get('affected', st.get('health_notice', {}).get('affected', [])))}",
-                f"Provider results (latest response, not a latency guarantee): {dict(Counter('usable' if x.get('ok') else 'unusable' for x in st.get('feed_health', {}).values()))}; full per-symbol details in appendix",
+                f"Provider results (latest response, not a latency guarantee): {provider_counts}{dormant_note}; full per-symbol details in appendix",
                 "Late backfill cannot reconstruct missed intrabar crossings; wall-clock-expired setups may remain expired, so historical matches are not a complete opportunity count.",
                 f"Diagnostic records omitted by retention cap: {st.get('diagnostics_omitted', 0)}",
                 "Coverage is OBSERVED data only. Discovery covers the universe before 11:00; seeded stocks are then watched through market close.",

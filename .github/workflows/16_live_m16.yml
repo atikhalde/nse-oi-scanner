@@ -132,7 +132,7 @@ jobs:
           esac
       - name: Upload M16 diagnostic snapshot even after failure
         if: always() && steps.market.outputs.should_run == 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: m16-diagnostics-${{ github.run_id }}
           path: |
@@ -152,24 +152,30 @@ jobs:
           git diff --cached --quiet || git commit -m "m16cycle $(date -u +%F_%H%M)Z"
           bash workflow_safe_push.sh
 
-      - name: Hand off supervised shift until 15:31 IST
+      - name: Hand off supervised shift until EOD review completes
         if: always() && !cancelled() && steps.market.outputs.should_run == 'true' && steps.regressions.outcome == 'success' && steps.market.outputs.regular_session == 'true' && inputs.mode != 'dry-run' && inputs.mode != 'test-alert' && inputs.mode != 'feed-probe' && inputs.mode != 'sector-probe'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MODE: ${{ inputs.mode || 'session' }}
         run: |
           IST=$((10#$(date -u +%H) * 60 + 10#$(date -u +%M) + 330)); IST=$((IST % 1440))
-          if [ "$MODE" = "session" ] && [ "$IST" -ge 555 ] && [ "$IST" -lt 931 ]; then
-            STARTS=$(python3 - <<'PY'
-          import json
+          if [ "$MODE" = "session" ] && [ "$IST" -ge 555 ] && [ "$IST" -lt 933 ]; then
+            read -r STARTS DONE < <(python3 - <<'PY'
+          import datetime, json
+          import m16_calendar as cal
+          today = datetime.datetime.now(cal.IST).strftime('%Y-%m-%d')
           try:
               state = json.load(open('state16.json'))
-              print(int(state.get('automatic_session_starts', state.get('session_starts', 0))))
+              starts = int(state.get('automatic_session_starts', state.get('session_starts', 0)))
+              done = 1 if state.get('date') == today and state.get('eod_done') else 0
+              print(starts, done)
           except Exception:
-              print(0)
+              print(0, 0)
           PY
             )
-            if [ "$STARTS" -lt "${M16_MAX_SESSION_STARTS:-16}" ]; then
+            if [ "$DONE" = "1" ]; then
+              echo "M16 EOD TXT + PDF review already completed for today; no handoff needed"
+            elif [ "$STARTS" -lt "${M16_MAX_SESSION_STARTS:-16}" ]; then
               if [ -f .m16-unhealthy ]; then
                 echo "M16 unhealthy watchdog requested a fresh supervised runner ($STARTS/${M16_MAX_SESSION_STARTS:-16} starts)"
               else

@@ -9,12 +9,37 @@ _COOLDOWN_LOCK = threading.Lock()
 _LAST_SESSION_RESET = float("-inf")
 
 
+def _ist(value):
+    ts = pd.Timestamp(value)
+    return ts.tz_localize('Asia/Kolkata') if ts.tzinfo is None else ts.tz_convert('Asia/Kolkata')
+
+
+def required_closed_bar(now):
+    """Latest completed 5m candle required to consider a current-session feed fresh.
+
+    Allows 30s publication grace after each 5m close and caps at 15:25 IST.
+    During NSE's closing-price aggregation window (15:20:30 <= now < 15:30:30),
+    Yahoo omits the 15:15 candle on ~35-80% of NSE equities and omits 15:20 on
+    ~98% before publishing 15:25 after 15:30 IST; 15:10 remains the latest
+    universally published pre-close candle until 15:25 is due at 15:30:30.
+    """
+    clock = _ist(now)
+    day = clock.normalize()
+    expected = (clock - pd.Timedelta(seconds=30)).floor('5min') - pd.Timedelta(minutes=5)
+    expected = min(expected, day + pd.Timedelta(hours=15, minutes=25))
+    closing_gap_start = day + pd.Timedelta(hours=15, minutes=15)
+    closing_final = day + pd.Timedelta(hours=15, minutes=25)
+    if closing_gap_start <= expected < closing_final:
+        return day + pd.Timedelta(hours=15, minutes=10)
+    return expected
+
+
 def current_bars(raw, now):
     if raw is None or raw.empty:
         raise ValueError('empty response')
     bars = raw.copy()
     bars['dt'] = pd.to_datetime(bars['dt'], utc=True).dt.tz_convert('Asia/Kolkata')
-    clock = pd.Timestamp(now)
+    clock = _ist(now)
     bars = bars[(bars.dt.dt.date == clock.date()) & (bars.dt <= clock)]
     # Yahoo may append a last-quote row at e.g. 14:26:13. It is NOT a
     # five-minute candle; do not let it falsely advertise current coverage.
@@ -23,11 +48,11 @@ def current_bars(raw, now):
     bars = bars.sort_values('dt').drop_duplicates('dt', keep='last')
     if bars.empty:
         raise ValueError('no current-session candles')
-    # Require the newest completed candle, allowing the first 30 seconds for
-    # publication. Forming candles alone are not proof of tick freshness.
-    expected = (clock - pd.Timedelta(seconds=30)).floor('5min') - pd.Timedelta(minutes=5)
-    expected = min(expected, clock.normalize() + pd.Timedelta(hours=15, minutes=25))
-    if expected >= clock.normalize() + pd.Timedelta(hours=9, minutes=15) and expected not in set(bars['dt']):
+    # Require the newest mandatory completed candle, allowing the first 30s for
+    # publication. Forming candles alone are not proof of completed continuity.
+    expected = required_closed_bar(clock)
+    completed = bars[bars['dt'] + pd.Timedelta(minutes=5) <= clock]
+    if expected >= clock.normalize() + pd.Timedelta(hours=9, minutes=15) and expected not in set(completed['dt']):
         raise ValueError(f'stale/missing completed candle expected={expected.isoformat()} latest={bars.iloc[-1]["dt"].isoformat()}')
     if bars.iloc[-1]['dt'] < expected:
         raise ValueError(f'stale latest={bars.iloc[-1]["dt"].isoformat()} expected>={expected.isoformat()}')
@@ -82,9 +107,11 @@ def fetch(symbol, security_id, now):
                 details['source_latest'] = str(raw['dt'].iloc[-1])
                 details['expected_session'] = str(pd.Timestamp(now).date())
             errors.append(details)
-            # A wider date range cannot make yesterday's nonempty data become
-            # today's data. Avoid doubling load while publication is absent.
-            if str(exc) == 'no current-session candles' and not transport_errors:
+            # A wider date range cannot synthesize unpublished today candles
+            # once 1d returned non-empty data without transport errors, nor
+            # bypass per-symbol empty-response backoff.
+            if (raw is not None and not raw.empty and not transport_errors) or any(
+                    x.get('host') == 'shared-m16-symbol' for x in transport_errors):
                 break
             if any(x.get('http_status') == 429 for x in transport_errors):
                 with _COOLDOWN_LOCK:

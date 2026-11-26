@@ -140,6 +140,16 @@ class WorkflowCoverageTests(unittest.TestCase):
         auto_expr = workflow['jobs']['continuation']['env']['M16_AUTOMATIC_SESSION']
         self.assertIn('inputs.manual_recovery', auto_expr)
 
+    def test_workflow_uses_node24_upload_artifact_and_guards_eod_handoff(self):
+        import yaml
+        from pathlib import Path
+        workflow = yaml.safe_load((Path(__file__).parent / '.github/workflows/16_live_m16.yml').read_text())
+        steps = workflow['jobs']['continuation']['steps']
+        upload = next(s for s in steps if s.get('name') == 'Upload M16 diagnostic snapshot even after failure')
+        self.assertEqual(upload['uses'], 'actions/upload-artifact@v7')
+        handoff = next(s for s in steps if 'Hand off supervised shift' in s.get('name', ''))
+        self.assertIn('eod_done', handoff['run'])
+
 
 if __name__ == '__main__':
     unittest.main()
