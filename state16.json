@@ -3,7 +3,7 @@
   "cursors": {
     "360ONE": "2026-11-26T10:40:00+05:30",
     "ABB": "2026-11-26T10:35:00+05:30",
-    "ABCAPITAL": "2026-11-26T10:35:00+05:30",
+    "ABCAPITAL": "2026-11-26T10:40:00+05:30",
     "ADANIENSOL": "2026-11-26T10:35:00+05:30",
     "ADANIENT": "2026-11-26T10:35:00+05:30",
     "ADANIGREEN": "2026-11-26T10:40:00+05:30",
@@ -6721,11 +6721,6 @@
       },
       "rally_trail": [
         {
-          "close": 417.5,
-          "ema9": 418.5904677903575,
-          "ema10": 418.6885717731071
-        },
-        {
           "close": 417.04998779296875,
           "ema9": 418.2823717908798,
           "ema10": 418.3906474130819
@@ -6749,9 +6744,14 @@
           "close": 416.95001220703125,
           "ema9": 417.61126348945066,
           "ema10": 417.7075945581091
+        },
+        {
+          "close": 417.3999938964844,
+          "ema9": 417.5690095708574,
+          "ema10": 417.65166716508645
         }
       ],
-      "last_checked_bar": "2026-11-26T10:35:00+05:30",
+      "last_checked_bar": "2026-11-26T10:40:00+05:30",
       "rally_context_start": "2026-11-26T09:50:00+05:30",
       "waiting_reason": "no directional rally before pullback (sideways/insufficient progress)"
     },
@@ -9409,7 +9409,7 @@
           "reason": "sector board unavailable"
         }
       },
-      "status": "pending",
+      "status": "expired_unsent",
       "awaiting_sector": true,
       "sector_last_check": {
         "status": "unknown",
@@ -9444,7 +9444,7 @@
           "reason": "sector board unavailable"
         }
       },
-      "status": "pending",
+      "status": "expired_unsent",
       "awaiting_sector": true,
       "sector_last_check": {
         "status": "unknown",
@@ -19669,7 +19669,7 @@
     "YESBANK": true,
     "ZYDUSLIFE": true
   },
-  "session_starts": 5,
+  "session_starts": 6,
   "sector_warmup": {
     "at": "2026-11-26T10:40:14.885490+05:30",
     "counts": [
@@ -19681,13 +19681,13 @@
     "360ONE": {
       "provider": "yahoo",
       "window": "1d",
-      "latest": "2026-11-26T10:40:00+05:30",
+      "latest": "2026-11-26T10:45:00+05:30",
       "fallback_errors": [],
       "transport_errors": [],
-      "received_at": "2026-11-26T10:45:16.736952+05:30",
-      "request_started": "2026-11-26T10:45:16.191188+05:30",
-      "at": "2026-11-26T10:45:16.629044+05:30",
-      "last_success": "2026-11-26T10:45:16.629044+05:30",
+      "received_at": "2026-11-26T10:46:33.925919+05:30",
+      "request_started": "2026-11-26T10:46:33.341652+05:30",
+      "at": "2026-11-26T10:46:33.957582+05:30",
+      "last_success": "2026-11-26T10:46:33.957582+05:30",
       "ok": true
     },
     "ABB": {
@@ -19705,13 +19705,13 @@
     "ABCAPITAL": {
       "provider": "yahoo",
       "window": "1d",
-      "latest": "2026-11-26T10:35:00+05:30",
+      "latest": "2026-11-26T10:45:00+05:30",
       "fallback_errors": [],
       "transport_errors": [],
-      "received_at": "2026-11-26T10:40:15.979227+05:30",
-      "request_started": "2026-11-26T10:40:11.390438+05:30",
-      "at": "2026-11-26T10:40:15.996178+05:30",
-      "last_success": "2026-11-26T10:40:15.996178+05:30",
+      "received_at": "2026-11-26T10:46:33.870470+05:30",
+      "request_started": "2026-11-26T10:46:33.341845+05:30",
+      "at": "2026-11-26T10:46:33.957582+05:30",
+      "last_success": "2026-11-26T10:46:33.957582+05:30",
       "ok": true
     },
     "ADANIENSOL": {
@@ -36020,9 +36020,183 @@
     "at": "2026-11-26T10:45:09.027348+05:30"
   },
   "monitoring_health": {
-    "at": "2026-11-26T10:45:12.431537+05:30",
+    "at": "2026-11-26T10:47:03.419326+05:30",
     "affected": [
-      "ICICIPRULI"
+      "ABB",
+      "ADANIENSOL",
+      "ADANIENT",
+      "ADANIPORTS",
+      "ALKEM",
+      "AMBUJACEM",
+      "ANGELONE",
+      "APOLLOHOSP",
+      "ASHOKLEY",
+      "ASTRAL",
+      "AUBANK",
+      "AUROPHARMA",
+      "AXISBANK",
+      "BAJAJ-AUTO",
+      "BAJAJFINSV",
+      "BAJAJHLDNG",
+      "BAJFINANCE",
+      "BANDHANBNK",
+      "BANKBARODA",
+      "BANKINDIA",
+      "BDL",
+      "BEL",
+      "BHARTIARTL",
+      "BLUESTARCO",
+      "BOSCHLTD",
+      "BPCL",
+      "BSE",
+      "CAMS",
+      "CDSL",
+      "CGPOWER",
+      "CHOLAFIN",
+      "COCHINSHIP",
+      "COFORGE",
+      "COLPAL",
+      "CONCOR",
+      "CROMPTON",
+      "CUMMINSIND",
+      "DABUR",
+      "DIVISLAB",
+      "DIXON",
+      "DLF",
+      "DMART",
+      "DRREDDY",
+      "EICHERMOT",
+      "ETERNAL",
+      "EXIDEIND",
+      "FORCEMOT",
+      "FORTIS",
+      "GLENMARK",
+      "GMRAIRPORT",
+      "GODFRYPHLP",
+      "GODREJCP",
+      "GODREJPROP",
+      "HAL",
+      "HAVELLS",
+      "HCLTECH",
+      "HDFCAMC",
+      "HDFCBANK",
+      "HDFCLIFE",
+      "HEROMOTOCO",
+      "HINDALCO",
+      "HINDPETRO",
+      "HINDZINC",
+      "HYUNDAI",
+      "ICICIBANK",
+      "ICICIGI",
+      "ICICIPRULI",
+      "IDEA",
+      "IDFCFIRSTB",
+      "IEX",
+      "INDHOTEL",
+      "INDIGO",
+      "INDUSINDBK",
+      "INDUSTOWER",
+      "INFY",
+      "INOXWIND",
+      "IOC",
+      "IREDA",
+      "IRFC",
+      "ITC",
+      "JINDALSTEL",
+      "JIOFIN",
+      "JSWENERGY",
+      "JSWSTEEL",
+      "JUBLFOOD",
+      "KALYANKJIL",
+      "KAYNES",
+      "KEI",
+      "KFINTECH",
+      "KOTAKBANK",
+      "LAURUSLABS",
+      "LICHSGFIN",
+      "LICI",
+      "LT",
+      "LTF",
+      "LUPIN",
+      "M&M",
+      "MANAPPURAM",
+      "MANKIND",
+      "MARICO",
+      "MARUTI",
+      "MAXHEALTH",
+      "MAZDOCK",
+      "MCX",
+      "MFSL",
+      "MOTHERSON",
+      "MOTILALOFS",
+      "MPHASIS",
+      "MUTHOOTFIN",
+      "NAM-INDIA",
+      "NATIONALUM",
+      "NAUKRI",
+      "NBCC",
+      "NESTLEIND",
+      "NHPC",
+      "NMDC",
+      "NUVAMA",
+      "NYKAA",
+      "OBEROIRLTY",
+      "OFSS",
+      "ONGC",
+      "PAGEIND",
+      "PATANJALI",
+      "PAYTM",
+      "PETRONET",
+      "PFC",
+      "PGEL",
+      "PHOENIXLTD",
+      "PIDILITIND",
+      "PIIND",
+      "PNB",
+      "PNBHOUSING",
+      "POLICYBZR",
+      "POLYCAB",
+      "POWERINDIA",
+      "PREMIERENE",
+      "PRESTIGE",
+      "RADICO",
+      "RBLBANK",
+      "RVNL",
+      "SAIL",
+      "SBICARD",
+      "SBILIFE",
+      "SBIN",
+      "SHREECEM",
+      "SHRIRAMFIN",
+      "SIEMENS",
+      "SOLARINDS",
+      "SONACOMS",
+      "SRF",
+      "SUNPHARMA",
+      "SUPREMEIND",
+      "SUZLON",
+      "SWIGGY",
+      "TATACONSUM",
+      "TATAELXSI",
+      "TATAPOWER",
+      "TATASTEEL",
+      "TCS",
+      "TECHM",
+      "TIINDIA",
+      "TITAN",
+      "TMPV",
+      "TRENT",
+      "TVSMOTOR",
+      "ULTRACEMCO",
+      "UNIONBANK",
+      "UNITDSPR",
+      "UPL",
+      "VBL",
+      "VEDL",
+      "WAAREEENER",
+      "WIPRO",
+      "YESBANK",
+      "ZYDUSLIFE"
     ],
     "watched": [
       "360ONE",
@@ -36237,6 +36411,577 @@
       "ZYDUSLIFE"
     ],
     "details": {
+      "ABB": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "ADANIENSOL": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "ADANIENT": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "ADANIPORTS": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "ALKEM": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "AMBUJACEM": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "ANGELONE": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "APOLLOHOSP": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "ASHOKLEY": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "ASTRAL": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "AUBANK": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "AUROPHARMA": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "AXISBANK": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "BAJAJ-AUTO": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "BAJAJFINSV": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "BAJAJHLDNG": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "BAJFINANCE": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "BANDHANBNK": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "BANKBARODA": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "BANKINDIA": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "BDL": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "BEL": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "BHARTIARTL": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "BLUESTARCO": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "BOSCHLTD": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "BPCL": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "BSE": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "CAMS": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "CDSL": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "CGPOWER": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "CHOLAFIN": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "COCHINSHIP": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "COFORGE": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "COLPAL": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "CONCOR": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "CROMPTON": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "CUMMINSIND": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "DABUR": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "DIVISLAB": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "DIXON": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "DLF": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "DMART": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "DRREDDY": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "EICHERMOT": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "ETERNAL": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "EXIDEIND": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "FORCEMOT": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "FORTIS": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "GLENMARK": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "GMRAIRPORT": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "GODFRYPHLP": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "GODREJCP": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "GODREJPROP": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "HAL": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "HAVELLS": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "HCLTECH": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "HDFCAMC": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "HDFCBANK": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "HDFCLIFE": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "HEROMOTOCO": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "HINDALCO": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "HINDPETRO": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "HINDZINC": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "HYUNDAI": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "ICICIBANK": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "ICICIGI": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
       "ICICIPRULI": {
         "reasons": [
           "no usable M16 feed: yahoo: [{'window': '1d', 'reason': 'empty response', 'transport': [{'host': 'query1.finance.yahoo.com', 'reason': 'empty_response', 'http_status': 200, 'retry_after': None}, {'host': 'query2.finance.yahoo.com', 'reason': 'empty_response', 'http_status': 200, 'retry_after': None}]}, {'window': '5d', 'reason': 'empty response', 'transport': [{'host': 'query1.finance.yahoo.com', 'reason': 'empty_response', 'http_status': 200, 'retry_after': None}, {'host': 'query2.finance.yahoo.com', 'reason': 'empty_response', 'http_status': 200, 'retry_after': None}]}]",
@@ -36244,7 +36989,882 @@
         ],
         "latest": null,
         "cursor": null,
-        "expected": "2026-11-26T10:35:00+05:30"
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "IDEA": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "IDFCFIRSTB": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "IEX": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "INDHOTEL": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "INDIGO": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "INDUSINDBK": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "INDUSTOWER": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "INFY": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "INOXWIND": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "IOC": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "IREDA": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "IRFC": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "ITC": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "JINDALSTEL": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "JIOFIN": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "JSWENERGY": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "JSWSTEEL": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "JUBLFOOD": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "KALYANKJIL": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "KAYNES": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "KEI": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "KFINTECH": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "KOTAKBANK": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "LAURUSLABS": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "LICHSGFIN": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "LICI": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "LT": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "LTF": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "LUPIN": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "M&M": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "MANAPPURAM": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "MANKIND": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "MARICO": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "MARUTI": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "MAXHEALTH": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "MAZDOCK": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "MCX": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "MFSL": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "MOTHERSON": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "MOTILALOFS": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "MPHASIS": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "MUTHOOTFIN": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "NAM-INDIA": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "NATIONALUM": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "NAUKRI": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "NBCC": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "NESTLEIND": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "NHPC": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "NMDC": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "NUVAMA": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "NYKAA": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "OBEROIRLTY": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "OFSS": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "ONGC": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "PAGEIND": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "PATANJALI": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "PAYTM": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "PETRONET": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "PFC": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "PGEL": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "PHOENIXLTD": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "PIDILITIND": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "PIIND": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "PNB": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "PNBHOUSING": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "POLICYBZR": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "POLYCAB": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "POWERINDIA": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "PREMIERENE": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "PRESTIGE": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "RADICO": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "RBLBANK": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "RVNL": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "SAIL": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "SBICARD": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "SBILIFE": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "SBIN": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "SHREECEM": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "SHRIRAMFIN": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "SIEMENS": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "SOLARINDS": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "SONACOMS": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "SRF": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "SUNPHARMA": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "SUPREMEIND": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "SUZLON": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "SWIGGY": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "TATACONSUM": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "TATAELXSI": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "TATAPOWER": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "TATASTEEL": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "TCS": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "TECHM": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "TIINDIA": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "TITAN": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "TMPV": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "TRENT": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "TVSMOTOR": {
+        "reasons": [
+          "stale candle coverage",
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:35:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "ULTRACEMCO": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "UNIONBANK": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "UNITDSPR": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "UPL": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "VBL": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "VEDL": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "WAAREEENER": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "WIPRO": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "YESBANK": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
+      },
+      "ZYDUSLIFE": {
+        "reasons": [
+          "analysis cursor behind expected close"
+        ],
+        "latest": "2026-11-26T10:40:00+05:30",
+        "cursor": "2026-11-26T10:35:00+05:30",
+        "expected": "2026-11-26T10:40:00+05:30"
       }
     },
     "sector_gate_unavailable": true
@@ -36481,9 +38101,183 @@
     "status": "degraded",
     "at": "2026-11-26T09:46:14.016608+05:30",
     "affected": [
-      "ICICIPRULI"
+      "ABB",
+      "ADANIENSOL",
+      "ADANIENT",
+      "ADANIPORTS",
+      "ALKEM",
+      "AMBUJACEM",
+      "ANGELONE",
+      "APOLLOHOSP",
+      "ASHOKLEY",
+      "ASTRAL",
+      "AUBANK",
+      "AUROPHARMA",
+      "AXISBANK",
+      "BAJAJ-AUTO",
+      "BAJAJFINSV",
+      "BAJAJHLDNG",
+      "BAJFINANCE",
+      "BANDHANBNK",
+      "BANKBARODA",
+      "BANKINDIA",
+      "BDL",
+      "BEL",
+      "BHARTIARTL",
+      "BLUESTARCO",
+      "BOSCHLTD",
+      "BPCL",
+      "BSE",
+      "CAMS",
+      "CDSL",
+      "CGPOWER",
+      "CHOLAFIN",
+      "COCHINSHIP",
+      "COFORGE",
+      "COLPAL",
+      "CONCOR",
+      "CROMPTON",
+      "CUMMINSIND",
+      "DABUR",
+      "DIVISLAB",
+      "DIXON",
+      "DLF",
+      "DMART",
+      "DRREDDY",
+      "EICHERMOT",
+      "ETERNAL",
+      "EXIDEIND",
+      "FORCEMOT",
+      "FORTIS",
+      "GLENMARK",
+      "GMRAIRPORT",
+      "GODFRYPHLP",
+      "GODREJCP",
+      "GODREJPROP",
+      "HAL",
+      "HAVELLS",
+      "HCLTECH",
+      "HDFCAMC",
+      "HDFCBANK",
+      "HDFCLIFE",
+      "HEROMOTOCO",
+      "HINDALCO",
+      "HINDPETRO",
+      "HINDZINC",
+      "HYUNDAI",
+      "ICICIBANK",
+      "ICICIGI",
+      "ICICIPRULI",
+      "IDEA",
+      "IDFCFIRSTB",
+      "IEX",
+      "INDHOTEL",
+      "INDIGO",
+      "INDUSINDBK",
+      "INDUSTOWER",
+      "INFY",
+      "INOXWIND",
+      "IOC",
+      "IREDA",
+      "IRFC",
+      "ITC",
+      "JINDALSTEL",
+      "JIOFIN",
+      "JSWENERGY",
+      "JSWSTEEL",
+      "JUBLFOOD",
+      "KALYANKJIL",
+      "KAYNES",
+      "KEI",
+      "KFINTECH",
+      "KOTAKBANK",
+      "LAURUSLABS",
+      "LICHSGFIN",
+      "LICI",
+      "LT",
+      "LTF",
+      "LUPIN",
+      "M&M",
+      "MANAPPURAM",
+      "MANKIND",
+      "MARICO",
+      "MARUTI",
+      "MAXHEALTH",
+      "MAZDOCK",
+      "MCX",
+      "MFSL",
+      "MOTHERSON",
+      "MOTILALOFS",
+      "MPHASIS",
+      "MUTHOOTFIN",
+      "NAM-INDIA",
+      "NATIONALUM",
+      "NAUKRI",
+      "NBCC",
+      "NESTLEIND",
+      "NHPC",
+      "NMDC",
+      "NUVAMA",
+      "NYKAA",
+      "OBEROIRLTY",
+      "OFSS",
+      "ONGC",
+      "PAGEIND",
+      "PATANJALI",
+      "PAYTM",
+      "PETRONET",
+      "PFC",
+      "PGEL",
+      "PHOENIXLTD",
+      "PIDILITIND",
+      "PIIND",
+      "PNB",
+      "PNBHOUSING",
+      "POLICYBZR",
+      "POLYCAB",
+      "POWERINDIA",
+      "PREMIERENE",
+      "PRESTIGE",
+      "RADICO",
+      "RBLBANK",
+      "RVNL",
+      "SAIL",
+      "SBICARD",
+      "SBILIFE",
+      "SBIN",
+      "SHREECEM",
+      "SHRIRAMFIN",
+      "SIEMENS",
+      "SOLARINDS",
+      "SONACOMS",
+      "SRF",
+      "SUNPHARMA",
+      "SUPREMEIND",
+      "SUZLON",
+      "SWIGGY",
+      "TATACONSUM",
+      "TATAELXSI",
+      "TATAPOWER",
+      "TATASTEEL",
+      "TCS",
+      "TECHM",
+      "TIINDIA",
+      "TITAN",
+      "TMPV",
+      "TRENT",
+      "TVSMOTOR",
+      "ULTRACEMCO",
+      "UNIONBANK",
+      "UNITDSPR",
+      "UPL",
+      "VBL",
+      "VEDL",
+      "WAAREEENER",
+      "WIPRO",
+      "YESBANK",
+      "ZYDUSLIFE"
     ],
-    "checked_at": "2026-11-26T10:45:12.431537+05:30"
+    "checked_at": "2026-11-26T10:47:03.419326+05:30"
   },
   "audit_bars": {
     "360ONE": {
@@ -37010,6 +38804,16 @@
         "dt": "2026-11-26T10:35:00+05:30",
         "ema9": 417.61126348945066,
         "ema10": 417.7075945581091
+      },
+      "2026-11-26T10:40:00+05:30": {
+        "open": 416.95001220703125,
+        "high": 417.95001220703125,
+        "low": 416.8500061035156,
+        "close": 417.3999938964844,
+        "volume": 19741.0,
+        "dt": "2026-11-26T10:40:00+05:30",
+        "ema9": 417.5690095708574,
+        "ema10": 417.65166716508645
       }
     },
     "ADANIENSOL": {
@@ -112232,6 +114036,17 @@
       "historical": false,
       "decision": "excluded",
       "reason": "preview/unsupported code or outside seed window"
+    },
+    {
+      "symbol": "ABCAPITAL",
+      "bar": "2026-11-26T10:40:00+05:30",
+      "code": 0,
+      "signal": "",
+      "setup": null,
+      "observed": "2026-11-26T10:46:34.102444+05:30",
+      "historical": true,
+      "decision": "excluded",
+      "reason": "preview/unsupported code or outside seed window"
     }
   ],
   "transitions": [
@@ -117459,7 +119274,7 @@
   "diagnostics_omitted": 270,
   "yahoo_budget": {
     "enabled": true,
-    "requests_started": 2329,
+    "requests_started": 1,
     "strikes": 0,
     "cooldown_seconds": 0.0
   }
