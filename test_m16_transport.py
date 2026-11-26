@@ -132,3 +132,75 @@ finally:
                 # Deliberately close without explicit unlock: spawn workers
                 # must never inherit this parent's open-file description.
             self.assertEqual(pool.submit(T.acquire).result(timeout=5),0.)
+
+    def test_empty_backoff_is_per_symbol_shared_with_process_and_recovers(self):
+        def empty(*args, **kwargs):
+            for host in ('query1', 'query2'):
+                kwargs['on_error'](dict(host=host, reason='empty_response', http_status=200))
+                kwargs['log'](f'yahoo MISSING: empty response on {host}; trying next host')
+            return None
+        messages, errors = [], []
+        with patch.object(feeds, 'fetch_bars_yahoo', side_effect=empty) as raw, patch.object(
+                T, 'acquire', return_value=0), patch.object(T.time, 'time', return_value=100):
+            T.install()
+            self.assertIsNone(feeds.fetch_bars_yahoo('MISSING', '1d', log=messages.append))
+            self.assertIsNone(feeds.fetch_bars_yahoo('MISSING', '5d', log=messages.append))
+            self.assertEqual(raw.call_count, 2)  # first fallback range remains allowed
+            feeds.fetch_bars_yahoo('MISSING', log=messages.append, on_error=errors.append)
+            self.assertEqual(raw.call_count, 2)
+            self.assertEqual(errors[-1]['reason'], 'empty response backoff')
+            self.assertIsNone(errors[-1]['http_status'])  # not a fake HTTP 429
+            self.assertEqual(T.status()['empty_backoffs'], {'MISSING': 30.0})
+            feeds.fetch_bars_yahoo('HEALTHY', log=messages.append)
+            self.assertEqual(raw.call_count, 3)
+        self.assertEqual(len([m for m in messages if 'MISSING' in m]), 2)
+        self.assertTrue(all('trying next host' not in m for m in messages))
+        # Real second process reads the same circuit without a Yahoo request.
+        p = subprocess.run([sys.executable, '-c',
+            "import m16_transport as T; from unittest.mock import patch; "
+            "clock=patch.object(T.time,'time',return_value=110); clock.start(); "
+            "assert T.status()['empty_backoffs']['MISSING']==20; print('shared')"],
+            capture_output=True, text=True, timeout=10)
+        self.assertEqual(p.returncode, 0, p.stderr)
+        with patch.object(feeds, 'fetch_bars_yahoo', return_value='recovered') as raw, patch.object(
+                T, 'acquire', return_value=0), patch.object(T.time, 'time', return_value=131):
+            T.install()
+            self.assertEqual(feeds.fetch_bars_yahoo('MISSING', log=messages.append), 'recovered')
+            self.assertNotIn('MISSING', T.status()['empty_backoffs'])
+        self.assertIn('data recovered', messages[-1])
+
+    def test_empty_backoff_grows_to_five_minutes_and_history_is_not_blocked(self):
+        def empty(*args, **kwargs):
+            kwargs['on_error'](dict(host='query2', reason='empty_response', http_status=200))
+            return None
+        with patch.object(feeds, 'fetch_bars_yahoo', side_effect=empty) as raw, patch.object(
+                T, 'acquire', return_value=0), patch.object(T.time, 'time', return_value=1000), patch('builtins.print'):
+            T.install()
+            for i in range(9):
+                T.update(lambda d: d.get('empty_symbols', {}).get('TEST', {}).update(until=0))
+                feeds.fetch_bars_yahoo('TEST')
+            rec = json.loads(self.path.read_text())['empty_symbols']['TEST']
+            self.assertEqual(rec['until']-1000, 300)
+            before = raw.call_count
+            feeds.fetch_bars_yahoo('TEST', '60d')
+            self.assertEqual(raw.call_count, before+1)
+
+    def test_shared_default_logging_unchanged_and_m16_coalesces_real_empty_response(self):
+        from unittest.mock import MagicMock
+        response = MagicMock(status_code=200)
+        response.json.return_value = {'chart': {'result': [{'timestamp': []}]}}
+        session = MagicMock()
+        session.get.return_value = response
+        original = feeds.fetch_bars_yahoo
+        with patch.object(feeds, '_yahoo_session', return_value=(session, None)), patch('builtins.print') as log:
+            original('TEST')
+            self.assertEqual(log.call_count, 2)
+        with patch.object(feeds, 'fetch_bars_yahoo', original), patch.object(
+                feeds, '_yahoo_session', return_value=(session, None)), patch.object(
+                T, 'acquire', return_value=0), patch('builtins.print') as log:
+            T.install()
+            feeds.fetch_bars_yahoo('TEST')
+            feeds.fetch_bars_yahoo('TEST', '5d')
+            feeds.fetch_bars_yahoo('TEST')
+            self.assertEqual(log.call_count, 2)
+            self.assertIn('retrying in 30s', log.call_args.args[0])
