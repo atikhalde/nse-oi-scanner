@@ -95,7 +95,7 @@ jobs:
           bash workflow_safe_push.sh
 
       - name: Hand off supervised shift until 15:31 IST
-        if: always() && steps.market.outputs.regular_session == 'true' && inputs.mode != 'dry-run' && inputs.mode != 'test-alert' && inputs.mode != 'feed-probe' && inputs.mode != 'sector-probe'
+        if: always() && !cancelled() && steps.market.outputs.regular_session == 'true' && inputs.mode != 'dry-run' && inputs.mode != 'test-alert' && inputs.mode != 'feed-probe' && inputs.mode != 'sector-probe'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MODE: ${{ inputs.mode || 'session' }}

@@ -236,6 +236,35 @@ class FeedTests(unittest.TestCase):
         self.assertEqual(send.call_count, 2)
         self.assertTrue(st['health_notice']['complete'])
 
+    def test_empty_symbol_does_not_invalidate_healthy_shared_session(self):
+        session = ('working-session', 'working-crumb')
+        with patch.object(F.feeds, '_YH_SESSION', session), patch.object(
+                F.feeds, 'fetch_bars_yahoo', side_effect=[None, None, frame()]):
+            with self.assertRaisesRegex(ValueError, 'empty response'):
+                F.fetch('MISSING', None, NOW)
+            self.assertIs(F.feeds._YH_SESSION, session)
+            _, health = F.fetch('HEALTHY', None, NOW)
+            self.assertEqual(health['provider'], 'yahoo')
+            self.assertIs(F.feeds._YH_SESSION, session)
+
+    def test_fetch_admission_is_bounded_and_fast_lane_is_reserved(self):
+        symbols = {f'S{i:03}' for i in range(210)}
+        got = list(R.fetch_candidates(symbols, {'S209'}, set(), {}, set(), {}))
+        self.assertEqual(got[0], 'S209')
+        self.assertEqual(len(got), 17)
+        self.assertEqual(list(R.fetch_candidates(symbols, {'S209'}, set(), {},
+                         set(), {i: False for i in range(16)})), ['S209'])
+
+    def test_fetch_admission_fairness_and_lane_changes(self):
+        got = list(R.fetch_candidates({'A','B'}, set(), set(), {'A': 10}, set(),
+                                     {i: False for i in range(15)}))
+        self.assertEqual(got, ['B'])
+        # A normal task becoming armed must not free its still occupied
+        # normal executor slot, nor occupy a fast executor slot retroactively.
+        got = list(R.fetch_candidates({'A','B'}, {'A'}, set(), {}, {'A'},
+                                     {i: False for i in range(16)}))
+        self.assertEqual(got, [])
+
 
 if __name__ == '__main__':
     unittest.main()
