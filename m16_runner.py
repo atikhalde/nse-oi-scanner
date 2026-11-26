@@ -573,7 +573,7 @@ def needs_audit_refresh(cached, target, now):
 
 
 def discovery_retries(symbols, latest, now):
-    if not model.before(now, "11:00:00"):
+    if model.before(now, "09:20:00") or not model.before(now, "11:00:00"):
         return set()
     target = (model.stamp(now)-pd.Timedelta(seconds=1)).floor("5min")-pd.Timedelta(minutes=5)
     return {sym for sym in symbols if needs_discovery_refresh(latest.get(sym), target)}
@@ -693,13 +693,14 @@ def live_session(st, cache, max_minutes, dry_run=False):
                         print("M16 sector refresh unavailable: "+reason)
                     st["sector_health"] = dict(ok=False, active=True, reason=reason, at=now.isoformat())
                 sector_future = None
+            first_close_ready = not model.before(now, "09:20:00")
             current_close = model.stamp(now).floor("5min")
             close_age = (model.stamp(now) - current_close).total_seconds()
             current_board = st.get("sector_snapshots", [])
             has_close_board = bool(current_board and model.stamp(current_board[-1]["close"]) == current_close)
             board_complete = bool(has_close_board and current_board[-1].get("complete", True))
             need_sector = (not has_close_board) or (not board_complete and close_age <= MAX_LAG)
-            if (sector_future is None and need_sector and close_age >= 1.0
+            if (sector_future is None and first_close_ready and need_sector and close_age >= 1.0
                     and time.monotonic() >= sector_retry and model.before(now, "12:35:00")):
                 target_bar = current_close - pd.Timedelta(minutes=5)
                 sector_bars = {sym: item[0] for sym, item in latest.items()
@@ -707,6 +708,8 @@ def live_session(st, cache, max_minutes, dry_run=False):
                 sector_future = (sector_pool.submit(m16_sector.refresh, now, sector_bars)
                                  if sector_bars else sector_pool.submit(m16_sector.refresh, now))
                 sector_retry = time.monotonic() + (2.5 if has_close_board else 2.0)
+            elif sector_future is None and not first_close_ready and st.get("sector_health", {}).get("phase") != "awaiting_first_close":
+                st["sector_health"] = dict(ok=True, active=False, phase="awaiting_first_close", at=now.isoformat())
             elif sector_future is None and not model.before(now, "12:35:00") and st.get("sector_health", {}).get("phase") != "post_cutoff":
                 st["sector_health"] = dict(
                     ok=True, active=False, phase="post_cutoff",
@@ -717,7 +720,7 @@ def live_session(st, cache, max_minutes, dry_run=False):
             active = {s["symbol"] for s in st["setups"].values() if s["phase"] not in model.TERMINAL}
             fast = {s["symbol"] for s in st["setups"].values() if s["phase"] in {"armed", "intrabar"}}
             bucket = (model.stamp(now)-pd.Timedelta(seconds=1)).floor("5min")
-            scan = last_discovery != bucket and model.before(now, "11:00:00")
+            scan = first_close_ready and last_discovery != bucket and model.before(now, "11:00:00")
             symbols = set(universe_syms) if scan else set()
             if scan:
                 last_discovery = bucket
@@ -732,9 +735,11 @@ def live_session(st, cache, max_minutes, dry_run=False):
             target = min((model.stamp(now)-pd.Timedelta(seconds=1)).floor("5min")-pd.Timedelta(minutes=5), day_last_bar)
             # Rally validation and EOD collection consume completed candles;
             # only armed/running setups need best-effort 1s quote monitoring.
-            symbols |= fast | {sym for sym in audit_symbols if needs_audit_refresh(latest.get(sym), target, now)}
-            if model.before(now, "12:35:00"):
-                symbols |= {sym for sym in basket_members if needs_discovery_refresh(latest.get(sym), target)}
+            symbols |= fast
+            if first_close_ready:
+                symbols |= {sym for sym in audit_symbols if needs_audit_refresh(latest.get(sym), target, now)}
+                if model.before(now, "12:35:00"):
+                    symbols |= {sym for sym in basket_members if needs_discovery_refresh(latest.get(sym), target)}
             # Recover missed morning discovery even after the seed cutoff.
             # apply/model still enforce original candle cutoffs and no backdating.
             for sym in universe_syms:
@@ -912,6 +917,154 @@ def sector_probe():
     return report['ok']
 
 
+def next_regular_session_day(now=None):
+    """Resolve the active or next open NSE equity session date in IST."""
+    clock = model.stamp(now or shared.now_ist())
+    probe = clock.normalize() + pd.Timedelta(hours=9, minutes=30)
+    if clock.weekday() < 5 and clock.strftime("%H:%M") < "15:40" and m16_calendar.session_status(probe)[0] != "closed":
+        return probe.strftime("%Y-%m-%d")
+    for offset in range(1, 15):
+        cand = probe + pd.Timedelta(days=offset)
+        if cand.weekday() < 5 and m16_calendar.session_status(cand)[0] != "closed":
+            return cand.strftime("%Y-%m-%d")
+    raise RuntimeError("unable to locate next open NSE trading day within 14 days")
+
+
+def previous_regular_session_day(target_day):
+    """Resolve the immediately preceding open NSE equity session date in IST."""
+    anchor = pd.Timestamp(f"{target_day} 09:30:00", tz="Asia/Kolkata")
+    for offset in range(1, 15):
+        cand = anchor - pd.Timedelta(days=offset)
+        if cand.weekday() < 5 and m16_calendar.session_status(cand)[0] != "closed":
+            return cand.strftime("%Y-%m-%d")
+    return None
+
+
+def readiness_check(target_day=None):
+    """Read-only pre-session readiness verification; never mutates state or calls Telegram."""
+    import re
+    import yaml
+
+    checked_at = model.stamp(shared.now_ist())
+    day = next_regular_session_day(checked_at) if not target_day or target_day == "auto" else str(target_day).strip()
+    session_probe = pd.Timestamp(f"{day} 09:30:00", tz="Asia/Kolkata")
+    cal_status, cal_reason = m16_calendar.session_status(session_probe)
+    calendar_ok = session_probe.weekday() < 5 and cal_status != "closed"
+    expected_prior_day = previous_regular_session_day(day)
+
+    cache = {sym: shared.symbol_history(sym, day) for sym in shared.L.SYMS}
+    dormant = sorted(inactive_symbols(cache))
+    active_syms = [sym for sym in shared.L.SYMS if sym not in dormant]
+    missing_history = [sym for sym in active_syms if not cache[sym].get("ok")]
+    stale_prior_day = [
+        sym for sym in active_syms
+        if expected_prior_day and str(cache[sym].get("last_day") or "")[:10] < expected_prior_day
+    ]
+    last_days = sorted({str(cache[sym].get("last_day") or "")[:10] for sym in active_syms if cache[sym].get("last_day")})
+
+    basket_active = sorted({sym for grp in shared.MEMBERS.values() for sym in grp if sym not in dormant})
+    basket_missing = [sym for sym in basket_active if not cache[sym].get("ok")]
+    empty_baskets = sorted(sec for sec, grp in shared.MEMBERS.items() if not (set(grp) - set(dormant)))
+
+    existing_state_date = None
+    existing_eod_done = None
+    if STATE.exists():
+        try:
+            raw_st = json.loads(STATE.read_text(encoding="utf-8"))
+            existing_state_date = raw_st.get("date")
+            existing_eod_done = raw_st.get("eod_done")
+        except Exception:
+            existing_state_date = "corrupt"
+    rolled = load(day)
+    json.dumps(rolled, allow_nan=False)
+    cap = max(1, int(os.getenv("M16_MAX_SESSION_STARTS", "12")))
+    used_starts = int(rolled.get("automatic_session_starts", rolled.get("session_starts", 0)))
+    state_ready = (
+        existing_state_date != "corrupt"
+        and rolled.get("date") == day
+        and not rolled.get("eod_done")
+        and used_starts < cap
+    )
+
+    wf_path = ROOT / ".github/workflows/16_live_m16.yml"
+    workflow_issues = []
+    if wf_path.exists():
+        wf_text = wf_path.read_text(encoding="utf-8")
+        wf = yaml.safe_load(wf_text)
+        job = wf["jobs"]["continuation"]
+        steps = job["steps"]
+        checkout = next((s for s in steps if str(s.get("uses", "")).startswith("actions/checkout@")), {})
+        if checkout.get("with", {}).get("ref") != "main":
+            workflow_issues.append("checkout ref is not main")
+        if wf.get("concurrency", {}).get("cancel-in-progress") is not False:
+            workflow_issues.append("cancel-in-progress is not false")
+        if "actions/upload-artifact@v7" not in wf_text:
+            workflow_issues.append("upload-artifact@v7 missing")
+        match = re.search(r"--session\s+--max-runtime-min\s+(\d+)", wf_text)
+        runtime = int(match.group(1)) if match else 0
+        timeout = int(job.get("timeout-minutes", 0))
+        if runtime < 215 or timeout - runtime < 10:
+            workflow_issues.append(f"invalid shift budget runtime={runtime} timeout={timeout}")
+        handoff = next((s for s in steps if "Hand off" in s.get("name", "")), {})
+        if "eod_done" not in handoff.get("run", ""):
+            workflow_issues.append("handoff missing eod_done guard")
+    else:
+        workflow_issues.append("workflow file missing")
+    workflow_ok = not workflow_issues
+
+    ready = bool(
+        calendar_ok
+        and active_syms
+        and not missing_history
+        and not stale_prior_day
+        and not basket_missing
+        and not empty_baskets
+        and state_ready
+        and workflow_ok
+    )
+    report = dict(
+        ready=ready,
+        diagnostic_only=True,
+        checked_at=checked_at.isoformat(),
+        target_session=day,
+        expected_prior_session=expected_prior_day,
+        calendar=dict(ok=calendar_ok, status=cal_status, reason=cal_reason, weekday=session_probe.day_name()),
+        universe=dict(
+            total_symbols=len(shared.L.SYMS),
+            active_symbols=len(active_syms),
+            dormant_excluded=dormant,
+            history_ok=len(active_syms) - len(missing_history),
+            missing_history=missing_history,
+            stale_prior_day=stale_prior_day,
+            active_last_days=last_days,
+        ),
+        sector_board=dict(
+            total_sectors=len(set(shared.FM.OFFICIAL_TICKERS) | set(shared.MEMBERS)),
+            official_indices=len(shared.FM.OFFICIAL_TICKERS),
+            constituent_sectors=len(shared.MEMBERS),
+            active_basket_members=len(basket_active),
+            basket_missing_history=basket_missing,
+            empty_baskets=empty_baskets,
+        ),
+        state_rollover=dict(
+            ok=state_ready,
+            on_disk_date=existing_state_date,
+            on_disk_eod_done=existing_eod_done,
+            rolled_date=rolled.get("date"),
+            rolled_eod_done=bool(rolled.get("eod_done")),
+            automatic_starts_used=used_starts,
+            automatic_starts_cap=cap,
+        ),
+        workflow=dict(ok=workflow_ok, issues=workflow_issues),
+        environment=dict(
+            primary_telegram_configured=bool(os.getenv("M16_BOT_TOKEN") and os.getenv("M16_CHAT_ID")),
+            mirror_telegram_configured=bool(os.getenv("M16_BOT_TOKEN_2") and os.getenv("M16_CHAT_ID_2")),
+        ),
+    )
+    print(json.dumps(report, indent=2))
+    return ready
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--session", action="store_true")
@@ -920,12 +1073,18 @@ def main():
     parser.add_argument("--test-alert", action="store_true")
     parser.add_argument("--feed-probe", action="store_true")
     parser.add_argument("--sector-probe", action="store_true")
+    parser.add_argument("--readiness-check", nargs="?", const="auto", default=None,
+                        help="Read-only pre-session readiness verification (optional YYYY-MM-DD, default next open session)")
     parser.add_argument("--max-runtime-min", type=float, default=324)
     parser.add_argument("--replay-date", help="Offline YYYY-MM-DD disk replay; no bot or feed calls")
     parser.add_argument("--symbols", nargs="+", default=None, help="Optional replay symbol subset")
     args = parser.parse_args()
     import m16_transport
     m16_transport.install()
+    if args.readiness_check is not None:
+        if not readiness_check(args.readiness_check):
+            raise SystemExit(1)
+        return
     if args.replay_date:
         result = replay(args.replay_date, args.symbols or list(shared.L.SYMS))
         print(pformat(result, width=120))
@@ -948,8 +1107,8 @@ def main():
         return
     if status == "unknown":
         print(f"M16 calendar warning: {reason}")
-    if now.weekday() >= 5 or now.strftime("%H:%M") < "09:00" or now.strftime("%H:%M") >= "15:40":
-        print("M16 outside weekday 09:00–15:40 IST window; no replay alerts")
+    if now.weekday() >= 5 or now.strftime("%H:%M") < "08:55" or now.strftime("%H:%M") >= "15:40":
+        print("M16 outside weekday 08:55–15:40 IST window; no replay alerts")
         return
     if not args.dry_run:
         credentials()
@@ -974,6 +1133,11 @@ def main():
         save(st, args.dry_run)
         live_session(st, cache, args.max_runtime_min, args.dry_run)
     else:
+        if model.before(now, "09:20:00"):
+            st["sector_health"] = dict(ok=True, active=False, phase="awaiting_first_close", at=now.isoformat())
+            save(st, args.dry_run)
+            print("M16 awaiting first 09:20 IST 5m candle close; state saved without premature feed polling")
+            return
         if model.before(now, "12:35:00"):
             try:
                 st.setdefault("sector_snapshots", []).append(m16_sector.refresh(shared.now_ist()))

@@ -840,6 +840,78 @@ class MirrorTests(unittest.TestCase):
             R.live_session(st, {'AXISBANK': {'ok': True}}, 1, dry_run=False)
         fin.assert_called_once_with(st, False)
 
+    def test_opening_bell_waits_for_0920_first_close_without_false_outages(self):
+        from concurrent.futures import Future
+        class ImmediateExecutor:
+            def __init__(self, **kw): pass
+            def __enter__(self): return self
+            def __exit__(self, *args): pass
+            def submit(self, fn, *args):
+                f = Future()
+                try:
+                    f.set_result(fn(*args))
+                except Exception as exc:
+                    f.set_exception(exc)
+                return f
+        st = M.fresh_state(DAY)
+        clock, elapsed = [at('09:15:01')], [0.]
+        steps = iter([at('09:17:00'), at('09:19:58'), at('09:20:02'), at('15:31:01')])
+        phases_seen = []
+        fetch_times = []
+        first_bar = R.normalize(pd.DataFrame([bar('09:15')]), DAY)
+        board = dict(close=at('09:20').isoformat(), observed=at('09:20:02').isoformat(),
+                     sectors={'A': dict(persist_bull=90, persist_bear=10)},
+                     complete=True, missing_sectors=[], missing_members=[])
+        def sleep(_):
+            phases_seen.append((clock[0].strftime('%H:%M:%S'), st.get('sector_health', {}).get('phase'), len(fetch_times)))
+            clock[0] = next(steps)
+            elapsed[0] += 6.
+        def fake_fetch(sym):
+            fetch_times.append((sym, clock[0].strftime('%H:%M:%S')))
+            return first_bar, clock[0]
+        with patch.object(R.m16_sector, 'warm', return_value=(63, 19)), patch.object(
+                R.m16_sector, 'refresh', return_value=board) as ref, patch.object(
+                R, 'ThreadPoolExecutor', ImmediateExecutor), patch.object(
+                R, 'ProcessPoolExecutor', ImmediateExecutor), patch.object(
+                R.shared, 'now_ist', side_effect=lambda: clock[0]), patch.object(
+                R.shared.L, 'SYMS', ['AXISBANK']), patch.object(
+                R, 'timed_fetch', side_effect=fake_fetch), patch.object(
+                R, 'analyze', return_value=('AXISBANK', [])), patch.object(
+                R.time, 'sleep', side_effect=sleep), patch.object(
+                R.time, 'monotonic', side_effect=lambda: elapsed[0]), patch.object(R, 'save'):
+            R.live_session(st, {'AXISBANK': {'ok': True}}, 1, dry_run=True)
+        # Zero fetches and zero sector refreshes during 09:15:01..09:19:58
+        self.assertEqual(phases_seen[:3], [
+            ('09:15:01', 'awaiting_first_close', 0),
+            ('09:17:00', 'awaiting_first_close', 0),
+            ('09:19:58', 'awaiting_first_close', 0),
+        ])
+        self.assertEqual(fetch_times, [('AXISBANK', '09:20:02')])
+        ref.assert_called_once()
+        self.assertEqual(st.get('feed_outages', {}), {})
+
+    def test_readiness_check_verifies_next_session_without_mutating_state(self):
+        import tempfile
+        from pathlib import Path
+        self.assertEqual(R.next_regular_session_day(pd.Timestamp('2026-11-26 18:10:00', tz='Asia/Kolkata')), '2026-11-27')
+        self.assertEqual(R.next_regular_session_day(pd.Timestamp('2026-11-27 18:10:00', tz='Asia/Kolkata')), '2026-11-30')
+        self.assertEqual(R.previous_regular_session_day('2026-11-27'), '2026-11-26')
+        with tempfile.TemporaryDirectory() as tmp:
+            fake_state = Path(tmp) / 'state16.json'
+            prior = dict(M.fresh_state('2026-11-26'), eod_done=True, session_starts=21, automatic_session_starts=14)
+            original_bytes = json.dumps(prior).encode()
+            fake_state.write_bytes(original_bytes)
+            with patch.object(R, 'STATE', fake_state), patch.object(
+                    R.shared.L, 'SYMS', ['AXISBANK', 'ICICIPRULI']), patch.object(
+                    R.shared, 'MEMBERS', {'BANK': ['AXISBANK'], 'INSURANCE': ['AXISBANK', 'ICICIPRULI']}), patch.object(
+                    R.shared, 'symbol_history', side_effect=lambda sym, day: (
+                        {'ok': True, 'last_day': '2026-10-22'} if sym == 'ICICIPRULI'
+                        else {'ok': True, 'last_day': '2026-11-26'}
+                    )):
+                ok = R.readiness_check('2026-11-27')
+            self.assertTrue(ok)
+            self.assertEqual(fake_state.read_bytes(), original_bytes)
+
 
 if __name__ == '__main__':
     unittest.main()

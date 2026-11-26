@@ -89,6 +89,8 @@ def refresh(now, shared_bars=None):
     m16_transport.install()
     now = stamp(now)
     close = now.floor('5min')
+    if close < now.normalize() + pd.Timedelta(hours=9, minutes=20):
+        raise ValueError('first 5m session candle has not closed yet (09:20 IST)')
     today = now.strftime('%Y-%m-%d')
     target = (close-pd.Timedelta(minutes=5)).strftime('%H:%M')
     members = sorted({s for group in S.MEMBERS.values() for s in group})
