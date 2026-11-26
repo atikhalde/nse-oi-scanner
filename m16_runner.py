@@ -251,6 +251,8 @@ def alert_text(e):
     if e.get("sector_eligible_at"):
         extra += f"Sector eligibility verified {model.stamp(e['sector_eligible_at']).strftime('%H:%M:%S')} IST after board publication\n"
     gate = e.get("sector_gate", {})
+    if gate.get("status") == "pass" and gate.get("missing_sectors"):
+        extra += f"Incomplete sectors: {', '.join(gate['missing_sectors'])}; guaranteed worst-case rank {gate['worst_rank']}/3\n"
     if gate.get("status") == "pass":
         extra += f"Sector {gate['sector']} · persistent {gate['score']:.2f} >70 · top 3 · board close {model.stamp(gate['close']).strftime('%H:%M')} IST\n"
     return (f"M16 · {labels.get(e['kind'], e['kind'])}\n{e['symbol']} {e['side']} @ {e['price']:.2f}\n"
@@ -460,7 +462,9 @@ def notify_health(st, now, dry_run=False):
     st["monitoring_health"] = dict(at=now.isoformat(), affected=bad, watched=watched_symbols, details=details)
     sector_unknown = st.get("sector_gate_required") and model.before(now, "12:35:00") and m16_sector.decision(st, "__HEALTH__", "BUY", now).get("reason") in {"sector board unavailable", "sector board stale"}
     st["monitoring_health"]["sector_gate_unavailable"] = bool(sector_unknown)
-    status = "degraded" if bad or sector_unknown else "healthy"
+    partial_sectors = (st.get("sector_snapshots") or [{}])[-1].get("missing_sectors", []) if st.get("sector_gate_required") and model.before(now, "12:35:00") else []
+    st["monitoring_health"]["missing_sectors"] = partial_sectors
+    status = "degraded" if bad or sector_unknown or partial_sectors else "healthy"
     old = st.get("health_notice", {})
     # Session-scoped, persisted dedupe: never repeat operational notices,
     # even after recovery/degradation flapping or a workflow restart.
@@ -476,6 +480,10 @@ def notify_health(st, now, dry_run=False):
             "Live alerts may be missed or delayed; stale entries will NOT be sent. "
             "Polling is not tick-time execution.") if bad else (
             "M16 feed monitoring healthy on latest poll; polling latency still applies.")
+    if partial_sectors and not sector_unknown:
+        if not bad:
+            text = "Healthy-sector prices are current; sector coverage remains degraded."
+        text = "M16 incomplete sectors: "+", ".join(partial_sectors)+". Affected sectors blocked; other alerts require guaranteed top-three rank despite missing sectors. " + text
     if sector_unknown:
         text = "M16 sector board missing/stale: entry alerts blocked until current persistence data is available. " + text
     if bad:
@@ -567,7 +575,7 @@ def live_session(st, cache, max_minutes, dry_run=False):
                 try:
                     snapshot = sector_future.result()
                     st.setdefault("sector_snapshots", []).append(snapshot)
-                    st["sector_health"] = dict(ok=True, at=now.isoformat())
+                    st["sector_health"] = dict(ok=True, complete=snapshot.get("complete", True), missing_sectors=snapshot.get("missing_sectors", []), at=now.isoformat())
                 except Exception as exc:
                     reason = str(exc)
                     if reason != st.get("sector_health", {}).get("reason"):
@@ -731,7 +739,12 @@ def sector_probe():
     try:
         snapshot = m16_sector.refresh(close)
         report = dict(ok=True, diagnostic_only=True, checked_at=now.isoformat(),
-                      source_close=snapshot['close'], sectors=len(snapshot['sectors']), meta=snapshot['meta'])
+                      source_close=snapshot['close'], sectors=len(snapshot['sectors']), meta=snapshot['meta'],
+                      complete=snapshot.get('complete', True),
+                      coverage_status='degraded' if snapshot.get('missing_sectors') else 'complete',
+                      missing_sectors=snapshot.get('missing_sectors', []),
+                      missing_members=snapshot.get('missing_members', []),
+                      rank_policy=snapshot.get('rank_policy', 'complete board'))
     except Exception as exc:
         report = dict(ok=False, diagnostic_only=True, checked_at=now.isoformat(), reason=str(exc))
     print(json.dumps(report, indent=2))

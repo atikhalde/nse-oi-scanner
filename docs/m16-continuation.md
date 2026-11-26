@@ -315,3 +315,13 @@ hours). Unlike a three-stock feed probe it checks board inputs and warm-up and
 prints specific missing/stale input names. It never saves live state or sends
 Telegram and fails the workflow if the board cannot be built. Detailed evidence,
 limits and validation: `docs/m16-2026-11-26-rate-limit-incident.md`.
+
+### Missing-member fault isolation
+
+A missing synthetic-basket member no longer suppresses every otherwise healthy
+sector. Its entire home sector is treated as unknown; no partial-basket score is
+used. A healthy sector may qualify only if `known_rank + missing_sector_count <=
+3` and its directional persistent score is >70. Thus one unknown sector allows
+known ranks 1/2, not rank 3. Global/index inputs remain mandatory. Complete-board
+behavior and M6 are unchanged. See `docs/m16-missing-insurance-sector.md` for the
+uploaded ICICIPRULI probe evidence, proofs/tests, and degraded-probe interpretation.
