@@ -62,8 +62,22 @@ jobs:
       - run: pip install -r requirements.txt
         if: steps.market.outputs.regular_session == 'true' || inputs.mode == 'dry-run' || inputs.mode == 'test-alert' || inputs.mode == 'feed-probe' || inputs.mode == 'sector-probe'
       - name: M16 offline regressions
+        id: regressions
         if: steps.market.outputs.regular_session == 'true' || inputs.mode == 'dry-run' || inputs.mode == 'test-alert' || inputs.mode == 'feed-probe' || inputs.mode == 'sector-probe'
-        run: M16_YAHOO_COORDINATE=0 python -m unittest -v test_m16_transport test_m16_sector test_m16_rally test_m16_calendar test_m16_feed test_m16_runner test_m16_audit
+        env:
+          M16_BOT_TOKEN: ""
+          M16_CHAT_ID: ""
+          M16_BOT_TOKEN_2: ""
+          M16_CHAT_ID_2: ""
+        run: |
+          TEST_ROOT=$(mktemp -d)
+          trap 'rm -rf "$TEST_ROOT"' EXIT
+          # Regression fixtures must never overwrite the live checkout state.
+          git archive HEAD | tar -x -C "$TEST_ROOT"
+          cd "$TEST_ROOT"
+          for START_MODE in 0 1; do
+            M16_YAHOO_COORDINATE=0 M16_AUTOMATIC_SESSION="$START_MODE" python -m unittest -v test_m16_transport test_m16_sector test_m16_rally test_m16_calendar test_m16_feed test_m16_runner test_m16_audit
+          done
       - name: M16 dedicated session
         if: steps.market.outputs.regular_session == 'true' || inputs.mode == 'dry-run' || inputs.mode == 'test-alert' || inputs.mode == 'feed-probe' || inputs.mode == 'sector-probe'
         env:
@@ -100,7 +114,7 @@ jobs:
           bash workflow_safe_push.sh
 
       - name: Hand off supervised shift until 15:31 IST
-        if: always() && !cancelled() && steps.market.outputs.regular_session == 'true' && inputs.mode != 'dry-run' && inputs.mode != 'test-alert' && inputs.mode != 'feed-probe' && inputs.mode != 'sector-probe'
+        if: always() && !cancelled() && steps.regressions.outcome == 'success' && steps.market.outputs.regular_session == 'true' && inputs.mode != 'dry-run' && inputs.mode != 'test-alert' && inputs.mode != 'feed-probe' && inputs.mode != 'sector-probe'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MODE: ${{ inputs.mode || 'session' }}

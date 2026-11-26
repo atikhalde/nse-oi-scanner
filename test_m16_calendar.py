@@ -85,13 +85,28 @@ class CalendarTests(unittest.TestCase):
         st = M.fresh_state('2026-11-25')
         st['session_starts'] = 1
         with patch('sys.argv', ['m16_runner.py', '--session']), patch.dict(
-                'os.environ', {'M16_MAX_SESSION_STARTS': '1'}), patch.object(
+                'os.environ', {'M16_MAX_SESSION_STARTS': '1', 'M16_AUTOMATIC_SESSION': '1'}), patch.object(
                 R.shared, 'now_ist', return_value=at(st['date'])), patch.object(
                 R, 'credentials'), patch.object(R, 'load', return_value=st), patch.object(
-                R.shared.L, 'SYMS', []), patch.object(R, 'live_session') as live:
+                R.shared.L, 'SYMS', []), patch.object(R, 'save') as save, patch.object(R, 'live_session') as live:
             with self.assertRaisesRegex(SystemExit, 'restart cap'):
                 R.main()
         live.assert_not_called()
+        save.assert_not_called()
+
+    def test_manual_recovery_cli_runs_at_cap_without_real_state_writes(self):
+        st = M.fresh_state('2026-11-25')
+        st['session_starts'] = 12
+        with patch('sys.argv', ['m16_runner.py', '--session']), patch.dict(
+                'os.environ', {'M16_MAX_SESSION_STARTS': '12', 'M16_AUTOMATIC_SESSION': '0'}), patch.object(
+                R.shared, 'now_ist', return_value=at(st['date'])), patch.object(
+                R, 'credentials'), patch.object(R, 'load', return_value=st), patch.object(
+                R.shared.L, 'SYMS', []), patch.object(R, 'save') as save, patch.object(R, 'live_session') as live:
+            R.main()
+        live.assert_called_once()
+        save.assert_called_once()
+        self.assertEqual(st['automatic_session_starts'], 12)
+        self.assertEqual(st['session_starts'], 13)
 
     def test_manual_bot_test_allowed_on_holiday(self):
         with patch('sys.argv', ['m16_runner.py', '--test-alert']), patch.object(
