@@ -8,6 +8,10 @@ on:
         type: choice
         default: session
         options: [session, once, dry-run, test-alert, feed-probe, sector-probe]
+      automatic_handoff:
+        description: "Automatic continuation (leave unchecked for manual recovery)"
+        type: boolean
+        default: false
   schedule:
     - cron: "30 3 * * 1-5" # exactly one 09:00 IST supervised session start
     - cron: "5 10 * * 1-5" # 15:35 IST: retry failed EOD document delivery
@@ -39,6 +43,7 @@ jobs:
       M16_ENGINE_WORKERS: "4"
       M16_UNHEALTHY_EXIT_SECONDS: "300"
       M16_MAX_SESSION_STARTS: "12"
+      M16_AUTOMATIC_SESSION: ${{ github.event_name != 'workflow_dispatch' && '1' || inputs.automatic_handoff && '1' || '0' }}
       M16_DRY_RUN_SYMBOLS: "3"
       TZ: Asia/Kolkata
     steps:
@@ -105,7 +110,8 @@ jobs:
             STARTS=$(python3 - <<'PY'
           import json
           try:
-              print(int(json.load(open('state16.json')).get('session_starts', 0)))
+              state = json.load(open('state16.json'))
+              print(int(state.get('automatic_session_starts', state.get('session_starts', 0))))
           except Exception:
               print(0)
           PY
@@ -116,8 +122,8 @@ jobs:
               else
                 echo "M16 shift complete; handing off to the next supervised session ($STARTS/${M16_MAX_SESSION_STARTS:-12} starts)"
               fi
-              gh workflow run 16_live_m16.yml --ref main -f mode=session
+              gh workflow run 16_live_m16.yml --ref main -f mode=session -f automatic_handoff=true
             else
-              echo "M16 supervised restart cap reached; not dispatching another loop"
+              echo "M16 automatic restart cap reached; manual session remains available; not dispatching another loop"
             fi
           fi

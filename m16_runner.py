@@ -543,6 +543,23 @@ def running_snapshot_usable(bars, started, observed):
             0 <= (receipt-model.stamp(started)).total_seconds() <= MAX_LAG)
 
 
+def register_session_start(st, automatic=True):
+    """Bound automatic chains without preventing an operator recovery start.
+
+    Legacy total counts conservatively consume the automatic allowance. Never
+    reset market state or delivery deduplication merely to restart monitoring.
+    """
+    limit = max(1, int(os.getenv("M16_MAX_SESSION_STARTS", "12")))
+    count = st.get("automatic_session_starts", st.get("session_starts", 0))
+    if automatic and count >= limit:
+        raise SystemExit("M16 automatic restart cap reached; start a manual session to resume monitoring")
+    st["automatic_session_starts"] = count + int(automatic)
+    st["session_starts"] = st.get("session_starts", 0)+1
+    st["last_session_start"] = dict(automatic=automatic, at=shared.now_ist().isoformat())
+    print(f"M16 {'automatic' if automatic else 'manual recovery'} session start; "
+          f"automatic allowance used {st['automatic_session_starts']}/{limit}; total starts {st['session_starts']}")
+
+
 def live_session(st, cache, max_minutes, dry_run=False):
     """Non-blocking discovery: monitoring never waits for a universe-wide batch.
 
@@ -825,10 +842,7 @@ def main():
         st["diagnostics"].append(dict(at=now.isoformat(), reason="history unavailable", symbols=missing_history))
         print(f"M16 history unavailable for {len(missing_history)} symbols; recorded in diagnostics")
     if args.session:
-        limit = max(1, int(os.getenv("M16_MAX_SESSION_STARTS", "12")))
-        if st.get("session_starts", 0) >= limit:
-            raise SystemExit("M16 supervised restart cap reached")
-        st["session_starts"] = st.get("session_starts", 0)+1
+        register_session_start(st, automatic=os.getenv("M16_AUTOMATIC_SESSION", "1") != "0")
         save(st, args.dry_run)
         live_session(st, cache, args.max_runtime_min, args.dry_run)
     else:

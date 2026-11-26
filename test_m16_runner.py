@@ -46,6 +46,33 @@ def armed(sell=False):
 
 
 class ContinuationTests(unittest.TestCase):
+    def test_manual_recovery_at_legacy_cap_preserves_state_and_automatic_cap(self):
+        st = M.fresh_state(DAY)
+        st.update(session_starts=12, events=[{'id': 'already-seen'}], cursors={'TEST': at('10:50').isoformat()})
+        before = copy.deepcopy(st)
+        with patch.dict(os.environ, {'M16_MAX_SESSION_STARTS': '12'}):
+            with self.assertRaisesRegex(SystemExit, 'automatic restart cap'):
+                R.register_session_start(st, automatic=True)
+            self.assertEqual(st, before)
+            R.register_session_start(st, automatic=False)
+            self.assertEqual(st['session_starts'], 13)
+            self.assertEqual(st['automatic_session_starts'], 12)
+            self.assertEqual(st['events'], before['events'])
+            self.assertEqual(st['cursors'], before['cursors'])
+            with self.assertRaises(SystemExit):
+                R.register_session_start(st, automatic=True)
+
+    def test_manual_starts_do_not_consume_automatic_allowance(self):
+        st = M.fresh_state(DAY)
+        with patch.dict(os.environ, {'M16_MAX_SESSION_STARTS': '2'}):
+            R.register_session_start(st, automatic=False)
+            R.register_session_start(st, automatic=True)
+            R.register_session_start(st, automatic=False)
+            R.register_session_start(st, automatic=True)
+            self.assertEqual(st['session_starts'], 4)
+            self.assertEqual(st['automatic_session_starts'], 2)
+            with self.assertRaises(SystemExit): R.register_session_start(st, automatic=True)
+
     def test_fib_and_sell_symmetry_two_alerts(self):
         for sell in (False, True):
             st, key = armed(sell)
