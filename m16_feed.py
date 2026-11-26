@@ -68,12 +68,9 @@ def fetch(symbol, security_id, now):
         if time.monotonic() < _COOLDOWN_UNTIL:
             raise ValueError('no usable M16 feed: yahoo: HTTP 429 shared cooldown')
     errors = []
-    empty_response = False
-    rate_limited = False
     for window in ('1d', '5d'):
         transport_errors = []
         raw = feeds.fetch_bars_yahoo(symbol, window, on_error=transport_errors.append, timeout=(2, 3))
-        empty_response = empty_response or raw is None or raw.empty
         try:
             bars = current_bars(raw, now)
             return bars, dict(provider='yahoo', window=window,
@@ -90,7 +87,6 @@ def fetch(symbol, security_id, now):
             if str(exc) == 'no current-session candles' and not transport_errors:
                 break
             if any(x.get('http_status') == 429 for x in transport_errors):
-                rate_limited = True
                 with _COOLDOWN_LOCK:
                     delays = [float(x.get("retry_after") or 0) for x in transport_errors]
                     minimum = 0. if all(x.get('host') == 'shared-m16-budget' for x in transport_errors) else 30.
@@ -98,6 +94,6 @@ def fetch(symbol, security_id, now):
             # A second range request cannot cure rate limiting/auth failure.
             if any(x.get('http_status') in (401, 403, 429) for x in transport_errors):
                 break
-    if empty_response and not rate_limited and recover_yahoo_session(now):
-        errors.append(dict(recovery='cached Yahoo session invalidated; next request reauthenticates'))
+    # Empty/stale symbol data is not authentication evidence. The shared
+    # fetcher already invalidates and retries on explicit HTTP 401/403.
     raise ValueError(f'no usable M16 feed: yahoo: {errors}')

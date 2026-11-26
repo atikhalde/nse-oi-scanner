@@ -513,6 +513,17 @@ def timed_fetch(sym):
     return bars, started
 
 
+def fetch_candidates(symbols, fast, active, requested, busy, lanes):
+    """Bound admission by actual executor lane; oldest equal-priority work first."""
+    slots = {True: max(0, 8-sum(lanes.values())),
+             False: max(0, 16-sum(not lane for lane in lanes.values()))}
+    for sym in sorted(symbols, key=lambda s: (s not in fast, s not in active, requested.get(s, -1e10), s)):
+        lane = sym in fast
+        if sym not in busy and slots[lane]:
+            slots[lane] -= 1
+            yield sym
+
+
 def needs_discovery_refresh(cached, target):
     """A pre-close snapshot is not final merely because the loop clock advanced."""
     closed = shared._closed_bars(cached[0], cached[1]) if cached else None
@@ -551,6 +562,7 @@ def live_session(st, cache, max_minutes, dry_run=False):
     outage_since = None
     (ROOT / ".m16-unhealthy").unlink(missing_ok=True) if not dry_run else None
     failures, retry_at = {}, {}
+    fetch_lanes = {}
     with ProcessPoolExecutor(max_workers=1, mp_context=multiprocessing.get_context("spawn")) as sector_pool, ThreadPoolExecutor(max_workers=16) as fetch_pool, ThreadPoolExecutor(max_workers=8) as watch_fetch, \
             ProcessPoolExecutor(max_workers=worker_count, mp_context=multiprocessing.get_context("spawn")) as discovery, ProcessPoolExecutor(max_workers=2, mp_context=multiprocessing.get_context("spawn")) as active_pool:
         warm_future = sector_pool.submit(m16_sector.warm, st["date"])
@@ -613,16 +625,22 @@ def live_session(st, cache, max_minutes, dry_run=False):
                 if not model.before(now, "11:00:00") and (not cursor or model.stamp(cursor).strftime("%H:%M") < "10:50"):
                     symbols.add(sym)
             busy_fetch = set(fetches.values())
-            for sym in sorted(symbols, key=lambda s: (s not in fast, s not in active, s)):
-                interval = poll if sym in fast else max(5., poll)
-                if sym not in busy_fetch and time.monotonic() >= retry_at.get(sym, 0) and time.monotonic()-requested.get(sym, -1e10) >= interval:
-                    executor = watch_fetch if sym in fast else fetch_pool
-                    fetches[executor.submit(timed_fetch, sym)] = sym
-                    requested[sym] = time.monotonic()
+            # Admit only work that can run now. Do not hide an entire universe
+            # in executor FIFO queues ahead of later urgent candle/quote work.
+            clock = time.monotonic()
+            eligible = {sym for sym in symbols if clock >= retry_at.get(sym, 0) and
+                        clock-requested.get(sym, -1e10) >= (poll if sym in fast else max(5., poll))}
+            for sym in fetch_candidates(eligible, fast, active, requested, busy_fetch, fetch_lanes):
+                executor = watch_fetch if sym in fast else fetch_pool
+                future = executor.submit(timed_fetch, sym)
+                fetches[future] = sym
+                fetch_lanes[future] = sym in fast
+                requested[sym] = time.monotonic()
             for future in list(fetches):
                 if not future.done():
                     continue
                 sym = fetches.pop(future)
+                fetch_lanes.pop(future, None)
                 try:
                     raw, received = future.result()
                     bars = normalize(raw, st["date"])
@@ -687,7 +705,10 @@ def live_session(st, cache, max_minutes, dry_run=False):
                 print("M16 progress " + json.dumps(dict(at=now.isoformat(),
                     processed_symbols=len(st["cursors"]), setups=len(st["setups"]),
                     events=len(st["events"]), pending_fetches=len(fetches), pending_engines=len(engines),
-                    unhealthy=len(st.get("monitoring_health", {}).get("affected", [])))))
+                    unhealthy=len(st.get("monitoring_health", {}).get("affected", [])),
+                    yahoo_budget=st["yahoo_budget"],
+                    sector_health=st.get("sector_health"),
+                    cursor_times=pd.Series(list(st["cursors"].values()), dtype=str).str.slice(11,16).value_counts().to_dict())))
                 next_heartbeat = time.monotonic()+60
             expire_setups(st, shared.now_ist())
             trim_diagnostics(st)
