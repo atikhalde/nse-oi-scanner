@@ -620,6 +620,8 @@ def notify_health(st, now, dry_run=False):
         text = "M16 incomplete sectors: "+", ".join(partial_sectors)+". Affected sectors blocked; other alerts require guaranteed top-three rank despite missing sectors. " + text
     if sector_unknown:
         text = "M16 sector board missing/stale: entry alerts blocked until current persistence data is available. " + text
+    if st.get("monitoring_health", {}).get("provider_throttled"):
+        text += " Provider rate limit (HTTP 429); M16 is pausing requests and resumes automatically."
     if bad:
         text += "\n" + "\n".join(
             f"{sym}: {', '.join(details[sym]['reasons'])[:180]}; latest={details[sym]['latest']}; cursor={details[sym]['cursor']}"
@@ -741,7 +743,12 @@ def live_session(st, cache, max_minutes, dry_run=False):
     dormant = inactive_symbols(cache) | set(st.get("inactive_symbols", []))
     universe_syms = [s for s in shared.L.SYMS if s not in dormant]
     basket_members = frozenset(s for g in shared.MEMBERS.values() for s in g) & frozenset(universe_syms)
-    with ProcessPoolExecutor(max_workers=1, mp_context=multiprocessing.get_context("spawn")) as sector_pool, ThreadPoolExecutor(max_workers=16) as fetch_pool, ThreadPoolExecutor(max_workers=8) as watch_fetch, \
+    # Two workers: the one-shot warm-up (index history for 19 tickers, network)
+    # must never sit in front of the 09:20 board refresh. On 2026-11-26 the
+    # single worker was still warming when the first candle closed, so the board
+    # only appeared at 11:25 and every morning alert expired waiting for it.
+    sector_workers = max(2, int(os.getenv("M16_SECTOR_WORKERS", "2")))
+    with ProcessPoolExecutor(max_workers=sector_workers, mp_context=multiprocessing.get_context("spawn")) as sector_pool, ThreadPoolExecutor(max_workers=16) as fetch_pool, ThreadPoolExecutor(max_workers=8) as watch_fetch, \
             ProcessPoolExecutor(max_workers=worker_count, mp_context=multiprocessing.get_context("spawn")) as discovery, ProcessPoolExecutor(max_workers=2, mp_context=multiprocessing.get_context("spawn")) as active_pool:
         warm_future = sector_pool.submit(m16_sector.warm, st["date"])
         while time.monotonic()-started < max_minutes*60:
@@ -1152,6 +1159,12 @@ def readiness_check(target_day=None):
             workflow_issues.append("cancel-in-progress is not false")
         if "actions/upload-artifact@v7" not in wf_text:
             workflow_issues.append("upload-artifact@v7 missing")
+        crons = [item.get("cron") for item in (wf.get("on") or wf.get(True)).get("schedule", [])]
+        if "25 3 * * 1-5" not in crons:
+            workflow_issues.append(f"08:55 IST session cron missing (found {crons})")
+        gate = re.search(r'hhmm < "(\d{2}:\d{2})" or hhmm >= "(\d{2}:\d{2})"', wf_text)
+        if not gate or gate.groups() != ("08:55", "15:40"):
+            workflow_issues.append("market gate window is not 08:55-15:40 IST")
         match = re.search(r"--session\s+--max-runtime-min\s+(\d+)", wf_text)
         runtime = int(match.group(1)) if match else 0
         timeout = int(job.get("timeout-minutes", 0))
