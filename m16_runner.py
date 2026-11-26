@@ -285,8 +285,8 @@ def alert_text(e):
     if late:
         extra += (f"Delayed discovery: breakout candle closed {late['delay_minutes']:.1f} min before "
                   f"detection; price {late['extension_pct']:.2f}% beyond BOS "
-                  f"(BOS close {late['original_price']:.2f}). Entry level is the discovery price, "
-                  "not the BOS close.\n")
+                  f"(breakout candle close {late['original_price']:.2f}). Entry level is the discovery "
+                  "price, not the BOS close.\n")
         header = (f"M16 · DELAYED — {labels.get(e['kind'], e['kind'])} "
                   f"(found {late['delay_minutes']:.1f} min late)")
     else:
