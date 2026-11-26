@@ -11,6 +11,13 @@ import feeds
 import m16_transport as T
 
 
+def worker_start_method():
+    # Resolve the child's own default context, not a pickled bound method
+    # carrying the parent's DefaultContext object.
+    import multiprocessing
+    return multiprocessing.get_start_method()
+
+
 class TransportTests(unittest.TestCase):
     def setUp(self):
         tmp=tempfile.TemporaryDirectory()
@@ -60,3 +67,68 @@ class TransportTests(unittest.TestCase):
         with patch.dict(os.environ,{'M16_YAHOO_COORDINATE':'0'}), patch.object(feeds,'fetch_bars_yahoo') as raw:
             T.install()
             self.assertIs(feeds.fetch_bars_yahoo,raw)
+
+    def test_explicit_unlock_works_while_forked_child_keeps_fd_open(self):
+        # Reproduce the exact inherited-open-file hazard in an isolated
+        # subprocess, so a regression cannot hang the test runner itself.
+        script = r'''
+import fcntl, os, time
+import m16_transport as T
+pid = None
+ready_r, ready_w = os.pipe()
+release_r, release_w = os.pipe()
+def fork_inside_lock(data):
+    global pid
+    pid = os.fork()
+    if pid == 0:
+        os.close(ready_r); os.close(release_w)
+        os.write(ready_w,b'1')
+        os.read(release_r,1)
+        os._exit(0)
+    os.close(ready_w); os.close(release_r)
+    os.read(ready_r,1)
+    data['test'] = True
+try:
+    T.update(fork_inside_lock)
+    # Child is alive with inherited fd. Parent must still acquire the lock.
+    with T.state_path().open('a+') as handle:
+        fcntl.flock(handle,fcntl.LOCK_EX|fcntl.LOCK_NB)
+        fcntl.flock(handle,fcntl.LOCK_UN)
+    print('unlocked with inherited child alive')
+finally:
+    if pid:
+        os.write(release_w,b'1')
+        os.waitpid(pid,0)
+'''
+        p=subprocess.run([sys.executable,'-c',script],capture_output=True,text=True,timeout=10)
+        self.assertEqual(p.returncode,0,p.stderr)
+        self.assertIn('unlocked with inherited child alive',p.stdout)
+
+    def test_lock_wait_is_bounded_and_status_does_not_freeze_heartbeat(self):
+        import fcntl
+        with self.path.open('a+') as locked:
+            fcntl.flock(locked,fcntl.LOCK_EX)
+            with patch.object(T.time,'monotonic',side_effect=[0,3]), patch.object(T.time,'sleep'):
+                with self.assertRaisesRegex(TimeoutError,'budget lock'):
+                    T.update(lambda data:None)
+            with patch.object(T.time,'monotonic',side_effect=[0,3]), patch.object(T.time,'sleep'):
+                self.assertIn('error',T.status())
+            fcntl.flock(locked,fcntl.LOCK_UN)
+
+    def test_callback_exception_still_releases_lock(self):
+        def broken(data):raise ValueError('test failure')
+        with self.assertRaises(ValueError):T.update(broken)
+        self.assertEqual(T.update(lambda data:'available'),'available')
+
+    def test_real_spawn_worker_can_use_budget_after_parent_lock_closes(self):
+        import fcntl
+        import multiprocessing
+        from concurrent.futures import ProcessPoolExecutor
+        with ProcessPoolExecutor(max_workers=1,mp_context=multiprocessing.get_context('spawn')) as pool:
+            with self.path.open('a+') as locked:
+                fcntl.flock(locked,fcntl.LOCK_EX)
+                method=pool.submit(worker_start_method).result(timeout=15)
+                self.assertEqual(method,'spawn')
+                # Deliberately close without explicit unlock: spawn workers
+                # must never inherit this parent's open-file description.
+            self.assertEqual(pool.submit(T.acquire).result(timeout=5),0.)

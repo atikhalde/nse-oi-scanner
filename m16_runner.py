@@ -8,6 +8,7 @@ from __future__ import annotations
 import argparse
 import html
 import json
+import multiprocessing
 import os
 import time
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_completed
@@ -550,8 +551,8 @@ def live_session(st, cache, max_minutes, dry_run=False):
     outage_since = None
     (ROOT / ".m16-unhealthy").unlink(missing_ok=True) if not dry_run else None
     failures, retry_at = {}, {}
-    with ProcessPoolExecutor(max_workers=1) as sector_pool, ThreadPoolExecutor(max_workers=16) as fetch_pool, ThreadPoolExecutor(max_workers=8) as watch_fetch, \
-            ProcessPoolExecutor(max_workers=worker_count) as discovery, ProcessPoolExecutor(max_workers=2) as active_pool:
+    with ProcessPoolExecutor(max_workers=1, mp_context=multiprocessing.get_context("spawn")) as sector_pool, ThreadPoolExecutor(max_workers=16) as fetch_pool, ThreadPoolExecutor(max_workers=8) as watch_fetch, \
+            ProcessPoolExecutor(max_workers=worker_count, mp_context=multiprocessing.get_context("spawn")) as discovery, ProcessPoolExecutor(max_workers=2, mp_context=multiprocessing.get_context("spawn")) as active_pool:
         warm_future = sector_pool.submit(m16_sector.warm, st["date"])
         while time.monotonic()-started < max_minutes*60:
             now = shared.now_ist()

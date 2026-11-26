@@ -325,3 +325,12 @@ used. A healthy sector may qualify only if `known_rank + missing_sector_count <=
 known ranks 1/2, not rank 3. Global/index inputs remain mandatory. Complete-board
 behavior and M6 are unchanged. See `docs/m16-missing-insurance-sector.md` for the
 uploaded ICICIPRULI probe evidence, proofs/tests, and degraded-probe interpretation.
+
+### Process/lock stall hardening
+
+M16's sector and both analysis process pools use explicit `spawn`, avoiding
+inherited file/network/Python locks from a threaded parent. Yahoo budget updates
+explicitly unlock in `finally` and have bounded two-second lock acquisition;
+heartbeat status reports a lock error rather than hanging on the budget read.
+See `docs/m16-worker-lock-stall.md` for the uploaded stalled-run evidence,
+subprocess regressions and deployment-verification limits.
