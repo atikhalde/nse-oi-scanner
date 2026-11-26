@@ -1038,5 +1038,93 @@ class MirrorTests(unittest.TestCase):
         self.assertGreater(len(attempts), 6)
 
 
+class LateDiscoveryTests(unittest.TestCase):
+    """A BOS found minutes late still alerts, priced at discovery, clearly labelled."""
+
+    GATE_PASS = dict(status='pass', sector='BANK', score=90.0, known_rank=1, worst_rank=1,
+                     missing_sectors=[], close='2026-11-20T09:55:00+05:30')
+    GATE_BLOCK = dict(status='block', sector='BANK', score=40.0, known_rank=9, worst_rank=10,
+                      missing_sectors=[], close='2026-11-20T09:55:00+05:30')
+    GATE_UNKNOWN = dict(status='unknown', reason='sector board unavailable')
+
+    def run_late(self, discovery_close, observed, gate=None):
+        st, key = armed()
+        st['sector_gate_required'] = True
+        b = bar("09:50", o=108, h=max(111, discovery_close), l=108, c=discovery_close)
+        rows = [dict(b, close=discovery_close, high=max(111, discovery_close))]
+        with patch.object(R.m16_sector, 'decision', return_value=gate or dict(self.GATE_PASS)):
+            R.apply(st, 'AXISBANK', [(rows[-1], 111, 'BUY-EX11', pd.DataFrame(rows))], at(observed))
+        return st
+
+    def test_two_minute_late_bos_alerts_at_the_discovery_price(self):
+        st = self.run_late(110.5, "09:57:00")
+        self.assertEqual(len(st['outbox']), 1)
+        event = next(iter(st['outbox'].values()))['event']
+        # No intrabar crossing was polled for this bar, so the close-only kind applies.
+        self.assertEqual(event['kind'], 'CLOSE_ONLY')
+        self.assertFalse(event['live'])
+        self.assertAlmostEqual(event['late']['delay_minutes'], 2.0)
+        self.assertAlmostEqual(event['late']['extension_pct'], 0.455, places=3)
+        self.assertAlmostEqual(event['price'], 110.5)
+        self.assertAlmostEqual(event['late']['original_price'], 110.5)
+        text = R.alert_text(event)
+        self.assertIn('DELAYED', text)
+        self.assertIn('2.0 min late', text)
+        self.assertIn('Entry level is the discovery price', text)
+
+    def test_price_already_away_from_the_level_is_not_a_late_entry(self):
+        for px in (112.0, 109.5):  # +1.8% (chased) and -0.45% (failed through BOS)
+            st = self.run_late(px, "09:57:00")
+            self.assertEqual(st['outbox'], {}, px)
+            self.assertFalse(any(e.get('late') for e in st['events']))
+
+    def test_late_window_and_cutoff_are_enforced(self):
+        self.assertEqual(self.run_late(110.5, "10:20:00")['outbox'], {})  # 25 min late
+        st, key = armed()
+        st['sector_gate_required'] = True
+        b = bar("12:26", o=108, h=111, l=108, c=110.5)
+        with patch.object(R.m16_sector, 'decision', return_value=dict(self.GATE_PASS)):
+            R.apply(st, 'AXISBANK', [(b, 111, 'BUY-EX11', pd.DataFrame([b]))], at("12:33:00"))
+        self.assertEqual(st['outbox'], {})
+
+    def test_late_entry_requires_a_validating_sector_board(self):
+        for gate in (self.GATE_BLOCK, self.GATE_UNKNOWN):
+            self.assertEqual(self.run_late(110.5, "09:57:00", gate=gate)['outbox'], {}, gate['status'])
+
+    def test_disabled_late_alerts_and_replay_never_queue(self):
+        st, key = armed()
+        st['sector_gate_required'] = True
+        b = bar("09:50", o=108, h=111, l=108, c=110.5)
+        with patch.dict(os.environ, {'M16_LATE_ALERTS': '0'}), patch.object(
+                R.m16_sector, 'decision', return_value=dict(self.GATE_PASS)):
+            R.apply(st, 'AXISBANK', [(b, 111, 'BUY-EX11', pd.DataFrame([b]))], at("09:57:00"))
+        self.assertEqual(st['outbox'], {})
+        st2, _ = armed()
+        st2['mode'] = 'offline_replay'
+        with patch.object(R.m16_sector, 'decision', return_value=dict(self.GATE_PASS)):
+            R.apply(st2, 'AXISBANK', [(b, 111, 'BUY-EX11', pd.DataFrame([b]))], at("09:57:00"))
+        self.assertEqual(st2['outbox'], {})
+
+    def test_running_break_is_never_reissued_as_a_delayed_alert(self):
+        st, key = armed()
+        st['sector_gate_required'] = True
+        st['events'].append(dict(id='RUN:1', symbol='AXISBANK', side='BUY', kind='RUNNING_BREAK',
+                                 bar=at('09:50').isoformat(), observed=at('09:52').isoformat(),
+                                 price=110.5, bos=110.0, pullback='FIB', seed=at('09:30').isoformat(),
+                                 signal='BUY-EX11', live=False, sector_gate={'status': 'unknown'}))
+        b = bar("09:50", o=108, h=111, l=108, c=110.5)
+        with patch.object(R.m16_sector, 'decision', return_value=dict(self.GATE_PASS)):
+            R.apply(st, 'AXISBANK', [(b, 111, 'BUY-EX11', pd.DataFrame([b]))], at("09:58:00"))
+        kinds = [item['event']['kind'] for item in st['outbox'].values()]
+        self.assertNotIn('RUNNING_BREAK', kinds)
+
+    def test_delayed_alert_freshness_runs_from_discovery_not_the_bos_bar(self):
+        late = dict(delay_minutes=2.0, extension_pct=0.45, discovery_price=110.5, original_price=110.0)
+        e = dict(kind='CLOSE_CONFIRMED', bar=at('09:50').isoformat(),
+                 observed=at('09:57').isoformat(), late=late)
+        self.assertTrue(R.event_fresh(e, at('09:57:20')))
+        self.assertFalse(R.event_fresh(e, at('09:58:00')))
+
+
 if __name__ == '__main__':
     unittest.main()
