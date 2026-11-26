@@ -35,6 +35,12 @@ class FeedTests(unittest.TestCase):
             _, health = F.fetch('TEST', None, NOW)
         self.assertEqual(health['provider'], 'yahoo')
 
+    def test_previous_session_response_does_not_double_range_requests(self):
+        with patch.object(F.feeds,'fetch_bars_yahoo',return_value=frame(day='2026-11-20')) as fetch:
+            with self.assertRaisesRegex(ValueError,'source_latest'):
+                F.fetch('TEST',None,NOW)
+        self.assertEqual(fetch.call_count,1)
+
     def test_previous_session_nonempty_is_not_usable(self):
         with self.assertRaisesRegex(ValueError, 'current-session'):
             F.current_bars(frame(day='2026-11-20'), NOW)

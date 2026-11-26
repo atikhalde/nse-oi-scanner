@@ -36,6 +36,8 @@ def decision(st, symbol, side, now):
 def fetch_members(members, now):
     """Explicit Yahoo-only basket feed: never calls the shared Dhan fallback."""
     import m6_runner as S
+    import m16_transport
+    m16_transport.install()
     def one(sym):
         return sym, S._prep(S.feeds.fetch_bars_yahoo(sym, rng='1d', timeout=(2, 3)))
     with ThreadPoolExecutor(max_workers=8) as pool:
@@ -45,6 +47,8 @@ def fetch_members(members, now):
 def warm(day):
     """Prime the dedicated process before the first session candle closes."""
     import m6_runner as S
+    import m16_transport
+    m16_transport.install()
     members = sorted({s for group in S.MEMBERS.values() for s in group})
     indices = list(S.FM.OFFICIAL_TICKERS.values())+[S.FM.NIFTY_TICKER, S.FM.VIX_TICKER]
     return S.preload(day, members, indices, log=lambda _: None)
@@ -53,6 +57,8 @@ def warm(day):
 def refresh(now):
     """Dedicated process: no M6 state, orders or Telegram functions called."""
     import m6_runner as S
+    import m16_transport
+    m16_transport.install()
     now = stamp(now)
     close = now.floor('5min')
     today = now.strftime('%Y-%m-%d')
@@ -71,10 +77,14 @@ def refresh(now):
         raise ValueError('sector index warm-up history unavailable')
     # Fail closed on incomplete inputs; M6's normal partial-board tolerance
     # must not silently change the persistence ranks used by this strategy.
-    for frame in list(idx.values())+list(bars.values()):
+    missing = []
+    for name, frame in list(idx.items())+list(bars.items()):
         frame = S._today_only(S._prep(frame), today)
         if not S._has_bar(S._closed_bars(frame, close), target):
-            raise ValueError('sector board inputs stale/incomplete')
+            latest = str(frame.iloc[-1]['dt']) if frame is not None and len(frame) else 'none'
+            missing.append(f'{name}:latest={latest}')
+    if missing:
+        raise ValueError(f'sector board incomplete for {target}: '+ '; '.join(missing))
     if set(indices)-set(idx) or set(members)-set(bars):
         raise ValueError('sector board inputs missing')
     history = {sym: S.symbol_history(sym, today) for sym in members}

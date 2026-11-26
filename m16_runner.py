@@ -569,7 +569,10 @@ def live_session(st, cache, max_minutes, dry_run=False):
                     st.setdefault("sector_snapshots", []).append(snapshot)
                     st["sector_health"] = dict(ok=True, at=now.isoformat())
                 except Exception as exc:
-                    st["sector_health"] = dict(ok=False, reason=str(exc), at=now.isoformat())
+                    reason = str(exc)
+                    if reason != st.get("sector_health", {}).get("reason"):
+                        print("M16 sector refresh unavailable: "+reason)
+                    st["sector_health"] = dict(ok=False, reason=reason, at=now.isoformat())
                 sector_future = None
             current_board = st.get("sector_snapshots", [])
             ready = current_board and model.stamp(current_board[-1]["close"]) == model.stamp(now).floor("5min")
@@ -577,6 +580,7 @@ def live_session(st, cache, max_minutes, dry_run=False):
                 sector_future = sector_pool.submit(m16_sector.refresh, now)
                 sector_retry = time.monotonic()+5
             active = {s["symbol"] for s in st["setups"].values() if s["phase"] not in model.TERMINAL}
+            fast = {s["symbol"] for s in st["setups"].values() if s["phase"] in {"armed", "intrabar"}}
             bucket = (model.stamp(now)-pd.Timedelta(seconds=1)).floor("5min")
             scan = last_discovery != bucket and model.before(now, "11:00:00")
             symbols = set(shared.L.SYMS) if scan else set()
@@ -589,7 +593,10 @@ def live_session(st, cache, max_minutes, dry_run=False):
             # Terminal/expired seeds stay under slower observation for the
             # full-day research audit, without creating new entries.
             audit_symbols = {s["symbol"] for s in st["setups"].values()}
-            symbols |= active | audit_symbols
+            target = (model.stamp(now)-pd.Timedelta(seconds=1)).floor("5min")-pd.Timedelta(minutes=5)
+            # Rally validation and EOD collection consume completed candles;
+            # only armed/running setups need best-effort 1s quote monitoring.
+            symbols |= fast | {sym for sym in audit_symbols if needs_discovery_refresh(latest.get(sym), target)}
             # Recover missed morning discovery even after the seed cutoff.
             # apply/model still enforce original candle cutoffs and no backdating.
             for sym in shared.L.SYMS:
@@ -597,10 +604,10 @@ def live_session(st, cache, max_minutes, dry_run=False):
                 if not model.before(now, "11:00:00") and (not cursor or model.stamp(cursor).strftime("%H:%M") < "10:50"):
                     symbols.add(sym)
             busy_fetch = set(fetches.values())
-            for sym in sorted(symbols, key=lambda s: (s not in active, s)):
-                interval = poll if sym in active else (30. if sym in audit_symbols or not model.before(now, "11:00:00") else max(5., poll))
+            for sym in sorted(symbols, key=lambda s: (s not in fast, s not in active, s)):
+                interval = poll if sym in fast else max(5., poll)
                 if sym not in busy_fetch and time.monotonic() >= retry_at.get(sym, 0) and time.monotonic()-requested.get(sym, -1e10) >= interval:
-                    executor = watch_fetch if sym in active else fetch_pool
+                    executor = watch_fetch if sym in fast else fetch_pool
                     fetches[executor.submit(timed_fetch, sym)] = sym
                     requested[sym] = time.monotonic()
             for future in list(fetches):
@@ -666,6 +673,8 @@ def live_session(st, cache, max_minutes, dry_run=False):
                     raise SystemExit("M16 sustained widespread outage; requesting supervised restart")
                 next_health = time.monotonic() + 30
             if time.monotonic() >= next_heartbeat:
+                import m16_transport
+                st["yahoo_budget"] = m16_transport.status()
                 print("M16 progress " + json.dumps(dict(at=now.isoformat(),
                     processed_symbols=len(st["cursors"]), setups=len(st["setups"]),
                     events=len(st["events"]), pending_fetches=len(fetches), pending_engines=len(engines),
@@ -715,6 +724,20 @@ def feed_probe(symbols=None):
     return report
 
 
+def sector_probe():
+    """Read-only end-to-end board diagnostic; never authorizes live entries."""
+    now = model.stamp(shared.now_ist())
+    close = min(now.floor('5min'), now.normalize()+pd.Timedelta(hours=15, minutes=30))
+    try:
+        snapshot = m16_sector.refresh(close)
+        report = dict(ok=True, diagnostic_only=True, checked_at=now.isoformat(),
+                      source_close=snapshot['close'], sectors=len(snapshot['sectors']), meta=snapshot['meta'])
+    except Exception as exc:
+        report = dict(ok=False, diagnostic_only=True, checked_at=now.isoformat(), reason=str(exc))
+    print(json.dumps(report, indent=2))
+    return report['ok']
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--session", action="store_true")
@@ -722,13 +745,20 @@ def main():
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--test-alert", action="store_true")
     parser.add_argument("--feed-probe", action="store_true")
+    parser.add_argument("--sector-probe", action="store_true")
     parser.add_argument("--max-runtime-min", type=float, default=324)
     parser.add_argument("--replay-date", help="Offline YYYY-MM-DD disk replay; no bot or feed calls")
     parser.add_argument("--symbols", nargs="+", default=None, help="Optional replay symbol subset")
     args = parser.parse_args()
+    import m16_transport
+    m16_transport.install()
     if args.replay_date:
         result = replay(args.replay_date, args.symbols or list(shared.L.SYMS))
         print(pformat(result, width=120))
+        return
+    if args.sector_probe:
+        if not sector_probe():
+            raise SystemExit(1)
         return
     if args.feed_probe:
         feed_probe(args.symbols)

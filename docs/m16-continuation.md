@@ -300,3 +300,18 @@ entries and keeps that first normal shift through the 12:30 BOS cutoff. Startup
 latency, workflow delays, early failures and feed outages can still create gaps;
 this change is not a no-missed-alert guarantee. Later recovery/handoff and the
 15:35 EOD retry remain enabled. No trading or sector thresholds change.
+
+### Rate-limit coordination after the uploaded 26-Nov incident
+
+M16 now enables a process-shared local chart-request budget and escalating 429
+cooldown for stocks, sector members, indices and warm-up chart requests. Only
+armed/intrabar setups retain best-effort 1s monitoring; rally/terminal audit
+collection refreshes missing completed candles. M6's shared feed code is not
+changed. Rate-limit backoff deliberately trades request frequency for recovery;
+it is not a no-missed-alert or tick-feed guarantee.
+
+Use Actions mode `sector-probe` for a read-only full-board test (also after
+hours). Unlike a three-stock feed probe it checks board inputs and warm-up and
+prints specific missing/stale input names. It never saves live state or sends
+Telegram and fails the workflow if the board cannot be built. Detailed evidence,
+limits and validation: `docs/m16-2026-11-26-rate-limit-incident.md`.

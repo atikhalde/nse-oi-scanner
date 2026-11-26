@@ -80,11 +80,21 @@ def fetch(symbol, security_id, now):
                               latest=bars.iloc[-1]['dt'].isoformat(), fallback_errors=errors,
                               transport_errors=transport_errors)
         except ValueError as exc:
-            errors.append(dict(window=window, reason=str(exc), transport=transport_errors))
+            details = dict(window=window, reason=str(exc), transport=transport_errors)
+            if raw is not None and not raw.empty and 'dt' in raw:
+                details['source_latest'] = str(raw['dt'].iloc[-1])
+                details['expected_session'] = str(pd.Timestamp(now).date())
+            errors.append(details)
+            # A wider date range cannot make yesterday's nonempty data become
+            # today's data. Avoid doubling load while publication is absent.
+            if str(exc) == 'no current-session candles' and not transport_errors:
+                break
             if any(x.get('http_status') == 429 for x in transport_errors):
                 rate_limited = True
                 with _COOLDOWN_LOCK:
-                    _COOLDOWN_UNTIL = max(_COOLDOWN_UNTIL, time.monotonic()+max([30.0]+[float(x.get("retry_after") or 0) for x in transport_errors]))
+                    delays = [float(x.get("retry_after") or 0) for x in transport_errors]
+                    minimum = 0. if all(x.get('host') == 'shared-m16-budget' for x in transport_errors) else 30.
+                    _COOLDOWN_UNTIL = max(_COOLDOWN_UNTIL, time.monotonic()+max([minimum]+delays))
             # A second range request cannot cure rate limiting/auth failure.
             if any(x.get('http_status') in (401, 403, 429) for x in transport_errors):
                 break
