@@ -441,6 +441,11 @@ class RunnerTests(unittest.TestCase):
             R.live_session(st, {'AXISBANK': {'ok': True}}, 1, dry_run=True)
         return st
 
+    def test_live_workers_use_spawn_instead_of_forking_fetch_threads(self):
+        with patch.object(R.multiprocessing, 'get_context', wraps=R.multiprocessing.get_context) as context:
+            self.run_snapshot_session(refresh_after_close=True)
+        self.assertEqual([call.args for call in context.call_args_list], [('spawn',), ('spawn',), ('spawn',)])
+
     def test_live_session_monitors_and_confirms_without_batch_wait(self):
         st = self.run_snapshot_session(refresh_after_close=True)
         self.assertEqual([e['kind'] for e in st['events']], ['RUNNING_BREAK', 'CLOSE_CONFIRMED'])

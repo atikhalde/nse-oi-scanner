@@ -21,16 +21,30 @@ def update(fn):
     path = state_path()
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open('a+') as handle:
-        fcntl.flock(handle, fcntl.LOCK_EX)
-        handle.seek(0)
-        raw = handle.read()
-        data = json.loads(raw) if raw else {}
-        result = fn(data)
-        handle.seek(0)
-        handle.truncate()
-        json.dump(data, handle)
-        handle.flush()
-        return result
+        deadline = time.monotonic()+2.
+        while True:
+            try:
+                fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                break
+            except BlockingIOError:
+                if time.monotonic() >= deadline:
+                    raise TimeoutError('M16 Yahoo budget lock unavailable for 2s')
+                time.sleep(.01)
+        try:
+            handle.seek(0)
+            raw = handle.read()
+            data = json.loads(raw) if raw else {}
+            result = fn(data)
+            handle.seek(0)
+            handle.truncate()
+            json.dump(data, handle)
+            handle.flush()
+            return result
+        finally:
+            # close() alone does not release flock if a forked child inherited
+            # this open-file description. Explicit unlock is essential.
+            fcntl.flock(handle, fcntl.LOCK_UN)
+
 
 
 def acquire():
@@ -67,9 +81,12 @@ def trip(retry_after):
 def status():
     if os.getenv('M16_YAHOO_COORDINATE') != '1':
         return dict(enabled=False)
-    return update(lambda data: dict(enabled=True,
-        requests_started=data.get('requests_started', 0), strikes=data.get('strikes', 0),
-        cooldown_seconds=max(0.,data.get('cooldown_until',0)-time.time())))
+    try:
+        return update(lambda data: dict(enabled=True,
+            requests_started=data.get('requests_started', 0), strikes=data.get('strikes', 0),
+            cooldown_seconds=max(0.,data.get('cooldown_until',0)-time.time())))
+    except TimeoutError as exc:
+        return dict(enabled=True, error=str(exc))
 
 
 def install():
