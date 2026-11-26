@@ -84,7 +84,10 @@ def status():
     try:
         return update(lambda data: dict(enabled=True,
             requests_started=data.get('requests_started', 0), strikes=data.get('strikes', 0),
-            cooldown_seconds=max(0.,data.get('cooldown_until',0)-time.time())))
+            cooldown_seconds=max(0.,data.get('cooldown_until',0)-time.time()),
+            empty_backoffs={sym: round(rec['until']-time.time(), 1)
+                            for sym, rec in data.get('empty_symbols', {}).items()
+                            if rec.get('until', 0) > time.time()}))
     except TimeoutError as exc:
         return dict(enabled=True, error=str(exc))
 
@@ -100,8 +103,21 @@ def install():
 
     @functools.wraps(original)
     def fetch(symbol, *args, **kwargs):
-        blocked = acquire()
         callback = kwargs.get('on_error')
+        rng = kwargs.get('rng', args[0] if args else '1d')
+        interval = kwargs.get('interval', args[1] if len(args) > 1 else '5m')
+        intraday = rng in ('1d', '5d') and interval == '5m'
+        remaining = update(lambda data: max(0., data.get('empty_symbols', {}).get(
+            symbol, {}).get('until', 0)-time.time())) if intraday else 0.
+        if remaining:
+            error = dict(host='shared-m16-symbol', reason='empty response backoff',
+                         http_status=None, retry_after=remaining)
+            if callback:
+                callback(error)
+            if kwargs.get('raise_errors'):
+                raise feeds.YahooFetchError(symbol, error['host'], error['reason'], None, remaining)
+            return None
+        blocked = acquire()
         if blocked:
             error = dict(host='shared-m16-budget', reason='shared 429 cooldown',
                          http_status=429, retry_after=blocked)
@@ -110,12 +126,45 @@ def install():
             if kwargs.get('raise_errors'):
                 raise feeds.YahooFetchError(symbol, error['host'], error['reason'], 429, blocked)
             return None
+        errors = []
         def report(error):
+            errors.append(error)
             if error.get('http_status') == 429:
                 trip(error.get('retry_after'))
             if callback:
                 callback(error)
         kwargs['on_error'] = report
-        return original(symbol, *args, **kwargs)
+        logger = kwargs.get('log') or print
+        def quiet_empty(message):
+            # Shared callers keep default logging. Only this M16 opt-in wrapper
+            # coalesces the redundant per-host empty-data messages.
+            if ': empty response on ' not in message:
+                logger(message)
+        if intraday:
+            kwargs['log'] = quiet_empty
+        result = original(symbol, *args, **kwargs)
+        if intraday:
+            empty = result is None and bool(errors) and all(
+                e.get('reason') == 'empty_response' and e.get('http_status') == 200 for e in errors)
+            success = result is not None and not getattr(result, 'empty', False)
+            def record(data):
+                entries = data.setdefault('empty_symbols', {})
+                if success:
+                    return 'recovered' if entries.pop(symbol, None) else None
+                if not empty:
+                    return None
+                previous = entries.get(symbol, {})
+                count = previous.get('count', 0)+1
+                delay = min(300, 30 * 2**min(max(0, count-2), 4)) if count >= 2 else 0
+                entries[symbol] = dict(count=count, until=time.time()+delay)
+                return delay
+            notice = update(record)
+            if notice == 'recovered':
+                logger(f'M16 Yahoo {symbol}: data recovered; empty-response backoff cleared')
+            elif notice is not None:
+                logger(f'M16 Yahoo {symbol}: empty data; '+
+                       (f'retrying in {notice}s; other symbols continue' if notice else
+                        'checking fallback range; other symbols continue'))
+        return result
     fetch._m16_coordinated = True
     feeds.fetch_bars_yahoo = fetch
