@@ -912,6 +912,131 @@ class MirrorTests(unittest.TestCase):
             self.assertTrue(ok)
             self.assertEqual(fake_state.read_bytes(), original_bytes)
 
+    def test_only_provider_rate_limit_failures_trigger_the_global_pause(self):
+        for reason in ("no usable M16 feed: yahoo: HTTP 429 shared cooldown",
+                       "no usable M16 feed: yahoo: empty response; host rate_limited",
+                       "HTTP 429 too many requests"):
+            self.assertTrue(R.provider_throttled(reason), reason)
+        for reason in ("stale/missing completed candle expected=2026-11-26T09:25:00+05:30",
+                       "no current-session candles", "empty response", ""):
+            self.assertFalse(R.provider_throttled(reason), reason)
+
+    def test_provider_cooldown_pauses_the_wave_instead_of_forcing_restarts(self):
+        from concurrent.futures import Future
+        class ImmediateExecutor:
+            def __init__(self, **kw): pass
+            def __enter__(self): return self
+            def __exit__(self, *args): pass
+            def submit(self, fn, *args):
+                f = Future()
+                try:
+                    f.set_result(fn(*args))
+                except Exception as exc:
+                    f.set_exception(exc)
+                return f
+
+        syms = ["AXISBANK", "HDFCBANK", "ICICIBANK"]
+        st = M.fresh_state(DAY)
+        clock, elapsed = [at("09:25:00")], [0.]
+        attempts = []
+
+        def fake_fetch(sym):
+            attempts.append((sym, elapsed[0]))
+            raise ValueError("no usable M16 feed: yahoo: HTTP 429 shared cooldown")
+
+        def sleep(_):
+            elapsed[0] += 1.
+
+        def advance(*_args):
+            # One virtual second of market clock per loop iteration.
+            clock[0] = clock[0] + pd.Timedelta(seconds=1)
+            return clock[0]
+
+        board = dict(close=at("09:25:00").isoformat(), observed=at("09:25:02").isoformat(),
+                     sectors={"BANK": dict(persist_bull=90, persist_bear=10)},
+                     complete=True, missing_sectors=[], missing_members=[])
+        with patch.dict(os.environ, {"M16_PROVIDER_PAUSE_SECONDS": "10",
+                                     "M16_PROVIDER_MAX_PAUSE_SECONDS": "120",
+                                     "M16_UNHEALTHY_EXIT_SECONDS": "1"}), patch.object(
+                R.m16_sector, "warm", return_value=(3, 19)), patch.object(
+                R.m16_sector, "refresh", return_value=board), patch.object(
+                R, "ThreadPoolExecutor", ImmediateExecutor), patch.object(
+                R, "ProcessPoolExecutor", ImmediateExecutor), patch.object(
+                R.shared, "now_ist", side_effect=advance), patch.object(
+                R.shared.L, "SYMS", syms), patch.object(
+                R, "timed_fetch", side_effect=fake_fetch), patch.object(
+                R, "analyze", return_value=("AXISBANK", [])), patch.object(
+                R.time, "sleep", side_effect=sleep), patch.object(
+                R.time, "monotonic", side_effect=lambda: elapsed[0]), patch.object(R, "save"):
+            # 1 virtual second per iteration for 60 iterations.
+            R.live_session(st, {s: {"ok": True} for s in syms}, 1, dry_run=True)
+
+        throttle = st.get("provider_throttle") or {}
+        self.assertGreaterEqual(throttle.get("streak", 0), 2)
+        self.assertEqual(throttle.get("pause_seconds"), 40.0)
+        self.assertTrue(st.get("monitoring_health", {}).get("provider_throttled"))
+        # Per-symbol backoff alone would retry each symbol at 0/2/6/14/30/60s.
+        self.assertLessEqual(len(attempts), 12)
+        self.assertGreaterEqual(len(attempts), 6)
+        # Every admission happens only after the previous pause expired.
+        self.assertEqual([t for _, t in attempts], sorted(t for _, t in attempts))
+        self.assertLessEqual(len({t for _, t in attempts}), 4)
+
+    def test_session_recovers_after_the_provider_cooldown_ends(self):
+        from concurrent.futures import Future
+        class ImmediateExecutor:
+            def __init__(self, **kw): pass
+            def __enter__(self): return self
+            def __exit__(self, *args): pass
+            def submit(self, fn, *args):
+                f = Future()
+                try:
+                    f.set_result(fn(*args))
+                except Exception as exc:
+                    f.set_exception(exc)
+                return f
+
+        syms = ["AXISBANK", "HDFCBANK", "ICICIBANK"]
+        st = M.fresh_state(DAY)
+        clock, elapsed, attempts = [at("09:25:00")], [0.], []
+        frames = R.normalize(pd.DataFrame([bar("09:15"), bar("09:20")]), DAY)
+
+        def fake_fetch(sym):
+            elapsed[0] += 0.01
+            attempts.append((sym, elapsed[0]))
+            if len(attempts) <= 3:
+                raise ValueError("no usable M16 feed: yahoo: HTTP 429 shared cooldown")
+            return frames.copy(), clock[0]
+
+        def sleep(_):
+            elapsed[0] += 1.
+
+        def advance(*_args):
+            clock[0] = clock[0] + pd.Timedelta(seconds=1)
+            return clock[0]
+
+        board = dict(close=at("09:25:00").isoformat(), observed=at("09:25:02").isoformat(),
+                     sectors={"BANK": dict(persist_bull=90, persist_bear=10)},
+                     complete=True, missing_sectors=[], missing_members=[])
+        with patch.dict(os.environ, {"M16_PROVIDER_PAUSE_SECONDS": "10",
+                                     "M16_UNHEALTHY_EXIT_SECONDS": "1"}), patch.object(
+                R.m16_sector, "warm", return_value=(3, 19)), patch.object(
+                R.m16_sector, "refresh", return_value=board), patch.object(
+                R, "ThreadPoolExecutor", ImmediateExecutor), patch.object(
+                R, "ProcessPoolExecutor", ImmediateExecutor), patch.object(
+                R.shared, "now_ist", side_effect=advance), patch.object(
+                R.shared.L, "SYMS", syms), patch.object(
+                R, "timed_fetch", side_effect=fake_fetch), patch.object(
+                R, "analyze", return_value=("AXISBANK", [])), patch.object(
+                R.time, "sleep", side_effect=sleep), patch.object(
+                R.time, "monotonic", side_effect=lambda: elapsed[0]), patch.object(R, "save"):
+            R.live_session(st, {s: {"ok": True} for s in syms}, 1, dry_run=True)
+
+        # Cooldown was respected, then the session resumed and recorded success.
+        self.assertGreaterEqual(st["provider_throttle"]["streak"], 1)
+        self.assertTrue(st["feed_health"]["AXISBANK"]["ok"])
+        self.assertGreater(len(attempts), 6)
+
 
 if __name__ == '__main__':
     unittest.main()
