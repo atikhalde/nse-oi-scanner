@@ -150,6 +150,37 @@ class WorkflowCoverageTests(unittest.TestCase):
         handoff = next(s for s in steps if 'Hand off supervised shift' in s.get('name', ''))
         self.assertIn('eod_done', handoff['run'])
 
+    def test_pre_open_0855_window_and_readiness_check_mode_alignment(self):
+        import yaml
+        from pathlib import Path
+        import pandas as pd
+
+        workflow = yaml.safe_load((Path(__file__).parent / '.github/workflows/16_live_m16.yml').read_text())
+        triggers = workflow.get('on') or workflow.get(True)
+        options = triggers['workflow_dispatch']['inputs']['mode']['options']
+        self.assertIn('readiness-check', options)
+        steps = workflow['jobs']['continuation']['steps']
+        preserve = next(s for s in steps if s.get('name') == 'Preserve M16 state and review')
+        handoff = next(s for s in steps if 'Hand off supervised shift' in s.get('name', ''))
+        self.assertIn("inputs.mode != 'readiness-check'", preserve['if'])
+        self.assertIn("inputs.mode != 'readiness-check'", handoff['if'])
+
+        pre_open = pd.Timestamp('2026-11-27 08:57:00', tz='Asia/Kolkata')
+        too_early = pd.Timestamp('2026-11-27 08:54:00', tz='Asia/Kolkata')
+        with patch('sys.argv', ['m16_runner.py', '--session', '--dry-run']), patch.object(
+                R.shared, 'now_ist', return_value=pre_open), patch.object(
+                R.shared.L, 'SYMS', ['AXISBANK']), patch.object(
+                R.shared, 'symbol_history', return_value={'ok': True, 'last_day': '2026-11-26'}), patch.object(
+                R, 'load', return_value=R.model.fresh_state('2026-11-27')), patch.object(
+                R, 'save'), patch.object(R, 'live_session') as live:
+            R.main()
+        live.assert_called_once()
+
+        with patch('sys.argv', ['m16_runner.py', '--session', '--dry-run']), patch.object(
+                R.shared, 'now_ist', return_value=too_early), patch.object(R, 'live_session') as live2:
+            R.main()
+        live2.assert_not_called()
+
 
 if __name__ == '__main__':
     unittest.main()

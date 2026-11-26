@@ -4,10 +4,10 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: "session / once / dry-run / dedicated bot self-test / feed-probe / sector-probe"
+        description: "session / once / dry-run / dedicated bot self-test / feed-probe / sector-probe / readiness-check"
         type: choice
         default: session
-        options: [session, once, dry-run, test-alert, feed-probe, sector-probe]
+        options: [session, once, dry-run, test-alert, feed-probe, sector-probe, readiness-check]
       manual_recovery:
         description: "Operator recovery override (bypasses automatic restart cap)"
         type: boolean
@@ -67,7 +67,7 @@ jobs:
           from pathlib import Path
           import m16_calendar as cal
           mode = os.environ.get("MODE", "session")
-          if mode in {"dry-run", "test-alert", "feed-probe", "sector-probe"}:
+          if mode in {"dry-run", "test-alert", "feed-probe", "sector-probe", "readiness-check"}:
               print("should_run=true")
               raise SystemExit(0)
           now = datetime.datetime.now(cal.IST)
@@ -123,6 +123,7 @@ jobs:
           MODE: ${{ inputs.mode || 'session' }}
         run: |
           case "$MODE" in
+            readiness-check) python -u m16_runner.py --readiness-check ;;
             test-alert) python -u m16_runner.py --test-alert ;;
             feed-probe) python -u m16_runner.py --feed-probe ;;
             sector-probe) python -u m16_runner.py --sector-probe ;;
@@ -142,7 +143,7 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
       - name: Preserve M16 state and review
-        if: always() && steps.market.outputs.should_run == 'true' && inputs.mode != 'dry-run' && inputs.mode != 'test-alert' && inputs.mode != 'feed-probe' && inputs.mode != 'sector-probe'
+        if: always() && steps.market.outputs.should_run == 'true' && inputs.mode != 'dry-run' && inputs.mode != 'test-alert' && inputs.mode != 'feed-probe' && inputs.mode != 'sector-probe' && inputs.mode != 'readiness-check'
         run: |
           git config user.name paper-bot
           git config user.email paper-bot@users.noreply.github.com
@@ -153,7 +154,7 @@ jobs:
           bash workflow_safe_push.sh
 
       - name: Hand off supervised shift until EOD review completes
-        if: always() && !cancelled() && steps.market.outputs.should_run == 'true' && steps.regressions.outcome == 'success' && steps.market.outputs.regular_session == 'true' && inputs.mode != 'dry-run' && inputs.mode != 'test-alert' && inputs.mode != 'feed-probe' && inputs.mode != 'sector-probe'
+        if: always() && !cancelled() && steps.market.outputs.should_run == 'true' && steps.regressions.outcome == 'success' && steps.market.outputs.regular_session == 'true' && inputs.mode != 'dry-run' && inputs.mode != 'test-alert' && inputs.mode != 'feed-probe' && inputs.mode != 'sector-probe' && inputs.mode != 'readiness-check'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MODE: ${{ inputs.mode || 'session' }}

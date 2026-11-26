@@ -309,6 +309,15 @@ class SectorTests(unittest.TestCase):
         self.assertTrue(st['events'][0]['live'])
         self.assertEqual(len(st['outbox']), 1)
 
+    def test_refresh_rejects_before_first_five_minute_close_without_network_calls(self):
+        with patch.object(R.shared, 'fetch_indices') as fi, patch.object(
+                R.shared, 'preload') as pre, patch.object(G, 'fetch_members') as fm:
+            with self.assertRaisesRegex(ValueError, '09:20'):
+                G.refresh(at('09:16:02'))
+        fi.assert_not_called()
+        pre.assert_not_called()
+        fm.assert_not_called()
+
 
 if __name__ == '__main__':
     unittest.main()
