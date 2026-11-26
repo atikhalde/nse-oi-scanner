@@ -129,6 +129,17 @@ class WorkflowCoverageTests(unittest.TestCase):
         self.assertGreaterEqual(job['timeout-minutes'] - runtime, 10)
         self.assertIn('dry-run) python -u m16_runner.py --once --dry-run', script)
 
+    def test_external_dispatches_do_not_cancel_in_progress_session_or_bypass_cap(self):
+        import yaml
+        from pathlib import Path
+        workflow = yaml.safe_load((Path(__file__).parent / '.github/workflows/16_live_m16.yml').read_text())
+        self.assertFalse(workflow['concurrency']['cancel-in-progress'])
+        triggers = workflow.get('on') or workflow.get(True)
+        inputs = triggers['workflow_dispatch']['inputs']
+        self.assertFalse(inputs['manual_recovery']['default'])
+        auto_expr = workflow['jobs']['continuation']['env']['M16_AUTOMATIC_SESSION']
+        self.assertIn('inputs.manual_recovery', auto_expr)
+
 
 if __name__ == '__main__':
     unittest.main()

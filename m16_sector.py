@@ -23,6 +23,8 @@ def decision(st, symbol, side, now):
     if stamp(snap['close']) != now.floor('5min') or stamp(snap['close']).date() != now.date():
         return dict(status='unknown', reason='sector board stale')
     sec = shared.SECTOR_OF.get(symbol)
+    if symbol in snap.get('dormant_members', []):
+        return dict(status='unknown', reason='symbol feed dormant', sector=sec)
     metrics = snap['sectors'].get(sec)
     if not metrics:
         return dict(status='unknown', reason='home sector unavailable', sector=sec)
@@ -65,7 +67,22 @@ def warm(day):
     return S.preload(day, members, indices, log=lambda _: None)
 
 
-def refresh(now):
+def dormant_members(history, stale_days=7):
+    """Identify stale/delisted universe entries whose local history trails peers."""
+    dates = [pd.Timestamp(rec['last_day']).normalize()
+             for rec in history.values() if rec.get('ok') and rec.get('last_day') is not None]
+    if not dates:
+        return set()
+    latest = max(dates)
+    return {sym for sym, rec in history.items()
+            if rec.get('ok') and rec.get('last_day') is not None
+            and (latest - pd.Timestamp(rec['last_day']).normalize()).days > stale_days}
+
+
+_DORMANT_BASELINE_READY: set[tuple[str, str, tuple[str, ...]]] = set()
+
+
+def refresh(now, shared_bars=None):
     """Dedicated process: no M6 state, orders or Telegram functions called."""
     import m6_runner as S
     import m16_transport
@@ -76,13 +93,12 @@ def refresh(now):
     target = (close-pd.Timedelta(minutes=5)).strftime('%H:%M')
     members = sorted({s for group in S.MEMBERS.values() for s in group})
     indices = list(S.FM.OFFICIAL_TICKERS.values())+[S.FM.NIFTY_TICKER, S.FM.VIX_TICKER]
-    # Warm index histories concurrently instead of serial network requests
-    # inside build_board; overlap all history work with current-price fetching.
-    with ThreadPoolExecutor(max_workers=4) as pool:
+    # Validate global/official index publication BEFORE fetching 60+ basket
+    # equities, so an early pre-publication check never wastes stock quota.
+    with ThreadPoolExecutor(max_workers=2) as pool:
         idx_job = pool.submit(S.fetch_indices, indices)
-        bars_job = pool.submit(fetch_members, members, now)
         warm_job = pool.submit(S.preload, today, members, indices, log=lambda _: None)
-        idx, bars = idx_job.result(), bars_job.result()
+        idx = idx_job.result()
         _, history_count = warm_job.result()
     if history_count != len(set(indices)):
         raise ValueError('sector index warm-up history unavailable')
@@ -95,13 +111,30 @@ def refresh(now):
     bad_indices = [name for name in indices if not is_current(idx.get(name))]
     if bad_indices:
         raise ValueError(f'sector board global/index inputs missing for {target}: '+', '.join(bad_indices))
-    history = {sym: S.symbol_history(sym, today) for sym in members}
-    missing_members = [sym for sym in members if not is_current(bars.get(sym)) or not history[sym].get('ok')]
-    missing_sectors = sorted(sec for sec, group in S.MEMBERS.items() if set(group)&set(missing_members))
-    # Exclude the ENTIRE affected basket. Reweighting a partial basket would
-    # change its score; pretending the missing sector cannot outrank others
-    # would change the top-three gate. decision() bounds that unknown rank.
-    safe_bars = {sym: frame for sym, frame in bars.items() if S.SECTOR_OF.get(sym) not in missing_sectors}
+    history = {sym: dict(S.symbol_history(sym, today)) for sym in members}
+    dormant = dormant_members(history)
+    for sym in dormant:
+        history[sym]['ok'] = False
+    for sec, group in S.MEMBERS.items():
+        dropped = tuple(sorted(set(group) & dormant))
+        if dropped and (sec, today, dropped) not in _DORMANT_BASELINE_READY:
+            S._SYNTH_Y_CACHE.pop((sec, today), None)
+            _DORMANT_BASELINE_READY.add((sec, today, dropped))
+    active_members = [sym for sym in members if sym not in dormant]
+    reusable = {sym: shared_bars[sym] for sym in active_members
+                if shared_bars and sym in shared_bars and is_current(shared_bars[sym])}
+    needed = [sym for sym in active_members if sym not in reusable]
+    fetched = fetch_members(needed, now) if needed else {}
+    bars = {**fetched, **reusable}
+    missing_members = [sym for sym in active_members if not is_current(bars.get(sym)) or not history[sym].get('ok')]
+    missing_sectors = sorted(
+        sec for sec, group in S.MEMBERS.items()
+        if not (set(group) - dormant) or ((set(group) - dormant) & set(missing_members))
+    )
+    # Exclude the ENTIRE affected basket when an active member is missing.
+    # decision() bounds that unknown rank via worst_rank = rank + len(missing).
+    safe_bars = {sym: frame for sym, frame in bars.items()
+                 if S.SECTOR_OF.get(sym) not in missing_sectors and sym not in dormant}
     try:
         board, meta = S.build_board(close, today, safe_bars, idx, history)
     finally:
@@ -121,4 +154,5 @@ def refresh(now):
     return dict(close=close.isoformat(), observed=pd.Timestamp.now(tz='Asia/Kolkata').isoformat(),
                 sectors=sectors, meta=meta, complete=not missing_sectors,
                 missing_sectors=missing_sectors, missing_members=missing_members,
+                dormant_members=sorted(dormant),
                 rank_policy='known_rank + missing_sector_count <= 3')

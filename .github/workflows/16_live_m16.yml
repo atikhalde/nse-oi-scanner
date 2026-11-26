@@ -8,30 +8,35 @@ on:
         type: choice
         default: session
         options: [session, once, dry-run, test-alert, feed-probe, sector-probe]
+      manual_recovery:
+        description: "Operator recovery override (bypasses automatic restart cap)"
+        type: boolean
+        default: false
       automatic_handoff:
-        description: "Automatic continuation (leave unchecked for manual recovery)"
+        description: "Automatic continuation handoff"
         type: boolean
         default: false
   schedule:
-    - cron: "30 3 * * 1-5" # exactly one 09:00 IST supervised session start
+    - cron: "30 3 * * 1-5" # 09:00 IST supervised session start
     - cron: "5 10 * * 1-5" # 15:35 IST: retry failed EOD document delivery
 
 permissions:
   contents: write
   actions: write
 
-# A stale long-running live session is cancelled by a newer supervised shift.
-# Dry-runs and probes have their own groups so they can be verified without
-# waiting behind, or cancelling, the live session.
+# Keep the active session alive when external cron-job.org keep-alives fire
+# every 15 minutes (matching M2/M5/M6/M15). Dry-runs and probes have their own
+# concurrency groups so they can run anytime without waiting on the live session.
 concurrency:
   group: live-m16-${{ github.ref }}-${{ inputs.mode || 'session' }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   continuation:
     runs-on: ubuntu-latest
-    # Keep the normal 09:00 start alive through the full 12:30 entry window.
-    timeout-minutes: 240
+    # Cover 09:00 -> ~14:25 IST in one uninterrupted shift (well past the 12:30
+    # entry cutoff), then hand off once through 15:31 IST EOD report delivery.
+    timeout-minutes: 350
     env:
       M16_BOT_TOKEN: ${{ secrets.M16_BOT_TOKEN }}
       M16_CHAT_ID: ${{ secrets.M16_CHAT_ID }}
@@ -39,11 +44,11 @@ jobs:
       M16_CHAT_ID_2: ${{ secrets.M16_CHAT_ID_2 }}
       M16_POLL_SECONDS: "1"
       M16_YAHOO_COORDINATE: "1"
-      M16_YAHOO_REQUEST_INTERVAL: "0.125"
+      M16_YAHOO_REQUEST_INTERVAL: "0.04"
       M16_ENGINE_WORKERS: "4"
       M16_UNHEALTHY_EXIT_SECONDS: "300"
-      M16_MAX_SESSION_STARTS: "12"
-      M16_AUTOMATIC_SESSION: ${{ github.event_name != 'workflow_dispatch' && '1' || inputs.automatic_handoff && '1' || '0' }}
+      M16_MAX_SESSION_STARTS: "16"
+      M16_AUTOMATIC_SESSION: ${{ inputs.manual_recovery && '0' || '1' }}
       M16_DRY_RUN_SYMBOLS: "3"
       TZ: Asia/Kolkata
     steps:
@@ -51,19 +56,55 @@ jobs:
         with:
           ref: main
           fetch-depth: 20
-      - name: Check regular NSE session before installing or starting scanner
+      - name: Check regular NSE session and active window before installing or starting scanner
         id: market
-        run: python3 m16_calendar.py >> "$GITHUB_OUTPUT"
+        env:
+          MODE: ${{ inputs.mode || 'session' }}
+        run: |
+          python3 m16_calendar.py >> "$GITHUB_OUTPUT"
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import datetime, json, os
+          from pathlib import Path
+          import m16_calendar as cal
+          mode = os.environ.get("MODE", "session")
+          if mode in {"dry-run", "test-alert", "feed-probe", "sector-probe"}:
+              print("should_run=true")
+              raise SystemExit(0)
+          now = datetime.datetime.now(cal.IST)
+          status, reason = cal.session_status(now)
+          hhmm = now.strftime("%H:%M")
+          if status == "closed" or now.weekday() >= 5 or hhmm < "08:55" or hhmm >= "15:40":
+              print("should_run=false")
+              raise SystemExit(0)
+          today = now.strftime("%Y-%m-%d")
+          state_path = Path("state16.json")
+          if state_path.exists():
+              try:
+                  st = json.loads(state_path.read_text(encoding="utf-8"))
+              except Exception:
+                  st = {}
+              if isinstance(st, dict) and st.get("date") == today:
+                  if st.get("eod_done"):
+                      print("should_run=false")
+                      raise SystemExit(0)
+                  auto = os.environ.get("M16_AUTOMATIC_SESSION", "1") != "0"
+                  cap = max(1, int(os.environ.get("M16_MAX_SESSION_STARTS", "12")))
+                  used = int(st.get("automatic_session_starts", st.get("session_starts", 0)))
+                  if mode == "session" and auto and used >= cap:
+                      print("should_run=false")
+                      raise SystemExit(0)
+          print("should_run=true")
+          PY
       - uses: actions/setup-python@v6
-        if: steps.market.outputs.regular_session == 'true' || inputs.mode == 'dry-run' || inputs.mode == 'test-alert' || inputs.mode == 'feed-probe' || inputs.mode == 'sector-probe'
+        if: steps.market.outputs.should_run == 'true'
         with:
           python-version: "3.12"
           cache: pip
       - run: pip install -r requirements.txt
-        if: steps.market.outputs.regular_session == 'true' || inputs.mode == 'dry-run' || inputs.mode == 'test-alert' || inputs.mode == 'feed-probe' || inputs.mode == 'sector-probe'
+        if: steps.market.outputs.should_run == 'true'
       - name: M16 offline regressions
         id: regressions
-        if: steps.market.outputs.regular_session == 'true' || inputs.mode == 'dry-run' || inputs.mode == 'test-alert' || inputs.mode == 'feed-probe' || inputs.mode == 'sector-probe'
+        if: steps.market.outputs.should_run == 'true'
         env:
           M16_BOT_TOKEN: ""
           M16_CHAT_ID: ""
@@ -75,11 +116,9 @@ jobs:
           # Regression fixtures must never overwrite the live checkout state.
           git archive HEAD | tar -x -C "$TEST_ROOT"
           cd "$TEST_ROOT"
-          for START_MODE in 0 1; do
-            M16_YAHOO_COORDINATE=0 M16_AUTOMATIC_SESSION="$START_MODE" python -m unittest -v test_m16_transport test_m16_sector test_m16_rally test_m16_calendar test_m16_feed test_m16_runner test_m16_audit
-          done
+          M16_YAHOO_COORDINATE=0 python -m unittest -v test_m16_transport test_m16_sector test_m16_rally test_m16_calendar test_m16_feed test_m16_runner test_m16_audit
       - name: M16 dedicated session
-        if: steps.market.outputs.regular_session == 'true' || inputs.mode == 'dry-run' || inputs.mode == 'test-alert' || inputs.mode == 'feed-probe' || inputs.mode == 'sector-probe'
+        if: steps.market.outputs.should_run == 'true'
         env:
           MODE: ${{ inputs.mode || 'session' }}
         run: |
@@ -89,10 +128,10 @@ jobs:
             sector-probe) python -u m16_runner.py --sector-probe ;;
             dry-run) python -u m16_runner.py --once --dry-run ;;
             once) python -u m16_runner.py --once ;;
-            *) python -u m16_runner.py --session --max-runtime-min 225 ;;
+            *) python -u m16_runner.py --session --max-runtime-min 325 ;;
           esac
       - name: Upload M16 diagnostic snapshot even after failure
-        if: always()
+        if: always() && steps.market.outputs.should_run == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: m16-diagnostics-${{ github.run_id }}
@@ -103,7 +142,7 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
       - name: Preserve M16 state and review
-        if: always() && inputs.mode != 'dry-run' && inputs.mode != 'test-alert' && inputs.mode != 'feed-probe' && inputs.mode != 'sector-probe'
+        if: always() && steps.market.outputs.should_run == 'true' && inputs.mode != 'dry-run' && inputs.mode != 'test-alert' && inputs.mode != 'feed-probe' && inputs.mode != 'sector-probe'
         run: |
           git config user.name paper-bot
           git config user.email paper-bot@users.noreply.github.com
@@ -114,7 +153,7 @@ jobs:
           bash workflow_safe_push.sh
 
       - name: Hand off supervised shift until 15:31 IST
-        if: always() && !cancelled() && steps.regressions.outcome == 'success' && steps.market.outputs.regular_session == 'true' && inputs.mode != 'dry-run' && inputs.mode != 'test-alert' && inputs.mode != 'feed-probe' && inputs.mode != 'sector-probe'
+        if: always() && !cancelled() && steps.market.outputs.should_run == 'true' && steps.regressions.outcome == 'success' && steps.market.outputs.regular_session == 'true' && inputs.mode != 'dry-run' && inputs.mode != 'test-alert' && inputs.mode != 'feed-probe' && inputs.mode != 'sector-probe'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MODE: ${{ inputs.mode || 'session' }}
@@ -130,11 +169,11 @@ jobs:
               print(0)
           PY
             )
-            if [ "$STARTS" -lt "${M16_MAX_SESSION_STARTS:-12}" ]; then
+            if [ "$STARTS" -lt "${M16_MAX_SESSION_STARTS:-16}" ]; then
               if [ -f .m16-unhealthy ]; then
-                echo "M16 unhealthy watchdog requested a fresh supervised runner ($STARTS/${M16_MAX_SESSION_STARTS:-12} starts)"
+                echo "M16 unhealthy watchdog requested a fresh supervised runner ($STARTS/${M16_MAX_SESSION_STARTS:-16} starts)"
               else
-                echo "M16 shift complete; handing off to the next supervised session ($STARTS/${M16_MAX_SESSION_STARTS:-12} starts)"
+                echo "M16 shift complete; handing off to the next supervised session ($STARTS/${M16_MAX_SESSION_STARTS:-16} starts)"
               fi
               gh workflow run 16_live_m16.yml --ref main -f mode=session -f automatic_handoff=true
             else

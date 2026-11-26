@@ -234,3 +234,81 @@ class SectorTests(unittest.TestCase):
         for s in partial:
             self.assertEqual(partial[s]['persist_bull'],full[s]['persist_bull'])
             self.assertEqual(partial[s]['persist_bear'],full[s]['persist_bear'])
+
+    def test_dormant_icicipruli_history_restores_complete_board_and_third_rank(self):
+        import pandas as pd
+        from types import SimpleNamespace
+        now = pd.Timestamp('2026-11-26 09:55:02', tz='Asia/Kolkata')
+        frame = pd.DataFrame([dict(dt='2026-11-26T09:50:00+05:30', open=100, high=102, low=99, close=101, volume=100)])
+        indices = list(R.shared.FM.OFFICIAL_TICKERS.values())+[R.shared.FM.NIFTY_TICKER,R.shared.FM.VIX_TICKER]
+        members = {s for group in R.shared.MEMBERS.values() for s in group}
+        expected = set(R.shared.FM.OFFICIAL_TICKERS) | set(R.shared.MEMBERS)
+        def fake_history(sym, today):
+            last = '2026-10-22' if sym == 'ICICIPRULI' else '2026-11-25'
+            return dict(ok=True, last_day=last)
+        def build(close, today, bars, idx, history):
+            self.assertNotIn('ICICIPRULI', bars)
+            self.assertFalse(history['ICICIPRULI']['ok'])
+            self.assertIn('HDFCLIFE', bars)
+            return SimpleNamespace(sectors={sec: dict(persist_bull=80, persist_bear=20) for sec in expected}), '17 official / 13 synthetic'
+        with patch.object(R.shared, 'preload', return_value=(len(members), len(set(indices)))), patch.object(
+                R.shared, 'fetch_indices', return_value={s: frame for s in indices}), patch.object(
+                G, 'fetch_members', return_value={s: frame for s in members if s != 'ICICIPRULI'}) as fm, patch.object(
+                R.shared, 'symbol_history', side_effect=fake_history), patch.object(R.shared, 'build_board', side_effect=build):
+            result = G.refresh(now)
+        self.assertNotIn('ICICIPRULI', fm.call_args.args[0])
+        self.assertEqual(len(result['sectors']), 30)
+        self.assertTrue(result['complete'])
+        self.assertEqual(result['missing_sectors'], [])
+        self.assertEqual(result['dormant_members'], ['ICICIPRULI'])
+        st = dict(sector_gate_required=True, sector_snapshots=[dict(
+            close=now.floor('5min').isoformat(), observed=now.isoformat(),
+            missing_sectors=[], dormant_members=['ICICIPRULI'],
+            sectors={'A': dict(persist_bull=95, persist_bear=10),
+                     'B': dict(persist_bull=88, persist_bear=10),
+                     'INSURANCE': dict(persist_bull=78, persist_bear=10),
+                     'C': dict(persist_bull=60, persist_bear=10)})])
+        self.assertEqual(G.decision(st, 'HDFCLIFE', 'BUY', now)['status'], 'pass')
+        self.assertEqual(G.decision(st, 'ICICIPRULI', 'BUY', now)['status'], 'unknown')
+
+    def test_refresh_reuses_shared_bars_and_aborts_before_members_when_indices_stale(self):
+        import pandas as pd
+        from types import SimpleNamespace
+        frame = pd.DataFrame([bar('09:50')])
+        indices = list(R.shared.FM.OFFICIAL_TICKERS.values())+[R.shared.FM.NIFTY_TICKER,R.shared.FM.VIX_TICKER]
+        members = sorted({s for group in R.shared.MEMBERS.values() for s in group})
+        expected = set(R.shared.FM.OFFICIAL_TICKERS) | set(R.shared.MEMBERS)
+        with patch.object(R.shared, 'preload', return_value=(len(members), len(set(indices)))), patch.object(
+                R.shared, 'fetch_indices', return_value={}), patch.object(G, 'fetch_members') as fm:
+            with self.assertRaisesRegex(ValueError, 'global/index inputs missing'):
+                G.refresh(at('09:55:02'))
+            fm.assert_not_called()
+        shared_bars = {s: frame for s in members[:-1]}
+        board = SimpleNamespace(sectors={sec: dict(persist_bull=75, persist_bear=25) for sec in expected})
+        with patch.object(R.shared, 'preload', return_value=(len(members), len(set(indices)))), patch.object(
+                R.shared, 'fetch_indices', return_value={s: frame for s in indices}), patch.object(
+                G, 'fetch_members', return_value={members[-1]: frame}) as fm, patch.object(
+                R.shared, 'symbol_history', return_value={'ok': True}), patch.object(
+                R.shared, 'build_board', return_value=(board, 'complete')):
+            result = G.refresh(at('09:55:02'), shared_bars=shared_bars)
+        self.assertEqual(fm.call_args.args[0], [members[-1]])
+        self.assertEqual(len(result['sectors']), 30)
+
+    def test_running_break_holds_armed_while_sector_unknown_then_fires_when_board_arrives(self):
+        st, key = armed()
+        st['sector_gate_required'] = True
+        b = bar('09:55', o=109, h=111.5, l=108.5, c=110.8)
+        M.running_bar(st, 'AXISBANK', b, at('09:55:02'))
+        self.assertEqual(st['setups'][key]['phase'], 'armed')
+        self.assertFalse(st['events'])
+        st['sector_snapshots'] = state()['sector_snapshots']
+        st['sector_snapshots'][0]['observed'] = at('09:55:04').isoformat()
+        M.running_bar(st, 'AXISBANK', b, at('09:55:05'))
+        self.assertEqual(st['setups'][key]['phase'], 'intrabar')
+        self.assertEqual(len(st['events']), 1)
+        self.assertTrue(st['events'][0]['live'])
+        self.assertEqual(len(st['outbox']), 1)
+
+
+if __name__ == '__main__':
+    unittest.main()

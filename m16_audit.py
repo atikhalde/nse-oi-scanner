@@ -35,7 +35,7 @@ def sections(st):
         'All final chart labels/EX variants seed tracking; previews 90/290 excluded. Seed confirmed before 11:00; BOS confirmation before 12:30.',
         'Pre-pullback rally: >=3 completed candles, >=2 directional advances, >=0.3% progress, efficiency >=0.65 and both EMA slopes directional.',
         'From seed through confirmation, BUY closes >= both EMA9/10; SELL closes <= both. Wick touches allowed. Missing continuity invalidates.',
-        'Fib 0.236-0.382 band or EMA9/10 wick touch; freeze prior extreme as BOS. >50% retracement invalidates. No sector/persistent/top-five filters.',
+        'Fib 0.236-0.382 band or EMA9/10 wick touch; freeze prior extreme as BOS. >50% retracement invalidates. Live alerts require M6 sector persistence >70 and directional top-3 rank on the current 5m board (no M6 composite/leadership/top-five stock filters).',
         'RUNNING_BREAK is provisional. CLOSE_CONFIRMED and CLOSE_FAILED describe the SAME candle. CLOSE_ONLY means no intrabar crossing was observed.',
         'DIRECT_BOS_CONFIRMED: the original final indicator label itself occurs on a qualifying BOS close. Prior price-pattern evidence, not a fabricated earlier indicator signal; no second pullback required.',
         'Delayed feed, computation, Telegram and GitHub scheduling can add latency. Poll cadence is not a zero-delay market-data guarantee.',
