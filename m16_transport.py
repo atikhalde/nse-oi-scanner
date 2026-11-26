@@ -58,7 +58,7 @@ def acquire():
             wait = max(0., data.get('next', 0)-now)
             if not wait:
                 data['requests_started'] = data.get('requests_started', 0)+1
-                data['next'] = now + max(.05, float(os.getenv('M16_YAHOO_REQUEST_INTERVAL', '.125')))
+                data['next'] = now + max(.02, float(os.getenv('M16_YAHOO_REQUEST_INTERVAL', '.04')))
             return wait, False
         delay, blocked = update(reserve)
         if blocked:

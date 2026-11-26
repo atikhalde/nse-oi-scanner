@@ -116,7 +116,7 @@ def load(day):
 def save(st, dry_run=False):
     if not dry_run:
         tmp = STATE.with_suffix(".tmp")
-        tmp.write_text(json.dumps(st, indent=2, ensure_ascii=False, allow_nan=False), encoding="utf-8")
+        tmp.write_text(json.dumps(st, separators=(",", ":"), ensure_ascii=False, allow_nan=False), encoding="utf-8")
         tmp.replace(STATE)
 
 
@@ -137,6 +137,27 @@ def normalize(bars, day):
     return b[mask].reset_index(drop=True)
 
 
+_WORKER_HISTORY: dict[tuple[str, str], dict] = {}
+
+
+def _resolve_worker_cache(symbol, cache):
+    if not isinstance(cache, dict) or not cache.get("ok"):
+        return cache or {}
+    if "eng_hist" in cache or not cache.get("day"):
+        return cache
+    key = (symbol, str(cache["day"]))
+    hit = _WORKER_HISTORY.get(key)
+    if hit is None:
+        hit = shared.symbol_history(symbol, str(cache["day"]))
+        _WORKER_HISTORY[key] = hit
+    return hit
+
+
+def inactive_symbols(cache, stale_days=7):
+    """Symbols whose local history last_day trails peers (delisted/dormant on Yahoo)."""
+    return m16_sector.dormant_members(cache, stale_days=stale_days)
+
+
 def analyze(job):
     """Independent worker: causal indicator evaluation, every EX switch enabled.
 
@@ -144,6 +165,7 @@ def analyze(job):
     full-day engine run is never used to infer historical labels.
     """
     symbol, bars, cache, cursor, now = job
+    cache = _resolve_worker_cache(symbol, cache)
     closed = shared._closed_bars(bars, now)
     if closed is None or closed.empty or not cache.get("ok"):
         return symbol, []
@@ -160,8 +182,10 @@ def analyze(job):
         if model.before(t + pd.Timedelta(minutes=5), "11:00:00"):
             res = scanner.run_symbol(frame, scanner.Params())
             if res is not None and not res.empty and pd.notna(res.iloc[-1].get("scan_code")):
-                code = int(res.iloc[-1]["scan_code"])
-                name = str(res.iloc[-1].get("scan_name", code))
+                raw_code = int(res.iloc[-1]["scan_code"])
+                if raw_code != 0:
+                    code = raw_code
+                    name = str(res.iloc[-1].get("scan_name", raw_code))
         bar = {k: float(row[k]) for k in ("open", "high", "low", "close", "volume")}
         bar.update(dt=t.isoformat(), ema9=float(ema9), ema10=float(ema10))
         # Closed session context only; includes pre-label pattern evidence for
@@ -432,8 +456,11 @@ def notify_health(st, now, dry_run=False):
     if model.stamp(now).strftime("%H:%M:%S") < "09:20:30":
         return
     health = st.get("feed_health", {})
+    dormant = set(st.get("inactive_symbols", []))
     bad, details, watched_symbols = [], {}, []
     for sym in shared.L.SYMS:
+        if sym in dormant:
+            continue
         rec = health.get(sym, {})
         # Symbols no longer scheduled after discovery are not falsely called stale.
         discovery_missing = not st.get("cursors", {}).get(sym) or model.stamp(st["cursors"][sym]).strftime("%H:%M") < "10:50"
@@ -513,11 +540,11 @@ def timed_fetch(sym):
     return bars, started
 
 
-def fetch_candidates(symbols, fast, active, requested, busy, lanes):
+def fetch_candidates(symbols, fast, active, requested, busy, lanes, basket=frozenset()):
     """Bound admission by actual executor lane; oldest equal-priority work first."""
     slots = {True: max(0, 8-sum(lanes.values())),
              False: max(0, 16-sum(not lane for lane in lanes.values()))}
-    for sym in sorted(symbols, key=lambda s: (s not in fast, s not in active, requested.get(s, -1e10), s)):
+    for sym in sorted(symbols, key=lambda s: (s not in fast, s not in active, s not in basket, requested.get(s, -1e10), s)):
         lane = sym in fast
         if sym not in busy and slots[lane]:
             slots[lane] -= 1
@@ -580,6 +607,9 @@ def live_session(st, cache, max_minutes, dry_run=False):
     (ROOT / ".m16-unhealthy").unlink(missing_ok=True) if not dry_run else None
     failures, retry_at = {}, {}
     fetch_lanes = {}
+    dormant = inactive_symbols(cache) | set(st.get("inactive_symbols", []))
+    universe_syms = [s for s in shared.L.SYMS if s not in dormant]
+    basket_members = frozenset(s for g in shared.MEMBERS.values() for s in g) & frozenset(universe_syms)
     with ProcessPoolExecutor(max_workers=1, mp_context=multiprocessing.get_context("spawn")) as sector_pool, ThreadPoolExecutor(max_workers=16) as fetch_pool, ThreadPoolExecutor(max_workers=8) as watch_fetch, \
             ProcessPoolExecutor(max_workers=worker_count, mp_context=multiprocessing.get_context("spawn")) as discovery, ProcessPoolExecutor(max_workers=2, mp_context=multiprocessing.get_context("spawn")) as active_pool:
         warm_future = sector_pool.submit(m16_sector.warm, st["date"])
@@ -604,40 +634,61 @@ def live_session(st, cache, max_minutes, dry_run=False):
             if sector_future is not None and sector_future.done():
                 try:
                     snapshot = sector_future.result()
-                    st.setdefault("sector_snapshots", []).append(snapshot)
-                    st["sector_health"] = dict(ok=True, complete=snapshot.get("complete", True), missing_sectors=snapshot.get("missing_sectors", []), at=now.isoformat())
+                    boards = st.setdefault("sector_snapshots", [])
+                    if boards and model.stamp(boards[-1]["close"]) == model.stamp(snapshot["close"]):
+                        if len(snapshot.get("sectors", {})) >= len(boards[-1].get("sectors", {})):
+                            boards[-1] = snapshot
+                    else:
+                        boards.append(snapshot)
+                    st["sector_health"] = dict(
+                        ok=True, complete=snapshot.get("complete", True),
+                        missing_sectors=snapshot.get("missing_sectors", []),
+                        dormant_members=snapshot.get("dormant_members", []),
+                        at=now.isoformat(),
+                    )
                 except Exception as exc:
                     reason = str(exc)
                     if reason != st.get("sector_health", {}).get("reason"):
                         print("M16 sector refresh unavailable: "+reason)
                     st["sector_health"] = dict(ok=False, reason=reason, at=now.isoformat())
                 sector_future = None
+            current_close = model.stamp(now).floor("5min")
+            close_age = (model.stamp(now) - current_close).total_seconds()
             current_board = st.get("sector_snapshots", [])
-            ready = current_board and model.stamp(current_board[-1]["close"]) == model.stamp(now).floor("5min")
-            if sector_future is None and not ready and time.monotonic() >= sector_retry and model.before(now, "12:35:00"):
-                sector_future = sector_pool.submit(m16_sector.refresh, now)
-                sector_retry = time.monotonic()+5
+            has_close_board = bool(current_board and model.stamp(current_board[-1]["close"]) == current_close)
+            board_complete = bool(has_close_board and current_board[-1].get("complete", True))
+            need_sector = (not has_close_board) or (not board_complete and close_age <= MAX_LAG)
+            if (sector_future is None and need_sector and close_age >= 1.0
+                    and time.monotonic() >= sector_retry and model.before(now, "12:35:00")):
+                target_bar = current_close - pd.Timedelta(minutes=5)
+                sector_bars = {sym: item[0] for sym, item in latest.items()
+                               if sym in basket_members and not needs_discovery_refresh(item, target_bar)}
+                sector_future = (sector_pool.submit(m16_sector.refresh, now, sector_bars)
+                                 if sector_bars else sector_pool.submit(m16_sector.refresh, now))
+                sector_retry = time.monotonic() + (2.5 if has_close_board else 2.0)
             active = {s["symbol"] for s in st["setups"].values() if s["phase"] not in model.TERMINAL}
             fast = {s["symbol"] for s in st["setups"].values() if s["phase"] in {"armed", "intrabar"}}
             bucket = (model.stamp(now)-pd.Timedelta(seconds=1)).floor("5min")
             scan = last_discovery != bucket and model.before(now, "11:00:00")
-            symbols = set(shared.L.SYMS) if scan else set()
+            symbols = set(universe_syms) if scan else set()
             if scan:
                 last_discovery = bucket
             # Re-fetch missing/late discovery bars during the freshness budget.
             # A batch arriving with yesterday's/previous candle's data must not
             # silently lose a morning signal until the next full discovery.
-            symbols.update(discovery_retries(shared.L.SYMS, latest, now))
+            symbols.update(discovery_retries(universe_syms, latest, now))
             # Terminal/expired seeds stay under slower observation for the
             # full-day research audit, without creating new entries.
-            audit_symbols = {s["symbol"] for s in st["setups"].values()}
+            audit_symbols = {s["symbol"] for s in st["setups"].values() if s["symbol"] not in dormant}
             target = (model.stamp(now)-pd.Timedelta(seconds=1)).floor("5min")-pd.Timedelta(minutes=5)
             # Rally validation and EOD collection consume completed candles;
             # only armed/running setups need best-effort 1s quote monitoring.
             symbols |= fast | {sym for sym in audit_symbols if needs_discovery_refresh(latest.get(sym), target)}
+            if model.before(now, "12:35:00"):
+                symbols |= {sym for sym in basket_members if needs_discovery_refresh(latest.get(sym), target)}
             # Recover missed morning discovery even after the seed cutoff.
             # apply/model still enforce original candle cutoffs and no backdating.
-            for sym in shared.L.SYMS:
+            for sym in universe_syms:
                 cursor = st["cursors"].get(sym)
                 if not model.before(now, "11:00:00") and (not cursor or model.stamp(cursor).strftime("%H:%M") < "10:50"):
                     symbols.add(sym)
@@ -647,7 +698,7 @@ def live_session(st, cache, max_minutes, dry_run=False):
             clock = time.monotonic()
             eligible = {sym for sym in symbols if clock >= retry_at.get(sym, 0) and
                         clock-requested.get(sym, -1e10) >= (poll if sym in fast else max(5., poll))}
-            for sym in fetch_candidates(eligible, fast, active, requested, busy_fetch, fetch_lanes):
+            for sym in fetch_candidates(eligible, fast, active, requested, busy_fetch, fetch_lanes, basket_members):
                 executor = watch_fetch if sym in fast else fetch_pool
                 future = executor.submit(timed_fetch, sym)
                 fetches[future] = sym
@@ -698,7 +749,8 @@ def live_session(st, cache, max_minutes, dry_run=False):
                 if not cache.get(sym, {}).get("ok"):
                     continue
                 executor = active_pool if sym in active else discovery
-                engines[executor.submit(analyze, (sym, bars, cache[sym], cursor, received))] = sym
+                worker_cache = dict(ok=True, day=st["date"]) if "eng_hist" in cache[sym] else cache[sym]
+                engines[executor.submit(analyze, (sym, bars, worker_cache, cursor, received))] = sym
             flush(st, shared.now_ist(), dry_run)
             if time.monotonic() >= next_health:
                 notify_health(st, now, dry_run)
@@ -783,6 +835,7 @@ def sector_probe():
                       coverage_status='degraded' if snapshot.get('missing_sectors') else 'complete',
                       missing_sectors=snapshot.get('missing_sectors', []),
                       missing_members=snapshot.get('missing_members', []),
+                      dormant_members=snapshot.get('dormant_members', []),
                       rank_policy=snapshot.get('rank_policy', 'complete board'))
     except Exception as exc:
         report = dict(ok=False, diagnostic_only=True, checked_at=now.isoformat(), reason=str(exc))
@@ -836,8 +889,12 @@ def main():
         return
     st["sector_gate_required"] = True
     cache = {sym: shared.symbol_history(sym, st["date"]) for sym in shared.L.SYMS}
-    st["history_health"] = {sym: bool(rec.get("ok")) for sym, rec in cache.items()}
-    missing_history = [sym for sym, rec in cache.items() if not rec.get("ok")]
+    dormant = sorted(inactive_symbols(cache))
+    st["inactive_symbols"] = dormant
+    if dormant:
+        print(f"M16 dormant symbols excluded from live polling ({len(dormant)}): {', '.join(dormant)}")
+    st["history_health"] = {sym: bool(rec.get("ok")) for sym, rec in cache.items() if sym not in dormant}
+    missing_history = [sym for sym, rec in cache.items() if sym not in dormant and not rec.get("ok")]
     if missing_history:
         st["diagnostics"].append(dict(at=now.isoformat(), reason="history unavailable", symbols=missing_history))
         print(f"M16 history unavailable for {len(missing_history)} symbols; recorded in diagnostics")
@@ -851,7 +908,8 @@ def main():
         except Exception as exc:
             st["sector_health"] = dict(ok=False, reason=str(exc))
         bars_map = {}
-        chosen = list(shared.L.SYMS[:max(1, int(os.getenv("M16_DRY_RUN_SYMBOLS", "3")))]) if args.dry_run else list(shared.L.SYMS)
+        active_syms = [s for s in shared.L.SYMS if s not in dormant]
+        chosen = active_syms[:max(1, int(os.getenv("M16_DRY_RUN_SYMBOLS", "3")))] if args.dry_run else active_syms
         with ThreadPoolExecutor(max_workers=8) as pool:
             pending = {pool.submit(timed_fetch, sym): sym for sym in chosen}
             for future in as_completed(pending):

@@ -119,6 +119,20 @@ class ContinuationTests(unittest.TestCase):
         M.closed_bar(st, 'AXISBANK', bar('09:50', h=112, l=108, c=111), at('09:55:01'))
         self.assertEqual(len(st['events']), 2)
 
+    def test_converging_seeds_with_different_pullback_bars_alert_once(self):
+        st, key = armed()
+        second = copy.deepcopy(st['setups'][key])
+        second.update(id=key + ':later-seed', signal='BUY-EX', signal_bar=at('09:35').isoformat(),
+                      pullback_bar=at('09:40').isoformat())
+        st['setups'][second['id']] = second
+        M.running_bar(st, 'AXISBANK', bar('09:50', h=112, l=108, c=111), at('09:52'))
+        self.assertEqual(len(st['events']), 1)
+        self.assertEqual(len(st['outbox']), 1)
+        self.assertEqual(len(st['events'][0]['coincident_original_signals']), 1)
+        M.closed_bar(st, 'AXISBANK', bar('09:50', h=112, l=108, c=111), at('09:55:01'))
+        self.assertEqual([e['kind'] for e in st['events']], ['RUNNING_BREAK', 'CLOSE_CONFIRMED'])
+        self.assertEqual(len(st['outbox']), 2)
+
     def test_deep_pullback_and_anchor_break_invalid(self):
         st, key = armed()
         st['setups'][key]['phase'] = 'rally'
@@ -613,6 +627,69 @@ class MirrorTests(unittest.TestCase):
         with patch.object(R.tg, 'send_message_to') as send:
             self.assertTrue(R.test_alert(dry_run=True))
             send.assert_not_called()
+
+    def test_zero_scan_code_not_logged_and_dormant_excluded_from_health(self):
+        rows = R.normalize(pd.DataFrame([bar('09:30'), bar('09:35')]), DAY)
+        codes = iter([0, 111])
+        def engine(frame, params):
+            c = next(codes)
+            return pd.DataFrame({'scan_code': [c], 'scan_name': ['NONE' if c == 0 else 'BUY-EX11']}, index=[frame.index[-1]])
+        with patch.object(R.scanner, 'run_symbol', side_effect=engine):
+            sym, output = R.analyze(('A', rows, {'ok': True, 'eng_hist': None}, None, at('09:40:01')))
+        self.assertIsNone(output[0][1])
+        self.assertEqual(output[1][1], 111)
+        st = M.fresh_state(DAY)
+        R.apply(st, sym, output, at('09:40:01'))
+        self.assertEqual(len(st['signal_audit']), 1)
+        self.assertEqual(st['signal_audit'][0]['code'], 111)
+        st['inactive_symbols'] = ['ICICIPRULI']
+        st['feed_health'] = {'A': dict(ok=True, at=at('09:40:01').isoformat(), latest=at('09:35').isoformat())}
+        with patch.object(R.shared.L, 'SYMS', ['A', 'ICICIPRULI']):
+            R.notify_health(st, at('09:40:01'), dry_run=True)
+        self.assertEqual(st['health_notice']['status'], 'healthy')
+
+    def test_partial_sector_board_retries_and_upgrades_in_place(self):
+        from concurrent.futures import Future
+        class ImmediateExecutor:
+            def __init__(self, **kw):
+                pass
+            def __enter__(self):
+                return self
+            def __exit__(self, *args):
+                pass
+            def submit(self, fn, *args):
+                f = Future()
+                try:
+                    f.set_result(fn(*args))
+                except Exception as exc:
+                    f.set_exception(exc)
+                return f
+        st = M.fresh_state(DAY)
+        clock, elapsed = [at('09:55:02')], [0.]
+        steps = iter([at('09:55:05'), at('09:55:08'), at('15:31:01')])
+        partial = dict(close=at('09:55').isoformat(), observed=at('09:55:02').isoformat(),
+                       sectors={'A': dict(persist_bull=90, persist_bear=10)},
+                       complete=False, missing_sectors=['CEMENT'], missing_members=['SHREECEM'])
+        complete = dict(close=at('09:55').isoformat(), observed=at('09:55:05').isoformat(),
+                        sectors={'A': dict(persist_bull=90, persist_bear=10),
+                                 'CEMENT': dict(persist_bull=75, persist_bear=25)},
+                        complete=True, missing_sectors=[], missing_members=[])
+        def sleep(_):
+            clock[0] = next(steps)
+            elapsed[0] += 3.
+        with patch.object(R.m16_sector, 'warm', return_value=(63, 19)), patch.object(
+                R.m16_sector, 'refresh', side_effect=[partial, complete]) as ref, patch.object(
+                R, 'ThreadPoolExecutor', ImmediateExecutor), patch.object(
+                R, 'ProcessPoolExecutor', ImmediateExecutor), patch.object(
+                R.shared, 'now_ist', side_effect=lambda: clock[0]), patch.object(
+                R.shared.L, 'SYMS', []), patch.object(
+                R.time, 'sleep', side_effect=sleep), patch.object(
+                R.time, 'monotonic', side_effect=lambda: elapsed[0]), patch.object(R, 'save'):
+            R.live_session(st, {}, 1, dry_run=True)
+        self.assertEqual(ref.call_count, 2)
+        self.assertEqual(len(st['sector_snapshots']), 1)
+        self.assertTrue(st['sector_snapshots'][0]['complete'])
+        self.assertEqual(len(st['sector_snapshots'][0]['sectors']), 2)
 
 
 if __name__ == '__main__':

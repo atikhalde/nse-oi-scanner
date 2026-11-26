@@ -109,11 +109,23 @@ def seed(st, symbol, code, name, bar, context):
 
 def emit(st, setup, kind, bar_time, price, now, live):
     # Several original labels may lead to the same continuation pattern.
-    # Track every seed, but notify only once per symbol/side/BOS/pullback/bar.
-    key = (f"{setup['symbol']}:{setup['side']}:{setup.get('pullback_bar')}:"
-           f"{setup.get('bos')}:{kind}:{stamp(bar_time).isoformat()}")
-    if any(e["id"] == key for e in st["events"]):
+    # Track every seed, but notify only once per symbol/side/BOS/kind/bar.
+    bar_iso = stamp(bar_time).isoformat()
+    same = next((e for e in st["events"]
+                 if e["symbol"] == setup["symbol"] and e["side"] == setup["side"]
+                 and e.get("bos") == setup.get("bos") and e["kind"] == kind
+                 and e["bar"] == bar_iso), None)
+    if same is not None:
+        if setup["signal_bar"] != same.get("seed") or setup["signal"] != same.get("signal"):
+            extra = dict(setup=setup["id"], signal=setup["signal"], seed=setup["signal_bar"])
+            coincident = same.setdefault("coincident_original_signals", [])
+            if extra not in coincident:
+                coincident.append(extra)
+                if same["id"] in st["outbox"]:
+                    st["outbox"][same["id"]]["event"] = same
         return
+    key = (f"{setup['symbol']}:{setup['side']}:{setup.get('pullback_bar')}:"
+           f"{setup.get('bos')}:{kind}:{bar_iso}")
     timely = bool(live)
     gate = m16_sector.decision(st, setup['symbol'], setup['side'], now)
     # Failure notices are risk updates, not new entries.
@@ -315,6 +327,10 @@ def running_bar(st, symbol, bar, now):
             s.update(phase="invalid", invalid_reason="pullback retraced more than 50% during running candle")
             continue
         if sign * (price-s["bos"]) > 0:
+            if st.get("sector_gate_required") and m16_sector.decision(st, symbol, s["side"], now)["status"] == "unknown":
+                s["awaiting_sector_running_at"] = now.isoformat()
+                continue
+            s.pop("awaiting_sector_running_at", None)
             s.update(phase="intrabar", trigger_bar=t.isoformat())
             emit(st, s, "RUNNING_BREAK", t, price, now, True)
 
