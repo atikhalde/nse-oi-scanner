@@ -181,6 +181,27 @@ class WorkflowCoverageTests(unittest.TestCase):
             R.main()
         live2.assert_not_called()
 
+    def test_schedule_and_gate_window_match_runner_pre_open_window(self):
+        import re
+        import yaml
+        from pathlib import Path
+
+        workflow_text = (Path(__file__).parent / '.github/workflows/16_live_m16.yml').read_text()
+        workflow = yaml.safe_load(workflow_text)
+        triggers = workflow.get('on') or workflow.get(True)
+        crons = [item['cron'] for item in triggers['schedule']]
+        # 25 3 UTC == 08:55 IST: the pre-open buffer must exist before the 09:20
+        # first-close gate, otherwise the shift loses the quiet warm-up window.
+        self.assertIn('25 3 * * 1-5', crons)
+        self.assertIn('5 10 * * 1-5', crons)  # 15:35 IST EOD delivery retry
+        gate = re.search(r'hhmm < "(\d{2}:\d{2})" or hhmm >= "(\d{2}:\d{2})"', workflow_text)
+        self.assertIsNotNone(gate)
+        self.assertEqual(gate.groups(), ('08:55', '15:40'))
+        runner = (Path(__file__).parent / 'm16_runner.py').read_text()
+        runner_gate = re.search(r'strftime\("%H:%M"\) < "(\d{2}:\d{2})" or now\.strftime\("%H:%M"\) >= "(\d{2}:\d{2})"', runner)
+        self.assertIsNotNone(runner_gate)
+        self.assertEqual(runner_gate.groups(), gate.groups())
+
 
 if __name__ == '__main__':
     unittest.main()

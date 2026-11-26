@@ -17,7 +17,7 @@ on:
         type: boolean
         default: false
   schedule:
-    - cron: "30 3 * * 1-5" # 09:00 IST supervised session start
+    - cron: "25 3 * * 1-5" # 08:55 IST supervised session start (pre-open buffer)
     - cron: "5 10 * * 1-5" # 15:35 IST: retry failed EOD document delivery
 
 permissions:
@@ -34,7 +34,7 @@ concurrency:
 jobs:
   continuation:
     runs-on: ubuntu-latest
-    # Cover 09:00 -> ~14:25 IST in one uninterrupted shift (well past the 12:30
+    # Cover 08:55 -> ~14:20 IST in one uninterrupted shift (well past the 12:30
     # entry cutoff), then hand off once through 15:31 IST EOD report delivery.
     timeout-minutes: 350
     env:
