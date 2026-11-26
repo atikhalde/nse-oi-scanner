@@ -154,3 +154,15 @@ class SectorTests(unittest.TestCase):
             R.flush(st,at('09:55:07'))
         self.assertEqual(send.call_count,2)
         self.assertEqual(next(iter(st['outbox'].values()))['status'],'sent')
+
+    def test_sector_probe_after_hours_checks_final_close_without_state_or_bot(self):
+        with patch.object(R.shared,'now_ist',return_value=at('21:00')), patch.object(
+                G,'refresh',return_value=dict(close=at('15:30').isoformat(),sectors={str(i):{} for i in range(30)},meta='complete')) as refresh, patch.object(
+                R,'save') as save, patch.object(R.tg,'send_message_to') as send:
+            self.assertTrue(R.sector_probe())
+        self.assertEqual(refresh.call_args.args[0],at('15:30'))
+        save.assert_not_called(); send.assert_not_called()
+
+    def test_sector_probe_failure_is_explicit(self):
+        with patch.object(R.shared,'now_ist',return_value=at('10:00')), patch.object(G,'refresh',side_effect=ValueError('TEST latest=none')):
+            self.assertFalse(R.sector_probe())
