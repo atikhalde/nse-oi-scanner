@@ -1,6 +1,7 @@
 """Offline M16 state machine, timing, isolation and delivery regressions."""
 import contextlib
 import copy
+import io
 import json
 import csv
 import os
@@ -380,6 +381,20 @@ COMPACT_MASTER = """EXCH_ID,SEGMENT,SECURITY_ID,SYMBOL,INSTRUMENT
 NSE,E,5900,AXISBANK,EQUITY
 NSE,E,2031,M&M,EQUITY
 """
+# Same symbol in two series plus a name that only lives in the BSE book: exactly
+# the shape that left HEG/GSPL/GUJGASLTD/JBCHEPHARM without a Dhan id in the
+# 2026-11-27 run.
+MIXED_MASTER = """SEM_EXM_EXCH_ID,SEM_SEGMENT,SEM_SMST_SECURITY_ID,SEM_TRADING_SYMBOL,SEM_CUSTOM_SYMBOL,SEM_INSTRUMENT_NAME
+NSE,E,5900,AXISBANK,AXISBANK,EQUITY
+BSE,E,5901,AXISBANK,AXISBANK,EQUITY
+NSE,BE,1234,HEG,HEG,EQUITY
+NSE,E,1235,HEG,HEG,EQUITY
+BSE,BE,500182,GSPL,GSPL,EQUITY
+NSE,E,1236,"M&M","M&M",EQUITY
+"""
+SHIFTED_MASTER = """EXCH_ID,SEGMENT,SECURITY_ID,SYMBOL,INSTRUMENT
+NSE,E,999,AXISBANK,EQUITY
+"""
 
 
 class DhanIdTests(unittest.TestCase):
@@ -394,6 +409,35 @@ class DhanIdTests(unittest.TestCase):
 
     def test_unknown_layout_parses_to_nothing(self):
         self.assertEqual(dhan_ids.parse_master("foo,bar\n1,2\n"), {})
+
+    def test_trade_to_trade_series_is_kept_and_equity_series_wins(self):
+        # NSE/BE is a real chartable id; when the same name also trades in the
+        # ordinary series that one must win regardless of file order.
+        self.assertEqual(dhan_ids.parse_master(MIXED_MASTER),
+                         {"AXISBANK": 5900, "HEG": 1235, "M&M": 1236})
+
+    def test_watch_reports_where_an_unresolved_name_lives(self):
+        parsed, seen = dhan_ids.parse_master(MIXED_MASTER, watch=["GSPL", "HEG", "GONE"])
+        self.assertNotIn("GSPL", parsed)          # BSE-only → still no NSE id
+        self.assertEqual(seen["GSPL"], "BSE/BE/EQUITY")   # …but we can say why
+        self.assertEqual(seen["HEG"], "NSE/BE/EQUITY")    # first row for that ticker
+        self.assertNotIn("GONE", seen)            # not listed at all
+
+    def test_fetch_text_skips_an_empty_body_and_falls_through(self):
+        class R:
+            def __init__(self, ok, text):
+                self.ok, self.text = ok, text
+
+        def fake_get(url, timeout=0):
+            return R(url.endswith("good"), COMPACT_MASTER if url.endswith("good") else "")
+
+        with patch.object(dhan_ids.requests, "get", side_effect=fake_get):
+            text, url = dhan_ids.fetch_text(["https://x/empty", "https://x/good"])
+        self.assertEqual(text, COMPACT_MASTER)
+        self.assertEqual(url, "https://x/good")
+        with patch.object(dhan_ids.requests, "get", return_value=R(False, "")):
+            with self.assertRaises(RuntimeError):
+                dhan_ids.fetch_text(["https://x/404"])
 
     def test_validation_accepts_a_matching_map(self):
         with patch.object(dhan_ids, "_MIN_AGREED", 1):
@@ -420,7 +464,7 @@ class DhanIdTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp, patch.object(
                 dhan_ids, "MAP_FILE", Path(tmp) / "ids.csv"), patch.object(
                 dhan_ids, "_MIN_AGREED", 1), patch.object(
-                dhan_ids, "fetch_master", return_value=({"TCS": 1}, "test://master")):
+                dhan_ids, "fetch_text", return_value=(SHIFTED_MASTER, "test://master")):
             self.assertFalse(R.shared.L.mode_refresh_dhan_ids())
             self.assertFalse((Path(tmp) / "ids.csv").exists())
 
@@ -428,10 +472,30 @@ class DhanIdTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp, patch.object(
                 dhan_ids, "MAP_FILE", Path(tmp) / "ids.csv"), patch.object(
                 dhan_ids, "_MIN_AGREED", 1), patch.object(
-                dhan_ids, "fetch_master",
-                return_value=({"TCS": 11536, "NOT_IN_UNIVERSE": 1}, "test://master")):
-            self.assertTrue(R.shared.L.mode_refresh_dhan_ids())
-            self.assertEqual(dhan_ids.load(Path(tmp) / "ids.csv"), {"TCS": 11536})
+                dhan_ids, "_MIN_AGREEMENT", 0.0), patch.object(
+                dhan_ids, "fetch_text", return_value=(MIXED_MASTER, "test://master")), \
+                patch.object(R.shared.L, "bootstrap_symbols", return_value=["AXISBANK", "HEG"]):
+            with contextlib.redirect_stdout(io.StringIO()):
+                self.assertTrue(R.shared.L.mode_refresh_dhan_ids())
+            loaded = dhan_ids.load(Path(tmp) / "ids.csv")
+            self.assertEqual(loaded.get("AXISBANK"), 5900)
+            self.assertNotIn("NOT_IN_UNIVERSE", loaded)
+
+    def test_refresh_logs_why_a_name_stayed_unresolved(self):
+        with tempfile.TemporaryDirectory() as tmp, patch.object(
+                dhan_ids, "MAP_FILE", Path(tmp) / "ids.csv"), patch.object(
+                dhan_ids, "_MIN_AGREED", 1), patch.object(
+                dhan_ids, "_MIN_AGREEMENT", 0.0), patch.object(
+                dhan_ids, "fetch_text", return_value=(MIXED_MASTER, "test://master")), \
+                patch.object(R.shared.L, "bootstrap_symbols",
+                             return_value=["AXISBANK", "GSPL", "HEG", "NOWHERE"]):
+            buf = io.StringIO()
+            with contextlib.redirect_stdout(buf):
+                self.assertTrue(R.shared.L.mode_refresh_dhan_ids())
+            out = buf.getvalue()
+            self.assertIn("unresolved=['GSPL', 'NOWHERE']", out)
+            self.assertIn("'GSPL': 'BSE/BE/EQUITY'", out)
+            self.assertIn("'NOWHERE': 'NOT LISTED'", out)
 
     def test_an_extra_name_with_a_dhan_id_gets_the_pinned_chart_key(self):
         with patch.dict(R.shared.L.SID, {"HEG": 1234}, clear=False):

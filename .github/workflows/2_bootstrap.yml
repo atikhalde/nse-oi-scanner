@@ -32,6 +32,17 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install -r requirements.txt
+      - name: check the Dhan token secret
+        run: |
+          # On 2026-11-26/27 every step's env block read "DHAN_TOKEN:" (empty): the
+          # repo secret is missing, so the Dhan candle fallback and the Dhan feed
+          # silently degraded to Yahoo-only. Say it out loud once per run instead
+          # of leaving it to be spotted in the env dump.
+          if [ -z "${DHAN_TOKEN}" ]; then
+            echo "::warning title=DHAN_TOKEN is empty::Repo secret DHAN_TOKEN is not set (Dhan candle fallback + Dhan feed disabled, Yahoo only). Add it under Settings -> Secrets and variables -> Actions."
+          else
+            echo "DHAN_TOKEN present (${#DHAN_TOKEN} chars)"
+          fi
       - name: refresh Dhan security ids for the extra/mapped names (best effort)
         continue-on-error: true
         run: |

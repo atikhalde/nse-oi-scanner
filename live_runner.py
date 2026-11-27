@@ -341,7 +341,8 @@ def mode_refresh_dhan_ids():
     """
     import dhan_ids as ids
     try:
-        parsed, url = ids.fetch_master()
+        text, url = ids.fetch_text()
+        parsed = ids.parse_master(text)
     except Exception as e:
         print(f"DHAN IDS FAILED: {e}")
         return False
@@ -354,6 +355,14 @@ def mode_refresh_dhan_ids():
     missing = [s for s in bootstrap_symbols() if s not in parsed]
     print(f"DHAN IDS ok={written} agreed={agreed}/{checked} source={url} "
           f"unresolved={missing}")
+    if missing:
+        # Tell "listed under another exchange/series" apart from "not in the master
+        # at all" — the first is fixable in parse_master, the second needs the ticker
+        # dropped from the universe.
+        detail = ids.parse_master(text, watch=missing)[1]
+        shown = {s: detail.get(s, "NOT LISTED") for s in missing[:25]}
+        extra = f" (+{len(missing) - 25} more)" if len(missing) > 25 else ""
+        print(f"DHAN IDS unresolved_detail={shown}{extra}")
     return written > 0
 
 

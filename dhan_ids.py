@@ -42,8 +42,22 @@ def _pick(fieldnames, *names):
     return None
 
 
-def parse_master(text):
-    """{NSE trading symbol: securityId} from a Dhan instrument-master CSV."""
+# NSE cash segments that carry a chartable security id. "E"/"EQ" are the normal
+# rolling-settlement series; "BE" is trade-to-trade and "BZ" the illiquid series,
+# which a stock can move into (or be listed only in) for long stretches.
+_SEG_PRIORITY = {"E": 0, "EQ": 0, "EQUITY": 0, "NSE_EQ": 0, "BE": 1, "BZ": 2, "BZ_BE": 2}
+
+
+def parse_master(text, watch=()):
+    """{NSE trading symbol: securityId} from a Dhan instrument-master CSV.
+
+    When `watch` is given, also returns a diagnostic map {symbol: "EXCH/SEG/INST"}
+    for those symbols wherever they appear in the file, so a name the filter drops
+    can be told apart from one the master simply does not list (the actionable
+    difference between "relax the filter" and "the ticker is gone"). When a
+    symbol is listed in several series the ordinary equity series wins over
+    BE/BZ; otherwise the first row wins.
+    """
     reader = csv.DictReader(io.StringIO(text))
     fields = reader.fieldnames or []
     id_col = _pick(fields, "sem_smst_security_id", "security_id", "securityid")
@@ -53,21 +67,32 @@ def parse_master(text):
     seg_col = _pick(fields, "sem_segment", "segment")
     inst_col = _pick(fields, "sem_instrument_name", "instrument_name", "instrument")
     if not id_col or not (sym_col or custom_col):
-        return {}
-    out = {}
+        return ({}, {}) if watch else {}
+    watch = {str(w).strip().upper() for w in watch}
+    seen, best = {}, {}
     for row in reader:
-        if exch_col and (row.get(exch_col) or "").strip().upper() != "NSE":
-            continue
-        if seg_col and (row.get(seg_col) or "").strip().upper() not in {"E", "EQ", "EQUITY", "NSE_EQ"}:
-            continue
-        if inst_col and (row.get(inst_col) or "").strip().upper() != "EQUITY":
-            continue
         sym = (row.get(sym_col) or row.get(custom_col) or "").strip().upper()
-        sid = (row.get(id_col) or "").strip()
-        if not sym or not sid.isdigit():
+        if not sym:
             continue
-        out[sym] = int(sid)
-    return out
+        exch = ((row.get(exch_col) or "").strip().upper() if exch_col else "")
+        seg = ((row.get(seg_col) or "").strip().upper() if seg_col else "")
+        inst = ((row.get(inst_col) or "").strip().upper() if inst_col else "")
+        if watch and sym in watch and sym not in seen:
+            seen[sym] = "/".join([exch or "?", seg or "?", inst or "?"])
+        if exch_col and exch != "NSE":
+            continue
+        if inst_col and inst and inst != "EQUITY":
+            continue
+        if seg_col and seg and seg not in _SEG_PRIORITY:
+            continue
+        sid = (row.get(id_col) or "").strip()
+        if not sid.isdigit():
+            continue
+        rank = _SEG_PRIORITY.get(seg, 9)
+        if sym not in best or rank < best[sym][0]:
+            best[sym] = (rank, int(sid))
+    out = {sym: sid for sym, (_, sid) in best.items()}
+    return (out, seen) if watch else out
 
 
 def validate(parsed, reference):
@@ -79,8 +104,8 @@ def validate(parsed, reference):
     return ok, agreed, checked
 
 
-def fetch_master(urls=MASTER_URLS, timeout=90):
-    """First master that downloads and parses to something plausible."""
+def fetch_text(urls=MASTER_URLS, timeout=90):
+    """First master CSV that downloads as text, with the URL it came from."""
     last = None
     for url in urls:
         try:
@@ -88,9 +113,23 @@ def fetch_master(urls=MASTER_URLS, timeout=90):
             if not r.ok:
                 last = f"HTTP {r.status_code} {url}"
                 continue
-            parsed = parse_master(r.text)
+            if r.text and r.text.strip():
+                return r.text, url
+            last = f"empty body from {url}"
+        except Exception as e:                     # network/SSL/timeout
+            last = f"{type(e).__name__}: {e} ({url})"
+    raise RuntimeError(last or "no master URL configured")
+
+
+def fetch_master(urls=MASTER_URLS, timeout=90, watch=()):
+    """First master that downloads and parses to something plausible."""
+    last = None
+    for url in urls:
+        try:
+            text, got = fetch_text([url], timeout=timeout)
+            parsed = parse_master(text, watch=watch) if watch else parse_master(text)
             if parsed:
-                return parsed, url
+                return parsed, got
             last = f"no rows parsed from {url}"
         except Exception as e:                     # network/SSL/timeout
             last = f"{type(e).__name__}: {e} ({url})"
@@ -113,7 +152,9 @@ def load(path=MAP_FILE):
         return {}
     out = {}
     try:
-        for row in csv.DictReader(fp.open()):
+        with fp.open(encoding="utf-8", newline="") as fh:
+            rows = list(csv.DictReader(fh))
+        for row in rows:
             sym = (row.get("symbol") or "").strip().upper()
             sid = (row.get("securityId") or "").strip()
             if sym and sid.isdigit():
