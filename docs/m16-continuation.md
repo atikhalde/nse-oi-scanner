@@ -132,6 +132,8 @@ can all add latency. M6 also cannot guarantee one-second exchange-to-alert delay
 
 The live runner preserves per-symbol provider, latest candle, availability,
 first failure and repetition counts. Repeated identical failures are aggregated.
+A close alert that is waiting for its own sector board is not "late": the board's publication delay (`M16_BOARD_WAIT_SECONDS`, default 60 s cap) is credited back to the 30-second freshness window, so a confirmation that arrives 20-40 s after the candle close because the board was late still carries the close-confirmed label instead of a DELAYED one. Once that credit pushes an alert past 30 s, the price must still be within the delayed-alert extension limit of the frozen BOS or it expires unsent, and an expired close may still take the delayed path (priced at discovery, labelled DELAYED). Time spent waiting for M16's own gate is never reported as discovery lateness.
+
 Dedicated-bot health notices send at most one degradation and one healthy notice
 per session. Persisted per-status delivery ledgers prevent repeats across workflow
 restarts and health-status flapping. When a delivered degradation clears while entry
