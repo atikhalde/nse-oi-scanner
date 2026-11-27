@@ -506,3 +506,27 @@ are corrected: **ALEMBICPHARMA → APLLTD**, **BIRLASOFT → BSOFT**,
 **GEOJIT → GEOJITFSL**. The other four (ATHERENERGY, GSPL, GUJGASLTD,
 JBCHEPHARM) are valid NSE symbols that Yahoo did not serve that morning; the
 retry and the daily refresh pick them up, and they stay dormant meanwhile.
+
+**Segment policy (fixed after reading the 2026-11-27 run log).** The parser used
+to keep only `SEM_SEGMENT` `E/EQ` NSE rows, so a name that trades in the
+trade-to-trade series that day (`BE`, e.g. **HEG**) was dropped even though the
+master lists it with a perfectly good security id — and nothing distinguished
+that from a ticker the master does not carry at all. `parse_master()` now accepts
+`E/EQ/EQUITY/NSE_EQ`, `BE` and `BZ` (ranked in that order, so the ordinary series
+wins when a name appears in several), and `parse_master(text, watch=[...])`
+returns `(map, seen)` where `seen[symbol] = "EXCH/SEG/INST"` for every watched
+symbol **anywhere** in the file. `DHAN IDS unresolved=` is therefore followed by
+`unresolved_detail={'HEG': 'NSE/BE/EQUITY', 'GSPL': 'BSE/BE/EQUITY', ...}` or
+`'NOT LISTED'`: the first says the id is reachable (relax the filter / map the
+series), the second means the ticker has to leave the universe. The next refresh
+run decides which case HEG, GSPL, GUJGASLTD, JBCHEPHARM, ATHERENERGY and
+ICICIPRULI are in — no egress from CI to Dhan is available to check locally. `fetch_text()` exposes the download so the
+master is fetched once and parsed twice (map, then diagnostics).
+
+**`DHAN_TOKEN` guard.** On 27-Nov every step's env block read `DHAN_TOKEN:`
+(empty): the repo secret is not set, so the Dhan candle fallback and the Dhan
+feed were dead and the run was silently Yahoo-only. `2_bootstrap.yml` now starts
+with a `check the Dhan token secret` step that emits
+`::warning title=DHAN_TOKEN is empty::` (with the fix location) when the variable
+is blank and prints the length when it is set. Nothing else depends on the token:
+M16 alerts are Yahoo-only, and id resolution needs no credentials.

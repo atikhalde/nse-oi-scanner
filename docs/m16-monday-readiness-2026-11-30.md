@@ -141,3 +141,51 @@ audit/calendar/transport`, `test_fast_feed`, `test_m15_runner`,
 
 `--readiness-check`: `ready: true`, target 2026-11-30, `missing_history: []`,
 `stale_prior_day: []`, `workflow.issues: []`.
+
+---
+
+## Third pass — what the real 2026-11-27 bootstrap log exposed (fixed)
+
+The 16:38Z `2. Bootstrap` run **passed** (`ok=402 total=406 missing_fno=[]`,
+`missing_extra=['ATHERENERGY','GUJGASLTD','GSPL','JBCHEPHARM']`, commit
+`ad81ce84` 403 files, push attempt 1/6, F&O freshness 209/210 dormant 1). Two
+real defects were visible in the same log and are now fixed:
+
+1. **Dhan ids under-covered.** `DHAN IDS ok=400 agreed=209/209
+   unresolved=['ICICIPRULI','ATHERENERGY','HEG','GUJGASLTD','GSPL','JBCHEPHARM']`.
+   `parse_master()` kept only `SEM_SEGMENT` `E/EQ` NSE rows, so a name listed in
+   the trade-to-trade (`BE`) or illiquid (`BZ`) series was dropped even though the
+   master carries its id; those names fall back to `NSE:<SYMBOL>` chart keys. Now
+   `E/EQ/BE/BZ` are accepted (ordinary equity series preferred), and the refresh
+   prints `unresolved_detail` from `parse_master(text, watch=…)`, which says
+   whether an unresolved name lives under another exchange/series
+   (`NSE/BE/EQUITY`, `BSE/BE/EQUITY`) or is `NOT LISTED` — the difference between
+   a filter to relax and a ticker to retire. The master downloads once
+   (`fetch_text`) and is parsed twice. Which case HEG/GSPL/GUJGASLTD/JBCHEPHARM/
+   ATHERENERGY/ICICIPRULI are in is decided by the next refresh run (no egress to
+   Dhan from CI to check locally).
+2. **Empty `DHAN_TOKEN`.** Every step of that run printed `DHAN_TOKEN:` (blank):
+   the repo secret is missing, so the Dhan candle fallback and the Dhan feed were
+   silently disabled. `2_bootstrap.yml` gained a first `check the Dhan token
+   secret` step that raises `::warning title=DHAN_TOKEN is empty::` and prints the
+   token length when present. **Action for the operator:** add the secret
+   (Settings → Secrets and variables → Actions). Alerts themselves are unaffected
+   — the M16 feed is Yahoo-only and id resolution needs no credentials.
+
+Also fixed while in there: `dhan_ids.load()` no longer leaks the file handle
+(it emitted `ResourceWarning` under `-W error` hosts), and the universe-limit
+refresh test no longer prints the whole 406-name universe.
+
+**Tests (all re-run after this pass):** `test_m16_runner` **151 OK**
+(14 `DhanIdTests`, new: `BE` series kept and equity series wins, `watch` reports
+where an unresolved name lives, refresh logs `unresolved_detail`, `fetch_text`
+skips an empty body); CI invocation **260 OK** (transport 13, sector 29, rally 4,
+calendar 19, feed 33, audit 11, runner 151); `test_telegram_bot` PASS ·
+`test_fast_feed` PASS · `test_m15_runner` OK · `test_m15_data_feed` OK ·
+`test_master_scanner` ALL CHECKS PASSED · `test_m6_runner` ALL PASSED.
+
+`--readiness-check`: `ready: true`, target 2026-11-30, prior 2026-11-27, 406
+universe / 400 active, dormant `[ICICIPRULI]`, `missing_history: []`,
+`stale_prior_day: []`, `extra_missing_history: [ATHERENERGY, GSPL, GUJGASLTD,
+JBCHEPHARM]` (Yahoo gaps, dormant), 30 sectors / 63 basket members,
+`workflow.issues: []`.
