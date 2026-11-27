@@ -657,6 +657,19 @@ def follow_through_ok(closed, prev_close, side):
                    f"{FOLLOW_THROUGH_BARS} follow-through closes — no alert")
 
 
+def entry_candidates(sec_sides, sym_cache):
+    """Symbols worth fetching for the open sector sides this candle.
+
+    `SEC_STOCKS` is the sector grouping and may contain names outside the F&O
+    universe (BEML was added to DEF on 27-Nov-2026). Those have no prior-day
+    cache here, so they can never be ranked or entered by M6: fetching their
+    bars would spend the shared provider budget on a candidate that is dropped
+    one line later. Only names with a loaded cache are candidates.
+    """
+    return sorted({sym for sec in sec_sides for sym in SEC_STOCKS.get(sec, [])
+                   if sym in sym_cache})
+
+
 def rank_sector_stocks(board, sec_sides, bars_map, sym_cache, close_ts):
     """Rank all available peers, not just stocks with signals or no open trade.
 
@@ -1170,7 +1183,7 @@ def scan_entries(st, today, close_ts, now, board, bars_map, sym_cache, dry_run=F
             sec_sides[sec] = sides
     if not sec_sides:
         return stats
-    cands = sorted({sym for sec in sec_sides for sym in SEC_STOCKS.get(sec, [])})
+    cands = entry_candidates(sec_sides, sym_cache)
     stats["candidates"] = len(cands)
 
     # --- stage 2a: fetch only what stage 1 did not already pull
