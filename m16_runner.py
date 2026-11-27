@@ -167,6 +167,36 @@ def sample_alert_text():
             + alert_text(sample_alert_event(), markup=True))
 
 
+def probe_app_links(symbol="AXISBANK", dry_run=False):
+    """Send one message of candidate Dhan app deep links so the working one can be picked."""
+    sid = security_id(symbol)
+    candidates = tg.app_link_candidates(symbol, sid)
+    lines = ["🔎 Dhan app deep-link probe — tap ONE link at a time.",
+             f"Reply with the number that opens the {symbol} chart in the app.",
+             "Tap the link text (the 'dhan://…' string) itself.\n"]
+    for i, (label, url) in enumerate(candidates, 1):
+        lines.append(f'{i}. {label}\n   <a href="{_html_escape_url(url)}">{esc_attr_display(url)}</a>')
+    lines.append("\nWeb fallbacks still here: the symbol link is the chart, "
+                 "and the last alert line opens the app home.")
+    text = "\n".join(lines)
+    if dry_run:
+        print("[DRY] app-link probe\n" + text)
+        return True
+    results = []
+    for token, chat in telegram_targets():
+        try:
+            results.append(bool(tg.send_message_to(token, chat, text)))
+        except Exception:
+            results.append(False)
+    print(f"M16 app-link probe: {sum(results)}/{len(results)} destination(s) sent")
+    return all(results)
+
+
+def esc_attr_display(url):
+    import html
+    return html.escape(str(url), quote=False)
+
+
 def test_alert(dry_run=False):
     if dry_run:
         print("[DRY] M16 dedicated-bot self-test")
@@ -1683,6 +1713,8 @@ def main():
     parser.add_argument("--once", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--test-alert", action="store_true")
+    parser.add_argument("--probe-app-links", action="store_true")
+    parser.add_argument("--probe-symbol", default="AXISBANK")
     parser.add_argument("--feed-probe", action="store_true")
     parser.add_argument("--sector-probe", action="store_true")
     parser.add_argument("--readiness-check", nargs="?", const="auto", default=None,
@@ -1709,6 +1741,9 @@ def main():
     if args.feed_probe:
         feed_probe(args.symbols)
         return
+    if args.probe_app_links:
+        if not probe_app_links(args.probe_symbol or "AXISBANK", args.dry_run):
+            raise SystemExit("M16 app-link probe failed for one or more destinations")
     if args.test_alert:
         if not test_alert(args.dry_run):
             raise SystemExit("M16 test alert failed for one or more destinations")

@@ -75,6 +75,31 @@ def app_url(symbol=None, security_id=None):
         "{chart}", quote(chart_url(symbol, security_id), safe="") if symbol else "")
 
 
+# Candidate in-app routes for opening a stock chart. Dhan publishes only
+# `dhan://Login`; these are the plausible shapes, probed on the phone through
+# `m16_runner.py --probe-app-links` so the real one can be adopted.
+def app_link_candidates(symbol="AXISBANK", security_id=5900):
+    sym = quote(str(symbol), safe="")
+    inst = quote(chart_instrument(symbol, security_id), safe="")
+    path = [
+        ("Chart?symbol=SYM", f"dhan://Chart?symbol={sym}"),
+        ("chart?symbol=SYM", f"dhan://chart?symbol={sym}"),
+        ("Chart?symbol=NSE:SYM", f"dhan://Chart?symbol=NSE%3A{sym}"),
+        ("Chart?symbol=NSEE<id>:SYM", f"dhan://Chart?symbol={inst}"),
+        ("Chart?securityId=<id>", f"dhan://Chart?securityId={quote(str(security_id), safe='')}"),
+        ("Chart?securityId&exchangeSegment", f"dhan://Chart?securityId={quote(str(security_id), safe='')}"
+                                            "&exchangeSegment=NSE_EQ"),
+        ("Chart/SYM", f"dhan://Chart/{sym}"),
+        ("stocks/SYM", f"dhan://stocks/{sym}"),
+        ("scrip/SYM", f"dhan://scrip/{sym}"),
+        ("terminal?symbol=NSEE<id>:SYM", f"dhan://terminal?symbol={inst}"),
+        ("Watchlist", "dhan://Watchlist"),
+        ("Search?query=SYM", f"dhan://Search?query={sym}"),
+    ]
+    return [(label.replace("SYM", str(symbol)).replace("<id>", str(security_id)), url)
+            for label, url in path]
+
+
 def configured():
     return bool(os.environ.get("TELEGRAM_BOT_TOKEN") and os.environ.get("TELEGRAM_CHAT_ID"))
 
