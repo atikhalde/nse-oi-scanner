@@ -2,7 +2,9 @@
 import contextlib
 import copy
 import json
+import csv
 import os
+import re
 import tempfile
 import unittest
 from pathlib import Path
@@ -211,6 +213,51 @@ class ExtraUniverseTests(unittest.TestCase):
     def test_shipped_extra_universe_covers_the_defence_names(self):
         names = {sym for sym, _ in R.extra_universe()}
         self.assertTrue({'GRSE', 'PARAS', 'DATAPATTNS', 'ASTRAMICRO', 'BEML'} <= names)
+
+    def test_shipped_extra_universe_is_broad_and_never_duplicates_the_fno_list(self):
+        rows = R.extra_universe()
+        fno = {r['symbol'] for r in csv.DictReader((R.ROOT / 'fno_universe.csv').open())}
+        names = [sym for sym, _ in rows]
+        self.assertGreaterEqual(len(rows), 150)                 # all major sectors
+        self.assertEqual(len(names), len(set(names)))           # no duplicate symbols
+        self.assertEqual(set(names) & fno, set())               # never re-add an F&O name
+        self.assertTrue(all(sym == sym.upper() and sector for sym, sector in rows))
+        self.assertTrue(all(re.fullmatch(r'[A-Z0-9&-]{2,20}', sym) for sym in names))
+        sectors = {sector for _, sector in rows}
+        self.assertTrue({'AUTO', 'BANK', 'CAPGOODS', 'CHEMICALS', 'DEF', 'FIN', 'IT', 'MEDIA',
+                         'MET', 'PHA', 'REALTY', 'TEXTILE'} <= sectors)
+        self.assertGreaterEqual(len(sectors), 25)
+
+    def test_every_documented_sector_label_is_lower_case_clean_and_known(self):
+        baskets = {r['sector'] for r in csv.DictReader((R.ROOT / 'fno_sector_map.csv').open())}
+        extra_only = {'TEXTILE', 'MEDIA', 'SUGAR', 'SHIPPING'}
+        labels = {sector for _, sector in R.extra_universe()}
+        self.assertEqual(labels - baskets, extra_only)
+
+    def test_extra_without_history_is_dormant_and_fno_names_are_not(self):
+        cache = {sym: dict(ok=True, last_day='2026-11-26') for sym in R.shared.L.SYMS if sym in ('AXISBANK', 'SBIN')}
+        cache['GRSE'] = dict(ok=False)
+        cache['TITAN'] = dict(ok=True, last_day='2026-11-26')
+        dormant = R.inactive_symbols(cache)
+        self.assertIn('GRSE', dormant)          # cannot seed without prior-day history
+        self.assertNotIn('AXISBANK', dormant)
+        self.assertNotIn('TITAN', dormant)
+
+    def test_bootstrap_fetches_the_extra_universe_too(self):
+        import live_runner
+        names = live_runner.extra_universe_symbols()
+        self.assertGreaterEqual(len(names), 150)
+        self.assertIn('GRSE', names)
+        fno = {r['symbol'] for r in csv.DictReader((R.ROOT / 'fno_universe.csv').open())}
+        self.assertEqual(set(names) & fno, set())     # never re-fetch an F&O name
+        with patch.dict(os.environ, {'M16_EXTRA_UNIVERSE': '0'}):
+            self.assertEqual(live_runner.extra_universe_symbols(), [])
+
+    def test_extra_sector_without_a_basket_says_unverified(self):
+        gate = dict(status='unknown', sector='MEDIA', reason='MEDIA not in the persistence board')
+        line, _ = R.sector_context_lines(gate)
+        self.assertIn('MEDIA not in the persistence board', line)
+        self.assertIn('sector unverified', line)
 
 
 class ContinuationTests(unittest.TestCase):
@@ -1647,6 +1694,41 @@ class OperationalHygieneTests(unittest.TestCase):
             R.notify_health(st, at("10:00:00"), dry_run=False)
         self.assertIn("Provider rate limit", captured["text"])
         self.assertTrue(captured["text"].startswith("M16 FEED DEGRADED"))
+
+    def test_an_extra_universe_gap_never_degrades_the_feed_notice(self):
+        core = [sym for sym in R.shared.L.SYMS if sym not in {x for x, _ in R.extra_universe()}]
+        st = M.fresh_state(DAY)
+        st["feed_health"] = {sym: dict(ok=True, at=at("10:00:00").isoformat(),
+                                       latest=at("09:55:00").isoformat()) for sym in core}
+        st["feed_health"]["GRSE"] = dict(ok=False, at=at("09:58:00").isoformat(),
+                                         first_failure=at("09:58:00").isoformat(),
+                                         failure_count=3, reason="HTTP 404 no data")
+        st["cursors"] = {sym: at("09:55:00").isoformat() for sym in core}
+        captured = {}
+
+        def capture(token, chat, text):
+            captured["text"] = text
+            return True
+
+        with patch.object(R, "telegram_targets", return_value=[("token", "chat")]), patch.object(
+                R.tg, "send_message_to", side_effect=capture), patch.object(R, "save"):
+            R.notify_health(st, at("10:00:00"), dry_run=False)
+        self.assertEqual(st["monitoring_health"]["affected"], [])
+        self.assertNotIn("GRSE", st["monitoring_health"]["details"])
+        self.assertFalse(str(captured.get("text", "")).startswith("M16 FEED DEGRADED"))
+
+        # The same gap on a core F&O name does degrade the notice.
+        st2 = M.fresh_state(DAY)
+        st2["feed_health"] = {sym: dict(ok=True, at=at("10:00:00").isoformat(),
+                                        latest=at("09:55:00").isoformat()) for sym in core}
+        st2["feed_health"]["SBIN"] = dict(ok=False, at=at("09:58:00").isoformat(),
+                                          first_failure=at("09:58:00").isoformat(), failure_count=3,
+                                          reason="HTTP 500")
+        st2["cursors"] = {sym: at("09:55:00").isoformat() for sym in core}
+        with patch.object(R, "telegram_targets", return_value=[("token", "chat")]), patch.object(
+                R.tg, "send_message_to", side_effect=capture), patch.object(R, "save"):
+            R.notify_health(st2, at("10:00:00"), dry_run=False)
+        self.assertIn("SBIN", st2["monitoring_health"]["affected"])
 
     def test_readiness_check_flags_schedule_and_gate_drift(self):
         with tempfile.TemporaryDirectory() as tmp:

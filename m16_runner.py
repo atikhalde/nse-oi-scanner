@@ -57,23 +57,29 @@ EXTRA_UNIVERSE = ROOT / "m16_extra_universe.csv"
 def extra_universe():
     """Optional stock universe beyond the F&O map (NSE names with no F&O contract).
 
-    GRSE, PARAS, DATAPATTNS, ASTRAMICRO and BEML are liquid defence names that
-    are not in `fno_universe.csv`, so M16 could never see them at all. They are
-    added to the SCANNED universe only: the sector baskets and the M6 board stay
-    exactly as they are, so no sector score changes because of this file.
+    `m16_extra_universe.csv` lists the major liquid NSE names that have no F&O
+    contract, so M16 could never see them at all (defence names such as GRSE or
+    PARAS were the first case). They are added to the SCANNED universe only: the
+    sector baskets and the M6 board stay exactly as they are, so no sector score
+    changes because of this file.
     """
     if str(os.getenv("M16_EXTRA_UNIVERSE", "1")).strip().lower() in {"0", "false", "no", "off"}:
         return []
     if not EXTRA_UNIVERSE.exists():
         return []
-    rows = []
+    rows, seen = [], set()
     for line in EXTRA_UNIVERSE.read_text(encoding="utf-8").splitlines():
         line = line.strip()
         if not line or line.startswith("#") or line.lower().startswith("symbol,"):
             continue
         parts = [x.strip() for x in line.split(",")]
-        if len(parts) >= 2 and parts[0] and parts[1]:
-            rows.append((parts[0], parts[1]))
+        if len(parts) < 2 or not parts[0] or not parts[1]:
+            continue
+        symbol, sector = parts[0].upper(), parts[1].upper()
+        if symbol in seen:
+            continue
+        seen.add(symbol)
+        rows.append((symbol, sector))
     return rows
 
 
@@ -87,7 +93,9 @@ def install_extra_universe():
             shared.L.SYMS.append(symbol)
             added.append(f"{symbol}({sector})")
     if added:
-        print(f"M16 extra universe: {len(added)} symbol(s) added to scanning only: {', '.join(added)}")
+        sectors = sorted({sector for _, sector in extra_universe()})
+        print(f"M16 extra universe: {len(added)} symbol(s) added to scanning only across "
+              f"{len(sectors)} sector labels ({', '.join(sectors)})")
     return added
 
 
@@ -215,8 +223,16 @@ def _resolve_worker_cache(symbol, cache):
 
 
 def inactive_symbols(cache, stale_days=7):
-    """Symbols whose local history last_day trails peers (delisted/dormant on Yahoo)."""
-    return m16_sector.dormant_members(cache, stale_days=stale_days)
+    """Symbols whose local history last_day trails peers (delisted/dormant on Yahoo).
+
+    An extra-universe name with no history file at all is dormant too: it cannot
+    produce a seed (analyze() needs a valid prior-day cache), so polling it would
+    only spend the shared provider budget. It joins the rotation by itself once
+    the next bootstrap writes its history.
+    """
+    dormant = set(m16_sector.dormant_members(cache, stale_days=stale_days))
+    dormant |= {sym for sym, _ in extra_universe() if not (cache.get(sym) or {}).get("ok")}
+    return dormant
 
 
 def analyze(job):
@@ -804,9 +820,13 @@ def notify_health(st, now, dry_run=False, due=None):
     # legitimate age of bars outside the current slice (not slices-1 buckets).
     rotation = pd.Timedelta(minutes=5 * max(
         1, int(os.getenv("M16_DISCOVERY_SLICES", str(DEFAULT_DISCOVERY_SLICES)))))
+    # A gap in an extra-universe name is not a degraded feed: those names are
+    # scanned in addition to the core universe, so one thin or delisted ticker
+    # must never raise an operational notice about the alert pipeline.
+    extras = {sym for sym, _ in extra_universe()}
     bad, details, watched_symbols = [], {}, []
     for sym in shared.L.SYMS:
-        if sym in dormant:
+        if sym in dormant or sym in extras:
             continue
         rec = health.get(sym, {})
         # Symbols no longer scheduled after discovery are not falsely called stale.
@@ -1483,7 +1503,9 @@ def readiness_check(target_day=None):
     # never block readiness (or the session would never start after a universe
     # change), so they are reported separately.
     missing_history = [sym for sym in active_syms if not cache[sym].get("ok") and sym not in extras]
-    extra_missing_history = [sym for sym in active_syms if not cache[sym].get("ok") and sym in extras]
+    # Computed from the file, not from active_syms: an extra without history is
+    # dormant by design and must still be visible here.
+    extra_missing_history = sorted(sym for sym in extras if not (cache.get(sym) or {}).get("ok"))
     stale_prior_day = [
         sym for sym in active_syms if sym not in extras
         and expected_prior_day and str(cache[sym].get("last_day") or "")[:10] < expected_prior_day
@@ -1566,8 +1588,9 @@ def readiness_check(target_day=None):
         universe=dict(
             total_symbols=len(shared.L.SYMS),
             active_symbols=len(active_syms),
-            dormant_excluded=dormant,
-            history_ok=len(active_syms) - len(missing_history) - len(extra_missing_history),
+            dormant_excluded=[sym for sym in dormant if sym not in extras],
+            history_ok=sum(1 for sym in active_syms if cache[sym].get("ok")),
+            extra_symbols=len(extras),
             missing_history=missing_history,
             extra_missing_history=extra_missing_history,
             stale_prior_day=stale_prior_day,
@@ -1658,7 +1681,15 @@ def main():
     for sym in dormant:
         st.get("feed_health", {}).pop(sym, None)
     if dormant:
-        print(f"M16 dormant symbols excluded from live polling ({len(dormant)}): {', '.join(dormant)}")
+        extras = {sym for sym, _ in extra_universe()}
+        waiting = [sym for sym in dormant if sym in extras]
+        market = [sym for sym in dormant if sym not in extras]
+        parts = []
+        if market:
+            parts.append(f"{len(market)} dormant: {', '.join(market)}")
+        if waiting:
+            parts.append(f"{len(waiting)} extra-universe name(s) waiting for their first bootstrap history")
+        print(f"M16 symbols excluded from live polling ({len(dormant)}): " + "; ".join(parts))
     st["history_health"] = {sym: bool(rec.get("ok")) for sym, rec in cache.items() if sym not in dormant}
     missing_history = [sym for sym, rec in cache.items() if sym not in dormant and not rec.get("ok")]
     if missing_history:

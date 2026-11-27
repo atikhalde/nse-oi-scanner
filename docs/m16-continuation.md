@@ -37,7 +37,36 @@ Reason: 49% of setups produce both events on one candle, and the close variant i
 
 ## Universe
 
-Discovery covers `fno_universe.csv` (210 F&O names). `m16_extra_universe.csv` adds liquid NSE names that have **no F&O contract** — today GRSE, PARAS, DATAPATTNS, ASTRAMICRO and BEML (sector `DEF`) — to the **scanning** universe only: `M16_EXTRA_UNIVERSE=1` (default). They never join a sector basket, so no sector score changes. Removing a line, or setting the flag to `0`, restores the F&O-only universe.
+Discovery covers `fno_universe.csv` (210 F&O names) plus `m16_extra_universe.csv`: **196 major liquid NSE names that have no F&O contract**,
+the ones the F&O universe makes invisible (defence: GRSE, PARAS, DATAPATTNS,
+ASTRAMICRO, BEML, MTARTECH, ZENTEC, AZAD, DCXINDIA, IDEAFORGE; capital goods:
+THERMAX, HONAUT, SCHAEFFLER, TIMKEN, SKFINDIA, TRITURBINE; travel: IRCTC;
+chem: NAVINFLUOR, DEEPAKNTR; cement: JKCEMENT, RAMCOCEM; pharma: ABBOTINDIA,
+AJANTPHARM; media: SUNTV, PVRINOX; textiles: KPRMILL, TRIDENT; and so on across
+32 sector labels). `M16_EXTRA_UNIVERSE=1` is the default; `0` restores the
+F&O-only universe, and removing a line narrows it further.
+
+Three rules make this safe:
+
+1. **Scan-only.** Extras never join a sector basket, so no sector score changes.
+   Their sector label is used for context only. Labels that reuse a basket name
+   (`DEF`, `CAPGOODS`, ...) print the real board line; the four labels with no
+   basket (`TEXTILE`, `MEDIA`, `SUGAR`, `SHIPPING`) print
+   `sector unverified` instead of a score.
+2. **History-gated.** A name produces no seeds until `data/history/<SYMBOL>.csv`
+   exists (`analyze()` needs a valid prior-day cache), and it is **not polled**
+   while it is missing — so a bad ticker costs nothing. Workflow 2. Bootstrap
+   (`live_runner.py --bootstrap refresh-60d`, 08:45 IST weekdays) fetches the
+   extras too and commits the files. `--readiness-check` lists them under
+   `universe.extra_missing_history` and keeps them out of `missing_history` /
+   `stale_prior_day`, so a universe change can never fail the pre-session gate.
+3. **Budget-aware.** The universe is now 406 symbols; with `M16_DISCOVERY_SLICES=3`
+   each 5-minute bucket polls ~136 names instead of ~70, i.e. roughly 230 provider
+   requests (~46s at `M16_YAHOO_REQUEST_INTERVAL=0.20`) instead of ~165 (~33s).
+   The 15-minute revisit still fits inside `M16_LATE_WINDOW_MIN=15`. If Yahoo
+   starts returning 429s again, raise the interval to `0.25` or trim the CSV —
+   do **not** raise the slice count past 3, because a slower revisit would push
+   discoveries outside the late-alert window.
 
 ## Two-stage alert contract
 
