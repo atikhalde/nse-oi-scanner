@@ -4,7 +4,8 @@
 
 Modes:
   --test                connectivity/self test (secrets, feeds, engine, telegram)
-  --bootstrap           download ~90d history for all 210 stocks -> data/history/
+  --bootstrap           download ~90d history for the whole scan universe (F&O +
+                        the extra/mapped names) -> data/history/
                         (+ prev-day combined OI base via NSE fo bhavcopy, best effort)
   --live                one cycle: fetch today's bars, run engine, gate, trade, alert
   --live --loop N       N consecutive cycles (~4 min apart) — cron-robust coverage
@@ -15,6 +16,7 @@ State lives in state.json (committed back to the repo by the workflow).
 Env: DHAN_TOKEN, TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID (all optional).
 """
 import argparse
+import csv
 import datetime as dt
 import json
 import os
@@ -282,6 +284,49 @@ def extra_universe_symbols():
     return out
 
 
+def sector_map_symbols():
+    """Every symbol fno_sector_map.csv groups, in file order."""
+    fp = ROOT / "fno_sector_map.csv"
+    if not fp.exists():
+        return []
+    return [row["symbol"].strip().upper() for row in csv.DictReader(fp.open())
+            if (row.get("symbol") or "").strip()]
+
+
+def bootstrap_symbols():
+    """History to keep warm: the F&O universe plus every extra/mapped name.
+
+    The sector map is included so a name added to the grouping can never be
+    silently missing its history: mapping a symbol is enough for the bootstrap to
+    fetch it, even before it reaches m16_extra_universe.csv.
+    """
+    out = list(dict.fromkeys(list(SYMS) + extra_universe_symbols()))
+    for sym in sector_map_symbols():
+        if sym not in out:
+            out.append(sym)
+    return out
+
+
+def _bootstrap_one(sym, since, to):
+    """Yahoo, one retry, then the Dhan fallback. None when nothing usable."""
+    for attempt in range(2):
+        df = feeds.fetch_bars_yahoo(sym, "60d")
+        if df is not None and not df.empty:
+            time.sleep(1.2)
+            return df
+        if attempt == 0:
+            time.sleep(1.5)          # transient 429/empty body: one more try
+    if os.environ.get("DHAN_TOKEN") and SID.get(sym):
+        try:
+            df = feeds.fetch_bars_dhan(SID[sym], since, to)
+            if df is not None and not df.empty:
+                time.sleep(0.6)
+                return df
+        except Exception as e:
+            print(f"  dhan fallback {sym}: {e}")
+    return None
+
+
 def mode_bootstrap(kind="full"):
     now = now_ist()
     since = (now - dt.timedelta(days=95)).strftime("%Y-%m-%d 09:15:00")
@@ -289,30 +334,29 @@ def mode_bootstrap(kind="full"):
         since = (now - dt.timedelta(days=63)).strftime("%Y-%m-%d 09:15:00")
     to = now.strftime("%Y-%m-%d %H:%M:%S")
     HIST.mkdir(parents=True, exist_ok=True)
-    n_ok = 0
-    extras = extra_universe_symbols()
-    if extras:
-        print(f"M16 extra universe history: {', '.join(extras)}")
-    for sym in list(dict.fromkeys(list(SYMS) + extras)):
-        df = None
-        df = feeds.fetch_bars_yahoo(sym, "60d")
-        if df is not None and not df.empty:
-            time.sleep(1.2)
-        if (df is None or df.empty) and os.environ.get("DHAN_TOKEN") and SID.get(sym):
-            try:
-                df = feeds.fetch_bars_dhan(SID[sym], since, to)
-                time.sleep(0.6)
-            except Exception as e:
-                print(f"  dhan fallback {sym}: {e}")
+    syms = bootstrap_symbols()
+    fno = set(SYMS)
+    extra = [s for s in syms if s not in fno]
+    print(f"bootstrap: {len(syms)} symbols ({len(fno)} F&O + {len(extra)} extra/mapped)")
+    n_ok, failed_fno, failed_extra = 0, [], []
+    for sym in syms:
+        df = _bootstrap_one(sym, since, to)
         if df is None or df.empty:
             print(f"  !! {sym}: no data")
+            (failed_fno if sym in fno else failed_extra).append(sym)
             continue
         df[["dt", "open", "high", "low", "close", "volume"]].to_csv(HIST / f"{sym}.csv", index=False)
         n_ok += 1
         if n_ok % 25 == 0:
-            print(f"  {n_ok}/{len(SYMS) + len(extras)}")
+            print(f"  {n_ok}/{len(syms)} written")
     prev_oi_base(now.strftime("%Y-%m-%d"))
-    print(f"bootstrap done: {n_ok}/{len(SYMS) + len(extras)} symbols")
+    print(f"bootstrap done: {n_ok}/{len(syms)} symbols")
+    # One machine-readable line the workflow turns into a warning/annotation.
+    # A missing extra is a gap to fix in the universe file; a missing F&O name is
+    # a broken session (every model needs that history), so they are reported apart.
+    print(f"BOOTSTRAP RESULT ok={n_ok} total={len(syms)} "
+          f"missing_fno={failed_fno} missing_extra={failed_extra}")
+    return dict(ok=n_ok, total=len(syms), failed_fno=failed_fno, failed_extra=failed_extra)
 
 
 # ---------------------------------------------------------------- live cycle

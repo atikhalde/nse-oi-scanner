@@ -15,9 +15,14 @@ concurrency:
 jobs:
   bootstrap:
     runs-on: ubuntu-latest
-    timeout-minutes: 55
+    # 406 symbols at ~2.5s each (throttled Yahoo fetch + 1.2s spacing) plus the
+    # two retries and the Dhan fallback; 55 min was sized for 210 names.
+    timeout-minutes: 90
     env:
       DHAN_TOKEN: ${{ secrets.DHAN_TOKEN }}
+      # History covers the F&O universe AND the major non-F&O names (196 today):
+      # without this they have no prior-day cache and can never produce a seed.
+      M16_EXTRA_UNIVERSE: "1"
     steps:
       - uses: actions/checkout@v5
         with:
@@ -27,7 +32,19 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install -r requirements.txt
-      - run: python -u live_runner.py --bootstrap refresh-60d
+      - name: download history for the whole scan universe
+        run: |
+          set -o pipefail
+          python -u live_runner.py --bootstrap refresh-60d 2>&1 | tee bootstrap.log
+          # Extra/mapped names that Yahoo still cannot serve are a universe gap to
+          # fix, not a broken session: surface them without failing the run.
+          line=$(grep -h "BOOTSTRAP RESULT" bootstrap.log | tail -1 || true)
+          echo "${line:-BOOTSTRAP RESULT missing}"
+          case "$line" in
+            *"missing_extra=[]"*) ;;
+            "") echo "::warning::bootstrap produced no result line" ;;
+            *) echo "::warning::$line" ;;
+          esac
       - run: python -u label_learn.py   # Phase-0 Learning Log labeler (ML dataset build-up)
       - name: commit data safely against moving main
         run: |
@@ -54,3 +71,46 @@ jobs:
           done
           echo "bootstrap push failed after 6 rebased attempts" >&2
           exit 1
+      - name: verify the F&O universe has yesterday's history
+        run: |
+          python - <<'PYV'
+          import csv, pathlib, sys
+          import pandas as pd
+          from m16_runner import previous_regular_session_day
+          import m16_runner as R
+
+          root = pathlib.Path('.')
+          expected = previous_regular_session_day(R.next_regular_session_day())
+          fno = [r['symbol'] for r in csv.DictReader((root / 'fno_universe.csv').open())]
+          mapped = [r['symbol'] for r in csv.DictReader((root / 'fno_sector_map.csv').open())]
+          last = {}
+          for sym in fno + [s for s in mapped if s not in set(fno)]:
+              fp = root / 'data' / 'history' / f'{sym}.csv'
+              if not fp.exists():
+                  last[sym] = None
+                  continue
+              try:
+                  last[sym] = str(pd.read_csv(fp, usecols=['dt'])['dt'].iloc[-1])[:10]
+              except Exception:
+                  last[sym] = None
+          # A name whose Yahoo series stopped more than a week before the session
+          # is dormant (ICICIPRULI, merged/delisted scrips) and already excluded
+          # from polling by inactive_symbols(); it must not fail the refresh.
+          dormant = [s for s in fno if last.get(s)
+                     and (pd.Timestamp(expected) - pd.Timestamp(last[s])).days > 7]
+          bad_fno = [s for s in fno if s not in dormant
+                     and (last.get(s) is None or last[s] < expected)]
+          gap_extra = [s for s in mapped if s not in dormant
+                       and (last.get(s) is None or last[s] < expected)]
+          print(f'expected prior session {expected}; '
+                f'F&O fresh {len(fno)-len(bad_fno)-len(dormant)}/{len(fno)} '
+                f'(dormant {len(dormant)}); extra/mapped gaps {len(gap_extra)}')
+          if dormant:
+              print('dormant (not polled): ' + ', '.join(dormant))
+          if gap_extra:
+              print('extra/mapped without fresh history: ' + ', '.join(gap_extra))
+              print('::warning::extra-universe history gaps: ' + ', '.join(gap_extra))
+          if bad_fno:
+              print('::error::F&O history missing or stale: ' + ', '.join(bad_fno))
+              sys.exit(1)
+          PYV
