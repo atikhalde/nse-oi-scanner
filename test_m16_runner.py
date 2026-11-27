@@ -197,8 +197,14 @@ class BasketMembershipTests(unittest.TestCase):
         self.assertEqual(rows.get('BEML'), 'DEF')
         self.assertEqual(R.shared.SECTOR_OF.get('BEML'), 'DEF')
         self.assertIn('BEML', R.shared.SEC_STOCKS['DEF'])
+        self.assertTrue({'BDL', 'BEL', 'BEML', 'COCHINSHIP', 'HAL', 'MAZDOCK', 'SOLARINDS'}
+                        <= set(R.shared.SEC_STOCKS['DEF']))
+        # The DEF group holds the whole defence complex; the basket that weights
+        # the (official) DEF score is still the F&O six.
         self.assertEqual(sorted(R.shared.SEC_STOCKS['DEF']),
-                         ['BDL', 'BEL', 'BEML', 'COCHINSHIP', 'HAL', 'MAZDOCK', 'SOLARINDS'])
+                         sorted(['BDL', 'BEL', 'BEML', 'COCHINSHIP', 'HAL', 'MAZDOCK', 'SOLARINDS',
+                                 'GRSE', 'PARAS', 'DATAPATTNS', 'ASTRAMICRO',
+                                 'MTARTECH', 'ZENTEC', 'AZAD', 'DCXINDIA', 'IDEAFORGE']))
 
     def test_def_is_an_index_sector_so_no_synthetic_basket_changes(self):
         self.assertEqual(R.shared.FM.OFFICIAL_TICKERS.get('DEF'), 'NIFTY_IND_DEFENCE.NS')
@@ -208,6 +214,52 @@ class BasketMembershipTests(unittest.TestCase):
     def test_beml_is_still_scanned_by_m16(self):
         self.assertIn(('BEML', 'DEF'), R.extra_universe())
         self.assertNotIn('BEML', {r['symbol'] for r in csv.DictReader((R.ROOT / 'fno_universe.csv').open())})
+
+    def test_every_extra_name_is_mapped_to_the_sector_it_declares(self):
+        mapped = {r['symbol']: r['sector'] for r in csv.DictReader((R.ROOT / 'fno_sector_map.csv').open())}
+        extras = R.extra_universe()
+        self.assertEqual(len(extras), 196)
+        mismatched = [(s, k, mapped.get(s)) for s, k in extras if mapped.get(s) != k]
+        self.assertEqual(mismatched, [])
+        self.assertEqual(R.shared.SECTOR_OF.get('THERMAX'), 'CAPGOODS')
+        self.assertEqual(R.shared.SECTOR_OF.get('IRCTC'), 'TRAVEL')
+        self.assertEqual(R.shared.SECTOR_OF.get('KPRMILL'), 'TEXTILE')
+
+    def test_sector_map_is_unique_and_covers_the_whole_scan_universe(self):
+        rows = [r for r in csv.DictReader((R.ROOT / 'fno_sector_map.csv').open())]
+        syms = [r['symbol'] for r in rows]
+        self.assertEqual(len(syms), len(set(syms)))          # one home sector each
+        self.assertEqual(len(rows), 406)
+        self.assertEqual(syms.count('BEML'), 1)              # the one deliberate dupe
+        fno = {r['symbol'] for r in csv.DictReader((R.ROOT / 'fno_universe.csv').open())}
+        self.assertEqual(fno | {s for s, _ in R.extra_universe()}, set(syms))
+
+    def test_synthetic_baskets_are_weighted_by_fno_constituents_only(self):
+        fno = {r['symbol'] for r in csv.DictReader((R.ROOT / 'fno_universe.csv').open())}
+        for basket in R.shared.MEMBERS.values():
+            self.assertTrue(set(basket) <= fno, set(basket) - fno)
+        self.assertEqual(len(R.shared.MEMBERS), 13)
+        self.assertEqual(sum(len(v) for v in R.shared.MEMBERS.values()), 64)
+        self.assertNotIn('THERMAX', R.shared.MEMBERS['CAPGOODS'])
+        self.assertNotIn('BEML', R.shared.MEMBERS.get('DEF', []))
+        # and every non-official group is exactly map ∩ F&O
+        rows = [r for r in csv.DictReader((R.ROOT / 'fno_sector_map.csv').open())]
+        for sec, basket in R.shared.MEMBERS.items():
+            expected = sorted(r['symbol'] for r in rows if r['sector'] == sec and r['symbol'] in fno)
+            self.assertEqual(sorted(basket), expected, sec)
+
+    def test_grouped_names_without_a_board_name_the_sector(self):
+        line, _ = R.sector_context_lines(dict(status='unknown', sector='TEXTILE',
+                                              reason='home sector unavailable'))
+        self.assertIn('TEXTILE is grouped but has no board', line)
+        self.assertIn('sector unverified', line)
+        self.assertNotIn('TEXTILE', R.shared.SEC_STOCKS.get('__none__', []))
+
+    def test_media_is_an_index_sector_so_its_new_members_get_a_real_board(self):
+        self.assertEqual(R.shared.FM.OFFICIAL_TICKERS.get('MEDIA'), '^CNXMEDIA')
+        self.assertEqual(sorted(R.shared.SEC_STOCKS['MEDIA']),
+                         ['NAZARA', 'PVRINOX', 'SAREGAMA', 'SUNTV', 'ZEEL'])
+        self.assertNotIn('MEDIA', R.shared.MEMBERS)     # score = published index
 
     def test_m6_never_fetches_a_basket_name_it_cannot_enter(self):
         cache = {'BEL': {}, 'HAL': {}}
@@ -255,11 +307,11 @@ class ExtraUniverseTests(unittest.TestCase):
                          'MET', 'PHA', 'REALTY', 'TEXTILE'} <= sectors)
         self.assertGreaterEqual(len(sectors), 25)
 
-    def test_every_documented_sector_label_is_lower_case_clean_and_known(self):
-        baskets = {r['sector'] for r in csv.DictReader((R.ROOT / 'fno_sector_map.csv').open())}
-        extra_only = {'TEXTILE', 'MEDIA', 'SUGAR', 'SHIPPING'}
+    def test_every_documented_sector_label_exists_in_the_sector_map(self):
+        sectors = {r['sector'] for r in csv.DictReader((R.ROOT / 'fno_sector_map.csv').open())}
         labels = {sector for _, sector in R.extra_universe()}
-        self.assertEqual(labels - baskets, extra_only)
+        self.assertEqual(labels - sectors, set())          # all 196 mapped
+        self.assertTrue({'TEXTILE', 'MEDIA', 'SUGAR', 'SHIPPING'} <= sectors)
 
     def test_extra_without_history_is_dormant_and_fno_names_are_not(self):
         cache = {sym: dict(ok=True, last_day='2026-11-26') for sym in R.shared.L.SYMS if sym in ('AXISBANK', 'SBIN')}

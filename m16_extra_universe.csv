@@ -81,8 +81,10 @@ GRSE,DEF
 PARAS,DEF
 DATAPATTNS,DEF
 ASTRAMICRO,DEF
-# BEML is ALSO listed as DEF in fno_sector_map.csv (the sector grouping every
-# model reads); it stays here because scanning follows this file, not the map.
+# Every name in this file is also listed under its sector in fno_sector_map.csv
+# (the grouping every model reads). It stays here because scanning follows this
+# file, not the map -- and because a basket is weighted by F&O names only, being
+# in the map never changes a sector score.
 BEML,DEF
 MTARTECH,DEF
 ZENTEC,DEF

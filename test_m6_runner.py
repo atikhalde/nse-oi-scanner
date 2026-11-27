@@ -532,7 +532,7 @@ def _index_proxies():
     def ew(members, label):
         parts = []
         for sym in members:
-            b = day["bars"][sym]
+            b = day["bars"].get(sym)      # grouped names may have no offline frame
             if b is None or len(b) == 0:
                 continue
             parts.append(pd.Series((b["close"] / float(b["close"].iloc[0])).to_numpy(),

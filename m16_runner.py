@@ -415,6 +415,10 @@ def sector_context_lines(gate):
     if not sector or score is None:
         if status == "unknown":
             reason = gate.get("reason") or "sector board not available"
+            if sector and score is None:
+                # Grouped but not a board sector (TEXTILE, SUGAR, SHIPPING): say
+                # which one, so the line is a fact and not a shrug.
+                reason = f"{sector} is grouped but has no board ({reason})"
             return f"Sector context unavailable ({reason}) — sector unverified", ""
         return "", ""
     slope, rank, breadth = gate.get("slope15"), gate.get("known_rank"), gate.get("boards_above70")
