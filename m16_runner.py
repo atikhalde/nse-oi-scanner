@@ -151,15 +151,35 @@ def deliver_targets(st, ledger, sender, can_send=lambda: True):
     return all(ledger.get(target_id(*target)) == "sent" for target in targets)
 
 
+def sample_alert_event(symbol="AXISBANK", price=1259.70):
+    """A labelled fake event: its alert text exercises the real symbol/chart markup."""
+    now = pd.Timestamp.now(tz="Asia/Kolkata")
+    return dict(symbol=symbol, side="BUY", price=float(price), bos=round(float(price) * 0.99, 2),
+                pullback="FIB_0.236_0.382 + EMA9 + EMA10", signal="CLOSE_CONFIRMED",
+                seed=now, bar=now, observed=now, kind="CLOSE_CONFIRMED",
+                sector_gate={"status": "disabled"})
+
+
+def sample_alert_text():
+    """Exactly what a live alert looks like, prefixed so it can never read as a signal."""
+    return ("🧪 M16 SAMPLE ALERT — format check only, not a trade.\n"
+            "Tap the stock name for its chart, then 'open in Dhan app'.\n\n"
+            + alert_text(sample_alert_event(), markup=True))
+
+
 def test_alert(dry_run=False):
     if dry_run:
         print("[DRY] M16 dedicated-bot self-test")
+        print(sample_alert_text())
         return True
     results = []
     for token, chat in telegram_targets():
         try:
-            results.append(bool(tg.send_message_to(token, chat,
-                "M16 bot connected — continuation alerts only; no orders.")))
+            ok = bool(tg.send_message_to(token, chat,
+                "M16 bot connected — continuation alerts only; no orders."))
+            # The sample proves the links on the phone, which a plain ping cannot.
+            ok = bool(tg.send_message_to(token, chat, sample_alert_text())) and ok
+            results.append(ok)
         except Exception:
             results.append(False)
     print(f"M16 self-test: {sum(results)}/{len(results)} destination(s) confirmed")
