@@ -1,64 +1,64 @@
 day,model,sym,side,sig,code,time,min,entry,rank,cls,taken,ghost,skip_why,breadth,daypct,sec,sec_bullq,sec_bearq,sec_pb,sec_pw,held,tilt,regime,cf_net_s,cf_net_p,cf_r_s,cf_r_p,cf_exit_s,cf_net,cf_r,cf_exit,mfe_r,mae_r,mfe30_r,mfe60_r,eod_pct,bear_close,day_regime
-2026-11-27,M6,BDL,BUY,BUY-EX,101,09:30,570,1067.0,,BREAKOUT,1,0,,0.635,3.112,DEF,0,0,1,0,0,-14.6,,413.0,,0.46,,OPEN,315,0.37,OPEN,0.96,0.35,0.21,0.69,0.98,0.529,MIXED
-2026-11-27,M6,COCHINSHIP,BUY,BUY-EX,101,09:30,570,1124.4,,BREAKOUT,1,0,,0.635,1.94,DEF,0,0,1,0,0,-14.6,,70.0,,0.08,,OPEN,39,0.08,OPEN,0.99,0.43,0.28,0.81,0.14,0.529,MIXED
-2026-11-27,M6,MAZDOCK,BUY,BUY-EX,101,09:30,570,1877.7,,BREAKOUT,1,0,,0.635,3.341,DEF,0,0,1,0,0,-14.6,,191.0,,0.21,,OPEN,166,0.21,OPEN,0.63,0.24,0.35,0.63,0.66,0.529,MIXED
-2026-11-27,M6,SOLARINDS,BUY,BUY-EX,101,09:30,570,18646.0,,BREAKOUT,1,0,,0.635,2.17,DEF,0,0,1,0,0,-14.6,,1330.0,,1.96,,100% trail 11:15,1263,1.96,100% trail 11:15,2.57,0.31,1.11,2.28,4.31,0.529,MIXED
-2026-11-27,M6,MPHASIS,SELL,NORMAL SELL,280,09:45,585,2452.5,,BREAKOUT,1,0,,0.635,-2.291,IT,0,0,0,1,1,-14.6,,-98.0,,-0.11,,OPEN,120,0.17,OPEN,0.28,0.39,0.28,0.28,0.46,0.529,MIXED
-2026-11-27,M6,HCLTECH,SELL,SELL-EX1,201,10:35,635,1431.6,,BREAKOUT,1,0,,0.635,-2.519,IT,0,0,0,1,1,-14.6,,-292.0,,-1.0,,100% SL 12:55,-378,-1.0,100% SL 12:55,1.35,1.18,0.42,0.68,0.52,0.529,MIXED
-2026-11-27,M6,LTM,SELL,SELL-EX15,215,10:35,635,4310.1,,BREAKOUT,1,0,,0.635,-2.192,IT,0,0,0,1,1,-14.6,,-327.0,,-1.0,,100% SL 11:50,-411,-1.0,100% SL 11:50,0.24,2.45,0.24,0.24,-0.23,0.529,MIXED
-2026-11-27,M6,LTM,SELL,ENTRY SELL,290,09:30,570,4313.6,,,0,0,scanner-table preview (90/290) — no chart label,0.635,-2.113,IT,0,0,0,1,1,-14.6,,,,,,,-80,-0.06,OPEN,0.1,0.64,0.05,0.05,-0.15,0.529,MIXED
-2026-11-27,M6,HAL,BUY,BUY-EX6,105,09:30,570,4963.9,,,0,0,"lags own sector (stock +1.11% vs DEF +1.70%; lag +0.591pp, tolerance 0.05pp)",0.635,1.106,DEF,0,0,1,0,0,-14.6,,,,,,,1373,2.53,100% trail 11:20,3.17,0.57,1.15,2.56,2.22,0.529,MIXED
-2026-11-27,M6,KPITTECH,BUY,BUY-EX17,102,09:30,570,524.45,,,0,0,sector IT not bull-qualified (bull 3/bear 81),0.635,0.431,IT,0,0,0,1,1,-14.6,,,,,,,-619,-1.0,100% SL 15:10,0.44,1.08,0.34,0.44,-0.85,0.529,MIXED
-2026-11-27,M6,RVNL,BUY,BUY-EX,101,09:30,570,,,,0,0,discovered late (09:30 < 09:35) — not alerted,0.635,,RAILWAYS,0,0,1,0,0,-14.6,,,,,,,,,,,,,,,0.529,MIXED
-2026-11-27,M6,IRFC,BUY,BUY-EX,101,09:35,575,82.9,,,0,0,"lags own sector (stock +0.73% vs RAILWAYS +1.20%; lag +0.472pp, tolerance 0.05pp",0.635,0.729,RAILWAYS,0,0,1,0,0,-14.6,,,,,,,-640,-1.0,100% SL 12:20,0.01,1.2,0.01,0.01,-0.78,0.529,MIXED
-2026-11-27,M6,TATAELXSI,BUY,BUY-EX17,102,09:35,575,3871.0,,,0,0,sector IT not bull-qualified (bull 4/bear 71),0.635,0.267,IT,0,0,0,1,1,-14.6,,,,,,,318,0.56,100% trail 14:30,1.26,0.49,0.82,0.82,0.16,0.529,MIXED
-2026-11-27,M6,PERSISTENT,BUY,BUY-EX12,111,09:45,585,6245.0,,,0,0,sector IT not bull-qualified (bull 11/bear 53),0.635,0.726,IT,0,0,0,1,1,-14.6,,,,,,,569,1.11,OPEN,1.11,0.86,0.3,0.3,1.2,0.529,MIXED
-2026-11-27,M6,BANKINDIA,BUY,BUY-EX,101,09:30,570,,,,0,0,discovered late (09:30 < 09:50) — not alerted,0.635,,PSUBK,0,0,0,0,0,-14.6,,,,,,,,,,,,,,,0.529,MIXED
-2026-11-27,M6,INDIANB,BUY,BUY-EX,101,09:30,570,,,,0,0,discovered late (09:30 < 09:50) — not alerted,0.635,,PSUBK,0,0,0,0,0,-14.6,,,,,,,,,,,,,,,0.529,MIXED
-2026-11-27,M6,BANKBARODA,BUY,BUY-EX17,102,09:30,570,,,,0,0,discovered late (09:30 < 09:50) — not alerted,0.635,,PSUBK,0,0,0,0,0,-14.6,,,,,,,,,,,,,,,0.529,MIXED
-2026-11-27,M6,UNIONBANK,BUY,BUY-EX17,102,09:30,570,,,,0,0,discovered late (09:30 < 09:50) — not alerted,0.635,,PSUBK,0,0,0,0,0,-14.6,,,,,,,,,,,,,,,0.529,MIXED
-2026-11-27,M6,CANBK,BUY,BUY-EX17,102,09:30,570,,,,0,0,discovered late (09:30 < 09:50) — not alerted,0.635,,PSUBK,0,0,0,0,0,-14.6,,,,,,,,,,,,,,,0.529,MIXED
-2026-11-27,M6,OFSS,BUY,BUY-EX7,106,09:50,590,9324.0,,,0,0,sector IT not bull-qualified (bull 10/bear 58),0.635,0.355,IT,0,0,0,1,1,-14.6,,,,,,,-267,-1.0,100% SL 11:00,1.17,2.0,0.95,0.95,-0.79,0.529,MIXED
-2026-11-27,M6,PNB,BUY,BUY-EX17,102,09:35,575,,,,0,0,discovered late (09:35 < 09:50) — not alerted,0.635,,PSUBK,0,0,0,0,0,-14.6,,,,,,,,,,,,,,,0.529,MIXED
-2026-11-27,M6,SBIN,BUY,BUY-EX17,102,09:40,580,,,,0,0,discovered late (09:40 < 09:50) — not alerted,0.635,,PSUBK,0,0,0,0,0,-14.6,,,,,,,,,,,,,,,0.529,MIXED
-2026-11-27,M6,BEL,BUY,BUY-EX,101,09:55,595,410.8,,,0,0,"lags own sector (stock +1.56% vs DEF +2.26%; lag +0.705pp, tolerance 0.05pp)",0.635,1.557,DEF,0,0,1,0,0,-14.6,,,,,,,48,0.09,OPEN,0.54,0.39,0.39,0.54,0.16,0.529,MIXED
-2026-11-27,M6,COFORGE,BUY,BUY-EX17,102,10:00,600,2079.5,,,0,0,sector IT not bull-qualified (bull 7/bear 67),0.635,3.975,IT,0,0,0,1,1,-14.6,,,,,,,-176,-0.18,OPEN,0.24,0.58,0.04,0.04,-0.41,0.529,MIXED
-2026-11-27,M6,INFY,SELL,SELL-EX1,201,10:30,630,,,,0,0,discovered late (10:30 < 10:35) — not alerted,0.635,,IT,0,0,0,1,1,-14.6,,,,,,,,,,,,,,,0.529,MIXED
-2026-11-27,M6,SUPREMEIND,BUY,BUY-EX17,102,10:00,600,,,,0,0,discovered late (10:00 < 10:35) — not alerted,0.635,,BUILDMAT,0,0,0,0,0,-14.6,,,,,,,,,,,,,,,0.529,MIXED
-2026-11-27,M6,ASTRAL,BUY,BUY-EX17,102,09:45,585,,,,0,0,discovered late (09:45 < 10:35) — not alerted,0.635,,BUILDMAT,0,0,0,0,0,-14.6,,,,,,,,,,,,,,,0.529,MIXED
-2026-11-27,M6,NBCC,BUY,BUY-EX,101,09:30,570,,,,0,0,discovered late (09:30 < 10:45) — not alerted,0.635,,PSE,0,0,0,0,0,-14.6,,,,,,,,,,,,,,,0.529,MIXED
-2026-11-27,M6,DALBHARAT,SELL,SELL-EX5,205,09:40,580,,,,0,0,discovered late (09:40 < 11:15) — not alerted,0.635,,CEMENT,0,1,0,1,1,-14.6,,,,,,,,,,,,,,,0.529,MIXED
-2026-11-27,M6,SOLARINDS,BUY,BUY-EX,101,09:30,570,,,,0,0,discovered late (09:30 < 11:15) — not alerted,0.635,,DEF,0,0,1,0,0,-14.6,,,,,,,,,,,,,,,0.529,MIXED
-2026-11-27,M6,AMBUJACEM,SELL,SELL-EX1,201,10:20,620,,,,0,0,discovered late (10:20 < 11:15) — not alerted,0.635,,CEMENT,0,1,0,1,1,-14.6,,,,,,,,,,,,,,,0.529,MIXED
-2026-11-27,M6,GRASIM,SELL,SELL-EX2,202,11:00,660,,,,0,0,discovered late (11:00 < 11:15) — not alerted,0.635,,CEMENT,0,1,0,1,1,-14.6,,,,,,,,,,,,,,,0.529,MIXED
-2026-11-27,M6,ULTRACEMCO,SELL,NORMAL SELL,280,10:30,630,,,,0,0,discovered late (10:30 < 11:15) — not alerted,0.635,,CEMENT,0,1,0,1,1,-14.6,,,,,,,,,,,,,,,0.529,MIXED
-2026-11-27,M6,OFSS,SELL,SELL-EX15,215,11:20,680,9265.5,,,0,0,"lags own sector (stock -0.27% vs IT -1.68%; lag +1.405pp, tolerance 0.05pp)",0.635,-0.274,IT,0,0,0,1,1,-14.6,,,,,,,-311,-1.0,100% SL 13:35,0.34,2.22,0.09,0.09,0.17,0.529,MIXED
-2026-11-27,M6,GVT&D,BUY,BUY-EX17,102,09:30,570,,,,0,0,discovered late (09:30 < 11:55) — not alerted,0.635,,CAPGOODS,0,0,1,0,0,-14.6,,,,,,,,,,,,,,,0.529,MIXED
-2026-11-27,M6,CUMMINSIND,BUY,BUY-EX17,102,09:30,570,,,,0,0,discovered late (09:30 < 11:55) — not alerted,0.635,,CAPGOODS,0,0,1,0,0,-14.6,,,,,,,,,,,,,,,0.529,MIXED
-2026-11-27,M6,KEI,BUY,BUY-EX17,102,09:30,570,,,,0,0,discovered late (09:30 < 11:55) — not alerted,0.635,,CAPGOODS,0,0,1,0,0,-14.6,,,,,,,,,,,,,,,0.529,MIXED
-2026-11-27,M6,LTM,SELL,SELL-EX15,215,10:35,635,,,,0,0,discovered late (10:35 < 11:55) — not alerted,0.635,,IT,0,0,0,1,1,-14.6,,,,,,,,,,,,,,,0.529,MIXED
-2026-11-27,M6,POWERINDIA,BUY,ENTRY BUY,90,09:30,570,,,,0,0,discovered late (09:30 < 11:55) — not alerted,0.635,,CAPGOODS,0,0,1,0,0,-14.6,,,,,,,,,,,,,,,0.529,MIXED
-2026-11-27,M6,POWERINDIA,BUY,BUY-EX12,111,10:10,610,,,,0,0,discovered late (10:10 < 11:55) — not alerted,0.635,,CAPGOODS,0,0,1,0,0,-14.6,,,,,,,,,,,,,,,0.529,MIXED
-2026-11-27,M6,ABB,BUY,BUY-EX7,106,09:30,570,,,,0,0,discovered late (09:30 < 11:55) — not alerted,0.635,,CAPGOODS,0,0,1,0,0,-14.6,,,,,,,,,,,,,,,0.529,MIXED
-2026-11-27,M6,BHEL,BUY,BUY-EX17,102,09:35,575,,,,0,0,discovered late (09:35 < 11:55) — not alerted,0.635,,CAPGOODS,0,0,1,0,0,-14.6,,,,,,,,,,,,,,,0.529,MIXED
-2026-11-27,M6,BHEL,SELL,SELL-EX5,205,10:55,655,,,,0,0,discovered late (10:55 < 11:55) — not alerted,0.635,,CAPGOODS,0,0,1,0,0,-14.6,,,,,,,,,,,,,,,0.529,MIXED
-2026-11-27,M6,KAYNES,BUY,BUY-EX,101,09:30,570,,,,0,0,discovered late (09:30 < 11:55) — not alerted,0.635,,CAPGOODS,0,0,1,0,0,-14.6,,,,,,,,,,,,,,,0.529,MIXED
-2026-11-27,M6,HCLTECH,SELL,SELL-EX1,201,10:35,635,,,,0,0,discovered late (10:35 < 15:00) — not alerted,0.635,,IT,0,0,0,1,1,-14.6,,,,,,,,,,,,,,,0.529,MIXED
-2026-11-27,M6,KPITTECH,BUY,ENTRY BUY,90,09:30,570,,,,0,0,discovered late (09:30 < 15:00) — not alerted,0.635,,IT,0,0,0,1,1,-14.6,,,,,,,,,,,,,,,0.529,MIXED
-2026-11-27,M6,ASTRAL,,—,,15:10,910,,,,0,0,stale bar 15:10 (301s > 120s) — not alerted,0.635,,BUILDMAT,0,0,0,0,0,-14.6,,,,,,,,,,,,,,,0.529,MIXED
-2026-11-27,M6,DLF,,—,,15:10,910,,,,0,0,stale bar 15:10 (301s > 120s) — not alerted,0.635,,REALTY,0,1,0,1,1,-14.6,,,,,,,,,,,,,,,0.529,MIXED
-2026-11-27,M6,GODREJPROP,,—,,15:10,910,,,,0,0,stale bar 15:10 (301s > 120s) — not alerted,0.635,,REALTY,0,1,0,1,1,-14.6,,,,,,,,,,,,,,,0.529,MIXED
-2026-11-27,M6,PHOENIXLTD,,—,,15:10,910,,,,0,0,stale bar 15:10 (301s > 120s) — not alerted,0.635,,REALTY,0,1,0,1,1,-14.6,,,,,,,,,,,,,,,0.529,MIXED
-2026-11-27,M6,PRESTIGE,,—,,15:10,910,,,,0,0,stale bar 15:10 (301s > 120s) — not alerted,0.635,,REALTY,0,1,0,1,1,-14.6,,,,,,,,,,,,,,,0.529,MIXED
-2026-11-27,M6,AMBUJACEM,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.635,,CEMENT,0,1,0,1,1,-14.6,,,,,,,,,,,,,,,0.529,MIXED
-2026-11-27,M6,DLF,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.635,,REALTY,0,1,0,1,1,-14.6,,,,,,,,,,,,,,,0.529,MIXED
-2026-11-27,M6,GODREJPROP,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.635,,REALTY,0,1,0,1,1,-14.6,,,,,,,,,,,,,,,0.529,MIXED
-2026-11-27,M6,GRASIM,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.635,,CEMENT,0,1,0,1,1,-14.6,,,,,,,,,,,,,,,0.529,MIXED
-2026-11-27,M6,HCLTECH,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.635,,IT,0,0,0,1,1,-14.6,,,,,,,,,,,,,,,0.529,MIXED
-2026-11-27,M6,KPITTECH,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.635,,IT,0,0,0,1,1,-14.6,,,,,,,,,,,,,,,0.529,MIXED
-2026-11-27,M6,PHOENIXLTD,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.635,,REALTY,0,1,0,1,1,-14.6,,,,,,,,,,,,,,,0.529,MIXED
-2026-11-27,M6,PRESTIGE,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.635,,REALTY,0,1,0,1,1,-14.6,,,,,,,,,,,,,,,0.529,MIXED
-2026-11-27,M6,SHREECEM,,—,,15:14,914,,,,0,0,stale bar 15:14 (361s > 120s) — not alerted,0.635,,CEMENT,0,1,0,1,1,-14.6,,,,,,,,,,,,,,,0.529,MIXED
-2026-11-27,M6,TATAELXSI,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.635,,IT,0,0,0,1,1,-14.6,,,,,,,,,,,,,,,0.529,MIXED
-2026-11-27,M6,TECHM,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.635,,IT,0,0,0,1,1,-14.6,,,,,,,,,,,,,,,0.529,MIXED
-2026-11-27,M6,ULTRACEMCO,,—,,15:14,914,,,,0,0,stale bar 15:14 (361s > 120s) — not alerted,0.635,,CEMENT,0,1,0,1,1,-14.6,,,,,,,,,,,,,,,0.529,MIXED
+2026-11-27,M6,BDL,BUY,BUY-EX,101,09:30,570,1067.0,,BREAKOUT,1,0,,0.635,3.112,DEF,0,0,1,0,0,-14.6,,413.0,,0.46,,OPEN,315,0.37,OPEN,0.96,0.35,0.21,0.69,0.98,0.53,MIXED
+2026-11-27,M6,COCHINSHIP,BUY,BUY-EX,101,09:30,570,1124.4,,BREAKOUT,1,0,,0.635,1.94,DEF,0,0,1,0,0,-14.6,,70.0,,0.08,,OPEN,39,0.08,OPEN,0.99,0.43,0.28,0.81,0.14,0.53,MIXED
+2026-11-27,M6,MAZDOCK,BUY,BUY-EX,101,09:30,570,1877.7,,BREAKOUT,1,0,,0.635,3.341,DEF,0,0,1,0,0,-14.6,,191.0,,0.21,,OPEN,166,0.21,OPEN,0.63,0.24,0.35,0.63,0.66,0.53,MIXED
+2026-11-27,M6,SOLARINDS,BUY,BUY-EX,101,09:30,570,18646.0,,BREAKOUT,1,0,,0.635,2.17,DEF,0,0,1,0,0,-14.6,,1330.0,,1.96,,100% trail 11:15,1263,1.96,100% trail 11:15,2.57,0.31,1.11,2.28,4.31,0.53,MIXED
+2026-11-27,M6,MPHASIS,SELL,NORMAL SELL,280,09:45,585,2452.5,,BREAKOUT,1,0,,0.635,-2.291,IT,0,0,0,1,1,-14.6,,-98.0,,-0.11,,OPEN,120,0.17,OPEN,0.28,0.39,0.28,0.28,0.46,0.53,MIXED
+2026-11-27,M6,HCLTECH,SELL,SELL-EX1,201,10:35,635,1431.6,,BREAKOUT,1,0,,0.635,-2.519,IT,0,0,0,1,1,-14.6,,-292.0,,-1.0,,100% SL 12:55,-378,-1.0,100% SL 12:55,1.35,1.18,0.42,0.68,0.52,0.53,MIXED
+2026-11-27,M6,LTM,SELL,SELL-EX15,215,10:35,635,4310.1,,BREAKOUT,1,0,,0.635,-2.192,IT,0,0,0,1,1,-14.6,,-327.0,,-1.0,,100% SL 11:50,-411,-1.0,100% SL 11:50,0.24,2.45,0.24,0.24,-0.23,0.53,MIXED
+2026-11-27,M6,LTM,SELL,ENTRY SELL,290,09:30,570,4313.6,,,0,0,scanner-table preview (90/290) — no chart label,0.635,-2.113,IT,0,0,0,1,1,-14.6,,,,,,,-80,-0.06,OPEN,0.1,0.64,0.05,0.05,-0.15,0.53,MIXED
+2026-11-27,M6,HAL,BUY,BUY-EX6,105,09:30,570,4963.9,,,0,0,"lags own sector (stock +1.11% vs DEF +1.70%; lag +0.591pp, tolerance 0.05pp)",0.635,1.106,DEF,0,0,1,0,0,-14.6,,,,,,,1373,2.53,100% trail 11:20,3.17,0.57,1.15,2.56,2.22,0.53,MIXED
+2026-11-27,M6,KPITTECH,BUY,BUY-EX17,102,09:30,570,524.45,,,0,0,sector IT not bull-qualified (bull 3/bear 81),0.635,0.431,IT,0,0,0,1,1,-14.6,,,,,,,-619,-1.0,100% SL 15:10,0.44,1.08,0.34,0.44,-0.85,0.53,MIXED
+2026-11-27,M6,RVNL,BUY,BUY-EX,101,09:30,570,,,,0,0,discovered late (09:30 < 09:35) — not alerted,0.635,,RAILWAYS,0,0,1,0,0,-14.6,,,,,,,,,,,,,,,0.53,MIXED
+2026-11-27,M6,IRFC,BUY,BUY-EX,101,09:35,575,82.9,,,0,0,"lags own sector (stock +0.73% vs RAILWAYS +1.20%; lag +0.472pp, tolerance 0.05pp",0.635,0.729,RAILWAYS,0,0,1,0,0,-14.6,,,,,,,-640,-1.0,100% SL 12:20,0.01,1.2,0.01,0.01,-0.78,0.53,MIXED
+2026-11-27,M6,TATAELXSI,BUY,BUY-EX17,102,09:35,575,3871.0,,,0,0,sector IT not bull-qualified (bull 4/bear 71),0.635,0.267,IT,0,0,0,1,1,-14.6,,,,,,,318,0.56,100% trail 14:30,1.26,0.49,0.82,0.82,0.16,0.53,MIXED
+2026-11-27,M6,PERSISTENT,BUY,BUY-EX12,111,09:45,585,6245.0,,,0,0,sector IT not bull-qualified (bull 11/bear 53),0.635,0.726,IT,0,0,0,1,1,-14.6,,,,,,,569,1.11,OPEN,1.11,0.86,0.3,0.3,1.2,0.53,MIXED
+2026-11-27,M6,BANKINDIA,BUY,BUY-EX,101,09:30,570,,,,0,0,discovered late (09:30 < 09:50) — not alerted,0.635,,PSUBK,0,0,0,0,0,-14.6,,,,,,,,,,,,,,,0.53,MIXED
+2026-11-27,M6,INDIANB,BUY,BUY-EX,101,09:30,570,,,,0,0,discovered late (09:30 < 09:50) — not alerted,0.635,,PSUBK,0,0,0,0,0,-14.6,,,,,,,,,,,,,,,0.53,MIXED
+2026-11-27,M6,BANKBARODA,BUY,BUY-EX17,102,09:30,570,,,,0,0,discovered late (09:30 < 09:50) — not alerted,0.635,,PSUBK,0,0,0,0,0,-14.6,,,,,,,,,,,,,,,0.53,MIXED
+2026-11-27,M6,UNIONBANK,BUY,BUY-EX17,102,09:30,570,,,,0,0,discovered late (09:30 < 09:50) — not alerted,0.635,,PSUBK,0,0,0,0,0,-14.6,,,,,,,,,,,,,,,0.53,MIXED
+2026-11-27,M6,CANBK,BUY,BUY-EX17,102,09:30,570,,,,0,0,discovered late (09:30 < 09:50) — not alerted,0.635,,PSUBK,0,0,0,0,0,-14.6,,,,,,,,,,,,,,,0.53,MIXED
+2026-11-27,M6,OFSS,BUY,BUY-EX7,106,09:50,590,9324.0,,,0,0,sector IT not bull-qualified (bull 10/bear 58),0.635,0.355,IT,0,0,0,1,1,-14.6,,,,,,,-267,-1.0,100% SL 11:00,1.17,2.0,0.95,0.95,-0.79,0.53,MIXED
+2026-11-27,M6,PNB,BUY,BUY-EX17,102,09:35,575,,,,0,0,discovered late (09:35 < 09:50) — not alerted,0.635,,PSUBK,0,0,0,0,0,-14.6,,,,,,,,,,,,,,,0.53,MIXED
+2026-11-27,M6,SBIN,BUY,BUY-EX17,102,09:40,580,,,,0,0,discovered late (09:40 < 09:50) — not alerted,0.635,,PSUBK,0,0,0,0,0,-14.6,,,,,,,,,,,,,,,0.53,MIXED
+2026-11-27,M6,BEL,BUY,BUY-EX,101,09:55,595,410.8,,,0,0,"lags own sector (stock +1.56% vs DEF +2.26%; lag +0.705pp, tolerance 0.05pp)",0.635,1.557,DEF,0,0,1,0,0,-14.6,,,,,,,48,0.09,OPEN,0.54,0.39,0.39,0.54,0.16,0.53,MIXED
+2026-11-27,M6,COFORGE,BUY,BUY-EX17,102,10:00,600,2079.5,,,0,0,sector IT not bull-qualified (bull 7/bear 67),0.635,3.975,IT,0,0,0,1,1,-14.6,,,,,,,-176,-0.18,OPEN,0.24,0.58,0.04,0.04,-0.41,0.53,MIXED
+2026-11-27,M6,INFY,SELL,SELL-EX1,201,10:30,630,,,,0,0,discovered late (10:30 < 10:35) — not alerted,0.635,,IT,0,0,0,1,1,-14.6,,,,,,,,,,,,,,,0.53,MIXED
+2026-11-27,M6,SUPREMEIND,BUY,BUY-EX17,102,10:00,600,,,,0,0,discovered late (10:00 < 10:35) — not alerted,0.635,,BUILDMAT,0,0,0,0,0,-14.6,,,,,,,,,,,,,,,0.53,MIXED
+2026-11-27,M6,ASTRAL,BUY,BUY-EX17,102,09:45,585,,,,0,0,discovered late (09:45 < 10:35) — not alerted,0.635,,BUILDMAT,0,0,0,0,0,-14.6,,,,,,,,,,,,,,,0.53,MIXED
+2026-11-27,M6,NBCC,BUY,BUY-EX,101,09:30,570,,,,0,0,discovered late (09:30 < 10:45) — not alerted,0.635,,PSE,0,0,0,0,0,-14.6,,,,,,,,,,,,,,,0.53,MIXED
+2026-11-27,M6,DALBHARAT,SELL,SELL-EX5,205,09:40,580,,,,0,0,discovered late (09:40 < 11:15) — not alerted,0.635,,CEMENT,0,1,0,1,1,-14.6,,,,,,,,,,,,,,,0.53,MIXED
+2026-11-27,M6,SOLARINDS,BUY,BUY-EX,101,09:30,570,,,,0,0,discovered late (09:30 < 11:15) — not alerted,0.635,,DEF,0,0,1,0,0,-14.6,,,,,,,,,,,,,,,0.53,MIXED
+2026-11-27,M6,AMBUJACEM,SELL,SELL-EX1,201,10:20,620,,,,0,0,discovered late (10:20 < 11:15) — not alerted,0.635,,CEMENT,0,1,0,1,1,-14.6,,,,,,,,,,,,,,,0.53,MIXED
+2026-11-27,M6,GRASIM,SELL,SELL-EX2,202,11:00,660,,,,0,0,discovered late (11:00 < 11:15) — not alerted,0.635,,CEMENT,0,1,0,1,1,-14.6,,,,,,,,,,,,,,,0.53,MIXED
+2026-11-27,M6,ULTRACEMCO,SELL,NORMAL SELL,280,10:30,630,,,,0,0,discovered late (10:30 < 11:15) — not alerted,0.635,,CEMENT,0,1,0,1,1,-14.6,,,,,,,,,,,,,,,0.53,MIXED
+2026-11-27,M6,OFSS,SELL,SELL-EX15,215,11:20,680,9265.5,,,0,0,"lags own sector (stock -0.27% vs IT -1.68%; lag +1.405pp, tolerance 0.05pp)",0.635,-0.274,IT,0,0,0,1,1,-14.6,,,,,,,-311,-1.0,100% SL 13:35,0.34,2.22,0.09,0.09,0.17,0.53,MIXED
+2026-11-27,M6,GVT&D,BUY,BUY-EX17,102,09:30,570,,,,0,0,discovered late (09:30 < 11:55) — not alerted,0.635,,CAPGOODS,0,0,1,0,0,-14.6,,,,,,,,,,,,,,,0.53,MIXED
+2026-11-27,M6,CUMMINSIND,BUY,BUY-EX17,102,09:30,570,,,,0,0,discovered late (09:30 < 11:55) — not alerted,0.635,,CAPGOODS,0,0,1,0,0,-14.6,,,,,,,,,,,,,,,0.53,MIXED
+2026-11-27,M6,KEI,BUY,BUY-EX17,102,09:30,570,,,,0,0,discovered late (09:30 < 11:55) — not alerted,0.635,,CAPGOODS,0,0,1,0,0,-14.6,,,,,,,,,,,,,,,0.53,MIXED
+2026-11-27,M6,LTM,SELL,SELL-EX15,215,10:35,635,,,,0,0,discovered late (10:35 < 11:55) — not alerted,0.635,,IT,0,0,0,1,1,-14.6,,,,,,,,,,,,,,,0.53,MIXED
+2026-11-27,M6,POWERINDIA,BUY,ENTRY BUY,90,09:30,570,,,,0,0,discovered late (09:30 < 11:55) — not alerted,0.635,,CAPGOODS,0,0,1,0,0,-14.6,,,,,,,,,,,,,,,0.53,MIXED
+2026-11-27,M6,POWERINDIA,BUY,BUY-EX12,111,10:10,610,,,,0,0,discovered late (10:10 < 11:55) — not alerted,0.635,,CAPGOODS,0,0,1,0,0,-14.6,,,,,,,,,,,,,,,0.53,MIXED
+2026-11-27,M6,ABB,BUY,BUY-EX7,106,09:30,570,,,,0,0,discovered late (09:30 < 11:55) — not alerted,0.635,,CAPGOODS,0,0,1,0,0,-14.6,,,,,,,,,,,,,,,0.53,MIXED
+2026-11-27,M6,BHEL,BUY,BUY-EX17,102,09:35,575,,,,0,0,discovered late (09:35 < 11:55) — not alerted,0.635,,CAPGOODS,0,0,1,0,0,-14.6,,,,,,,,,,,,,,,0.53,MIXED
+2026-11-27,M6,BHEL,SELL,SELL-EX5,205,10:55,655,,,,0,0,discovered late (10:55 < 11:55) — not alerted,0.635,,CAPGOODS,0,0,1,0,0,-14.6,,,,,,,,,,,,,,,0.53,MIXED
+2026-11-27,M6,KAYNES,BUY,BUY-EX,101,09:30,570,,,,0,0,discovered late (09:30 < 11:55) — not alerted,0.635,,CAPGOODS,0,0,1,0,0,-14.6,,,,,,,,,,,,,,,0.53,MIXED
+2026-11-27,M6,HCLTECH,SELL,SELL-EX1,201,10:35,635,,,,0,0,discovered late (10:35 < 15:00) — not alerted,0.635,,IT,0,0,0,1,1,-14.6,,,,,,,,,,,,,,,0.53,MIXED
+2026-11-27,M6,KPITTECH,BUY,ENTRY BUY,90,09:30,570,,,,0,0,discovered late (09:30 < 15:00) — not alerted,0.635,,IT,0,0,0,1,1,-14.6,,,,,,,,,,,,,,,0.53,MIXED
+2026-11-27,M6,ASTRAL,,—,,15:10,910,,,,0,0,stale bar 15:10 (301s > 120s) — not alerted,0.635,,BUILDMAT,0,0,0,0,0,-14.6,,,,,,,,,,,,,,,0.53,MIXED
+2026-11-27,M6,DLF,,—,,15:10,910,,,,0,0,stale bar 15:10 (301s > 120s) — not alerted,0.635,,REALTY,0,1,0,1,1,-14.6,,,,,,,,,,,,,,,0.53,MIXED
+2026-11-27,M6,GODREJPROP,,—,,15:10,910,,,,0,0,stale bar 15:10 (301s > 120s) — not alerted,0.635,,REALTY,0,1,0,1,1,-14.6,,,,,,,,,,,,,,,0.53,MIXED
+2026-11-27,M6,PHOENIXLTD,,—,,15:10,910,,,,0,0,stale bar 15:10 (301s > 120s) — not alerted,0.635,,REALTY,0,1,0,1,1,-14.6,,,,,,,,,,,,,,,0.53,MIXED
+2026-11-27,M6,PRESTIGE,,—,,15:10,910,,,,0,0,stale bar 15:10 (301s > 120s) — not alerted,0.635,,REALTY,0,1,0,1,1,-14.6,,,,,,,,,,,,,,,0.53,MIXED
+2026-11-27,M6,AMBUJACEM,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.635,,CEMENT,0,1,0,1,1,-14.6,,,,,,,,,,,,,,,0.53,MIXED
+2026-11-27,M6,DLF,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.635,,REALTY,0,1,0,1,1,-14.6,,,,,,,,,,,,,,,0.53,MIXED
+2026-11-27,M6,GODREJPROP,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.635,,REALTY,0,1,0,1,1,-14.6,,,,,,,,,,,,,,,0.53,MIXED
+2026-11-27,M6,GRASIM,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.635,,CEMENT,0,1,0,1,1,-14.6,,,,,,,,,,,,,,,0.53,MIXED
+2026-11-27,M6,HCLTECH,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.635,,IT,0,0,0,1,1,-14.6,,,,,,,,,,,,,,,0.53,MIXED
+2026-11-27,M6,KPITTECH,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.635,,IT,0,0,0,1,1,-14.6,,,,,,,,,,,,,,,0.53,MIXED
+2026-11-27,M6,PHOENIXLTD,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.635,,REALTY,0,1,0,1,1,-14.6,,,,,,,,,,,,,,,0.53,MIXED
+2026-11-27,M6,PRESTIGE,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.635,,REALTY,0,1,0,1,1,-14.6,,,,,,,,,,,,,,,0.53,MIXED
+2026-11-27,M6,SHREECEM,,—,,15:14,914,,,,0,0,stale bar 15:14 (361s > 120s) — not alerted,0.635,,CEMENT,0,1,0,1,1,-14.6,,,,,,,,,,,,,,,0.53,MIXED
+2026-11-27,M6,TATAELXSI,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.635,,IT,0,0,0,1,1,-14.6,,,,,,,,,,,,,,,0.53,MIXED
+2026-11-27,M6,TECHM,,—,,15:15,915,,,,0,0,stale bar 15:15 (301s > 120s) — not alerted,0.635,,IT,0,0,0,1,1,-14.6,,,,,,,,,,,,,,,0.53,MIXED
+2026-11-27,M6,ULTRACEMCO,,—,,15:14,914,,,,0,0,stale bar 15:14 (361s > 120s) — not alerted,0.635,,CEMENT,0,1,0,1,1,-14.6,,,,,,,,,,,,,,,0.53,MIXED
