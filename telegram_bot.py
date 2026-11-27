@@ -69,11 +69,27 @@ def app_link_enabled():
     return os.environ.get("M16_APP_LINK", "1").strip().lower() not in {"0", "false", "no"}
 
 
-def app_url(symbol=None, security_id=None, deeplink="dhan://Login"):
-    """https link that hands `deeplink` to the Dhan Android app (web chart as fallback)."""
+def app_deeplink(symbol=None, security_id=None, deeplink=None):
+    """Route handed to the Dhan app; M16_APP_DEEPLINK overrides it without a code change.
+
+    Probed on 27-Nov-2026: the app honours `dhan://Login` only — twelve chart
+    routes (Chart/stocks/scrip/terminal/Search, symbol and securityId forms) all
+    land on the app home, and no Dhan host publishes an App Link, so an https
+    chart link always opens the browser. If Dhan ships a route later, set
+    M16_APP_DEEPLINK (placeholders `{symbol}`, `{instrument}`, `{security_id}`).
+    """
+    route = deeplink or os.environ.get("M16_APP_DEEPLINK") or "dhan://Login"
+    return (str(route)
+            .replace("{symbol}", str(symbol or ""))
+            .replace("{instrument}", chart_instrument(symbol, security_id) if symbol else "")
+            .replace("{security_id}", "" if security_id in (None, "") else str(security_id)))
+
+
+def app_url(symbol=None, security_id=None, deeplink=None):
+    """https link that hands the route to the Dhan Android app (web chart as fallback)."""
     tmpl = os.environ.get("M16_APP_URL_TEMPLATE") or DHAN_APP_URL_TEMPLATE
     fallback = chart_url(symbol, security_id) if symbol else "https://web.dhan.co/"
-    return (tmpl.replace("{deeplink}", quote(str(deeplink), safe=""))
+    return (tmpl.replace("{deeplink}", quote(app_deeplink(symbol, security_id, deeplink), safe=""))
                 .replace("{fallback}", quote(fallback, safe="")))
 
 

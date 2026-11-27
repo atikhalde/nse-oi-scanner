@@ -229,6 +229,15 @@ class ChartLinkTests(unittest.TestCase):
         self.assertNotIn("dhan.go.link", markup)
         self.assertNotIn("Dhan app", plain)
 
+    def test_the_in_app_route_is_configurable_without_a_code_change(self):
+        with patch.dict(os.environ, {"M16_APP_DEEPLINK": "dhan://Chart?symbol={symbol}"}):
+            markup = R.alert_text(self.event(), markup=True)
+        self.assertIn("adj_deeplink=dhan%3A%2F%2FChart%3Fsymbol%3DAXISBANK", markup)
+        self.assertNotIn("dhan%3A%2F%2FLogin", markup)
+        # the web fallback still points at the same stock's chart
+        self.assertIn("adj_fallback=https%3A%2F%2Fcharts.dhan.co%2F%3Fsymbol%3DNSEE5900%3AAXISBANK",
+                      markup)
+
     def test_the_app_link_template_is_overridable(self):
         with patch.dict(os.environ, {"M16_APP_URL_TEMPLATE":
                                      "https://example.test/app?to={fallback}"}):
