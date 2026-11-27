@@ -290,6 +290,8 @@ class ChartLinkTests(unittest.TestCase):
         self.assertIn('<a href="https://charts.dhan.co/?symbol=NSEE2031:M%26M">', healed)
         self.assertIn("</a></b>", healed)
         self.assertNotIn("&lt;a", healed)
+        self.assertIn(">M&amp;M</a></b>", healed)                # label survives the retry
+        self.assertNotIn("&amp;amp;", healed)
         app = [ln for ln in healed.splitlines() if "dhan.go.link" in ln]
         self.assertEqual(len(app), 1)
         self.assertTrue(app[0].startswith("📱 <a href=\"https://dhan.go.link/"))
