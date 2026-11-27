@@ -162,7 +162,7 @@ class AdvisoryAndDuplicateTests(unittest.TestCase):
         self.assertIn('Entry +1.09% beyond BOS', text)
         self.assertIn('tier B', text)
         markup = R.alert_text(event, markup=True)
-        self.assertIn('<b><a href="https://tradingcharts.co/terminal?symbol=NSEE5900:AXISBANK">'
+        self.assertIn('<b><a href="https://charts.dhan.co/?symbol=NSEE5900:AXISBANK">'
                       'AXISBANK</a></b> · BUY @ 111.20', markup)
         self.assertNotIn('&lt;', markup)
 
@@ -171,7 +171,7 @@ class AdvisoryAndDuplicateTests(unittest.TestCase):
         event = dict(st['events'][0])
         event['symbol'] = 'M&M'
         markup = R.alert_text(event, markup=True)
-        self.assertIn('<b><a href="https://tradingcharts.co/terminal?symbol=NSEE2031:M%26M">'
+        self.assertIn('<b><a href="https://charts.dhan.co/?symbol=NSEE2031:M%26M">'
                       'M&amp;M</a></b> · BUY @', markup)
         self.assertNotIn('&lt;', markup)
 
@@ -206,7 +206,7 @@ class ChartLinkTests(unittest.TestCase):
     def test_symbol_is_a_chart_link_and_a_bold_name(self):
         markup = R.alert_text(self.event(), markup=True)
         self.assertEqual(markup.count("<a href="), 1)
-        self.assertIn('<b><a href="https://tradingcharts.co/terminal?symbol=NSEE5900:AXISBANK">'
+        self.assertIn('<b><a href="https://charts.dhan.co/?symbol=NSEE5900:AXISBANK">'
                       'AXISBANK</a></b>', markup)
         self.assertIn("</a></b> · BUY @ 111.20", markup)
 
@@ -222,11 +222,13 @@ class ChartLinkTests(unittest.TestCase):
         self.assertIn('href="https://example.test/c?symbol=NSEE5900:AXISBANK&amp;tf=5"', markup)
         self.assertNotIn("&tf=5", markup)          # unescaped & would break the parser
 
-    def test_dhan_is_the_default_and_tradingview_is_not(self):
+    def test_the_link_stays_inside_dhan(self):
         url = R.tg.chart_url("AXISBANK", 5900)
-        self.assertTrue(url.startswith("https://tradingcharts.co/terminal?symbol="))
+        self.assertTrue(url.startswith("https://charts.dhan.co/?symbol="))
         self.assertNotIn("tradingview", url.lower())
         self.assertNotIn("tv.dhan.co", url)
+        self.assertNotIn("tradingcharts.co", url)   # the standalone site, not Dhan
+        self.assertEqual(url, "https://charts.dhan.co/?symbol=NSEE5900:AXISBANK")
 
     def test_the_instrument_key_uses_the_dhan_security_id_when_known(self):
         self.assertEqual(R.tg.chart_instrument("TCS", 11536), "NSEE11536:TCS")   # Dhan's own link
@@ -236,19 +238,19 @@ class ChartLinkTests(unittest.TestCase):
 
     def test_hyphenated_and_ampersand_symbols_are_url_quoted(self):
         self.assertEqual(R.tg.chart_url("BAJAJ-AUTO", 16669),
-                         "https://tradingcharts.co/terminal?symbol=NSEE16669:BAJAJ-AUTO")
+                         "https://charts.dhan.co/?symbol=NSEE16669:BAJAJ-AUTO")
         self.assertEqual(R.tg.chart_url("M&M", 2031),
-                         "https://tradingcharts.co/terminal?symbol=NSEE2031:M%26M")
+                         "https://charts.dhan.co/?symbol=NSEE2031:M%26M")
 
     def test_an_extra_name_without_an_id_still_links(self):
         markup = R.alert_text(self.event("ATHERENERGY"), markup=True)
-        self.assertIn('<a href="https://tradingcharts.co/terminal?symbol=NSE:ATHERENERGY">'
+        self.assertIn('<a href="https://charts.dhan.co/?symbol=NSE:ATHERENERGY">'
                       'ATHERENERGY</a>', markup)
 
     def test_the_parse_reject_retry_keeps_the_link(self):
         markup = R.alert_text(self.event("M&M"), markup=True)
         healed = R.tg._heal_html(markup)
-        self.assertIn('<a href="https://tradingcharts.co/terminal?symbol=NSEE2031:M%26M">', healed)
+        self.assertIn('<a href="https://charts.dhan.co/?symbol=NSEE2031:M%26M">', healed)
         self.assertIn("</a></b>", healed)
         self.assertNotIn("&lt;a", healed)
 

@@ -95,29 +95,32 @@ Three rules make this safe:
 - If the trigger candle is missing, record `CLOSE_UNAVAILABLE`; do not confirm using a different candle.
 - Historical reconstruction records events but suppresses stale alerts. Default close/send freshness budget is 30 seconds. Failed sends retry within that budget with a short backoff. An outbox left `sending` after a crash is uncertain and is not blindly duplicated.
 
-### Stock name opens the chart
+### Stock name opens the chart — inside Dhan
 
-In every M16 Telegram alert the bold stock name is also the chart link. It opens
-Dhan's own charting platform, **TradingCharts** (`tradingcharts.co`) — not
-TradingView — so a tap lands on the same charts the Dhan app shows:
+In every M16 Telegram alert the bold stock name is also the chart link, and it
+opens **Dhan's own charts at `charts.dhan.co`** (the TradingCharts engine served
+by DEXT, signed in with the Dhan account). It deliberately does **not** point at
+the standalone `tradingcharts.co`, at Tv.dhan.co, or at TradingView:
 
 ```
-<b><a href="https://tradingcharts.co/terminal?symbol=NSEE5900:AXISBANK">AXISBANK</a></b> · BUY @ 111.20
-<b><a href="https://tradingcharts.co/terminal?symbol=NSE:ATHERENERGY">ATHERENERGY</a></b> · BUY @ 96.40
+<b><a href="https://charts.dhan.co/?symbol=NSEE5900:AXISBANK">AXISBANK</a></b> · BUY @ 111.20
+<b><a href="https://charts.dhan.co/?symbol=NSE:ATHERENERGY">ATHERENERGY</a></b> · BUY @ 96.40
 ```
 
-- Instrument key: `NSEE<security-id>:<SYMBOL>` — exactly the form Dhan's own
-  "Launch This Stock" link uses (`tradingcharts.co/terminal?symbol=NSEE11536:TCS`
-  for TCS, whose id in `fno_universe.csv` is 11536). The id comes from
-  `fno_universe.csv` via `live_runner.SID`, i.e. the 210 F&O names.
-- A name with no security id (the 196 scan-only extras) uses TradingCharts'
+- Instrument key: `NSEE<security-id>:<SYMBOL>` — the form Dhan itself generates
+  (`tradingcharts.co/terminal?symbol=NSEE11536:TCS` for TCS, whose id in
+  `fno_universe.csv` is 11536). The id comes from `fno_universe.csv` via
+  `live_runner.SID`, i.e. the 210 F&O names.
+- A name with no security id (the 196 scan-only extras) uses the platform's
   published instrument string `NSE:<SYMBOL>` instead of dropping the link.
 - Built by `telegram_bot.chart_link()` / `chart_instrument()`; the instrument is
   URL-quoted (`M&M` → `NSEE2031:M%26M`) and the entire `href` is HTML-escaped,
   so no symbol can break Telegram's parser.
 - Template is one constant (`telegram_bot.CHART_URL_TEMPLATE`) and can be
   changed without a code edit through `M16_CHART_URL_TEMPLATE`; `{instrument}`
-  (or the older `{symbol}`) is replaced and the rest is used verbatim.
+  (or the older `{symbol}`) is replaced and the rest is used verbatim. Tests
+  assert the default stays on `charts.dhan.co` and never leaks to
+  `tradingcharts.co`, `tv.dhan.co` or TradingView.
 - Plain-text (TXT/PDF, `markup=False`) output is unchanged, and no alert
   content, gating or delivery logic changed.
 - `_heal_html()` (the one-shot retry after a 400 parse reject) preserves
