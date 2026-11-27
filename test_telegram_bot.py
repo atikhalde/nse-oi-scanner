@@ -76,8 +76,11 @@ def main():
         ok("heal keeps the chart link, escaping & once",
            tg._heal_html('<b><a href="https://x.test/?s=NSE%3AA&amp;tf=5">A</a></b>')
            == '<b><a href="https://x.test/?s=NSE%3AA&amp;tf=5">A</a></b>')
-        ok("chart link is bold, quoted and env-overridable",
-           tg.chart_link("M&M") == '<b><a href="https://tv.dhan.co/?symbol=NSE%3AM%26M">M&amp;M</a></b>')
+        ok("chart link is bold, quoted and points at Dhan TradingCharts",
+           tg.chart_link("M&M", 2031) ==
+           '<b><a href="https://tradingcharts.co/terminal?symbol=NSEE2031:M%26M">M&amp;M</a></b>')
+        ok("chart link falls back to the NSE ticker without an id",
+           tg.chart_url("ATHERENERGY") == "https://tradingcharts.co/terminal?symbol=NSE:ATHERENERGY")
     finally:
         tg.requests.post = old_post
         for k, v in saved.items():

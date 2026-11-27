@@ -18,25 +18,36 @@ import requests
 
 API = "https://api.telegram.org"
 
-# Chart that opens when the stock name in an alert is tapped. `{symbol}` is
-# URL-quoted for you. The default is Dhan's TradingView terminal with a
-# TradingView-style `?symbol=NSE:SYMBOL` parameter — confirm it once on the
-# phone; if Dhan rejects the parameter, override the whole template with
-# M16_CHART_URL_TEMPLATE (no code change), e.g.
-#   https://www.tradingview.com/chart/?symbol=NSE%3A{symbol}
-#   https://tv.dhan.co/chart/?symbol={symbol}.NS
-CHART_URL_TEMPLATE = "https://tv.dhan.co/?symbol=NSE%3A{symbol}"
+# Chart that opens when the stock name in an alert is tapped: Dhan's own
+# charting platform, TradingCharts (tradingcharts.co), not TradingView.
+# Dhan's own "Launch This Stock" links carry an instrument key of the form
+#   ?symbol=NSEE<security-id>:<SYMBOL>      e.g. NSEE11536:TCS
+# and the platform's published instrument string (the one chartscript's
+# request.security takes) is `NSE:<SYMBOL>`, used when a name has no known
+# security id (the non-F&O extras). `{instrument}` is URL-quoted for you;
+# `{symbol}` is accepted as the same placeholder for older overrides.
+# M16_CHART_URL_TEMPLATE overrides the whole template without a code change.
+CHART_URL_TEMPLATE = "https://tradingcharts.co/terminal?symbol={instrument}"
 
 
-def chart_url(symbol, template=None):
-    """Deep link to the stock's chart; the symbol is quoted, never interpolated raw."""
+def chart_instrument(symbol, security_id=None):
+    """TradingCharts instrument key: NSEE<id>:SYM when the id is known, else NSE:SYM."""
+    sid = "" if security_id is None else str(security_id).strip()
+    if sid in {"", "nan", "None", "-1"}:
+        return f"NSE:{symbol}"
+    return f"NSEE{sid}:{symbol}"
+
+
+def chart_url(symbol, security_id=None, template=None):
+    """Deep link to the stock's chart; the instrument is quoted, never interpolated raw."""
     tmpl = template or os.environ.get("M16_CHART_URL_TEMPLATE") or CHART_URL_TEMPLATE
-    return tmpl.replace("{symbol}", quote(str(symbol), safe=""))
+    inst = quote(chart_instrument(symbol, security_id), safe=":")
+    return tmpl.replace("{instrument}", inst).replace("{symbol}", inst)
 
 
-def chart_link(symbol):
+def chart_link(symbol, security_id=None):
     """The alert's stock name: bold, and a tap opens its chart (Telegram HTML)."""
-    return (f'<b><a href="{_html.escape(chart_url(symbol), quote=True)}">'
+    return (f'<b><a href="{_html.escape(chart_url(symbol, security_id), quote=True)}">'
             f'{esc(symbol)}</a></b>')
 
 

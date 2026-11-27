@@ -162,8 +162,8 @@ class AdvisoryAndDuplicateTests(unittest.TestCase):
         self.assertIn('Entry +1.09% beyond BOS', text)
         self.assertIn('tier B', text)
         markup = R.alert_text(event, markup=True)
-        self.assertIn('<b><a href="https://tv.dhan.co/?symbol=NSE%3AAXISBANK">AXISBANK</a></b>'
-                      ' · BUY @ 111.20', markup)
+        self.assertIn('<b><a href="https://tradingcharts.co/terminal?symbol=NSEE5900:AXISBANK">'
+                      'AXISBANK</a></b> · BUY @ 111.20', markup)
         self.assertNotIn('&lt;', markup)
 
     def test_symbol_with_an_ampersand_is_escaped_inside_the_bold_tag(self):
@@ -171,8 +171,8 @@ class AdvisoryAndDuplicateTests(unittest.TestCase):
         event = dict(st['events'][0])
         event['symbol'] = 'M&M'
         markup = R.alert_text(event, markup=True)
-        self.assertIn('<b><a href="https://tv.dhan.co/?symbol=NSE%3AM%26M">M&amp;M</a></b>'
-                      ' · BUY @', markup)
+        self.assertIn('<b><a href="https://tradingcharts.co/terminal?symbol=NSEE2031:M%26M">'
+                      'M&amp;M</a></b> · BUY @', markup)
         self.assertNotIn('&lt;', markup)
 
     def test_extended_entry_and_tier_a_are_labelled(self):
@@ -193,7 +193,7 @@ class AdvisoryAndDuplicateTests(unittest.TestCase):
 
 
 class ChartLinkTests(unittest.TestCase):
-    """Tapping the stock name in an alert opens that stock's chart."""
+    """Tapping the stock name in an alert opens Dhan's own TradingCharts chart."""
 
     def event(self, symbol="AXISBANK"):
         return dict(symbol=symbol, side="BUY", price=111.2, bos=110.0, pullback="none",
@@ -206,8 +206,8 @@ class ChartLinkTests(unittest.TestCase):
     def test_symbol_is_a_chart_link_and_a_bold_name(self):
         markup = R.alert_text(self.event(), markup=True)
         self.assertEqual(markup.count("<a href="), 1)
-        self.assertIn('<b><a href="https://tv.dhan.co/?symbol=NSE%3AAXISBANK">AXISBANK</a></b>',
-                      markup)
+        self.assertIn('<b><a href="https://tradingcharts.co/terminal?symbol=NSEE5900:AXISBANK">'
+                      'AXISBANK</a></b>', markup)
         self.assertIn("</a></b> · BUY @ 111.20", markup)
 
     def test_plain_text_alerts_stay_plain(self):
@@ -217,19 +217,38 @@ class ChartLinkTests(unittest.TestCase):
 
     def test_the_template_is_configurable_and_ampersands_are_escaped(self):
         with patch.dict(os.environ, {"M16_CHART_URL_TEMPLATE":
-                                     "https://example.test/c?symbol=NSE%3A{symbol}&tf=5"}):
+                                     "https://example.test/c?symbol={instrument}&tf=5"}):
             markup = R.alert_text(self.event(), markup=True)
-        self.assertIn('href="https://example.test/c?symbol=NSE%3AAXISBANK&amp;tf=5"', markup)
+        self.assertIn('href="https://example.test/c?symbol=NSEE5900:AXISBANK&amp;tf=5"', markup)
         self.assertNotIn("&tf=5", markup)          # unescaped & would break the parser
 
+    def test_dhan_is_the_default_and_tradingview_is_not(self):
+        url = R.tg.chart_url("AXISBANK", 5900)
+        self.assertTrue(url.startswith("https://tradingcharts.co/terminal?symbol="))
+        self.assertNotIn("tradingview", url.lower())
+        self.assertNotIn("tv.dhan.co", url)
+
+    def test_the_instrument_key_uses_the_dhan_security_id_when_known(self):
+        self.assertEqual(R.tg.chart_instrument("TCS", 11536), "NSEE11536:TCS")   # Dhan's own link
+        self.assertEqual(R.tg.chart_instrument("ATHERENERGY"), "NSE:ATHERENERGY")  # no id
+        self.assertEqual(R.security_id("AXISBANK"), 5900)
+        self.assertIsNone(R.security_id("ATHERENERGY"))
+
     def test_hyphenated_and_ampersand_symbols_are_url_quoted(self):
-        self.assertEqual(R.tg.chart_url("BAJAJ-AUTO"), "https://tv.dhan.co/?symbol=NSE%3ABAJAJ-AUTO")
-        self.assertEqual(R.tg.chart_url("M&M"), "https://tv.dhan.co/?symbol=NSE%3AM%26M")
+        self.assertEqual(R.tg.chart_url("BAJAJ-AUTO", 16669),
+                         "https://tradingcharts.co/terminal?symbol=NSEE16669:BAJAJ-AUTO")
+        self.assertEqual(R.tg.chart_url("M&M", 2031),
+                         "https://tradingcharts.co/terminal?symbol=NSEE2031:M%26M")
+
+    def test_an_extra_name_without_an_id_still_links(self):
+        markup = R.alert_text(self.event("ATHERENERGY"), markup=True)
+        self.assertIn('<a href="https://tradingcharts.co/terminal?symbol=NSE:ATHERENERGY">'
+                      'ATHERENERGY</a>', markup)
 
     def test_the_parse_reject_retry_keeps_the_link(self):
         markup = R.alert_text(self.event("M&M"), markup=True)
         healed = R.tg._heal_html(markup)
-        self.assertIn('<a href="https://tv.dhan.co/?symbol=NSE%3AM%26M">', healed)
+        self.assertIn('<a href="https://tradingcharts.co/terminal?symbol=NSEE2031:M%26M">', healed)
         self.assertIn("</a></b>", healed)
         self.assertNotIn("&lt;a", healed)
 
