@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: "session / once / dry-run / dedicated bot self-test / feed-probe / sector-probe / readiness-check"
+        description: "session / once / dry-run / bot self-test / app-link-probe / feed-probe / sector-probe / readiness-check"
         type: choice
         default: session
         options: [session, once, dry-run, test-alert, app-link-probe, feed-probe, sector-probe, readiness-check]

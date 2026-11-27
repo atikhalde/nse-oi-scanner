@@ -32,6 +32,16 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install -r requirements.txt
+      - name: refresh Dhan security ids for the extra/mapped names (best effort)
+        continue-on-error: true
+        run: |
+          # fno_universe.csv only carries ids for the 210 F&O names; without an id
+          # an extra name gets no Dhan candle fallback and its chart link can only
+          # use the NSE:<SYMBOL> form. The refresh self-validates against the F&O
+          # ids and writes nothing when the master disagrees, so this step can
+          # never poison the universe.
+          python -u live_runner.py --refresh-dhan-ids 2>&1 | tee dhan_ids.log || true
+          grep -h "DHAN IDS" dhan_ids.log | tail -1 || true
       - name: download history for the whole scan universe
         run: |
           set -o pipefail
@@ -52,6 +62,7 @@ jobs:
           git config user.name "paper-bot"
           git config user.email "paper-bot@users.noreply.github.com"
           git add data/ learn/
+          if [ -f dhan_security_ids.csv ]; then git add dhan_security_ids.csv; fi
           if git diff --cached --quiet; then
             echo "nothing to commit"
             exit 0

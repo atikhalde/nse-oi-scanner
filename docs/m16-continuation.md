@@ -189,12 +189,16 @@ The session refuses stale, outside-window and weekend starts. A continuous sessi
 - `state16.json`: daily seeds, cursors, phases, observations, outbox and diagnostics. Atomic writes; corrupt state fails closed. Date rollover starts a new ledger.
 - `activity_M16_YYYY-MM-DD.txt`: attachment-only full-day review. Existing TXT delivery is retained.
 - `audit_M16_YYYY-MM-DD.pdf`: detailed, paginated PDF audit with all saved data in an appendix, sent to both configured bots. TXT and PDF have independent per-bot delivery acknowledgements, so a failed PDF retry does not duplicate a successful TXT. Report-generation or delivery failure leaves EOD incomplete for retry; uncertain crash-sends remain available for manual review.
-- `.github/workflows/16_live_m16.yml`: isolated workflow/concurrency; saves only M16 state/reports.
+- `.github/workflows/16_live_m16.yml`: isolated workflow/concurrency; saves only M16 state/reports. Modes: `session`, `once`, `dry-run`, `test-alert` (ping + labelled sample with both links), `app-link-probe` (Dhan app deep-link candidates), `feed-probe`, `sector-probe`, `readiness-check`.
+- `dhan_ids.py` + `dhan_security_ids.csv`: Dhan instrument-master refresh for the extra/mapped names (self-validating; `live_runner.py --refresh-dhan-ids`), so every name has a pinned chart key and a Dhan candle fallback.
 
 ```sh
 python -m unittest -v test_m16_runner test_m16_audit
 python m16_runner.py --test-alert --dry-run
 python m16_runner.py --test-alert
+python m16_runner.py --probe-app-links --dry-run
+python live_runner.py --refresh-dhan-ids
+python m16_runner.py --readiness-check
 python m16_runner.py --session
 python m16_runner.py --replay-date 2026-11-20 --symbols AXISBANK
 ```
@@ -485,6 +489,17 @@ symbol is enough for its history to be fetched — no second file to remember.
   needs a valid prior-day cache) and is not polled, so a universe change can never
   crash a session. The readiness check keeps them under
   `universe.extra_missing_history`, outside `missing_history`/`stale_prior_day`.
+
+**Dhan security ids (`dhan_security_ids.csv`).** `fno_universe.csv` only carries
+an id for the 210 F&O names, so an extra/mapped name had no Dhan candle fallback
+and its chart link could only use the `NSE:<SYMBOL>` form. A best-effort step
+before the download (`live_runner.py --refresh-dhan-ids`) reads Dhan's public
+instrument master and writes `dhan_security_ids.csv` for the 406-name universe.
+It **self-validates**: the parsed map is only accepted when it agrees with the
+ids already trusted in `fno_universe.csv` (≥ 90 % of the checked names, ≥ 100 of
+them), so a changed column layout writes nothing instead of poisoning the
+universe; the step is `continue-on-error` and `live_runner.SID` keeps
+`fno_universe.csv` authoritative on every overlap.
 
 On 27-Nov the first full run left 7 of 196 uncovered; three were wrong tickers and
 are corrected: **ALEMBICPHARMA → APLLTD**, **BIRLASOFT → BSOFT**,
