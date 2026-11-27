@@ -10,10 +10,34 @@ Failure-visibility rules (08-Nov alert-blackout fix):
 """
 import html as _html
 import os
+import re
 import time
+from urllib.parse import quote
+
 import requests
 
 API = "https://api.telegram.org"
+
+# Chart that opens when the stock name in an alert is tapped. `{symbol}` is
+# URL-quoted for you. The default is Dhan's TradingView terminal with a
+# TradingView-style `?symbol=NSE:SYMBOL` parameter — confirm it once on the
+# phone; if Dhan rejects the parameter, override the whole template with
+# M16_CHART_URL_TEMPLATE (no code change), e.g.
+#   https://www.tradingview.com/chart/?symbol=NSE%3A{symbol}
+#   https://tv.dhan.co/chart/?symbol={symbol}.NS
+CHART_URL_TEMPLATE = "https://tv.dhan.co/?symbol=NSE%3A{symbol}"
+
+
+def chart_url(symbol, template=None):
+    """Deep link to the stock's chart; the symbol is quoted, never interpolated raw."""
+    tmpl = template or os.environ.get("M16_CHART_URL_TEMPLATE") or CHART_URL_TEMPLATE
+    return tmpl.replace("{symbol}", quote(str(symbol), safe=""))
+
+
+def chart_link(symbol):
+    """The alert's stock name: bold, and a tap opens its chart (Telegram HTML)."""
+    return (f'<b><a href="{_html.escape(chart_url(symbol), quote=True)}">'
+            f'{esc(symbol)}</a></b>')
 
 
 def configured():
@@ -26,8 +50,18 @@ def esc(s):
 
 
 def _heal_html(text):
-    """Escape every stray &, <, > but keep the only tags this codebase emits: <b></b>."""
-    return esc(text).replace("&lt;b&gt;", "<b>").replace("&lt;/b&gt;", "</b>")
+    """Escape every stray &, <, > but keep the tags this codebase emits.
+
+    `<b>`/`</b>` and the chart anchor `<a href="…">`/`</a>`. Inside an href the
+    only legal entity is `&amp;`, so the double-escaped form esc() produces is
+    folded back to one level instead of leaving a broken URL.
+    """
+    healed = esc(text).replace("&lt;b&gt;", "<b>").replace("&lt;/b&gt;", "</b>")
+    healed = healed.replace("&lt;/a&gt;", "</a>")
+    healed = re.sub(r'&lt;a href="(.*?)"&gt;',
+                    lambda m: '<a href="' + m.group(1).replace("&amp;amp;", "&amp;") + '">',
+                    healed, flags=re.S)
+    return healed
 
 
 def _err(r):

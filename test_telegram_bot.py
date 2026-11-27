@@ -73,6 +73,11 @@ def main():
         ok("heal escapes angle brackets", tg._heal_html("a < b > c") == "a &lt; b &gt; c")
         ok("heal keeps bold only",
            tg._heal_html("<b>X</b> F&O") == "<b>X</b> F&amp;O")
+        ok("heal keeps the chart link, escaping & once",
+           tg._heal_html('<b><a href="https://x.test/?s=NSE%3AA&amp;tf=5">A</a></b>')
+           == '<b><a href="https://x.test/?s=NSE%3AA&amp;tf=5">A</a></b>')
+        ok("chart link is bold, quoted and env-overridable",
+           tg.chart_link("M&M") == '<b><a href="https://tv.dhan.co/?symbol=NSE%3AM%26M">M&amp;M</a></b>')
     finally:
         tg.requests.post = old_post
         for k, v in saved.items():
