@@ -96,3 +96,48 @@ Feed-polled observation, not a guaranteed tick-time fill. Alerts only; no live o
   Monday id refresh every name should carry the pinned `NSEE<id>:` form.
 - History comes from Yahoo (60 d) with a Dhan fallback; a name Yahoo stops
   serving stays dormant until it appears in the Dhan master with an id.
+
+## Second verification pass — 27-Nov, 22:00 IST (re-run on merged main `6a68f527`)
+
+Everything below was executed again from a fresh checkout of the merged `main`
+and a rebuilt virtualenv.
+
+**One bug found and fixed on this pass.** `_heal_html()` — the one-shot retry
+after Telegram answers `400 can't parse entities` — re-escaped entities that were
+already correct, so a retry of an `M&M` alert showed `M&amp;M` literally and its
+href grew an extra level of escaping. Healing is now **idempotent**: entities
+emitted by this module are parked while the text is escaped and restored
+afterwards, so a correctly escaped message comes back byte-identical, while a raw
+`&`/`<`/`>` is still escaped. Covered by two new checks in `test_telegram_bot.py`
+and a label assertion in `test_m16_runner.py`.
+
+**Alert behaviour matrix — 16/16 PASS** (`charts.dhan.co` key, Adjust app link,
+same-stock fallback, no foreign hosts, exactly two anchors, id/no-id extras,
+`M&M` quoting, heal keeps both anchors and a clean label, heal idempotent, plain
+text has no anchors but keeps the app URL, body line unchanged, `M16_APP_LINK=0`,
+`M16_APP_DEEPLINK` override, labelled self-test sample, delayed alerts).
+
+**Workflow invariants — 21/21 PASS**: bootstrap `15 3 * * 1-5` / 90 min /
+`M16_EXTRA_UNIVERSE=1` / id refresh + id map committed + F&O verify + rebase
+retry; M16 `25 3 * * 1-5` and `5 10 * * 1-5` / 350 min / all eight modes with a
+run branch / probes excluded from state commits / advisory sector mode,
+duplicate suppression, EMA tolerance 0.30 %, late alerts, 3 discovery slices,
+0.20 s Yahoo spacing / CI regression module list intact.
+
+**Data**: 406 universe (210 F&O + 196 extra, no duplicates); 400 files carry
+2026-11-27; no missing or stale *active* name; ICICIPRULI dormant; the four
+Yahoo-less extras remain the only gaps and are dormant; 30 sectors, 63 active
+basket members, no empty basket.
+
+**State**: rollover produces a clean 2026-11-30 ledger (`eod_done: false`,
+0 events, 0 outbox, 0/12 automatic starts); calendar says 30-Nov `open`
+(regular Monday) and 28-Nov `closed` (weekend).
+
+**Tests (all re-run)**: `test_m16_runner` 147 OK · CI invocation **256 tests OK**
+(transport 13, sector 29, rally 4, calendar 19, feed 33, audit 11, runner 147) ·
+`test_m6_runner` ALL PASSED · `test_telegram_bot`, `test_m16_feed/sector/rally/
+audit/calendar/transport`, `test_fast_feed`, `test_m15_runner`,
+`test_m15_data_feed`, `test_master_scanner`, `test_trader` OK.
+
+`--readiness-check`: `ready: true`, target 2026-11-30, `missing_history: []`,
+`stale_prior_day: []`, `workflow.issues: []`.

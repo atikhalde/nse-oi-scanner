@@ -76,6 +76,11 @@ def main():
         ok("heal keeps the chart link, escaping & once",
            tg._heal_html('<b><a href="https://x.test/?s=NSE%3AA&amp;tf=5">A</a></b>')
            == '<b><a href="https://x.test/?s=NSE%3AA&amp;tf=5">A</a></b>')
+        already = ('<b><a href="https://x.test/?s=NSE%3AA&amp;tf=5">M&amp;M</a></b> F&amp;O')
+        ok("heal is idempotent (a correct message is untouched)",
+           tg._heal_html(already) == already and tg._heal_html(tg._heal_html(already)) == already)
+        ok("heal still escapes a raw ampersand",
+           tg._heal_html("P&L &lt") == "P&amp;L &amp;lt")
         ok("chart link is bold, quoted and stays on charts.dhan.co",
            tg.chart_link("M&M", 2031) ==
            '<b><a href="https://charts.dhan.co/?symbol=NSEE2031:M%26M">M&amp;M</a></b>')

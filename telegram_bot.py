@@ -129,18 +129,30 @@ def esc(s):
     return _html.escape(str(s), quote=False)
 
 
+# Entities this module already emits. They are parked while the text is escaped
+# and restored afterwards, so healing a correctly escaped message is a no-op:
+# without this, "M&amp;M" became "M&amp;amp;M" on the 400 retry and showed the
+# entity literally in the chat.
+_HEAL_ENTITIES = (("&amp;", "\x00amp\x00"), ("&lt;", "\x00lt\x00"), ("&gt;", "\x00gt\x00"))
+
+
 def _heal_html(text):
     """Escape every stray &, <, > but keep the tags this codebase emits.
 
-    `<b>`/`</b>` and the chart anchor `<a href="…">`/`</a>`. Inside an href the
-    only legal entity is `&amp;`, so the double-escaped form esc() produces is
-    folded back to one level instead of leaving a broken URL.
+    `<b>`/`</b>`, the chart/mirror anchors `<a href="…">`/`</a>`, and entities
+    that were already correct. Idempotent: healing an escaped message leaves it
+    byte-identical, so the retry can neither double-escape a label nor break a
+    URL's `&amp;`.
     """
-    healed = esc(text).replace("&lt;b&gt;", "<b>").replace("&lt;/b&gt;", "</b>")
+    healed = str(text)
+    for entity, token in _HEAL_ENTITIES:
+        healed = healed.replace(entity, token)
+    healed = esc(healed)
+    healed = healed.replace("&lt;b&gt;", "<b>").replace("&lt;/b&gt;", "</b>")
     healed = healed.replace("&lt;/a&gt;", "</a>")
-    healed = re.sub(r'&lt;a href="(.*?)"&gt;',
-                    lambda m: '<a href="' + m.group(1).replace("&amp;amp;", "&amp;") + '">',
-                    healed, flags=re.S)
+    healed = re.sub(r'&lt;a href="(.*?)"&gt;', r'<a href="\1">', healed, flags=re.S)
+    for entity, token in _HEAL_ENTITIES:
+        healed = healed.replace(token, entity)
     return healed
 
 
