@@ -18,16 +18,18 @@ import requests
 
 API = "https://api.telegram.org"
 
-# Chart that opens when the stock name in an alert is tapped: Dhan's own
-# charting platform, TradingCharts (tradingcharts.co), not TradingView.
-# Dhan's own "Launch This Stock" links carry an instrument key of the form
+# Chart that opens when the stock name in an alert is tapped. It stays inside
+# Dhan: charts.dhan.co is Dhan's own charts home (the TradingCharts engine
+# served by DEXT, signed in with the Dhan account), so no separate
+# tradingcharts.co/Google login is involved.
+# The instrument key is the one Dhan's own "Launch This Stock" links carry:
 #   ?symbol=NSEE<security-id>:<SYMBOL>      e.g. NSEE11536:TCS
 # and the platform's published instrument string (the one chartscript's
 # request.security takes) is `NSE:<SYMBOL>`, used when a name has no known
 # security id (the non-F&O extras). `{instrument}` is URL-quoted for you;
 # `{symbol}` is accepted as the same placeholder for older overrides.
 # M16_CHART_URL_TEMPLATE overrides the whole template without a code change.
-CHART_URL_TEMPLATE = "https://tradingcharts.co/terminal?symbol={instrument}"
+CHART_URL_TEMPLATE = "https://charts.dhan.co/?symbol={instrument}"
 
 
 def chart_instrument(symbol, security_id=None):
