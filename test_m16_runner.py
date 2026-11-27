@@ -10,6 +10,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 import pandas as pd
+import dhan_ids
 import m16_model as M
 import m16_runner as R
 
@@ -364,6 +365,86 @@ class AppLinkProbeTests(unittest.TestCase):
             self.assertTrue(R.probe_app_links("AXISBANK"))
             self.assertEqual(send.call_count, 1)
             self.assertIn("https://dhan.go.link/", send.call_args[0][2])
+
+
+DETAILED_MASTER = """SEM_EXM_EXCH_ID,SEM_SEGMENT,SEM_SMST_SECURITY_ID,SEM_TRADING_SYMBOL,SEM_CUSTOM_SYMBOL,SEM_INSTRUMENT_NAME
+NSE,E,11536,TCS,TCS,EQUITY
+NSE,E,2885,RELIANCE,RELIANCE,EQUITY
+NSE,E,5900,AXISBANK,AXISBANK,EQUITY
+BSE,E,500325,RELIANCE,RELIANCE,EQUITY
+NSE,D,5001,NIFTY,FUTIDX,FUTIDX
+"""
+COMPACT_MASTER = """EXCH_ID,SEGMENT,SECURITY_ID,SYMBOL,INSTRUMENT
+NSE,E,5900,AXISBANK,EQUITY
+NSE,E,2031,M&M,EQUITY
+"""
+
+
+class DhanIdTests(unittest.TestCase):
+    """Extra/mapped names need a Dhan id: candle fallback + pinned chart link."""
+
+    def test_detailed_master_keeps_nse_equity_only(self):
+        parsed = dhan_ids.parse_master(DETAILED_MASTER)
+        self.assertEqual(parsed, {"TCS": 11536, "RELIANCE": 2885, "AXISBANK": 5900})
+
+    def test_compact_master_layout_also_parses(self):
+        self.assertEqual(dhan_ids.parse_master(COMPACT_MASTER), {"AXISBANK": 5900, "M&M": 2031})
+
+    def test_unknown_layout_parses_to_nothing(self):
+        self.assertEqual(dhan_ids.parse_master("foo,bar\n1,2\n"), {})
+
+    def test_validation_accepts_a_matching_map(self):
+        with patch.object(dhan_ids, "_MIN_AGREED", 1):
+            ok, agreed, checked = dhan_ids.validate({"TCS": 11536, "X": 1}, {"TCS": 11536})
+        self.assertTrue(ok)
+        self.assertEqual((agreed, checked), (1, 1))
+
+    def test_validation_rejects_a_shifted_map(self):
+        with patch.object(dhan_ids, "_MIN_AGREED", 1):
+            ok, agreed, checked = dhan_ids.validate({"TCS": 99, "RELIANCE": 98},
+                                                      {"TCS": 11536, "RELIANCE": 2885})
+        self.assertFalse(ok)
+        self.assertEqual((agreed, checked), (0, 2))
+
+    def test_save_writes_only_the_wanted_symbols_and_load_round_trips(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            fp = Path(tmp) / "ids.csv"
+            n = dhan_ids.save({"TCS": 11536, "ZZZ": 1}, ["TCS", "AXISBANK"], fp)
+            self.assertEqual(n, 1)
+            self.assertEqual(dhan_ids.load(fp), {"TCS": 11536})
+            self.assertTrue(fp.read_text().startswith("symbol,securityId\n"))
+
+    def test_refresh_rejects_a_disagreeing_master_without_writing(self):
+        with tempfile.TemporaryDirectory() as tmp, patch.object(
+                dhan_ids, "MAP_FILE", Path(tmp) / "ids.csv"), patch.object(
+                dhan_ids, "_MIN_AGREED", 1), patch.object(
+                dhan_ids, "fetch_master", return_value=({"TCS": 1}, "test://master")):
+            self.assertFalse(R.shared.L.mode_refresh_dhan_ids())
+            self.assertFalse((Path(tmp) / "ids.csv").exists())
+
+    def test_refresh_accepts_and_limits_the_map_to_the_universe(self):
+        with tempfile.TemporaryDirectory() as tmp, patch.object(
+                dhan_ids, "MAP_FILE", Path(tmp) / "ids.csv"), patch.object(
+                dhan_ids, "_MIN_AGREED", 1), patch.object(
+                dhan_ids, "fetch_master",
+                return_value=({"TCS": 11536, "NOT_IN_UNIVERSE": 1}, "test://master")):
+            self.assertTrue(R.shared.L.mode_refresh_dhan_ids())
+            self.assertEqual(dhan_ids.load(Path(tmp) / "ids.csv"), {"TCS": 11536})
+
+    def test_an_extra_name_with_a_dhan_id_gets_the_pinned_chart_key(self):
+        with patch.dict(R.shared.L.SID, {"HEG": 1234}, clear=False):
+            self.assertEqual(R.security_id("HEG"), 1234)
+            event = dict(symbol="HEG", side="BUY", price=100.0, bos=99.0, pullback="none",
+                         signal="CLOSE_CONFIRMED",
+                         seed=pd.Timestamp("2026-11-20 09:30", tz="Asia/Kolkata"),
+                         bar=pd.Timestamp("2026-11-20 09:45", tz="Asia/Kolkata"),
+                         observed=pd.Timestamp("2026-11-20 09:45:20", tz="Asia/Kolkata"),
+                         kind="CLOSE_CONFIRMED", sector_gate={"status": "disabled"})
+            markup = R.alert_text(event, markup=True)
+        self.assertIn('href="https://charts.dhan.co/?symbol=NSEE1234:HEG"', markup)
+
+    def test_the_universe_ids_never_override_fno_universe_csv(self):
+        self.assertEqual({s: R.shared.L.SID[s] for s in R.shared.L.FNO_SID}, R.shared.L.FNO_SID)
 
 
 class BootstrapTests(unittest.TestCase):

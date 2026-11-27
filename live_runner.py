@@ -74,9 +74,15 @@ EX_OPEN_FROM = "09:45"
 # (chart-window rule, user-confirmed 23-Jul-2026).
 CHART_MIN_TIME = "09:26"
 
+import dhan_ids
+
 UNI = pd.read_csv(ROOT / "fno_universe.csv")
 SYMS = UNI["symbol"].tolist()
-SID = dict(zip(UNI["symbol"], UNI["securityId"]))
+# fno_universe.csv ids always win; dhan_security_ids.csv (refreshed best-effort by
+# the 08:45 bootstrap) fills in the extra/mapped names, which have no id here and
+# otherwise get neither a Dhan candle fallback nor a pinned TradingCharts link.
+FNO_SID = dict(zip(UNI["symbol"], UNI["securityId"]))
+SID = {**dhan_ids.load(ROOT / dhan_ids.MAP_FILE), **FNO_SID}
 # Snapshot of the F&O universe. M16 appends its scan-only extras to SYMS in
 # place when both run in one process, so the extras helper must not rely on the
 # live list to tell the two apart.
@@ -325,6 +331,30 @@ def _bootstrap_one(sym, since, to):
         except Exception as e:
             print(f"  dhan fallback {sym}: {e}")
     return None
+
+
+def mode_refresh_dhan_ids():
+    """Best-effort: refresh dhan_security_ids.csv from Dhan's instrument master.
+
+    Never fatal — a failure leaves the previous map (or no map) in place and only
+    prints a warning line the workflow surfaces.
+    """
+    import dhan_ids as ids
+    try:
+        parsed, url = ids.fetch_master()
+    except Exception as e:
+        print(f"DHAN IDS FAILED: {e}")
+        return False
+    ok, agreed, checked = ids.validate(parsed, FNO_SID)
+    if not ok:
+        print(f"DHAN IDS REJECTED: parsed {len(parsed)} NSE equities but agreed "
+              f"{agreed}/{checked} with fno_universe.csv — map not written ({url})")
+        return False
+    written = ids.save(parsed, bootstrap_symbols(), ROOT / ids.MAP_FILE)
+    missing = [s for s in bootstrap_symbols() if s not in parsed]
+    print(f"DHAN IDS ok={written} agreed={agreed}/{checked} source={url} "
+          f"unresolved={missing}")
+    return written > 0
 
 
 def mode_bootstrap(kind="full"):
@@ -593,6 +623,7 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--test", action="store_true")
     ap.add_argument("--bootstrap", nargs="?", const="full", choices=["full", "refresh-60d"])
+    ap.add_argument("--refresh-dhan-ids", action="store_true")
     ap.add_argument("--live", action="store_true")
     ap.add_argument("--loop", type=int, default=1, help="run N consecutive live cycles (~4 min apart)")
     ap.add_argument("--replay")
@@ -600,6 +631,8 @@ if __name__ == "__main__":
     a = ap.parse_args()
     if a.test:
         sys.exit(mode_test())
+    elif a.refresh_dhan_ids:
+        sys.exit(0 if mode_refresh_dhan_ids() else 1)
     elif a.bootstrap:
         mode_bootstrap(a.bootstrap)
     elif a.live:
