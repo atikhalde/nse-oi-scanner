@@ -44,10 +44,12 @@ jobs:
       M16_CHAT_ID_2: ${{ secrets.M16_CHAT_ID_2 }}
       M16_POLL_SECONDS: "1"
       M16_YAHOO_COORDINATE: "1"
-      # 5 starts/s. With discovery sliced in three (below) a bucket is ~70
-      # symbols + ~62 basket members + 32 index series (~165 requests, ~33s),
-      # inside the close budget and far below the 10/s burst that still tripped
-      # Yahoo's 429 cooldown on 26-Nov (1201 of 2667 requests).
+      # 5 starts/s. With discovery sliced in three (below) a bucket is ~136
+      # symbols (210 F&O + 196 extra-universe, 406 total) + ~62 basket members +
+      # 32 index series (~230 requests, ~46s), still far below the 10/s burst that
+      # tripped Yahoo's 429 cooldown on 26-Nov (1201 of 2667 requests). If 429s
+      # return, raise this to 0.25 or trim m16_extra_universe.csv; do not raise
+      # M16_DISCOVERY_SLICES past 3 (a slower revisit breaks the 15-min late window).
       M16_YAHOO_REQUEST_INTERVAL: "0.20"
       M16_ENGINE_WORKERS: "4"
       M16_SECTOR_WORKERS: "2"
@@ -81,9 +83,11 @@ jobs:
       # seed (the entry candle itself still has to hold them strictly). 358
       # seeds died on EMA noise in four sessions, 95% of them within 0.30%.
       M16_EMA_TOLERANCE_PCT: "0.30"
-      # Scan the non-F&O names in m16_extra_universe.csv (GRSE, PARAS,
-      # DATAPATTNS, ASTRAMICRO, BEML) for STOCK alerts only. Sector baskets and
-      # every sector score are untouched; set "0" to scan the F&O map alone.
+      # Scan the 196 major non-F&O names in m16_extra_universe.csv (GRSE, PARAS,
+      # THERMAX, IRCTC, NAVINFLUOR, JKCEMENT, ABBOTINDIA, SUNTV, KPRMILL, ...) for
+      # STOCK alerts only. Names are polled from the session after workflow
+      # 2. Bootstrap writes their history. Sector baskets and every sector score
+      # are untouched; set "0" to scan the F&O map alone.
       M16_EXTRA_UNIVERSE: "1"
       # Delayed re-entry policy: a close-confirmed BOS found up to 15 min late
       # still alerts (priced at discovery, labelled DELAYED) while price is

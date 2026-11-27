@@ -75,6 +75,10 @@ CHART_MIN_TIME = "09:26"
 UNI = pd.read_csv(ROOT / "fno_universe.csv")
 SYMS = UNI["symbol"].tolist()
 SID = dict(zip(UNI["symbol"], UNI["securityId"]))
+# Snapshot of the F&O universe. M16 appends its scan-only extras to SYMS in
+# place when both run in one process, so the extras helper must not rely on the
+# live list to tell the two apart.
+FNO_SYMBOLS = frozenset(SYMS)
 
 
 def now_ist():
@@ -273,7 +277,7 @@ def extra_universe_symbols():
         if not line or line.lower().startswith("symbol"):
             continue
         sym = line.split(",")[0].strip().upper()
-        if sym and sym not in SYMS and sym not in out:
+        if sym and sym not in FNO_SYMBOLS and sym not in out:
             out.append(sym)
     return out
 
@@ -289,7 +293,7 @@ def mode_bootstrap(kind="full"):
     extras = extra_universe_symbols()
     if extras:
         print(f"M16 extra universe history: {', '.join(extras)}")
-    for sym in list(SYMS) + extras:
+    for sym in list(dict.fromkeys(list(SYMS) + extras)):
         df = None
         df = feeds.fetch_bars_yahoo(sym, "60d")
         if df is not None and not df.empty:

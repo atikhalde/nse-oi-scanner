@@ -334,6 +334,17 @@ Fix shipped: `m16_extra_universe.csv` (+ `M16_EXTRA_UNIVERSE=1`) adds those five
 as `DEF` to the **scanning** list only. They never join a sector basket, so no
 sector score changes.
 
+That file now carries **196 major liquid non-F&O names across 32 sector labels**
+— the rest of the defence complex (MTARTECH, ZENTEC, AZAD, DCXINDIA, IDEAFORGE),
+capital goods (THERMAX, HONAUT, SCHAEFFLER, TIMKEN, SKFINDIA, TRITURBINE),
+travel (IRCTC), chemicals (NAVINFLUOR, DEEPAKNTR, AARTIIND, ATUL), cement
+(JKCEMENT, RAMCOCEM, JKLAKSHMI), pharma (ABBOTINDIA, AJANTPHARM, NATCOPHARM),
+metals (JSL, HINDCOPPER, JINDALSAW), realty (BRIGADE, SOBHA), textiles
+(KPRMILL, TRIDENT), media (SUNTV, PVRINOX, ZEEL), sugar, shipping and so on.
+Same rule as the five: scan-only, never in a basket. `TEXTILE`/`MEDIA`/`SUGAR`/
+`SHIPPING` have no basket, so those alerts print `sector unverified` instead of
+a score — honest context rather than a fabricated one.
+
 ### 8.2 BDL: in the universe, tracked, then lost — twice
 
 BDL seeded `BUY-EX` at 09:30 and ran 1041 → 1092.75 by 10:40. Then:
