@@ -411,13 +411,30 @@ heartbeat status reports a lock error rather than hanging on the budget read.
 See `docs/m16-worker-lock-stall.md` for the uploaded stalled-run evidence,
 subprocess regressions and deployment-verification limits.
 
-### Extra-universe history
+### History bootstrap (workflow 2, 08:45 IST weekdays)
 
-`data/history/<SYMBOL>.csv` is committed and refreshed by workflow **2. Bootstrap**
-(`live_runner.py --bootstrap refresh-60d`, 08:45 IST weekdays), which now also
-fetches the `m16_extra_universe.csv` names. Until a name has its history file it
-produces **no seeds** (`analyze()` needs a valid prior-day cache) — that is by
-design, so a universe change can never crash a session. The readiness check
-reports those names under `universe.extra_missing_history` and keeps them out of
-`missing_history`/`stale_prior_day`, so they cannot fail the pre-session gate.
-The first bootstrap after merging this change fills them in.
+`live_runner.py --bootstrap refresh-60d` writes `data/history/<SYMBOL>.csv` for
+**the F&O universe ∪ the extra universe ∪ every symbol in `fno_sector_map.csv`**
+(`bootstrap_symbols()`), 406 names today. Including the sector map means mapping a
+symbol is enough for its history to be fetched — no second file to remember.
+
+- Per symbol: Yahoo 60d, **one retry** after 1.5 s (transient 429 / empty body),
+  then the Dhan fallback when `DHAN_TOKEN` is set. The last line of the log is
+  machine-readable: `BOOTSTRAP RESULT ok=N total=N missing_fno=[…] missing_extra=[…]`,
+  and the workflow turns any gap into an `::warning::` annotation instead of
+  failing the run.
+- The job budget is **90 minutes** (406 symbols × ~2.5 s throttled).
+- After the commit a verification step re-reads every file: an **F&O** name whose
+  history is missing or older than the previous session fails the job, except a
+  name whose Yahoo series stopped more than a week earlier (dormant, e.g.
+  ICICIPRULI, already excluded from polling). Extra/mapped gaps only warn.
+- Until a name has a fresh history file it produces **no seeds** (`analyze()`
+  needs a valid prior-day cache) and is not polled, so a universe change can never
+  crash a session. The readiness check keeps them under
+  `universe.extra_missing_history`, outside `missing_history`/`stale_prior_day`.
+
+On 27-Nov the first full run left 7 of 196 uncovered; three were wrong tickers and
+are corrected: **ALEMBICPHARMA → APLLTD**, **BIRLASOFT → BSOFT**,
+**GEOJIT → GEOJITFSL**. The other four (ATHERENERGY, GSPL, GUJGASLTD,
+JBCHEPHARM) are valid NSE symbols that Yahoo did not serve that morning; the
+retry and the daily refresh pick them up, and they stay dormant meanwhile.

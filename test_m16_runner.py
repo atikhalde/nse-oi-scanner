@@ -189,6 +189,46 @@ class AdvisoryAndDuplicateTests(unittest.TestCase):
         self.assertIn('undercut EMA9/10 by 0.19%', R.alert_text(event))
 
 
+class BootstrapTests(unittest.TestCase):
+    """The 08:45 history refresh must cover every symbol the models can name."""
+
+    def test_bootstrap_covers_the_fno_universe_and_every_mapped_name(self):
+        import live_runner as L
+        syms = L.bootstrap_symbols()
+        fno = [r['symbol'] for r in csv.DictReader((R.ROOT / 'fno_universe.csv').open())]
+        mapped = [r['symbol'] for r in csv.DictReader((R.ROOT / 'fno_sector_map.csv').open())]
+        self.assertEqual(len(syms), len(set(syms)))              # no duplicates
+        self.assertEqual(syms[:len(fno)], fno)                   # F&O first, in file order
+        self.assertEqual(set(syms), set(mapped))                 # 406 = 210 F&O + 196
+        self.assertEqual(len(syms), 406)
+        self.assertTrue({s for s, _ in R.extra_universe()} <= set(syms))
+
+    def test_bootstrap_retries_yahoo_once_before_giving_up(self):
+        import live_runner as L
+        frame = pd.DataFrame([dict(dt='2026-11-27 15:25:00+05:30', open=1, high=1, low=1,
+                                   close=1, volume=1)])
+        with patch.object(L.feeds, 'fetch_bars_yahoo', side_effect=[None, frame]) as fetch, \
+                patch.object(L.time, 'sleep'):
+            got = L._bootstrap_one('AXISBANK', '2026-08-01 09:15:00', '2026-11-27 15:30:00')
+        self.assertIs(got, frame)
+        self.assertEqual(fetch.call_count, 2)
+        with patch.dict(os.environ, {'DHAN_TOKEN': ''}), patch.object(
+                L.feeds, 'fetch_bars_yahoo', return_value=None) as fetch, patch.object(L.time, 'sleep'):
+            self.assertIsNone(L._bootstrap_one('NOPE', 'a', 'b'))
+        self.assertEqual(fetch.call_count, 2)
+
+    def test_renamed_tickers_are_the_real_nse_symbols(self):
+        mapped = {r['symbol']: r['sector'] for r in csv.DictReader((R.ROOT / 'fno_sector_map.csv').open())}
+        self.assertEqual(mapped.get('APLLTD'), 'PHA')            # Alembic Pharmaceuticals
+        self.assertEqual(mapped.get('BSOFT'), 'IT')              # Birlasoft
+        self.assertEqual(mapped.get('GEOJITFSL'), 'CAPMKTS')     # Geojit Financial
+        for stale in ('ALEMBICPHARMA', 'BIRLASOFT', 'GEOJIT'):
+            self.assertNotIn(stale, mapped)
+        extras = {s for s, _ in R.extra_universe()}
+        self.assertTrue({'APLLTD', 'BSOFT', 'GEOJITFSL'} <= extras)
+        self.assertEqual(len(mapped), 406)
+
+
 class BasketMembershipTests(unittest.TestCase):
     """BEML joins the DEF group without touching any sector score."""
 
