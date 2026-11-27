@@ -591,7 +591,9 @@ def notify_health(st, now, dry_run=False):
             if not model.before(now, "11:00:00") and discovery_missing: reasons.append("morning discovery incomplete")
             details[sym] = dict(reasons=reasons, latest=latest, cursor=cursor, expected=expected.isoformat())
     st["monitoring_health"] = dict(at=now.isoformat(), affected=bad, watched=watched_symbols, details=details)
-    sector_unknown = st.get("sector_gate_required") and model.before(now, "12:35:00") and m16_sector.decision(st, "__HEALTH__", "BUY", now).get("reason") in {"sector board unavailable", "sector board stale"}
+    sector_reason = (m16_sector.decision(st, "__HEALTH__", "BUY", now).get("reason")
+                     if st.get("sector_gate_required") and model.before(now, "12:35:00") else None)
+    sector_unknown = sector_reason in {"sector board unavailable", "sector board stale"}
     st["monitoring_health"]["sector_gate_unavailable"] = bool(sector_unknown)
     partial_sectors = (st.get("sector_snapshots") or [{}])[-1].get("missing_sectors", []) if st.get("sector_gate_required") and model.before(now, "12:35:00") else []
     st["monitoring_health"]["missing_sectors"] = partial_sectors
@@ -605,7 +607,25 @@ def notify_health(st, now, dry_run=False):
     notices = st.setdefault("health_notices", {})
     if old.get("status") and old.get("complete"):
         notices.setdefault(old["status"], old)
-    notice = notices.setdefault(status, dict(complete=False))
+    key, recovery = status, False
+    if status == "healthy" and notices.get("healthy", {}).get("complete"):
+        # The healthy state was already announced once. If the last *delivered*
+        # notice was a degradation, entry alerts were reported as blocked and
+        # silence would otherwise leave the operator unable to tell whether
+        # they resumed. Announce that recovery, bounded so flapping is quiet.
+        cap = max(0, int(os.getenv("M16_MAX_RECOVERIES", "2")))
+        quiet = max(0., float(os.getenv("M16_RECOVERY_QUIET_SECONDS", "120")))
+        delivered = int(st.get("health_recoveries", 0))
+        age = (model.stamp(now)-model.stamp(old["at"])).total_seconds() if old.get("at") else 0
+        # A recovery whose delivery is still unconfirmed retries immediately;
+        # the quiet period only stops fresh announcements from flapping.
+        pending = (not old.get("complete", True)) and str(old.get("key", "")).startswith("recovered")
+        if not pending and (old.get("status") != "degraded" or delivered >= cap or age < quiet):
+            st["health_notice"] = dict(notices["healthy"], status=status, affected=bad,
+                                      checked_at=now.isoformat())
+            return
+        key, recovery = f"recovered:{delivered+1}", True
+    notice = notices.setdefault(key, dict(complete=False))
     if notice.get("complete"):
         st["health_notice"] = dict(notice, status=status, affected=bad,
                                   checked_at=now.isoformat())
@@ -614,12 +634,28 @@ def notify_health(st, now, dry_run=False):
             "Live alerts may be missed or delayed; stale entries will NOT be sent. "
             "Polling is not tick-time execution.") if bad else (
             "M16 feed monitoring healthy on latest poll; polling latency still applies.")
+    if recovery:
+        text = ("M16 RECOVERED: feed and sector inputs are current again; entry alerts are unblocked. "
+                "Stale entries were not sent and polling latency still applies.")
     if partial_sectors and not sector_unknown:
         if not bad:
             text = "Healthy-sector prices are current; sector coverage remains degraded."
         text = "M16 incomplete sectors: "+", ".join(partial_sectors)+". Affected sectors blocked; other alerts require guaranteed top-three rank despite missing sectors. " + text
     if sector_unknown:
-        text = "M16 sector board missing/stale: entry alerts blocked until current persistence data is available. " + text
+        # Name which of the two states it is, when the last good board existed
+        # and why the refresh is failing: a 30-second gap and an all-morning
+        # outage read identically in the old wording.
+        detail = []
+        boards = st.get("sector_snapshots") or []
+        if boards:
+            detail.append("last board " + model.stamp(boards[-1]["close"]).strftime("%H:%M"))
+        refresh = st.get("sector_health") or {}
+        if refresh.get("reason") and not refresh.get("ok", True):
+            detail.append("refresh failing: " + str(refresh["reason"])[:120])
+        state = sector_reason.split("board ")[-1] if sector_reason else "unknown"
+        text = ("M16 sector board missing/stale: entry alerts blocked until current persistence "
+                "data is available (state: " + state +
+                ("; " + "; ".join(detail) if detail else "") + "). ") + text
     if st.get("monitoring_health", {}).get("provider_throttled"):
         text += " Provider rate limit (HTTP 429); M16 is pausing requests and resumes automatically."
     if bad:
@@ -631,9 +667,13 @@ def notify_health(st, now, dry_run=False):
                                if old.get("status") == status else {})
     complete = True if dry_run else deliver_targets(st, ledger,
         lambda token, chat: tg.send_message_to(token, chat, text))
-    notice.update(status=status, at=now.isoformat(), affected=bad,
+    notice.update(status=status, at=now.isoformat(), affected=bad, key=key,
                   deliveries=ledger, complete=complete)
-    st["health_notice"] = dict(notice)
+    if recovery and complete:
+        st["health_recoveries"] = int(st.get("health_recoveries", 0)) + 1
+    # An unconfirmed recovery keeps the degraded marker so the next cycle
+    # re-enters this branch and retries only the destinations still missing.
+    st["health_notice"] = dict(notice, status="degraded" if recovery and not complete else status)
     print(text)
 
 
@@ -813,6 +853,14 @@ def live_session(st, cache, max_minutes, dry_run=False):
                     reason = str(exc)
                     if reason != st.get("sector_health", {}).get("reason"):
                         print("M16 sector refresh unavailable: "+reason)
+                    # Keep a bounded trail of refresh failures so the EOD state
+                    # and notices can say *why* the board was unavailable.
+                    trail = st.setdefault("sector_refresh_failures", [])
+                    last = trail[-1] if trail else {}
+                    if (last.get("reason") != reason or not last.get("at") or
+                            (model.stamp(now)-model.stamp(last["at"])).total_seconds() >= 60):
+                        trail.append(dict(at=now.isoformat(), reason=str(reason)[:200]))
+                        del trail[:-20]
                     st["sector_health"] = dict(ok=False, active=True, reason=reason, at=now.isoformat())
                 sector_future = None
             first_close_ready = not model.before(now, "09:20:00")

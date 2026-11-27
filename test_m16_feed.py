@@ -227,6 +227,119 @@ class FeedTests(unittest.TestCase):
             R.notify_health(st, NOW+pd.Timedelta(minutes=10))
         send.assert_not_called()
 
+    def test_sector_block_notice_names_state_last_board_and_reason(self):
+        st = M.fresh_state('2026-11-23')
+        st['sector_gate_required'] = True
+        st['feed_health'] = {'TEST': dict(ok=True, at=NOW.isoformat(),
+                                          latest=frame().iloc[-1]['dt'].isoformat())}
+        st['sector_snapshots'] = [dict(close='2026-11-23T09:20:00+05:30',
+                                       observed='2026-11-23T09:20:20+05:30',
+                                       sectors={}, complete=True)]
+        st['sector_health'] = dict(ok=False, active=True, at=NOW.isoformat(),
+                                   reason='sector board global/index inputs missing for target: 09:20')
+        with patch.object(R.shared.L, 'SYMS', ['TEST']), patch.object(
+                R.m16_sector, 'decision', return_value={'status': 'unknown',
+                                                        'reason': 'sector board stale'}), patch(
+                'builtins.print') as out:
+            R.notify_health(st, NOW, True)
+        text = out.call_args.args[0]
+        self.assertIn('sector board missing/stale', text)
+        self.assertIn('state: stale', text)
+        self.assertIn('last board 09:20', text)
+        self.assertIn('refresh failing', text)
+        self.assertEqual(st['health_notice']['status'], 'degraded')
+
+    def test_sector_recovery_is_announced_once_then_bounded(self):
+        st = M.fresh_state('2026-11-23')
+        st['sector_gate_required'] = True
+        st['sector_snapshots'] = [dict(close='2026-11-23T09:20:00+05:30',
+                                       observed='2026-11-23T09:20:20+05:30',
+                                       sectors={}, complete=True)]
+        state = {'blocked': True}
+
+        def decide(*_a, **_k):
+            return ({'status': 'unknown', 'reason': 'sector board stale'} if state['blocked']
+                    else {'status': 'unknown', 'reason': 'home sector unavailable'})
+
+        texts = []
+
+        def send(_st, ledger, sender, can_send=lambda: True):
+            for token, chat in R.telegram_targets():
+                key = R.target_id(token, chat)
+                if ledger.get(key) in {'sent', 'sending'}:
+                    continue
+                ledger[key] = 'sending'
+                self.assertTrue(sender(token, chat))
+            return True
+
+        with patch.object(R.shared.L, 'SYMS', ['TEST']), patch.object(
+                R.m16_sector, 'decision', side_effect=decide), patch.object(
+                R, 'deliver_targets', side_effect=send), patch.object(
+                R, 'telegram_targets', return_value=[('tok', 'chat')]), patch.object(
+                R, 'save'), patch.object(R.tg, 'send_message_to',
+                                         side_effect=lambda _t, _c, text: texts.append(text) or True):
+            def tick(minutes, blocked):
+                state['blocked'] = blocked
+                now = NOW + pd.Timedelta(minutes=minutes)
+                # A live run refreshes feed health each cycle; keep it current so
+                # these assertions exercise the sector notice, not feed staleness.
+                st['feed_health'] = {'TEST': dict(ok=True, at=now.isoformat(),
+                                                  latest=R.m16_feed.required_closed_bar(now).isoformat())}
+                R.notify_health(st, now)
+
+            tick(0, True)     # degraded block, sent
+            tick(0.5, True)   # deduped
+            tick(1, False)    # first healthy, sent
+            tick(6, True)     # deduped block
+            tick(9, False)    # recovery #1
+            tick(15, True)    # deduped
+            tick(18, False)   # recovery #2
+            tick(24, True)    # deduped
+            tick(27, False)   # capped: silent
+        self.assertEqual(len(texts), 4, texts)
+        self.assertEqual(sum('M16 RECOVERED' in t for t in texts), 2)
+        self.assertEqual(st['health_recoveries'], 2)
+        self.assertEqual(st['health_notice']['status'], 'healthy')
+
+    def test_failed_recovery_keeps_degraded_marker_and_retries(self):
+        st = M.fresh_state('2026-11-23')
+        st['sector_gate_required'] = True
+        st['sector_snapshots'] = [dict(close='2026-11-23T09:20:00+05:30',
+                                       observed='2026-11-23T09:20:20+05:30',
+                                       sectors={}, complete=True)]
+        st['health_notices'] = {
+            'healthy': dict(status='healthy', complete=True, at=NOW.isoformat(), deliveries={}),
+            'degraded': dict(status='degraded', complete=True,
+                             at=NOW.isoformat(), deliveries={})}
+        st['health_notice'] = dict(st['health_notices']['degraded'])
+        outcomes = [False, True]
+        texts = []
+
+        def send(_st, ledger, sender, can_send=lambda: True):
+            for token, chat in R.telegram_targets():
+                key = R.target_id(token, chat)
+                if ledger.get(key) in {'sent', 'sending'}:
+                    continue
+                ledger[key] = 'sent' if sender(token, chat) else 'failed'
+            return all(v == 'sent' for v in ledger.values())
+
+        with patch.object(R.shared.L, 'SYMS', ['TEST']), patch.object(
+                R.m16_sector, 'decision', return_value={'status': 'unknown',
+                                                        'reason': 'home sector unavailable'}), patch.object(
+                R, 'deliver_targets', side_effect=send), patch.object(
+                R, 'telegram_targets', return_value=[('tok', 'chat')]), patch.object(
+                R, 'save'), patch.object(R.tg, 'send_message_to',
+                                         side_effect=lambda _t, _c, text: texts.append(text) or outcomes.pop(0)):
+            for minute in (3, 3.5, 4):
+                now = NOW + pd.Timedelta(minutes=minute)
+                st['feed_health'] = {'TEST': dict(ok=True, at=now.isoformat(),
+                                                  latest=R.m16_feed.required_closed_bar(now).isoformat())}
+                R.notify_health(st, now)
+        self.assertEqual(len(texts), 2, texts)
+        self.assertTrue(all('M16 RECOVERED' in t for t in texts))
+        self.assertEqual(st['health_notice']['status'], 'healthy')
+        self.assertEqual(st['health_recoveries'], 1)
+
     def test_failed_health_delivery_is_retried(self):
         st = M.fresh_state('2026-11-23')
         with patch.object(R.shared.L, 'SYMS', ['TEST']), patch.object(

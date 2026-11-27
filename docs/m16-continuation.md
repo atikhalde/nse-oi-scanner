@@ -132,10 +132,17 @@ can all add latency. M6 also cannot guarantee one-second exchange-to-alert delay
 
 The live runner preserves per-symbol provider, latest candle, availability,
 first failure and repetition counts. Repeated identical failures are aggregated.
-Dedicated-bot health notices send at most one degradation and one healthy/recovery
-notice per session. Persisted per-status delivery ledgers prevent repeats across
-workflow restarts and health-status flapping. Monitoring and audit updates continue
-without Telegram reminders. Failed notice deliveries retry on the next health check.
+Dedicated-bot health notices send at most one degradation and one healthy notice
+per session. Persisted per-status delivery ledgers prevent repeats across workflow
+restarts and health-status flapping. When a delivered degradation clears while entry
+alerts had been blocked, M16 additionally sends a bounded recovery notice so silence
+is never mistaken for "still blocked": at most `M16_MAX_RECOVERIES` (default 2) per
+session, only after `M16_RECOVERY_QUIET_SECONDS` (default 120 s), and never for a
+capped flapping cycle. Sector-block notices name the state (`unavailable`/`stale`),
+the last accepted board time and the current refresh failure, and the runner keeps a
+bounded `sector_refresh_failures` trail in state for post-session diagnosis.
+Monitoring and audit updates continue without Telegram reminders. Failed notice
+deliveries retry on the next health check, including an unconfirmed recovery.
 These are operational warnings, not trade alerts. Reports distinguish historical
 and live-eligible events. Missing morning discovery is retried after 11:00 for
 research/recovery; historical signals remain audit-only, never backdated alerts.
