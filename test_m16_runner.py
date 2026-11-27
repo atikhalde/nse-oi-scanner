@@ -375,6 +375,120 @@ class RunnerTests(unittest.TestCase):
             send.assert_not_called()
         self.assertEqual(list(st['outbox'].values())[0]['status'], 'expired_unsent')
 
+    def event(self, price=111.5, kind='CLOSE_CONFIRMED', bos=111.):
+        return dict(id='E1', symbol='AXISBANK', side='BUY', kind=kind,
+                    bar=at('09:50').isoformat(), observed=at('09:55:03').isoformat(),
+                    price=price, bos=bos, pullback='FIB_0.236_0.382',
+                    seed=at('09:45').isoformat(), signal='BUY-EX',
+                    sector_gate={})
+
+    def board_state(self, event, observed='09:55:22'):
+        st = M.fresh_state(DAY)
+        st['sector_gate_required'] = True
+        st['sector_snapshots'] = [dict(close=at('09:55').isoformat(),
+                                       observed=at(observed).isoformat(),
+                                       sectors={'BANK': dict(persist_bull=90., persist_bear=10.)},
+                                       complete=True, missing_sectors=[], missing_members=[])]
+        st['outbox']['E1'] = dict(event=event, status='pending', awaiting_sector=True)
+        return st
+
+    def test_board_publication_wait_extends_only_the_close_window(self):
+        event = self.event()
+        self.assertTrue(R.event_fresh(event, at('09:55:25')))
+        self.assertFalse(R.event_fresh(event, at('09:55:35')))
+        event['board_wait'] = 22.
+        self.assertTrue(R.event_fresh(event, at('09:55:45')))
+        self.assertFalse(R.event_fresh(event, at('09:56:00')))
+        future = self.event()
+        future['observed'] = at('09:55:30').isoformat()
+        self.assertFalse(R.event_fresh(future, at('09:55:25')))  # observation cannot be from the future
+
+    def test_awaiting_board_is_not_expired_inside_the_wait_cap(self):
+        event = self.event()
+        st = self.board_state(event, observed='09:50')
+        with patch.object(R.m16_sector, 'decision', return_value={
+                'status': 'unknown', 'reason': 'sector board unavailable'}), patch.object(
+                R, 'save'), patch.object(R, 'telegram_targets', return_value=[('t', 'c')]), patch.object(
+                R.tg, 'send_message_to') as send:
+            R.flush(st, at('09:55:50'))
+            send.assert_not_called()
+        self.assertEqual(st['outbox']['E1']['status'], 'pending')
+
+    def test_board_publication_wait_promotes_and_sends(self):
+        event = self.event(price=111.5)
+        st = self.board_state(event)
+        with patch.object(R.m16_sector, 'decision', return_value={
+                'status': 'pass', 'sector': 'BANK', 'score': 90., 'close': at('09:55').isoformat(),
+                'observed': at('09:55:22').isoformat(), 'top3': ['BANK'],
+                'known_rank': 1, 'worst_rank': 1, 'missing_sectors': []}), patch.object(
+                R, 'save'), patch.object(R, 'telegram_targets', return_value=[('t', 'c')]), patch.object(
+                R.tg, 'send_message_to', return_value=True) as send:
+            R.flush(st, at('09:55:48'))
+        self.assertEqual(send.call_count, 1)
+        self.assertEqual(st['outbox']['E1']['status'], 'sent')
+        self.assertAlmostEqual(st['outbox']['E1']['event']['board_wait'], 22., places=1)
+
+    def test_extended_window_still_rejects_a_price_that_left_the_level(self):
+        event = self.event(price=113.)          # +1.8% beyond a 111 BOS
+        st = self.board_state(event)
+        with patch.object(R.m16_sector, 'decision', return_value={
+                'status': 'pass', 'sector': 'BANK', 'score': 90., 'close': at('09:55').isoformat(),
+                'observed': at('09:55:22').isoformat(), 'top3': ['BANK'],
+                'known_rank': 1, 'worst_rank': 1, 'missing_sectors': []}), patch.object(
+                R, 'save'), patch.object(R, 'telegram_targets', return_value=[('t', 'c')]), patch.object(
+                R.tg, 'send_message_to') as send:
+            R.flush(st, at('09:55:48'))
+            send.assert_not_called()
+        self.assertEqual(st['outbox']['E1']['status'], 'expired_unsent')
+
+    def test_expired_close_still_reaches_the_delayed_path(self):
+        st = M.fresh_state(DAY)
+        st['sector_gate_required'] = True
+        event = self.event(price=111.4)
+        event['live'] = False
+        st['events'].append(event)
+        st['outbox']['E1'] = dict(event=event, status='expired_unsent')
+        rows = [(dict(close=111.4), None, '', {})]
+        with patch.object(R.m16_sector, 'decision', return_value={
+                'status': 'pass', 'sector': 'BANK', 'score': 90., 'close': at('09:55').isoformat()}):
+            R.queue_late_entries(st, 'AXISBANK', rows, at('10:05'))
+        self.assertEqual(st['outbox']['E1']['status'], 'pending')
+        self.assertIn('late', st['outbox']['E1']['event'])
+
+    def test_sent_close_is_never_requeued_by_the_delayed_path(self):
+        st = M.fresh_state(DAY)
+        st['sector_gate_required'] = True
+        event = self.event(price=111.4)
+        event['live'] = True
+        st['events'].append(event)
+        st['outbox']['E1'] = dict(event=event, status='sent')
+        rows = [(dict(close=111.4), None, '', {})]
+        with patch.object(R.m16_sector, 'decision', return_value={
+                'status': 'pass', 'sector': 'BANK', 'score': 90., 'close': at('09:55').isoformat()}):
+            R.queue_late_entries(st, 'AXISBANK', rows, at('10:05'))
+        self.assertEqual(st['outbox']['E1']['status'], 'sent')
+        self.assertNotIn('late', st['outbox']['E1']['event'])
+
+    def test_board_publication_lag_is_credited_at_detection(self):
+        import contextlib, io
+        st, _ = armed()
+        st['sector_gate_required'] = True
+        st['sector_snapshots'] = [dict(close=at('09:55').isoformat(),
+                                       observed=at('09:55:22').isoformat(),
+                                       sectors={'BANK': dict(persist_bull=90., persist_bear=10.)},
+                                       complete=True, missing_sectors=[], missing_members=[])]
+        R.apply(st, 'AXISBANK', [(bar('09:50', h=111, l=108, c=110.5, e9=109, e10=108), None, '', [])],
+                at('09:55:33'))          # 33s after the close, board took 22s of it
+        event = st['events'][0]
+        self.assertTrue(event['live'])
+        self.assertAlmostEqual(event['board_wait'], 22., places=1)
+        self.assertEqual(len(st['outbox']), 1)
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            R.flush(st, at('09:55:33'), True)
+        self.assertIn('CANDLE CLOSE', out.getvalue())
+        self.assertNotIn('DELAYED', out.getvalue())
+
     def test_dry_run_no_writes_or_sends(self):
         st, _ = armed()
         M.running_bar(st, 'AXISBANK', bar('09:50', h=112, l=108, c=111), at('09:52'))

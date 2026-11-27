@@ -57,6 +57,11 @@ jobs:
       # the board always gets the provider budget first.
       M16_DISCOVERY_SLICES: "3"
       M16_SECTOR_RUNWAY_SECONDS: "25"
+      # A close alert may wait for its own gate: the wait (capped here) is
+      # credited back to the 30s freshness window instead of turning the alert
+      # into a "found late" one, and the price still has to be within 0.75% of
+      # the BOS once the wait pushed it past 30s.
+      M16_BOARD_WAIT_SECONDS: "60"
       # Delayed re-entry policy: a close-confirmed BOS found up to 15 min late
       # still alerts (priced at discovery, labelled DELAYED) while price is
       # within 0.75% of the frozen BOS and the sector board passes.

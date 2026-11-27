@@ -237,11 +237,21 @@ def apply(st, symbol, rows, now):
         # Preserve all processed completed candles, including post-cutoff
         # observations. No forming-bar history is invented from final OHLC.
         st.setdefault("audit_bars", {}).setdefault(symbol, {})[bar["dt"]] = dict(bar)
-        model.closed_bar(st, symbol, bar, now, MAX_LAG)
+        # A board that published after this candle closed is M16's own delay,
+        # not the signal's: credit it so the observation is not mislabelled.
+        credit = board_publication_credit(st, bar)
+        model.closed_bar(st, symbol, bar, now, MAX_LAG + credit)
+        if credit:
+            for produced in st["events"]:
+                if (produced.get("symbol") == symbol and not produced.get("board_wait")
+                        and produced.get("bar") == model.stamp(bar["dt"]).isoformat()):
+                    produced["board_wait"] = credit
+                    if produced["id"] in st["outbox"]:
+                        st["outbox"][produced["id"]]["event"] = produced
         if code is not None:
             key = model.seed(st, symbol, code, name, bar, pd.DataFrame(context))
             if key:
-                model.direct_original_bos(st, key, bar, pd.DataFrame(context), now, MAX_LAG)
+                model.direct_original_bos(st, key, bar, pd.DataFrame(context), now, MAX_LAG + credit)
             setup = st["setups"].get(key, {})
             st.setdefault("signal_audit", []).append(dict(
                 symbol=symbol, bar=bar["dt"], code=code, signal=name, setup=key,
@@ -301,11 +311,49 @@ def alert_text(e):
             + extra + "Feed-polled observation, not a guaranteed tick-time fill. Alerts only; no live order.")
 
 
-def event_fresh(event, now):
+def board_publication_credit(st, bar):
+    """Credit for the board's own publication lag, from a raw candle dict."""
+    if not st.get("sector_gate_required"):
+        return 0.
+    observed = (st.get("sector_snapshots") or [{}])[-1].get("observed")
+    if not observed:
+        return 0.
+    end = model.stamp(bar["dt"]) + pd.Timedelta(minutes=5)
+    cap = max(0., float(os.getenv("M16_BOARD_WAIT_SECONDS", "60")))
+    return float(max(0., min(cap, (model.stamp(observed)-end).total_seconds())))
+
+
+def board_wait_seconds(st, event):
+    """How much of a close alert's window was spent waiting for the sector board.
+
+    The 30s window measures how stale an observation is, not how long M16 spent
+    waiting for its own gate. A board that publishes 20-40s after the candle
+    close (the normal publication lag) pushed confirmations past 30s and made
+    them look "found late" when nothing had been missed. The wait is credited
+    back below, capped, and only for the gate the alert actually needed.
+    """
+    if event.get("kind") not in {"CLOSE_CONFIRMED", "CLOSE_ONLY", "DIRECT_BOS_CONFIRMED"}:
+        return 0.
+    return board_publication_credit(st, dict(dt=event["bar"]))
+
+
+def price_at_level(event, price):
+    """Trade side of the frozen BOS, within the delayed-alert extension limit."""
+    try:
+        sign = 1 if event["side"] == "BUY" else -1
+        extension = sign * (float(price) - float(event["bos"])) / float(event["bos"]) * 100.
+    except (TypeError, ValueError, ZeroDivisionError, KeyError):
+        return False
+    return 0 < extension <= late_alert_max_extension_pct()
+
+
+def event_fresh(event, now, grace=0.):
     now = model.stamp(now)
     start = model.stamp(event["bar"])
     age = (now-model.stamp(event["observed"])).total_seconds()
-    if now.strftime("%Y-%m-%d") != start.strftime("%Y-%m-%d") or not 0 <= age <= MAX_LAG:
+    # Time spent waiting for our own gate is not staleness of the observation.
+    allowance = grace + float(event.get("board_wait", 0.))
+    if now.strftime("%Y-%m-%d") != start.strftime("%Y-%m-%d") or not 0 <= age <= MAX_LAG + allowance:
         return False
     # A delayed re-entry is fresh from the moment we discovered it; the staleness
     # of the BOS candle itself is bounded by late_entry_candidate, and the send
@@ -315,7 +363,8 @@ def event_fresh(event, now):
     end = start+pd.Timedelta(minutes=5)
     if event["kind"] == "RUNNING_BREAK":
         return start <= now < end  # NEVER send a provisional alert after close
-    return 0 <= (now-end).total_seconds() <= MAX_LAG
+    # A gate that published late extends only its own alert's window.
+    return 0 <= (now-end).total_seconds() <= MAX_LAG + allowance
 
 
 def sector_send_ok(st, event, now):
@@ -337,7 +386,10 @@ def flush(st, now, dry_run=False):
         if item.get("retry_after") and model.stamp(now) < model.stamp(item["retry_after"]):
             continue
         e = item["event"]
-        if not event_fresh(e, now):
+        # While the gate for this very candle is still unpublished, waiting is
+        # legitimate up to the board cap; the promotion below pins the real wait.
+        grace = max(0., float(os.getenv("M16_BOARD_WAIT_SECONDS", "60"))) if item.get("awaiting_sector") else 0.
+        if not event_fresh(e, now, grace):
             item["status"] = "expired_unsent"
             continue
         if item.get("awaiting_sector"):
@@ -351,12 +403,31 @@ def flush(st, now, dry_run=False):
                 e["sector_gate_at_detection"] = e["sector_gate"]
                 e["sector_gate"] = gate
                 e["sector_eligible_at"] = now.isoformat()
-                e["live"] = True
+                e["board_wait"] = board_wait_seconds(st, e)
                 item["awaiting_sector"] = False
+                # The waiting grace above kept the item alive; now that the real
+                # board timestamps are known, the true window applies. A close
+                # whose board arrived past the credited wait expires unsent.
+                if not event_fresh(e, now):
+                    item["status"] = "expired_unsent"
+                    continue
+                e["live"] = True
                 # JSON persistence duplicates event objects; update both copies.
                 for saved in st["events"]:
                     if saved["id"] == e["id"]:
                         saved.update(e)
+        end = model.stamp(e["bar"]) + pd.Timedelta(minutes=5)
+        late_but_gated = (e.get("board_wait") and
+                          (model.stamp(now)-end).total_seconds() > MAX_LAG)
+        if late_but_gated and not price_at_level(e, e["price"]):
+            # The wait was ours, but the level is gone: never dress a stale
+            # price up as a live entry.
+            item["status"] = "expired_unsent"
+            item["awaiting_sector"] = False
+            st.setdefault("diagnostics", []).append(dict(
+                at=model.stamp(now).isoformat(), symbol=e["symbol"],
+                reason=f"board published {e['board_wait']:.0f}s after the close and the price left the BOS"))
+            continue
         if not sector_send_ok(st, e, now):
             item["sector_blocked"] = True
             continue
@@ -515,7 +586,12 @@ def queue_late_entries(st, symbol, rows, now):
     except (TypeError, KeyError, IndexError):
         return
     for event in st["events"]:
-        if event.get("symbol") != symbol or event["id"] in st["outbox"]:
+        if event.get("symbol") != symbol:
+            continue
+        existing = st["outbox"].get(event["id"])
+        # An event that waited for its sector board and then expired still gets
+        # the delayed path: that is the safety net the live window exists for.
+        if existing and existing.get("status") != "expired_unsent":
             continue
         info = late_entry_candidate(st, event, now, discovery_price)
         if not info:
