@@ -399,15 +399,29 @@ def alert_text(e, markup=False):
             + f"Breakout candle {model.stamp(e['bar']).strftime('%H:%M')} · "
               f"observed {model.stamp(e['observed']).strftime('%H:%M:%S')} IST\n"
               "Feed-polled observation, not a guaranteed tick-time fill. Alerts only; no live order.")
+    sid = security_id(e["symbol"])
     if not markup:
-        return text
+        return text + (f"\n📱 Open in Dhan app: {tg.app_url(e['symbol'], sid)}"
+                       if tg.app_link_enabled() else "")
     escaped = tg.esc(text)
     symbol = tg.esc(str(e["symbol"]))
     # The bold symbol is a chart deep link: one tap opens the stock's chart on
-    # Dhan's TradingCharts. F&O names carry their Dhan security id; the extras
-    # only have their NSE ticker, which is TradingCharts' published instrument.
-    return escaped.replace(f"{symbol} · {e['side']} @",
-                           f"{tg.chart_link(e['symbol'], security_id(e['symbol']))} · {e['side']} @", 1)
+    # Dhan's own charts. F&O names carry their Dhan security id; the extras only
+    # have their NSE ticker, which is TradingCharts' published instrument.
+    body = escaped.replace(f"{symbol} · {e['side']} @",
+                           f"{tg.chart_link(e['symbol'], sid)} · {e['side']} @", 1)
+    if not tg.app_link_enabled():
+        return body
+    # Android opens the browser for the chart link above; this second, optional
+    # tap hands the phone to the Dhan app itself (Dhan's own Adjust entry link).
+    return body + (f'\n📱 <a href="{_html_escape_url(tg.app_url(e["symbol"], sid))}">'
+                   "open in Dhan app</a>")
+
+
+def _html_escape_url(url):
+    """Escape a URL for a quoted attribute (only & has to change, but be strict)."""
+    import html
+    return html.escape(str(url), quote=True)
 
 
 def security_id(symbol):

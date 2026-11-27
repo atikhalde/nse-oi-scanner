@@ -53,6 +53,28 @@ def chart_link(symbol, security_id=None):
             f'{esc(symbol)}</a></b>')
 
 
+# Dhan publishes one Android app entry point: its own Adjust link, which hands
+# `dhan://Login` to the app and falls back to the web when the app is absent
+# (this is the "Use App" button on dhan.co). There is no per-stock deep link,
+# so this opens the Dhan app itself; the symbol keeps the exact chart link.
+# `{fallback}` is URL-quoted for you. M16_APP_URL_TEMPLATE overrides the whole
+# template, and M16_APP_LINK=0 removes the line.
+DHAN_APP_URL_TEMPLATE = ("https://dhan.go.link/?adj_t=tunb1sj&adj_deeplink=dhan%3A%2F%2FLogin"
+                         "&adj_fallback={fallback}&adj_campaign=m16-alert")
+
+
+def app_link_enabled():
+    return os.environ.get("M16_APP_LINK", "1").strip().lower() not in {"0", "false", "no"}
+
+
+def app_url(symbol=None, security_id=None):
+    """Link that opens the Dhan Android app (web chart as the no-app fallback)."""
+    tmpl = os.environ.get("M16_APP_URL_TEMPLATE") or DHAN_APP_URL_TEMPLATE
+    fallback = chart_url(symbol, security_id) if symbol else "https://web.dhan.co/"
+    return tmpl.replace("{fallback}", quote(fallback, safe="")).replace(
+        "{chart}", quote(chart_url(symbol, security_id), safe="") if symbol else "")
+
+
 def configured():
     return bool(os.environ.get("TELEGRAM_BOT_TOKEN") and os.environ.get("TELEGRAM_CHAT_ID"))
 

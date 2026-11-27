@@ -205,15 +205,42 @@ class ChartLinkTests(unittest.TestCase):
 
     def test_symbol_is_a_chart_link_and_a_bold_name(self):
         markup = R.alert_text(self.event(), markup=True)
-        self.assertEqual(markup.count("<a href="), 1)
+        self.assertEqual(markup.count("<a href="), 2)          # chart + Dhan app
         self.assertIn('<b><a href="https://charts.dhan.co/?symbol=NSEE5900:AXISBANK">'
                       'AXISBANK</a></b>', markup)
         self.assertIn("</a></b> · BUY @ 111.20", markup)
+
+    def test_a_second_link_opens_the_dhan_android_app(self):
+        markup = R.alert_text(self.event(), markup=True)
+        app_line = markup.splitlines()[-1]
+        self.assertTrue(app_line.startswith("📱 <a href=\"https://dhan.go.link/"))
+        self.assertIn("adj_deeplink=dhan%3A%2F%2FLogin", app_line)
+        self.assertIn("adj_fallback=https%3A%2F%2Fcharts.dhan.co%2F%3Fsymbol%3DNSEE5900%3AAXISBANK",
+                      app_line)
+        self.assertIn(">open in Dhan app</a>", app_line)
+        self.assertNotIn("&adj_", app_line)      # every & must be escaped in an attribute
+        self.assertIn("&amp;adj_", app_line)
+
+    def test_the_app_link_can_be_switched_off(self):
+        with patch.dict(os.environ, {"M16_APP_LINK": "0"}):
+            markup = R.alert_text(self.event(), markup=True)
+            plain = R.alert_text(self.event(), markup=False)
+        self.assertEqual(markup.count("<a href="), 1)
+        self.assertNotIn("dhan.go.link", markup)
+        self.assertNotIn("Dhan app", plain)
+
+    def test_the_app_link_template_is_overridable(self):
+        with patch.dict(os.environ, {"M16_APP_URL_TEMPLATE":
+                                     "https://example.test/app?to={fallback}"}):
+            markup = R.alert_text(self.event(), markup=True)
+        self.assertIn("href=\"https://example.test/app?to=https%3A%2F%2Fcharts.dhan.co%2F%3Fsymbol"
+                      "%3DNSEE5900%3AAXISBANK\"", markup)
 
     def test_plain_text_alerts_stay_plain(self):
         text = R.alert_text(self.event(), markup=False)
         self.assertNotIn("<a", text)
         self.assertIn("AXISBANK · BUY @ 111.20", text)
+        self.assertIn("📱 Open in Dhan app: https://dhan.go.link/", text)   # TXT/PDF keeps it
 
     def test_the_template_is_configurable_and_ampersands_are_escaped(self):
         with patch.dict(os.environ, {"M16_CHART_URL_TEMPLATE":
@@ -247,12 +274,16 @@ class ChartLinkTests(unittest.TestCase):
         self.assertIn('<a href="https://charts.dhan.co/?symbol=NSE:ATHERENERGY">'
                       'ATHERENERGY</a>', markup)
 
-    def test_the_parse_reject_retry_keeps_the_link(self):
+    def test_the_parse_reject_retry_keeps_both_links(self):
         markup = R.alert_text(self.event("M&M"), markup=True)
         healed = R.tg._heal_html(markup)
         self.assertIn('<a href="https://charts.dhan.co/?symbol=NSEE2031:M%26M">', healed)
         self.assertIn("</a></b>", healed)
         self.assertNotIn("&lt;a", healed)
+        app = [ln for ln in healed.splitlines() if "dhan.go.link" in ln]
+        self.assertEqual(len(app), 1)
+        self.assertTrue(app[0].startswith("📱 <a href=\"https://dhan.go.link/"))
+        self.assertIn("&amp;adj_deeplink=dhan%3A%2F%2FLogin", app[0])
 
     def test_the_alert_body_is_otherwise_unchanged(self):
         markup = R.alert_text(self.event(), markup=True)
