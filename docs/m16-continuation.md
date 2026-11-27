@@ -48,11 +48,22 @@ F&O-only universe, and removing a line narrows it further.
 
 Three rules make this safe:
 
-1. **Scan-only.** Extras never join a sector basket, so no sector score changes.
-   Their sector label is used for context only. Labels that reuse a basket name
-   (`DEF`, `CAPGOODS`, ...) print the real board line; the four labels with no
-   basket (`TEXTILE`, `MEDIA`, `SUGAR`, `SHIPPING`) print
-   `sector unverified` instead of a score.
+1. **Scan-only, and no score moves.** Extras add no member to `MEMBERS` (the 13
+   synthetic baskets), so no synthetic sector score changes. Their sector label is
+   used for context: labels naming an official index sector (`AUTO`, `IT`, `DEF`,
+   `BANK`, ...) print that published index's line, labels naming a synthetic basket
+   print the basket line, and the four with neither (`TEXTILE`, `MEDIA`, `SUGAR`,
+   `SHIPPING`) print `sector unverified` instead of a score.
+
+   One name is deliberately different: **BEML is listed as `DEF` in
+   `fno_sector_map.csv` as well** (27-Nov-2026, user request). That file is the
+   sector grouping every model reads (`SECTOR_OF` / `SEC_STOCKS`), so BEML now
+   appears in the DEF group in reports and filters. It does **not** change the DEF
+   score: `DEF` is an official index sector (`NIFTY_IND_DEFENCE.NS`), so its score
+   comes from the index, not from members. BEML stays in this file because scanning
+   follows `m16_extra_universe.csv`, not the sector map. M6 ignores it as an entry
+   candidate — `entry_candidates()` keeps only names with a loaded prior-day cache,
+   so BEML never spends a provider request in a DEF cycle it cannot trade.
 2. **History-gated.** A name produces no seeds until `data/history/<SYMBOL>.csv`
    exists (`analyze()` needs a valid prior-day cache), and it is **not polled**
    while it is missing — so a bad ticker costs nothing. Workflow 2. Bootstrap

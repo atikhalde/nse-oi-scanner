@@ -189,6 +189,33 @@ class AdvisoryAndDuplicateTests(unittest.TestCase):
         self.assertIn('undercut EMA9/10 by 0.19%', R.alert_text(event))
 
 
+class BasketMembershipTests(unittest.TestCase):
+    """BEML joins the DEF group without touching any sector score."""
+
+    def test_beml_is_in_the_defence_group(self):
+        rows = {r['symbol']: r['sector'] for r in csv.DictReader((R.ROOT / 'fno_sector_map.csv').open())}
+        self.assertEqual(rows.get('BEML'), 'DEF')
+        self.assertEqual(R.shared.SECTOR_OF.get('BEML'), 'DEF')
+        self.assertIn('BEML', R.shared.SEC_STOCKS['DEF'])
+        self.assertEqual(sorted(R.shared.SEC_STOCKS['DEF']),
+                         ['BDL', 'BEL', 'BEML', 'COCHINSHIP', 'HAL', 'MAZDOCK', 'SOLARINDS'])
+
+    def test_def_is_an_index_sector_so_no_synthetic_basket_changes(self):
+        self.assertEqual(R.shared.FM.OFFICIAL_TICKERS.get('DEF'), 'NIFTY_IND_DEFENCE.NS')
+        self.assertNotIn('DEF', R.shared.MEMBERS)          # score = published index
+        self.assertEqual(len(R.shared.MEMBERS), 13)
+
+    def test_beml_is_still_scanned_by_m16(self):
+        self.assertIn(('BEML', 'DEF'), R.extra_universe())
+        self.assertNotIn('BEML', {r['symbol'] for r in csv.DictReader((R.ROOT / 'fno_universe.csv').open())})
+
+    def test_m6_never_fetches_a_basket_name_it_cannot_enter(self):
+        cache = {'BEL': {}, 'HAL': {}}
+        self.assertEqual(R.shared.entry_candidates({'DEF': ['BUY']}, cache), ['BEL', 'HAL'])
+        self.assertNotIn('BEML', R.shared.entry_candidates({'DEF': ['BUY']}, cache))
+        self.assertEqual(R.shared.entry_candidates({}, cache), [])
+
+
 class ExtraUniverseTests(unittest.TestCase):
     def test_extra_universe_is_parsed_and_installed_without_touching_baskets(self):
         rows = [('GRSE', 'DEF'), ('PARAS', 'DEF')]

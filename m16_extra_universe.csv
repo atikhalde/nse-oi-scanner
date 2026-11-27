@@ -1,8 +1,10 @@
 # Major liquid NSE names that have NO F&O contract, i.e. invisible to the 210-name
-# F&O universe. Scanned by M16 only (M16_EXTRA_UNIVERSE=1); they never join a
-# sector basket, so no sector score changes. Sector labels reuse the basket names
-# where one exists; TEXTILE / MEDIA / SUGAR / SHIPPING have no basket, so those
-# alerts print "sector unverified" instead of a score.
+# F&O universe. Scanned by M16 only (M16_EXTRA_UNIVERSE=1). They add no synthetic
+# basket and change no sector score: the sectors below are either official index
+# sectors (AUTO, IT, DEF, ...) whose score is the published index, or one of the
+# 13 synthetic baskets, which stay byte-identical. Sector labels reuse those names;
+# TEXTILE / MEDIA / SUGAR / SHIPPING have neither, so those alerts print
+# "sector unverified" instead of a score.
 #
 # Their data/history/<SYMBOL>.csv is fetched and committed by workflow 2. Bootstrap
 # (08:45 IST weekdays). Until a name has history it is not polled and produces no
@@ -79,6 +81,8 @@ GRSE,DEF
 PARAS,DEF
 DATAPATTNS,DEF
 ASTRAMICRO,DEF
+# BEML is ALSO listed as DEF in fno_sector_map.csv (the sector grouping every
+# model reads); it stays here because scanning follows this file, not the map.
 BEML,DEF
 MTARTECH,DEF
 ZENTEC,DEF
