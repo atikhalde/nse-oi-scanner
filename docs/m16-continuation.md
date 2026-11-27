@@ -121,6 +121,17 @@ the standalone `tradingcharts.co`, at Tv.dhan.co, or at TradingView:
   (or the older `{symbol}`) is replaced and the rest is used verbatim. Tests
   assert the default stays on `charts.dhan.co` and never leaks to
   `tradingcharts.co`, `tv.dhan.co` or TradingView.
+- **Probe result (27-Nov-2026): the Dhan app has no chart route.** Twelve
+  candidate routes were tested through Dhan's own entry link
+  (`--probe-app-links`, mode `app-link-probe`): `Chart`/`chart` with `symbol`
+  (`AXISBANK`, `NSE:AXISBANK`, `NSEE5900:AXISBANK`), `securityId` (+
+  `exchangeSegment`), path forms `Chart/`, `stocks/`, `scrip/`, `terminal`,
+  `Watchlist`, `Search` — every one opened the app at its home; only
+  `dhan://Login` is honoured. No Dhan host serves an App Links file
+  (`charts.dhan.co` 403s it, `web.dhan.co` answers with its SPA), so an https
+  chart link always opens the browser on Android. Re-probe with mode
+  `app-link-probe` if Dhan ships this; set `M16_APP_DEEPLINK` (placeholders
+  `{symbol}`, `{instrument}`, `{security_id}`) the moment one works.
 - **Second link for the phone:** every alert ends with
   `📱 <a href="…dhan.go.link…">open in Dhan app</a>`. Android opens a
   `charts.dhan.co` link in the browser (the Dhan app registers no App Link for

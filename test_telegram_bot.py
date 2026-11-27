@@ -87,6 +87,10 @@ def main():
         ok("app link falls back to the same stock's web chart",
            "adj_fallback=https%3A%2F%2Fcharts.dhan.co%2F%3Fsymbol%3DNSEE5900%3AAXISBANK" in app)
         ok("app link respects M16_APP_LINK=0", tg.app_link_enabled())
+        ok("route placeholders resolve",
+           tg.app_deeplink("AXISBANK", 5900, "dhan://Chart?symbol={symbol}&id={security_id}"
+                                                 "&inst={instrument}")
+           == "dhan://Chart?symbol=AXISBANK&id=5900&inst=NSEE5900:AXISBANK")
     finally:
         tg.requests.post = old_post
         for k, v in saved.items():
