@@ -108,6 +108,38 @@ class AuditTests(unittest.TestCase):
         self.assertNotIn("'unusable'", sec1)
         self.assertIn("dormant excluded: ['ICICIPRULI']", sec1)
 
+    def test_delivery_ledger_separates_delivered_and_duplicate_alerts(self):
+        st, key = armed()
+        running = dict(id='R1', symbol='AXISBANK', side='BUY', kind='RUNNING_BREAK',
+                       bar=at('09:50').isoformat(), observed=at('09:50:05').isoformat(),
+                       price=111.0, bos=110.0, signal='BUY-EX11', seed=at('09:30').isoformat(),
+                       sector_gate=dict(status='pass', sector='BANK', score=90.0, known_rank=1, slope15=1.5))
+        close = dict(id='C1', symbol='AXISBANK', side='BUY', kind='CLOSE_CONFIRMED',
+                     bar=at('09:50').isoformat(), observed=at('09:55:02').isoformat(),
+                     price=111.4, bos=110.0, signal='BUY-EX11', seed=at('09:30').isoformat(),
+                     sector_gate=dict(status='unknown', reason='sector board stale'), duplicate_of='R1')
+        st['events'] = [running, close]
+        st['outbox'] = {'R1': dict(event=running, status='sent', deliveries={'a': 'sent', 'b': 'sent'}),
+                        'C1': dict(event=close, status='duplicate_suppressed', suppresses='R1')}
+        lines = '\n'.join(dict(A.sections(st))['9. Bot delivery and stale-send audit'])
+        self.assertIn('DELIVERED', lines)
+        self.assertIn('AXISBANK BUY RUNNING_BREAK @ 111.0', lines)
+        self.assertIn('BANK 90.0 (+1.5/15m) rank 1', lines)
+        self.assertIn('DUPLICATE of 09:50 alert', lines)
+        self.assertIn("{'delivered': 1, 'duplicate': 1}", lines)
+        sec1 = '\n'.join(dict(A.sections(st))['1. Executive summary and coverage'])
+        self.assertIn('Alerts delivered: 1; duplicate-suppressed (same candle already delivered): 1', sec1)
+        self.assertIn('Sector mode:', sec1)
+
+    def test_advisory_policy_is_documented_in_the_report(self):
+        st = M.fresh_state(DAY)
+        st['events'] = [dict(id='E1', symbol='A', side='BUY', kind='RUNNING_BREAK', sector_mode='advisory',
+                             sector_gate=dict(status='block', sector='BANK', score=40.0))]
+        sec1 = '\n'.join(dict(A.sections(st))['1. Executive summary and coverage'])
+        self.assertIn('the board is CONTEXT on every alert, never a send filter', sec1)
+        rules = '\n'.join(dict(A.sections(st))['2. Rules and interpretation'])
+        self.assertIn('M16_SECTOR_MODE=gate', rules)
+
     def test_large_appendix_pdf_builds_fast_with_wide_unicode_lines(self):
         import time
         st = M.fresh_state(DAY)

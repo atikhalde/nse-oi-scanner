@@ -6,7 +6,6 @@ are reported, never disguised as an exact one-second execution guarantee.
 """
 from __future__ import annotations
 import argparse
-import html
 import json
 import multiprocessing
 import os
@@ -31,6 +30,65 @@ MAX_LAG = 30
 # Discovery rotation: the universe is fetched in this many rotating slices so a
 # single bucket no longer fires one full-universe wave at the provider.
 DEFAULT_DISCOVERY_SLICES = 3
+
+
+def sector_mode():
+    return model.sector_mode()
+
+
+def sector_advisory():
+    return model.advisory()
+
+
+def suppress_duplicates():
+    return model.suppress_duplicates()
+
+
+def signal_tier(name):
+    return model.signal_tier(name)
+
+
+ENTRY_KINDS = model.ENTRY_KINDS
+
+
+EXTRA_UNIVERSE = ROOT / "m16_extra_universe.csv"
+
+
+def extra_universe():
+    """Optional stock universe beyond the F&O map (NSE names with no F&O contract).
+
+    GRSE, PARAS, DATAPATTNS, ASTRAMICRO and BEML are liquid defence names that
+    are not in `fno_universe.csv`, so M16 could never see them at all. They are
+    added to the SCANNED universe only: the sector baskets and the M6 board stay
+    exactly as they are, so no sector score changes because of this file.
+    """
+    if str(os.getenv("M16_EXTRA_UNIVERSE", "1")).strip().lower() in {"0", "false", "no", "off"}:
+        return []
+    if not EXTRA_UNIVERSE.exists():
+        return []
+    rows = []
+    for line in EXTRA_UNIVERSE.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or line.lower().startswith("symbol,"):
+            continue
+        parts = [x.strip() for x in line.split(",")]
+        if len(parts) >= 2 and parts[0] and parts[1]:
+            rows.append((parts[0], parts[1]))
+    return rows
+
+
+def install_extra_universe():
+    """Extend this process's scan list; never the sector baskets."""
+    added = []
+    for symbol, sector in extra_universe():
+        if symbol not in shared.SECTOR_OF:
+            shared.SECTOR_OF[symbol] = sector
+        if symbol not in shared.L.SYMS:
+            shared.L.SYMS.append(symbol)
+            added.append(f"{symbol}({sector})")
+    if added:
+        print(f"M16 extra universe: {len(added)} symbol(s) added to scanning only: {', '.join(added)}")
+    return added
 
 
 def credentials():
@@ -279,21 +337,31 @@ def observe_running(st, symbol, bars, now):
     record_transitions(st, previous, now, "running candle")
 
 
-def alert_text(e):
+def alert_text(e, markup=False):
+    """One alert message. `markup=True` bolds the symbol for Telegram HTML.
+
+    Everything else is escaped, so symbols such as M&M or GVT&D cannot break
+    Telegram's HTML parser.
+    """
     labels = dict(DIRECT_BOS_CONFIRMED="ORIGINAL SIGNAL ON BOS — CLOSE CONFIRMED",
                   RUNNING_BREAK="RUNNING BOS — unconfirmed",
                   CLOSE_CONFIRMED="CANDLE CLOSE — BOS CONFIRMED",
                   CLOSE_FAILED="CANDLE CLOSE — BOS FAILED (not an entry)",
                   CLOSE_ONLY="CANDLE CLOSE — BOS confirmed; running crossing was not observed")
     coincident = e.get("coincident_original_signals", [])
-    extra = ("Coincident final labels: "+", ".join(x["signal"] for x in coincident)+"\n") if coincident else ""
-    if e.get("sector_eligible_at"):
-        extra += f"Sector eligibility verified {model.stamp(e['sector_eligible_at']).strftime('%H:%M:%S')} IST after board publication\n"
-    gate = e.get("sector_gate", {})
-    if gate.get("status") == "pass" and gate.get("missing_sectors"):
-        extra += f"Incomplete sectors: {', '.join(gate['missing_sectors'])}; guaranteed worst-case rank {gate['worst_rank']}/3\n"
-    if gate.get("status") == "pass":
-        extra += f"Sector {gate['sector']} · persistent {gate['score']:.2f} >70 · top 3 · board close {model.stamp(gate['close']).strftime('%H:%M')} IST\n"
+    extra = "".join(f"Coincident final labels: {x['signal']}\n" for x in coincident[:1])
+    ext = entry_extension_pct(e)
+    entry_line = f"Entry {ext:+.2f}% beyond BOS" if ext is not None else "Entry level unavailable"
+    if ext is not None and ext > 0.2:
+        entry_line += " · EXTENDED — a retest of BOS is the better entry"
+    if model.stamp(e["bar"]).strftime("%H:%M") < "10:15":
+        entry_line += " · early window (wider noise)"
+    gate = e.get("sector_gate_at_send") or e.get("sector_gate") or {}
+    sector_line, risk_line = sector_context_lines(gate)
+    if e.get("ema_undercut"):
+        risk_line = ((risk_line + "\n") if risk_line else "") + (
+            f"Pullback undercut EMA9/10 by {float(e['ema_undercut']):.2f}% "
+            f"(tolerance {model.ema_tolerance_pct():.2f}%) — watched, not invalidated.")
     late = e.get("late") or {}
     if late:
         extra += (f"Delayed discovery: breakout candle closed {late['delay_minutes']:.1f} min before "
@@ -304,16 +372,71 @@ def alert_text(e):
                   f"(found {late['delay_minutes']:.1f} min late)")
     else:
         header = f"M16 · {labels.get(e['kind'], e['kind'])}"
-    return (f"{header}\n{e['symbol']} {e['side']} @ {e['price']:.2f}\n"
-            f"BOS {e['bos']:.2f} · pullback {e['pullback']}\n"
-            f"Original {e['signal']} candle {model.stamp(e['seed']).strftime('%H:%M')}\n"
-            f"Breakout candle {model.stamp(e['bar']).strftime('%H:%M')} · observed {model.stamp(e['observed']).strftime('%H:%M:%S')} IST\n"
-            + extra + "Feed-polled observation, not a guaranteed tick-time fill. Alerts only; no live order.")
+    text = (f"{header}\n"
+            f"{e['symbol']} · {e['side']} @ {e['price']:.2f}\n"
+            f"BOS {e['bos']:.2f} · pullback {e['pullback']} · {e['signal']} "
+            f"(seed {model.stamp(e['seed']).strftime('%H:%M')}) · tier {signal_tier(e['signal'])}\n"
+            f"{entry_line}\n"
+            + (sector_line + "\n" if sector_line else "")
+            + (risk_line + "\n" if risk_line else "")
+            + extra
+            + f"Breakout candle {model.stamp(e['bar']).strftime('%H:%M')} · "
+              f"observed {model.stamp(e['observed']).strftime('%H:%M:%S')} IST\n"
+              "Feed-polled observation, not a guaranteed tick-time fill. Alerts only; no live order.")
+    if not markup:
+        return text
+    escaped = tg.esc(text)
+    symbol = tg.esc(str(e["symbol"]))
+    return escaped.replace(f"{symbol} · {e['side']} @", f"<b>{symbol}</b> · {e['side']} @", 1)
+
+
+def sector_context_lines(gate):
+    """Two lines of sector context; never a claim of a fresh board we do not have."""
+    status = (gate or {}).get("status")
+    if status == "disabled":
+        return "", ""
+    sector, score = gate.get("sector"), gate.get("score")
+    if not sector or score is None:
+        if status == "unknown":
+            reason = gate.get("reason") or "sector board not available"
+            return f"Sector context unavailable ({reason}) — sector unverified", ""
+        return "", ""
+    slope, rank, breadth = gate.get("slope15"), gate.get("known_rank"), gate.get("boards_above70")
+    bits = [f"Sector {sector} {float(score):.2f}"]
+    if slope is not None:
+        bits.append(f"15m {float(slope):+.1f} {'↓' if slope < -0.5 else ('↑' if slope > 0.5 else '→')}")
+    if rank:
+        bits.append(f"rank {rank}")
+    if breadth is not None:
+        bits.append(f"{breadth} sectors above 70")
+    if status == "unknown":
+        bits.append("board not published — sector unverified")
+    elif status == "block":
+        bits.append("below the old gate — advisory only")
+    line = " · ".join(bits)
+    risk = ""
+    if slope is not None and slope <= -1:
+        risk = ("⚠ Sector score is falling — the sector move is already behind it; "
+                "late-cycle, not a fresh rotation.")
+    elif slope is not None and slope >= 1 and breadth is not None and breadth <= 3:
+        risk = "Sector score rising on a narrow board — the early-rotation shape."
+    elif breadth is not None and breadth >= 4 and slope is not None and slope < 0.5:
+        risk = "⚠ Broad board and a flat sector — crowded; expect chop."
+    return line, risk
+
+
+def entry_extension_pct(event):
+    """How far beyond the frozen BOS the alert price already is, in trade direction."""
+    try:
+        sign = 1 if event["side"] == "BUY" else -1
+        return sign * (float(event["price"]) - float(event["bos"])) / float(event["bos"]) * 100.
+    except (TypeError, ValueError, ZeroDivisionError, KeyError):
+        return None
 
 
 def board_publication_credit(st, bar):
     """Credit for the board's own publication lag, from a raw candle dict."""
-    if not st.get("sector_gate_required"):
+    if not st.get("sector_gate_required") or sector_advisory():
         return 0.
     observed = (st.get("sector_snapshots") or [{}])[-1].get("observed")
     if not observed:
@@ -368,6 +491,10 @@ def event_fresh(event, now, grace=0.):
 
 
 def sector_send_ok(st, event, now):
+    if sector_advisory():
+        # Advisory: the board is context in the message, never a reason to drop
+        # a fresh signal after it was accepted for delivery.
+        return True
     if not st.get("sector_gate_required") or event["kind"] in {"CLOSE_FAILED", "CLOSE_UNAVAILABLE"}:
         return True
     # Never resurrect an old pre-gate outbox item or a failed detection.
@@ -379,6 +506,7 @@ def flush(st, now, dry_run=False):
     """Durable per-event outbox. Uncertain crash sends are not blindly repeated."""
     batch_started = time.monotonic()
     batch_now = model.stamp(now)
+    promote_stranded_duplicates(st)
     for item in st["outbox"].values():
         if item["status"] not in {"pending", "failed"}:
             continue
@@ -388,10 +516,19 @@ def flush(st, now, dry_run=False):
         e = item["event"]
         # While the gate for this very candle is still unpublished, waiting is
         # legitimate up to the board cap; the promotion below pins the real wait.
-        grace = max(0., float(os.getenv("M16_BOARD_WAIT_SECONDS", "60"))) if item.get("awaiting_sector") else 0.
+        grace = max(0., float(os.getenv("M16_BOARD_WAIT_SECONDS", "60"))) if (
+            item.get("awaiting_sector") and not sector_advisory()) else 0.
         if not event_fresh(e, now, grace):
             item["status"] = "expired_unsent"
             continue
+        if item.get("awaiting_sector") and sector_advisory():
+            # A state file written by gate mode (or a board that arrived late)
+            # is context now: refresh it for the message and send.
+            item["awaiting_sector"] = False
+            e["sector_gate_at_send"] = m16_sector.decision(st, e["symbol"], e["side"], now)
+            for saved in st["events"]:
+                if saved["id"] == e["id"]:
+                    saved.update(e)
         if item.get("awaiting_sector"):
             gate = m16_sector.decision(st, e["symbol"], e["side"], now)
             item["sector_last_check"] = gate
@@ -417,7 +554,7 @@ def flush(st, now, dry_run=False):
                     if saved["id"] == e["id"]:
                         saved.update(e)
         end = model.stamp(e["bar"]) + pd.Timedelta(minutes=5)
-        late_but_gated = (e.get("board_wait") and
+        late_but_gated = (e.get("board_wait") and not sector_advisory() and
                           (model.stamp(now)-end).total_seconds() > MAX_LAG)
         if late_but_gated and not price_at_level(e, e["price"]):
             # The wait was ours, but the level is gone: never dress a stale
@@ -443,12 +580,30 @@ def flush(st, now, dry_run=False):
             current = batch_now + pd.Timedelta(seconds=time.monotonic()-batch_started)
             return event_fresh(e, current) and sector_send_ok(st, e, current)
         delivered = deliver_targets(st, ledger, lambda token, chat:
-                                    tg.send_message_to(token, chat, html.escape(alert_text(e))),
+                                    tg.send_message_to(token, chat, alert_text(e, markup=True)),
                                     can_send=can_send)
         item["status"] = "sent" if delivered else "failed"
         if item["status"] == "failed":
             item["retry_after"] = (model.stamp(now) + pd.Timedelta(seconds=3)).isoformat()
         save(st)
+    promote_stranded_duplicates(st)
+
+
+def promote_stranded_duplicates(st):
+    """A suppressed duplicate is only safe while its twin is really going out."""
+    if not model.suppress_duplicates():
+        return
+    for item in st["outbox"].values():
+        if item.get("status") != "duplicate_suppressed":
+            continue
+        twin = st["outbox"].get(item.get("suppresses"))
+        if twin is None or twin.get("status") in {"failed", "expired_unsent", "sector_rejected"}:
+            item["status"] = "pending"
+            item["promoted_from_duplicate"] = twin.get("status") if twin else "missing"
+            st.setdefault("diagnostics", []).append(dict(
+                at=model.stamp(item["event"].get("observed") or "").isoformat() if item["event"].get("observed") else None,
+                symbol=item["event"].get("symbol"),
+                reason=f"duplicate of a twin that never went out ({item['promoted_from_duplicate']}); re-queued"))
 
 
 def finish(st, dry_run=False):
@@ -548,7 +703,7 @@ def late_entry_candidate(st, event, now, discovery_price):
       * still before the 12:30 confirmation cutoff
       * price on the trade side of the BOS and at most
         M16_LATE_MAX_EXTENSION_PCT (default 0.75 %) away from it
-      * the sector board validates the sector at that moment (no guessing)
+      * in gate mode only: the sector board validates the sector at that moment
     """
     if st.get("mode") == "offline_replay" or os.getenv("M16_LATE_ALERTS", "1") == "0":
         return None
@@ -570,7 +725,7 @@ def late_entry_candidate(st, event, now, discovery_price):
     if extension <= 0 or extension > late_alert_max_extension_pct():
         return None
     gate = m16_sector.decision(st, event["symbol"], event["side"], now)
-    if gate.get("status") not in {"pass", "disabled"}:
+    if not sector_advisory() and gate.get("status") not in {"pass", "disabled"}:
         return None
     return dict(delay_seconds=round(delay, 1), delay_minutes=round(delay / 60., 2),
                 extension_pct=round(extension, 3), discovery_price=float(discovery_price),
@@ -858,12 +1013,19 @@ def discovery_hold(now, bucket_age, has_close_board, gate_required=True, refresh
     cooldown. While the board's own refresh is still in flight the wave stays
     queued behind it; the wait is capped so a hung refresh cannot stall
     discovery. With the sector gate disabled there is nothing to protect.
+
+    In advisory mode the board cannot block anything, so it only ever needs a
+    short courtesy window (`M16_SECTOR_RUNWAY_ADVISORY_SECONDS`, default 8):
+    every second it holds the wave is a second added to a real alert's latency.
     """
     if not gate_required or has_close_board or not refresh_pending:
         return False
     if not model.before(now, "12:35:00"):
         return False
-    runway = max(0., float(os.getenv("M16_SECTOR_RUNWAY_SECONDS", "25")))
+    if model.advisory():
+        runway = max(0., float(os.getenv("M16_SECTOR_RUNWAY_ADVISORY_SECONDS", "8")))
+    else:
+        runway = max(0., float(os.getenv("M16_SECTOR_RUNWAY_SECONDS", "25")))
     return bucket_age < runway
 
 
@@ -1313,12 +1475,18 @@ def readiness_check(target_day=None):
     expected_prior_day = previous_regular_session_day(day)
 
     cache = {sym: shared.symbol_history(sym, day) for sym in shared.L.SYMS}
+    extras = {sym for sym, _ in extra_universe()}
     dormant = sorted(inactive_symbols(cache))
     active_syms = [sym for sym in shared.L.SYMS if sym not in dormant]
-    missing_history = [sym for sym in active_syms if not cache[sym].get("ok")]
+    # Extra-universe names are scan-only additions: their history arrives with
+    # the next bootstrap, and until then they simply produce no seeds. They must
+    # never block readiness (or the session would never start after a universe
+    # change), so they are reported separately.
+    missing_history = [sym for sym in active_syms if not cache[sym].get("ok") and sym not in extras]
+    extra_missing_history = [sym for sym in active_syms if not cache[sym].get("ok") and sym in extras]
     stale_prior_day = [
-        sym for sym in active_syms
-        if expected_prior_day and str(cache[sym].get("last_day") or "")[:10] < expected_prior_day
+        sym for sym in active_syms if sym not in extras
+        and expected_prior_day and str(cache[sym].get("last_day") or "")[:10] < expected_prior_day
     ]
     last_days = sorted({str(cache[sym].get("last_day") or "")[:10] for sym in active_syms if cache[sym].get("last_day")})
 
@@ -1399,8 +1567,9 @@ def readiness_check(target_day=None):
             total_symbols=len(shared.L.SYMS),
             active_symbols=len(active_syms),
             dormant_excluded=dormant,
-            history_ok=len(active_syms) - len(missing_history),
+            history_ok=len(active_syms) - len(missing_history) - len(extra_missing_history),
             missing_history=missing_history,
+            extra_missing_history=extra_missing_history,
             stale_prior_day=stale_prior_day,
             active_last_days=last_days,
         ),
@@ -1447,6 +1616,7 @@ def main():
     args = parser.parse_args()
     import m16_transport
     m16_transport.install()
+    install_extra_universe()
     if args.readiness_check is not None:
         if not readiness_check(args.readiness_check):
             raise SystemExit(1)

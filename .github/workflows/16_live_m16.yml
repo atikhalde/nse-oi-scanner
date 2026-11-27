@@ -57,14 +57,37 @@ jobs:
       # the board always gets the provider budget first.
       M16_DISCOVERY_SLICES: "3"
       M16_SECTOR_RUNWAY_SECONDS: "25"
+      # Advisory mode has nothing to wait for: the board only gets a short
+      # courtesy window (8s) instead of holding the discovery wave for 25s.
+      M16_SECTOR_RUNWAY_ADVISORY_SECONDS: "8"
       # A close alert may wait for its own gate: the wait (capped here) is
       # credited back to the 30s freshness window instead of turning the alert
       # into a "found late" one, and the price still has to be within 0.75% of
       # the BOS once the wait pushed it past 30s.
       M16_BOARD_WAIT_SECONDS: "60"
+      # Sector policy: advisory (default) delivers EVERY fresh signal and prints
+      # the board as context - score, 15-minute slope, rank, breadth, plus a
+      # warning when the score is falling. Set "gate" to restore the strict
+      # fail-closed board (score >70 and top-3 rank, waiting for publication):
+      # on 27-Nov that gate passed 10 of the day's worst breakouts and blocked
+      # 10 of the best (BAJAJ-AUTO +2.04%, ANGELONE, ABCAPITAL, GODFRYPHLP,
+      # ETERNAL, GAIL, AXISBANK, BAJAJFINSV, LICI, SBIN).
+      M16_SECTOR_MODE: "advisory"
+      # One alert per symbol/side/candle: when a running alert was delivered,
+      # its close confirmation is recorded (duplicate_suppressed) not re-sent.
+      # Set "0" to keep both messages.
+      M16_SUPPRESS_DUPLICATES: "1"
+      # A pullback may close this far through EMA9/EMA10 without killing the
+      # seed (the entry candle itself still has to hold them strictly). 358
+      # seeds died on EMA noise in four sessions, 95% of them within 0.30%.
+      M16_EMA_TOLERANCE_PCT: "0.30"
+      # Scan the non-F&O names in m16_extra_universe.csv (GRSE, PARAS,
+      # DATAPATTNS, ASTRAMICRO, BEML) for STOCK alerts only. Sector baskets and
+      # every sector score are untouched; set "0" to scan the F&O map alone.
+      M16_EXTRA_UNIVERSE: "1"
       # Delayed re-entry policy: a close-confirmed BOS found up to 15 min late
       # still alerts (priced at discovery, labelled DELAYED) while price is
-      # within 0.75% of the frozen BOS and the sector board passes.
+      # within 0.75% of the frozen BOS.
       M16_LATE_ALERTS: "1"
       M16_LATE_WINDOW_MIN: "15"
       M16_LATE_MAX_EXTENSION_PCT: "0.75"

@@ -18,13 +18,28 @@ def sections(st):
     provider_counts = dict(Counter('usable' if x.get('ok') else 'unusable'
                                    for sym, x in st.get('feed_health', {}).items() if sym not in dormant))
     dormant_note = f"; dormant excluded: {sorted(dormant)}" if dormant else ""
+    outbox = st.get('outbox', {})
+    sent = [v for v in outbox.values() if v.get('status') == 'sent' or 'sent' in (v.get('deliveries') or {}).values()]
+    duplicates = [e for e in events if e.get('duplicate_of')]
+    modes = dict(Counter(e.get('sector_mode') or st.get('sector_mode') or 'unknown' for e in events)) or {
+        (st.get('sector_mode') or 'unknown'): 0}
+    if set(modes) == {'unknown'}:
+        policy = ("Sector mode: not recorded in this state (written before the advisory switch); "
+                  "the events below were produced by the fail-closed gate: score > 70 and top-3 rank required")
+    else:
+        policy = (f"Sector mode: {', '.join(f'{k} ({v} events)' for k, v in modes.items())} | "
+                  + ("the board is CONTEXT on every alert, never a send filter"
+                     if 'advisory' in modes else "fail-closed gate: score > 70 and top-3 rank required"))
     coverage = [f"Date: {st.get('date', '?')} (IST) | Mode: {st.get('mode', 'feed-polled observations; historical events are not live alerts')}",
+                policy,
                 f"Original tracked signals: {len(setups)}; continuation observations: {len(events)}",
                 f"Setup phases: {dict(Counter(s.get('phase', '?') for s in setups.values()))}",
-                f"Persistence-only sector gate required: {st.get('sector_gate_required', False)}; decisions: {dict(Counter(e.get('sector_gate', {}).get('status', 'legacy') for e in events))}; snapshots: {len(st.get('sector_snapshots', []))}",
+                f"Persistence-only sector board required: {st.get('sector_gate_required', False)}; decisions: {dict(Counter(e.get('sector_gate', {}).get('status', 'legacy') for e in events))}; snapshots: {len(st.get('sector_snapshots', []))}",
                 f"Event types: {dict(Counter(e.get('kind', '?') for e in events))}",
                 f"Recorded completed candles: {sum(len(b) for b in bars.values())} across {len(bars)} symbols.",
-                f"Live eligible events: {sum(bool(e.get('live')) for e in events)}; historical only: {sum(not bool(e.get('live')) for e in events)}",
+                f"Alerts delivered: {len(sent)}; duplicate-suppressed (same candle already delivered): {len(duplicates)}; "
+                f"not delivered: {len(outbox) - len(sent) - len(duplicates)}; events with no outbox item: {len(events) - len(outbox)}",
+                f"Promoted after a board wait (live flag): {sum(bool(e.get('live')) for e in events)}; historical only: {sum(not bool(e.get('live')) and not e.get('duplicate_of') for e in events)}",
                 f"Delayed re-entry alerts (BOS found late, priced at discovery): {sum(bool(e.get('late')) for e in events)}"
                 + (f" | delays {dict(Counter(round(e['late']['delay_minutes'], 1) for e in events if e.get('late')))}" if any(e.get('late') for e in events) else ""),
                 f"Monitoring last checked: {st.get('monitoring_health', {}).get('at', st.get('health_notice', {}).get('checked_at', '?'))}; affected symbols: {len(st.get('monitoring_health', {}).get('affected', st.get('health_notice', {}).get('affected', [])))}",
@@ -41,7 +56,8 @@ def sections(st):
         'All final chart labels/EX variants seed tracking; previews 90/290 excluded. Seed confirmed before 11:00; BOS confirmation before 12:30.',
         'Pre-pullback rally: >=3 completed candles, >=2 directional advances, >=0.3% progress, efficiency >=0.65 and both EMA slopes directional.',
         'From seed through confirmation, BUY closes >= both EMA9/10; SELL closes <= both. Wick touches allowed. Missing continuity invalidates.',
-        'Fib 0.236-0.382 band or EMA9/10 wick touch; freeze prior extreme as BOS. >50% retracement invalidates. Live alerts require M6 sector persistence >70 and directional top-3 rank on the current 5m board (no M6 composite/leadership/top-five stock filters).',
+        'Fib 0.236-0.382 band or EMA9/10 wick touch; freeze prior extreme as BOS. >50% retracement invalidates. Default sector mode is ADVISORY: every fresh signal is delivered and the M6 persistence board appears as context (score, 15-minute slope, rank, board breadth). Setting M16_SECTOR_MODE=gate restores the fail-closed board (score >70 and top-3 rank, waiting for publication).',
+        'Duplicate policy: one alert per symbol/side/candle. When a running alert was already delivered for that candle, its close confirmation is recorded as duplicate_suppressed instead of sent again (M16_SUPPRESS_DUPLICATES=0 keeps both). A CLOSE_FAILED risk update is never suppressed.',
         'RUNNING_BREAK is provisional. CLOSE_CONFIRMED and CLOSE_FAILED describe the SAME candle. CLOSE_ONLY means no intrabar crossing was observed.',
         'DIRECT_BOS_CONFIRMED: the original final indicator label itself occurs on a qualifying BOS close. Prior price-pattern evidence, not a fabricated earlier indicator signal; no second pullback required.',
         'DELAYED re-entry: when a close-confirmed BOS is first discovered 30s-15min late and price is still within 0.75% of the frozen BOS, the alert is sent priced at the discovery candle and labelled DELAYED. Provisional RUNNING_BREAK alerts are never delayed-issued.',
@@ -85,11 +101,7 @@ def sections(st):
                      f"directional best {favorable:+.3f}%, worst {adverse:+.3f}%, last {change:+.3f}% | last recorded {later[-1]['dt']}")
     yield '8. Later price behavior - observations, NOT trade P&L', [
         'Exclude the event candle. No assumed entry execution, stop, target, fees or guaranteed tradable prices. Values can remain negative/positive throughout; they are raw extrema, not clipped MFE/MAE.'] + (paths or ['No events to evaluate.'])
-    delivery = [f"{key}: {pformat(value, width=110)}" for key,value in st.get('outbox', {}).items()]
-    delivery.extend(['TXT delivery acknowledgements: '+pformat(st.get('eod_deliveries', {})),
-                     'PDF delivery acknowledgements (snapshot before sending): '+pformat(st.get('eod_pdf_deliveries', {})),
-                     'Sending after a crash is uncertain, not proof of delivery. Reports cannot contain acknowledgements received after their own creation.'])
-    yield '9. Bot delivery and stale-send audit', delivery
+    yield '9. Bot delivery and stale-send audit', alert_ledger(st)
     yield '10. Feed, engine and retention diagnostics', [pformat(d, width=110) for d in st.get('diagnostics', [])] or ['No diagnostics recorded; this alone does not prove uninterrupted data coverage.']
     coverage = []
     for symbol, values in sorted(bars.items()):
@@ -104,6 +116,66 @@ def sections(st):
         coverage.append(f"{symbol}: {len(keys)} candles | {keys[0]} through {keys[-1]} | {'seeded full-day' if seeded else 'discovery-only'} | absent expected bars: {', '.join(missing) or 'none'}")
     yield '11. Per-symbol candle coverage', coverage or ['No candle journal available. Legacy states cannot supply missing history.']
     yield '12. COMPLETE SAVED AUDIT - all recorded fields', pformat(st, width=110, sort_dicts=False).splitlines()
+
+
+def alert_ledger(st):
+    """One readable line per alert: delivered, duplicate-suppressed or not sent.
+
+    The full raw outbox dict is still in the appendix; this is the summary a
+    reader needs to answer "what did the bot actually send today?".
+    """
+    lines, outbox = [], st.get('outbox', {})
+    events = {e.get('id'): e for e in st.get('events', [])}
+    for key, item in outbox.items():
+        e = item.get('event') or events.get(key) or {}
+        delivered = item.get('status') == 'sent' or 'sent' in (item.get('deliveries') or {}).values()
+        if delivered:
+            state = 'DELIVERED'
+        elif item.get('status') == 'duplicate_suppressed':
+            first = events.get(item.get('suppresses')) or {}
+            state = f"DUPLICATE of {str(first.get('bar', '?'))[11:16]} alert (same candle)"
+        elif item.get('status') == 'sector_rejected':
+            state = 'NOT SENT (gate mode: sector)'
+        elif item.get('status') == 'expired_unsent':
+            state = 'NOT SENT (expired before delivery)'
+        else:
+            state = f"NOT SENT ({item.get('status', '?')})"
+        gate = e.get('sector_gate_at_send') or e.get('sector_gate') or {}
+        ctx = ''
+        if gate.get('sector'):
+            ctx = f" | {gate['sector']} {float(gate.get('score') or 0):.1f}"
+            if gate.get('slope15') is not None:
+                ctx += f" ({float(gate['slope15']):+.1f}/15m)"
+            if gate.get('known_rank'):
+                ctx += f" rank {gate['known_rank']}"
+            if gate.get('status') == 'unknown':
+                ctx += ' unverified'
+        ext = None
+        if e.get('bos') and e.get('price'):
+            sign = 1 if e.get('side') == 'BUY' else -1
+            try:
+                ext = sign * (float(e['price']) - float(e['bos'])) / float(e['bos']) * 100.
+            except (TypeError, ValueError, ZeroDivisionError):
+                ext = None
+        ext_s = f" | ext {ext:+.2f}%" if ext is not None else ''
+        ema_s = f" | EMA undercut {float(e['ema_undercut']):.2f}%" if e.get('ema_undercut') else ''
+        late_s = f" | late {e['late']['delay_minutes']:.1f} min" if e.get('late') else ''
+        mirror = f"{sum(1 for v in (item.get('deliveries') or {}).values() if v == 'sent')} destination(s)"
+        lines.append(f"{str(e.get('observed', ''))[11:19]} {e.get('symbol', '?')} {e.get('side', '?')} "
+                     f"{e.get('kind', '?')} @ {e.get('price')} | {state}{ctx}{ext_s}{ema_s}{late_s}"
+                     + (f" | {mirror}" if delivered else ''))
+    suppressed = [e for e in st.get('events', []) if e.get('duplicate_of') and e.get('id') not in outbox]
+    for e in suppressed:
+        lines.append(f"{str(e.get('observed', ''))[11:19]} {e.get('symbol')} {e.get('side')} {e.get('kind')} "
+                     f"@ {e.get('price')} | DUPLICATE not sent (kept {e['duplicate_of'].split(':')[2:4]})")
+    counts = Counter('delivered' if (v.get('status') == 'sent' or 'sent' in (v.get('deliveries') or {}).values())
+                     else ('duplicate' if v.get('status') == 'duplicate_suppressed' else 'not sent')
+                     for v in outbox.values())
+    lines.insert(0, f"Outbox summary: {dict(counts)}")
+    lines.extend(['TXT delivery acknowledgements: '+pformat(st.get('eod_deliveries', {})),
+                  'PDF delivery acknowledgements (snapshot before sending): '+pformat(st.get('eod_pdf_deliveries', {})),
+                  'Sending after a crash is uncertain, not proof of delivery. Reports cannot contain acknowledgements received after their own creation.'])
+    return lines
 
 
 def build_pdf(st, path):

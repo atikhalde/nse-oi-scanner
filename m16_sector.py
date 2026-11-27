@@ -1,4 +1,10 @@
-"""M16 persistence-only gate using M6's unmodified sector board engine."""
+"""Sector board for M16: context on every alert, optional hard gate.
+
+`M16_SECTOR_MODE=advisory` (default) returns the sector's score, 15-minute
+slope, rank and board breadth so the alert can print them; it never blocks a
+send. `gate` restores the fail-closed persistence-only gate (score > 70 and a
+top-3 rank, waiting for publication) exactly as it was.
+"""
 import math
 from concurrent.futures import ThreadPoolExecutor
 import pandas as pd
@@ -7,6 +13,40 @@ import pandas as pd
 def stamp(t):
     t = pd.Timestamp(t)
     return t.tz_localize('Asia/Kolkata') if t.tzinfo is None else t.tz_convert('Asia/Kolkata')
+
+
+SCORE_SLOPE_BARS = 3   # 15 minutes of 5m boards
+
+
+def _context(snap, sec, key, now, eligible):
+    """Score, rank, slope and board breadth for one sector on one board.
+
+    The slope matters more than the level: on 2026-11-26/27 alerts whose home
+    sector score had fallen 1-5 points in the previous 15 minutes went 0-for-7
+    (mean -1.01%), while a score rising 1-5 points went 11-for-15 (mean +0.43%).
+    A high, flat score is a sector whose move is already behind it.
+    """
+    if not snap or sec not in snap.get('sectors', {}):
+        return {}
+    metrics = snap['sectors'][sec]
+    if key not in metrics:
+        return {}
+    score = float(metrics[key])
+    ordered = sorted(snap['sectors'], key=lambda s: -float(snap['sectors'][s].get(key, 0.)))
+    prior = None
+    for i in range(len(eligible) - 1, -1, -1):
+        if stamp(eligible[i]['close']) <= stamp(snap['close']) - pd.Timedelta(minutes=5 * SCORE_SLOPE_BARS):
+            prior = eligible[i]
+            break
+    try:
+        slope = round(score - float(prior['sectors'][sec][key]), 2) if prior and sec in prior['sectors'] else None
+    except (KeyError, TypeError, ValueError):
+        slope = None
+    breadth = sum(1 for s in snap['sectors'] if float(snap['sectors'][s].get(key, 0.)) > 70)
+    return dict(sector=sec, score=score, top3=ordered[:3], known_rank=ordered.index(sec) + 1,
+                slope15=slope, boards_above70=breadth,
+                close=snap['close'], observed=snap['observed'],
+                board_age_seconds=round((stamp(now) - stamp(snap['close'])).total_seconds(), 1))
 
 
 def decision(st, symbol, side, now):
@@ -19,28 +59,29 @@ def decision(st, symbol, side, now):
     if not eligible:
         return dict(status='unknown', reason='sector board unavailable')
     snap = max(eligible, key=lambda s: stamp(s['close']))
+    sec = shared.SECTOR_OF.get(symbol)
+    key = 'persist_bull' if side == 'BUY' else 'persist_bear'
     # Do not silently reuse an older candle once the next candle has closed.
     if stamp(snap['close']) != now.floor('5min') or stamp(snap['close']).date() != now.date():
-        return dict(status='unknown', reason='sector board stale')
-    sec = shared.SECTOR_OF.get(symbol)
+        # The unpublished board is not a verdict, but the last one is still
+        # useful context for an advisory label.
+        return dict(status='unknown', reason='sector board stale',
+                    **_context(snap, sec, key, now, eligible))
     if symbol in snap.get('dormant_members', []):
         return dict(status='unknown', reason='symbol feed dormant', sector=sec)
     metrics = snap['sectors'].get(sec)
     if not metrics:
         return dict(status='unknown', reason='home sector unavailable', sector=sec)
-    key = 'persist_bull' if side == 'BUY' else 'persist_bear'
-    score = float(metrics[key])
-    ordered = sorted(snap['sectors'], key=lambda s: -float(snap['sectors'][s][key]))
-    leaders = ordered[:3]
+    evidence = _context(snap, sec, key, now, eligible)
+    if not evidence:
+        return dict(status='unknown', reason='home sector metrics unavailable', sector=sec)
     missing = snap.get('missing_sectors', [])
-    rank = ordered.index(sec)+1
-    worst_rank = rank+len(missing)
-    evidence = dict(sector=sec, score=score, top3=leaders, known_rank=rank,
-                    worst_rank=worst_rank, missing_sectors=missing,
-                    close=snap['close'], observed=snap['observed'])
+    evidence.update(missing_sectors=missing,
+                    worst_rank=evidence['known_rank'] + len(missing))
+    score, rank = evidence['score'], evidence['known_rank']
     if not math.isfinite(score) or score <= 70 or rank > 3:
         return dict(status='block', **evidence)
-    if worst_rank > 3:
+    if evidence['worst_rank'] > 3:
         return dict(status='unknown', reason='top-three rank uncertain with missing sector', **evidence)
     return dict(status='pass', **evidence)
 

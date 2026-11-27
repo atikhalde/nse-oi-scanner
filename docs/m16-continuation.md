@@ -11,6 +11,8 @@ M16 is an **alerts-only** model. It does not place orders or reuse M2/M6 trade l
 
    **EMA continuity:** from the original signal candle through the BOS confirmation candle, BUY closes must remain at or above **both EMA9 and EMA10**. SELL closes must remain at or below **both**. A close through either EMA permanently invalidates that seed; touching/crossing with a wick or closing exactly on an EMA is allowed. Missing EMA data or a missing completed candle fails closed, because continuity cannot be verified. A provisional running breakout whose candle violates this rule receives `CLOSE_FAILED`, not confirmation.
 
+   **Noise tolerance (`M16_EMA_TOLERANCE_PCT`, default `0.30`):** the tracked pullback may close up to this percentage *through* the EMAs without invalidating the seed; the depth is recorded (`ema_undercut`) and printed on the alert. The original seed candle and the entry candle itself still have to hold both EMAs strictly. Reason: across 2026-11-23/25/26/27 the strict rule killed **358 seeds** — three times the number of alerts sent — and 95% of those kills were closes within 0.30% of the EMA, i.e. ordinary pullback noise. BDL on 27-Nov closed 0.19% under EMA9 at 11:15 and was dropped for the session. Setting `0` restores the strict rule.
+
    After a qualifying rally, on a **later, separate completed candle**, recognize either:
    - A wick intersecting the 23.6%–38.2% retracement band of the anchor-to-extreme leg; **or**
    - A wick touching EMA9 **or** EMA10. EMA calculations include prior-session warm-up, like the shared scanner frame.
@@ -18,6 +20,24 @@ M16 is an **alerts-only** model. It does not place orders or reuse M2/M6 trade l
 6. Small-pullback safeguard: retracement greater than 50% of the leg invalidates the setup. An anchor break also invalidates it. These are starting defaults, not profitability-optimized parameters.
 7. BUY when observed running price crosses above frozen BOS; SELL mirrors below BOS. Use the current received candle close/last price, not the bar's historical wick. Stop after one outcome per seed. Multiple seeds converging on the identical symbol/side/BOS/pullback/break candle produce only one alert pair.
 8. Both setup and breakout confirmation must occur **strictly before 12:30**. The latest eligible breakout candle is therefore 12:20–12:25; a 12:25–12:30 candle is excluded. Unfinished setups expire at 12:30.
+
+## Sector board: advisory by default, gate on request
+
+`M16_SECTOR_MODE=advisory` (default) treats the M6 persistence board as **context, never a send filter**: every fresh signal is delivered, and the alert prints the home sector, its score, the 15-minute score slope, the rank, how many sectors are above 70, and a plain warning when the score is falling (`⚠ Sector score is falling — the sector move is already behind it`) or the board is crowded. A stale board delays nothing: the alert goes out immediately labelled `sector unverified`.
+
+Why this is the default: the board scores a sector from the sector index's own recent returns, and the alerting stock sits inside that average, so a hard gate mostly selects whichever candle has already run. On 2026-11-27 with `gate` the model sent 15 messages (10 distinct setups) with mean drift −0.16% and **blocked** the day's best: BAJAJ-AUTO +2.04%, ANGELONE +0.57%, ABCAPITAL +0.39%, GODFRYPHLP +1.12%, ETERNAL +1.00%, GAIL +1.02%, AXISBANK +0.73%, BAJAJFINSV +0.70%, LICI +0.80%, SBIN +0.54%. Rank IC of the score against the sector's own next-30-minute member return is +0.19 with a +0.06–0.08pp effect — a tenth of the noise it filters on.
+
+`M16_SECTOR_MODE=gate` restores the previous behaviour exactly (score > 70, top-3 rank, wait up to `M16_BOARD_WAIT_SECONDS` for publication, reject on block). It stays available as a rollback and for shadow comparison.
+
+## Duplicate policy
+
+`M16_SUPPRESS_DUPLICATES=1` (default) keeps **one alert per symbol/side/candle**. When a `RUNNING_BREAK` alert was actually delivered for a candle, the `CLOSE_CONFIRMED` event for that same candle is recorded as `duplicate_suppressed` (price included, listed in the EOD delivery ledger) instead of being sent again. A failed or unsent first alert never blocks its close confirmation, and a `CLOSE_FAILED` risk update is never suppressed. `0` restores two messages.
+
+Reason: 49% of setups produce both events on one candle, and the close variant is always the worse price for the direction (HAL 5033.10 → 5053.40, COCHINSHIP 1130 → 1133, where the second alert lost 1.15% while the first gained 1.24%).
+
+## Universe
+
+Discovery covers `fno_universe.csv` (210 F&O names). `m16_extra_universe.csv` adds liquid NSE names that have **no F&O contract** — today GRSE, PARAS, DATAPATTNS, ASTRAMICRO and BEML (sector `DEF`) — to the **scanning** universe only: `M16_EXTRA_UNIVERSE=1` (default). They never join a sector basket, so no sector score changes. Removing a line, or setting the flag to `0`, restores the F&O-only universe.
 
 ## Two-stage alert contract
 
@@ -343,3 +363,14 @@ explicitly unlock in `finally` and have bounded two-second lock acquisition;
 heartbeat status reports a lock error rather than hanging on the budget read.
 See `docs/m16-worker-lock-stall.md` for the uploaded stalled-run evidence,
 subprocess regressions and deployment-verification limits.
+
+### Extra-universe history
+
+`data/history/<SYMBOL>.csv` is committed and refreshed by workflow **2. Bootstrap**
+(`live_runner.py --bootstrap refresh-60d`, 08:45 IST weekdays), which now also
+fetches the `m16_extra_universe.csv` names. Until a name has its history file it
+produces **no seeds** (`analyze()` needs a valid prior-day cache) — that is by
+design, so a universe change can never crash a session. The readiness check
+reports those names under `universe.extra_missing_history` and keeps them out of
+`missing_history`/`stale_prior_day`, so they cannot fail the pre-session gate.
+The first bootstrap after merging this change fills them in.

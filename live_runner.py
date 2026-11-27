@@ -262,6 +262,22 @@ def prev_oi_base(today_str):
         print("oi_prev fetch failed (non-fatal, gate uses nse-live):", e)
 
 
+def extra_universe_symbols():
+    """Scan-only names M16 adds beyond the F&O universe (no securityId of their own)."""
+    fp = ROOT / "m16_extra_universe.csv"
+    if os.environ.get("M16_EXTRA_UNIVERSE", "1") == "0" or not fp.exists():
+        return []
+    out = []
+    for line in fp.read_text().splitlines():
+        line = line.split("#", 1)[0].strip()
+        if not line or line.lower().startswith("symbol"):
+            continue
+        sym = line.split(",")[0].strip().upper()
+        if sym and sym not in SYMS and sym not in out:
+            out.append(sym)
+    return out
+
+
 def mode_bootstrap(kind="full"):
     now = now_ist()
     since = (now - dt.timedelta(days=95)).strftime("%Y-%m-%d 09:15:00")
@@ -270,12 +286,15 @@ def mode_bootstrap(kind="full"):
     to = now.strftime("%Y-%m-%d %H:%M:%S")
     HIST.mkdir(parents=True, exist_ok=True)
     n_ok = 0
-    for sym in SYMS:
+    extras = extra_universe_symbols()
+    if extras:
+        print(f"M16 extra universe history: {', '.join(extras)}")
+    for sym in list(SYMS) + extras:
         df = None
         df = feeds.fetch_bars_yahoo(sym, "60d")
         if df is not None and not df.empty:
             time.sleep(1.2)
-        if (df is None or df.empty) and os.environ.get("DHAN_TOKEN"):
+        if (df is None or df.empty) and os.environ.get("DHAN_TOKEN") and SID.get(sym):
             try:
                 df = feeds.fetch_bars_dhan(SID[sym], since, to)
                 time.sleep(0.6)
@@ -287,9 +306,9 @@ def mode_bootstrap(kind="full"):
         df[["dt", "open", "high", "low", "close", "volume"]].to_csv(HIST / f"{sym}.csv", index=False)
         n_ok += 1
         if n_ok % 25 == 0:
-            print(f"  {n_ok}/{len(SYMS)}")
+            print(f"  {n_ok}/{len(SYMS) + len(extras)}")
     prev_oi_base(now.strftime("%Y-%m-%d"))
-    print(f"bootstrap done: {n_ok}/{len(SYMS)} symbols")
+    print(f"bootstrap done: {n_ok}/{len(SYMS) + len(extras)} symbols")
 
 
 # ---------------------------------------------------------------- live cycle

@@ -1,4 +1,5 @@
 """Offline M16 state machine, timing, isolation and delivery regressions."""
+import contextlib
 import copy
 import json
 import os
@@ -11,6 +12,13 @@ import m16_model as M
 import m16_runner as R
 
 DAY = "2026-11-20"
+
+
+@contextlib.contextmanager
+def gate_mode(**env):
+    """Pin the legacy strict sector gate for tests that describe it."""
+    with patch.dict(os.environ, {'M16_SECTOR_MODE': 'gate', **env}):
+        yield
 
 
 def at(t):
@@ -43,6 +51,166 @@ def armed(sell=False):
     M.closed_bar(st, "AXISBANK", peak, at("09:45:01"))
     M.closed_bar(st, "AXISBANK", pullback, at("09:50:01"))
     return st, key
+
+
+GATE_PASS = dict(status='pass', sector='BANK', score=90.0, known_rank=1, worst_rank=1,
+                 missing_sectors=[], slope15=2.4, boards_above70=2, close=at('09:55').isoformat(),
+                 observed=at('09:55:20').isoformat(), top3=['BANK'])
+GATE_BLOCK = dict(status='block', sector='BANK', score=41.0, known_rank=9, worst_rank=10,
+                  missing_sectors=[], slope15=-2.6, boards_above70=5, close=at('09:55').isoformat(),
+                  observed=at('09:55:20').isoformat())
+GATE_UNKNOWN = dict(status='unknown', reason='sector board stale')
+
+
+class AdvisoryAndDuplicateTests(unittest.TestCase):
+    """Advisory board, one alert per candle, highlighted symbol."""
+
+    def emitted(self, kind='RUNNING_BREAK', gate=None, price=111.0, now='09:52', env=None):
+        st, key = armed()
+        st['sector_gate_required'] = True
+        with patch.dict(os.environ, env or {}), patch.object(
+                R.m16_sector, 'decision', return_value=dict(gate if gate is not None else GATE_PASS)):
+            M.emit(st, st['setups'][key], kind, at('09:50'), price, at(now), True)
+        return st
+
+    def test_blocked_board_still_emits_in_advisory_mode(self):
+        st = self.emitted(gate=GATE_BLOCK, now='09:52')
+        self.assertEqual(len(st['outbox']), 1)
+        event = st['events'][0]
+        self.assertTrue(event['live'])
+        self.assertEqual(event['sector_mode'], 'advisory')
+        self.assertEqual(event['sector_gate']['status'], 'block')
+
+    def test_gate_mode_still_blocks_a_qualified_sector(self):
+        with gate_mode():
+            st = self.emitted(gate=GATE_BLOCK)
+        self.assertEqual(st['outbox'], {})
+        self.assertFalse(st['events'][0]['live'])
+
+    @staticmethod
+    def item_for(st, kind):
+        return next(v for v in st['outbox'].values() if v['event']['kind'] == kind)
+
+    def test_duplicate_close_is_suppressed_after_a_delivered_running_alert(self):
+        st = self.emitted()
+        next(iter(st['outbox'].values()))['status'] = 'sent'
+        with patch.object(R.m16_sector, 'decision', return_value=dict(GATE_PASS)):
+            M.emit(st, st['setups'][next(iter(st['setups']))], 'CLOSE_CONFIRMED', at('09:50'), 111.4, at('09:55:02'), True)
+        item = self.item_for(st, 'CLOSE_CONFIRMED')
+        self.assertEqual(item['status'], 'duplicate_suppressed')
+        self.assertEqual(item['event']['duplicate_of'], st['events'][0]['id'])
+        self.assertFalse(item['event']['live'])
+
+    def test_duplicate_is_delivered_when_the_first_alert_failed(self):
+        st = self.emitted()
+        next(iter(st['outbox'].values()))['status'] = 'failed'
+        with patch.object(R.m16_sector, 'decision', return_value=dict(GATE_PASS)):
+            M.emit(st, st['setups'][next(iter(st['setups']))], 'CLOSE_CONFIRMED', at('09:50'), 111.4, at('09:55:02'), True)
+        item = self.item_for(st, 'CLOSE_CONFIRMED')
+        self.assertEqual(item['status'], 'pending')
+        self.assertNotIn('duplicate_of', item['event'])
+
+    def test_pending_twin_suppresses_the_second_alert_of_one_candle(self):
+        st = self.emitted()                       # RUNNING_BREAK stays pending
+        with patch.object(R.m16_sector, 'decision', return_value=dict(GATE_PASS)):
+            M.emit(st, st['setups'][next(iter(st['setups']))], 'CLOSE_CONFIRMED', at('09:50'), 111.4, at('09:55:02'), True)
+        self.assertEqual(self.item_for(st, 'CLOSE_CONFIRMED')['status'], 'duplicate_suppressed')
+
+    def test_suppressed_duplicate_is_promoted_when_its_twin_never_goes_out(self):
+        st = self.emitted()
+        with patch.object(R.m16_sector, 'decision', return_value=dict(GATE_PASS)):
+            M.emit(st, st['setups'][next(iter(st['setups']))], 'CLOSE_CONFIRMED', at('09:50'), 111.4, at('09:55:02'), True)
+        running = self.item_for(st, 'RUNNING_BREAK')
+        running['status'] = 'failed'
+        with patch.object(R, 'save'), patch.object(R, 'telegram_targets', return_value=[('t', 'c')]), patch.object(
+                R.tg, 'send_message_to', return_value=True) as send, patch.object(
+                R.m16_sector, 'decision', return_value=dict(GATE_PASS)):
+            R.flush(st, at('09:55:05'))
+        self.assertEqual(send.call_count, 1)      # the promoted close alert, not twice
+        self.assertEqual(self.item_for(st, 'CLOSE_CONFIRMED')['status'], 'sent')
+        self.assertEqual(self.item_for(st, 'CLOSE_CONFIRMED')['promoted_from_duplicate'], 'failed')
+        self.assertTrue(any('never went out' in str(d.get('reason')) for d in st['diagnostics']))
+
+    def test_risk_update_is_never_suppressed(self):
+        st = self.emitted()
+        next(iter(st['outbox'].values()))['status'] = 'sent'
+        with patch.object(R.m16_sector, 'decision', return_value=dict(GATE_PASS)):
+            M.emit(st, st['setups'][next(iter(st['setups']))], 'CLOSE_FAILED', at('09:50'), 109.0, at('09:55:02'), True)
+        self.assertEqual(len(st['outbox']), 2)
+        self.assertNotEqual(self.item_for(st, 'CLOSE_FAILED')['status'], 'duplicate_suppressed')
+
+    def test_suppression_can_be_switched_off(self):
+        st, key = armed()
+        st['sector_gate_required'] = True
+        with patch.dict(os.environ, {'M16_SUPPRESS_DUPLICATES': '0'}), patch.object(
+                R.m16_sector, 'decision', return_value=dict(GATE_PASS)):
+            M.emit(st, st['setups'][key], 'RUNNING_BREAK', at('09:50'), 111.0, at('09:52'), True)
+            next(iter(st['outbox'].values()))['status'] = 'sent'
+            M.emit(st, st['setups'][key], 'CLOSE_CONFIRMED', at('09:50'), 111.4, at('09:55:02'), True)
+        self.assertEqual(len(st['outbox']), 2)
+        self.assertTrue(all(v['status'] in {'pending', 'sent'} for v in st['outbox'].values()))
+
+    def test_alert_highlights_the_symbol_and_carries_the_context(self):
+        st = self.emitted(gate=GATE_BLOCK, price=111.2)
+        event = st['events'][0]
+        text = R.alert_text(event)
+        self.assertIn('Sector BANK 41.00 · 15m -2.6 ↓ · rank 9 · 5 sectors above 70', text)
+        self.assertIn('below the old gate — advisory only', text)
+        self.assertIn('Sector score is falling', text)
+        self.assertIn('Entry +1.09% beyond BOS', text)
+        self.assertIn('tier B', text)
+        markup = R.alert_text(event, markup=True)
+        self.assertIn('<b>AXISBANK</b> · BUY @ 111.20', markup)
+        self.assertNotIn('&lt;b&gt;', markup)
+
+    def test_symbol_with_an_ampersand_is_escaped_inside_the_bold_tag(self):
+        st = self.emitted()
+        event = dict(st['events'][0])
+        event['symbol'] = 'M&M'
+        markup = R.alert_text(event, markup=True)
+        self.assertIn('<b>M&amp;M</b> · BUY @', markup)
+
+    def test_extended_entry_and_tier_a_are_labelled(self):
+        st = self.emitted(kind='CLOSE_CONFIRMED', price=112.0, now='09:55:02')
+        event = dict(st['events'][0])
+        event['signal'] = 'BUY-EX17'
+        event['bar'] = at('10:30').isoformat()
+        text = R.alert_text(event)
+        self.assertIn('EXTENDED — a retest of BOS is the better entry', text)
+        self.assertIn('tier A', text)
+        self.assertNotIn('early window', text)
+
+    def test_ema_undercut_is_reported_in_the_alert(self):
+        st = self.emitted()
+        event = dict(st['events'][0])
+        event['ema_undercut'] = 0.19
+        self.assertIn('undercut EMA9/10 by 0.19%', R.alert_text(event))
+
+
+class ExtraUniverseTests(unittest.TestCase):
+    def test_extra_universe_is_parsed_and_installed_without_touching_baskets(self):
+        rows = [('GRSE', 'DEF'), ('PARAS', 'DEF')]
+        for sym in ('GRSE', 'PARAS'):          # main() may already have installed them
+            if sym in R.shared.L.SYMS:
+                R.shared.L.SYMS.remove(sym)
+        before_basket = {k: list(v) for k, v in R.shared.MEMBERS.items()}
+        with patch.object(R, 'extra_universe', return_value=rows):
+            added = R.install_extra_universe()
+        self.assertEqual(sorted(added), ['GRSE(DEF)', 'PARAS(DEF)'])
+        self.assertIn('GRSE', R.shared.L.SYMS)
+        self.assertEqual(R.shared.SECTOR_OF['GRSE'], 'DEF')
+        self.assertEqual({k: list(v) for k, v in R.shared.MEMBERS.items()}, before_basket)
+        for sym in ('GRSE', 'PARAS'):
+            R.shared.L.SYMS.remove(sym)
+            R.shared.SECTOR_OF.pop(sym, None)
+
+    def test_extra_universe_can_be_disabled(self):
+        with patch.dict(os.environ, {'M16_EXTRA_UNIVERSE': '0'}):
+            self.assertEqual(R.extra_universe(), [])
+
+    def test_shipped_extra_universe_covers_the_defence_names(self):
+        names = {sym for sym, _ in R.extra_universe()}
+        self.assertTrue({'GRSE', 'PARAS', 'DATAPATTNS', 'ASTRAMICRO', 'BEML'} <= names)
 
 
 class ContinuationTests(unittest.TestCase):
@@ -167,20 +335,38 @@ class ContinuationTests(unittest.TestCase):
         self.assertTrue(M.rally_metrics(trail([100,101,102], 1), 1)['ready'])
 
     def test_either_ema_close_violation_permanently_invalidates(self):
+        with patch.dict(os.environ, {'M16_EMA_TOLERANCE_PCT': '0'}):
+            for sell in (False, True):
+                for n in (9,10):
+                    st, key = armed(sell)
+                    b = bar('09:50', o=108, h=109, l=107, c=107.9, e9=107.5, e10=107.5)
+                    b[f'ema{n}'] = 108
+                    if sell:
+                        b = invert(b)
+                    M.closed_bar(st, 'AXISBANK', b, at('09:55:01'))
+                    self.assertEqual(st['setups'][key]['phase'], 'invalid')
+                    b = bar('09:55', h=112, l=108, c=111)
+                    if sell:
+                        b = invert(b)
+                    M.running_bar(st, 'AXISBANK', b, at('09:56'))
+                    self.assertFalse(st['events'])
+
+    def test_shallow_ema_undercut_is_tolerated_and_recorded(self):
+        # BDL 2026-11-27 11:15: close 1082.30 vs EMA9 1084.40 = 0.19% undercut.
         for sell in (False, True):
-            for n in (9,10):
-                st, key = armed(sell)
-                b = bar('09:50', o=108, h=109, l=107, c=107.9, e9=107.5, e10=107.5)
-                b[f'ema{n}'] = 108
-                if sell:
-                    b = invert(b)
-                M.closed_bar(st, 'AXISBANK', b, at('09:55:01'))
-                self.assertEqual(st['setups'][key]['phase'], 'invalid')
-                b = bar('09:55', h=112, l=108, c=111)
-                if sell:
-                    b = invert(b)
-                M.running_bar(st, 'AXISBANK', b, at('09:56'))
-                self.assertFalse(st['events'])
+            st, key = armed(sell)
+            b = bar('09:50', o=108, h=109, l=107, c=107.9, e9=108.0, e10=107.95)
+            if sell:
+                b = invert(b)
+            M.closed_bar(st, 'AXISBANK', b, at('09:55:01'))
+            self.assertEqual(st['setups'][key]['phase'], 'armed')
+            self.assertAlmostEqual(st['setups'][key]['ema_undercut'], 0.1, places=1)
+
+    def test_a_real_ema_break_still_invalidates(self):
+        st, key = armed()
+        b = bar('09:50', o=108, h=109, l=107, c=106.0, e9=108.0, e10=107.9)  # 1.9% under
+        M.closed_bar(st, 'AXISBANK', b, at('09:55:01'))
+        self.assertEqual(st['setups'][key]['phase'], 'invalid')
 
     def test_wick_and_equal_close_allowed_but_missing_candle_fails_closed(self):
         st, key = armed()
@@ -293,7 +479,7 @@ class DirectOriginalBOSTests(unittest.TestCase):
 
     def test_ema_violation_rejects_direct_and_replay_never_alerts(self):
         rows = self.pattern()
-        rows[3]['ema9'] = 108.1
+        rows[3]['ema9'] = 111.0     # a real break, not pullback noise
         st = M.fresh_state(DAY)
         key = M.seed(st, 'A', 110, 'EX', rows[-1], pd.DataFrame(rows))
         self.assertFalse(M.direct_original_bos(st, key, rows[-1], pd.DataFrame(rows), at('09:50:01')))
@@ -406,7 +592,7 @@ class RunnerTests(unittest.TestCase):
     def test_awaiting_board_is_not_expired_inside_the_wait_cap(self):
         event = self.event()
         st = self.board_state(event, observed='09:50')
-        with patch.object(R.m16_sector, 'decision', return_value={
+        with gate_mode(), patch.object(R.m16_sector, 'decision', return_value={
                 'status': 'unknown', 'reason': 'sector board unavailable'}), patch.object(
                 R, 'save'), patch.object(R, 'telegram_targets', return_value=[('t', 'c')]), patch.object(
                 R.tg, 'send_message_to') as send:
@@ -414,10 +600,23 @@ class RunnerTests(unittest.TestCase):
             send.assert_not_called()
         self.assertEqual(st['outbox']['E1']['status'], 'pending')
 
+    def test_advisory_mode_never_waits_for_the_board(self):
+        event = self.event()
+        st = self.board_state(event, observed='09:50')
+        with patch.object(R.m16_sector, 'decision', return_value={
+                'status': 'unknown', 'reason': 'sector board stale'}), patch.object(
+                R, 'save'), patch.object(R, 'telegram_targets', return_value=[('t', 'c')]), patch.object(
+                R.tg, 'send_message_to', return_value=True) as send:
+            R.flush(st, at('09:55:10'))
+        self.assertEqual(send.call_count, 1)
+        self.assertEqual(st['outbox']['E1']['status'], 'sent')
+        self.assertEqual(st['outbox']['E1']['event']['sector_gate_at_send']['status'], 'unknown')
+        self.assertIn('sector unverified', send.call_args.args[2])
+
     def test_board_publication_wait_promotes_and_sends(self):
         event = self.event(price=111.5)
         st = self.board_state(event)
-        with patch.object(R.m16_sector, 'decision', return_value={
+        with gate_mode(), patch.object(R.m16_sector, 'decision', return_value={
                 'status': 'pass', 'sector': 'BANK', 'score': 90., 'close': at('09:55').isoformat(),
                 'observed': at('09:55:22').isoformat(), 'top3': ['BANK'],
                 'known_rank': 1, 'worst_rank': 1, 'missing_sectors': []}), patch.object(
@@ -470,6 +669,10 @@ class RunnerTests(unittest.TestCase):
         self.assertNotIn('late', st['outbox']['E1']['event'])
 
     def test_board_publication_lag_is_credited_at_detection(self):
+        with gate_mode():
+            self._board_publication_lag_is_credited_at_detection()
+
+    def _board_publication_lag_is_credited_at_detection(self):
         import contextlib, io
         st, _ = armed()
         st['sector_gate_required'] = True
@@ -1036,13 +1239,19 @@ class MirrorTests(unittest.TestCase):
                                              attempted={'A'}), {'A'})
 
     def test_discovery_is_held_only_while_a_board_refresh_is_pending(self):
-        with patch.dict(os.environ, {'M16_SECTOR_RUNWAY_SECONDS': '20'}):
+        with gate_mode(), patch.dict(os.environ, {'M16_SECTOR_RUNWAY_SECONDS': '20'}):
             self.assertTrue(R.discovery_hold(at('09:25:05'), 5, False, True, True))
             self.assertFalse(R.discovery_hold(at('09:25:05'), 5, True, True, True))
             self.assertFalse(R.discovery_hold(at('09:25:05'), 5, False, False, True))
             self.assertFalse(R.discovery_hold(at('09:25:05'), 5, False, True, False))
             self.assertFalse(R.discovery_hold(at('09:25:25'), 25, False, True, True))
             self.assertFalse(R.discovery_hold(at('12:40:05'), 5, False, True, True))
+
+    def test_advisory_mode_keeps_the_board_courtesy_window_short(self):
+        with patch.dict(os.environ, {'M16_SECTOR_RUNWAY_SECONDS': '20',
+                                     'M16_SECTOR_RUNWAY_ADVISORY_SECONDS': '6'}):
+            self.assertTrue(R.discovery_hold(at('09:25:04'), 4, False, True, True))
+            self.assertFalse(R.discovery_hold(at('09:25:07'), 7, False, True, True))
 
     def test_rotation_is_not_reported_as_a_feed_outage(self):
         syms = ['A', 'B', 'C', 'D', 'E', 'F']
@@ -1333,8 +1542,19 @@ class LateDiscoveryTests(unittest.TestCase):
         self.assertEqual(st['outbox'], {})
 
     def test_late_entry_requires_a_validating_sector_board(self):
+        with gate_mode():
+            for gate in (self.GATE_BLOCK, self.GATE_UNKNOWN):
+                self.assertEqual(self.run_late(110.5, "09:57:00", gate=gate)['outbox'], {}, gate['status'])
+
+    def test_late_entry_is_delivered_in_advisory_mode(self):
         for gate in (self.GATE_BLOCK, self.GATE_UNKNOWN):
-            self.assertEqual(self.run_late(110.5, "09:57:00", gate=gate)['outbox'], {}, gate['status'])
+            st = self.run_late(110.5, "09:57:00", gate=gate)
+            self.assertEqual(len(st['outbox']), 1, gate['status'])
+            item = next(iter(st['outbox'].values()))
+            self.assertEqual(item['status'], 'pending')
+            self.assertFalse(item['event']['live'])          # labelled, never "live"
+            self.assertTrue(item['event']['late'])
+            self.assertIn('DELAYED', R.alert_text(item['event']))
 
     def test_disabled_late_alerts_and_replay_never_queue(self):
         st, key = armed()
