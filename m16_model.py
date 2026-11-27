@@ -1,5 +1,6 @@
 """M16 causal five-minute pullback/BOS state machine. Persistence-gated alerts; no orders."""
 from __future__ import annotations
+import os
 import pandas as pd
 import m16_sector
 
@@ -20,6 +21,45 @@ def fresh_state(day):
     return dict(date=day, cursors={}, setups={}, events=[], outbox={}, diagnostics=[], eod_done=False)
 
 
+# --------------------------------------------------------------- alert policy
+def sector_mode():
+    """`advisory` (default) or `gate`.
+
+    advisory: the M6 sector board is CONTEXT on every alert. It never suppresses
+    a fresh signal. On 2026-11-27 the strict gate passed ten of the day's worst
+    breakouts and blocked ten of the best (BAJAJ-AUTO +2.04%, ANGELONE +0.57%,
+    ABCAPITAL +0.39%, GODFRYPHLP +1.12%, ETERNAL +1.00%, GAIL +1.02%,
+    AXISBANK +0.73%, BAJAJFINSV +0.70%, LICI +0.80%, SBIN +0.54%). The board
+    scores a sector from its own recent returns and the alerting stock is inside
+    that average, so a hard gate mostly selects whichever candle already ran.
+
+    gate: the previous fail-closed behaviour (score > 70, top-3 rank, wait for
+    the board to publish), kept as an explicit, testable option.
+    """
+    mode = str(os.getenv("M16_SECTOR_MODE", "advisory")).strip().lower()
+    return mode if mode in {"advisory", "gate"} else "advisory"
+
+
+def advisory():
+    return sector_mode() == "advisory"
+
+
+def suppress_duplicates():
+    """One alert per symbol/side/candle; a running alert already covers its close."""
+    return str(os.getenv("M16_SUPPRESS_DUPLICATES", "1")).strip().lower() not in {"0", "false", "no", "off"}
+
+
+# Codes with clearly positive outcomes across 2026-11-23/25/26/27 (BUY-EX17 9/10,
+# SELL-EX1 11/16, NORMAL SELL 8/12 at a +/-0.5% barrier) against the bare BUY-EX
+# base exception (15/38). Informational only: tier B is still delivered.
+TIER_A_SIGNALS = {"BUY-EX17", "SELL-EX1", "NORMAL SELL"}
+ENTRY_KINDS = {"RUNNING_BREAK", "CLOSE_CONFIRMED", "CLOSE_ONLY", "DIRECT_BOS_CONFIRMED"}
+
+
+def signal_tier(name):
+    return "A" if str(name or "").strip() in TIER_A_SIGNALS else "B"
+
+
 # Objective starting definition of a rally (mirrored for SELL).
 RALLY_MIN_BARS = 3
 RALLY_MIN_RETURN_PCT = 0.3
@@ -27,14 +67,43 @@ RALLY_MIN_EFFICIENCY = 0.65
 RALLY_WINDOW = 6
 
 
-def ema_holds(bar, sign):
-    """Equality/touch is allowed; a close through EITHER EMA invalidates."""
+def ema_tolerance_pct():
+    """Allowed close-through during tracking, in percent of price (0 disables).
+
+    The strict rule killed 358 seeds across 2026-11-23/25/26/27 - three times the
+    number of alerts that were sent - and 95% of those kills were closes within
+    0.30% of the EMA, i.e. ordinary pullback noise. BDL on 2026-11-27 closed
+    0.16% under EMA9 at 11:15 and was dropped for the rest of the session.
+    The entry candle itself still has to hold the EMAs strictly.
+    """
+    try:
+        return max(0., float(os.getenv("M16_EMA_TOLERANCE_PCT", "0.30")))
+    except ValueError:
+        return 0.30
+
+
+def ema_undercut_pct(bar, sign):
+    """How far a close sits beyond the nearest EMA, in percent (0 when inside)."""
+    c, e9, e10 = (float(bar[k]) for k in ("close", "ema9", "ema10"))
+    edge = max(e9, e10) if sign > 0 else min(e9, e10)
+    return max(0., sign*(edge-c)/c*100.)
+
+
+def ema_holds(bar, sign, tolerance_pct=0.0):
+    """Equality/touch is allowed; a close through the EMAs invalidates.
+
+    `tolerance_pct` allows a shallow close-through during the tracked pullback
+    (never for the seed or the entry candle, which call this with the default).
+    """
     import math
     values = [bar.get(k) for k in ("close", "ema9", "ema10")]
     if any(v is None or not math.isfinite(float(v)) for v in values):
         return False
     c, e9, e10 = map(float, values)
-    return sign*(c-e9) >= -1e-10 and sign*(c-e10) >= -1e-10
+    tol = max(0., float(tolerance_pct or 0.))/100.
+    if sign > 0:
+        return c >= max(e9, e10)*(1-tol) - 1e-10
+    return c <= min(e9, e10)*(1+tol) + 1e-10
 
 
 def rally_metrics(trail, sign):
@@ -136,20 +205,69 @@ def emit(st, setup, kind, bar_time, price, now, live):
                                  for e in st['events'])
     if st.get('sector_gate_required') and risk_update:
         live = live and prior_eligible_running
+    elif advisory():
+        # Advisory: a fresh signal is always delivered. The board annotates the
+        # message (score, slope, rank) but never suppresses it: on 2026-11-27
+        # the strict gate passed ten of the day's worst breakouts and blocked
+        # ten of the best. Nothing is lost from the audit either way.
+        live = bool(live)
     else:
         live = live and gate['status'] in {'pass', 'disabled'}
     event = dict(id=key, symbol=setup["symbol"], side=setup["side"], kind=kind,
                  bar=stamp(bar_time).isoformat(), observed=stamp(now).isoformat(), price=float(price),
                  bos=setup.get("bos"), pullback=setup.get("pullback"), seed=setup["signal_bar"],
-                 signal=setup["signal"], rally=setup.get("rally_evidence", {}), live=bool(live), sector_gate=gate)
+                 signal=setup["signal"], rally=setup.get("rally_evidence", {}), live=bool(live),
+                 sector_gate=gate, sector_mode='advisory' if advisory() else 'gate')
+    if setup.get("ema_undercut"):
+        event["ema_undercut"] = setup["ema_undercut"]
     st["events"].append(event)
     # A close can arrive before the sector worker publishes that same close.
     # Retain only timely close candidates for the existing 30s delivery budget;
-    # never promote historical backfill or a blocked/running detection.
-    wait_sector = (timely and gate['status'] == 'unknown' and
+    # never promote historical backfill or a blocked/running detection. Advisory
+    # mode never waits: a late board becomes context, not latency.
+    wait_sector = (not advisory() and timely and gate['status'] == 'unknown' and
                    kind in {'CLOSE_ONLY', 'CLOSE_CONFIRMED', 'DIRECT_BOS_CONFIRMED'})
+    twin = duplicate_twin(st, event) if (live or wait_sector) else None
+    if twin is not None:
+        event['duplicate_of'] = twin['id']
+        event['live'] = False
+        st["outbox"][key] = dict(event=event, status="duplicate_suppressed", suppresses=twin['id'])
+        return
     if live or wait_sector:
         st["outbox"][key] = dict(event=event, status="pending", awaiting_sector=wait_sector)
+
+
+def delivered(item):
+    return bool(item) and (item.get('status') == 'sent'
+                           or 'sent' in (item.get('deliveries') or {}).values())
+
+
+def duplicate_twin(st, event):
+    """The same setup already delivered on this candle (RUNNING vs CLOSE).
+
+    49% of 2026-11-27's setups produced both a running and a close event on one
+    candle; the close one is always the worse price for the direction (HAL
+    5033.10 -> 5053.40, COCHINSHIP 1130 -> 1133, where the second alert lost
+    1.15% while the first gained 1.24%). Suppress only when the twin really was
+    delivered; a failed or unsent twin never blocks its own close confirmation.
+    """
+    if not suppress_duplicates() or event['kind'] not in ENTRY_KINDS:
+        return None
+    for e in st['events']:
+        if (e is not event and e['symbol'] == event['symbol'] and e['side'] == event['side']
+                and e['bar'] == event['bar'] and e['kind'] in ENTRY_KINDS
+                and queued_or_delivered(st['outbox'].get(e['id']))):
+            return e
+    return None
+
+
+def queued_or_delivered(item):
+    """True when the twin is already on its way, so the second one is noise.
+
+    `promote_stranded_duplicates` puts a suppressed duplicate back in the queue
+    if that first item never actually goes out, so nothing is lost.
+    """
+    return delivered(item) or (item or {}).get('status') in {'pending', 'dry_run'}
 
 
 def direct_original_bos(st, key, bar, context, now, max_lag=30):
@@ -231,9 +349,16 @@ def closed_bar(st, symbol, bar, now, max_lag=30):
         sign = 1 if s["side"] == "BUY" else -1
         c, hi, lo = (float(bar[k]) for k in ("close", "high", "low"))
         holds = ema_holds(bar, sign)
-        if s["phase"] != "intrabar" and not holds:
-            s.update(phase="invalid", invalid_reason=f"close through EMA9/EMA10 at {t.isoformat()} (or missing EMA data)")
-            continue
+        if s["phase"] != "intrabar":
+            # Tracking tolerates a shallow close-through; the seed and the
+            # entry candle below stay strict.
+            if not ema_holds(bar, sign, ema_tolerance_pct()):
+                s.update(phase="invalid", invalid_reason=f"close through EMA9/EMA10 at {t.isoformat()} (or missing EMA data)")
+                continue
+            if not holds:
+                undercut = ema_undercut_pct(bar, sign)
+                s["ema_undercut"] = round(max(float(s.get("ema_undercut") or 0.), undercut), 3)
+                s["ema_undercut_bar"] = t.isoformat()
         if s["phase"] == "intrabar":
             trigger = stamp(s["trigger_bar"])
             if t < trigger:

@@ -1,3 +1,4 @@
+import os
 import unittest
 from unittest.mock import patch
 import m16_sector as G
@@ -16,6 +17,16 @@ def state(score=71):
 
 
 class SectorTests(unittest.TestCase):
+    # These regressions describe the strict, fail-closed gate. That path is no
+    # longer the default (M16_SECTOR_MODE=advisory), but it must keep working:
+    # it is the rollback switch and the shadow comparison.
+    def setUp(self):
+        self._gate = patch.dict(os.environ, {'M16_SECTOR_MODE': 'gate'})
+        self._gate.start()
+
+    def tearDown(self):
+        self._gate.stop()
+
     def test_threshold_direction_and_rank(self):
         self.assertEqual(G.decision(state(), 'AXISBANK', 'BUY', at('09:55:02'))['status'], 'pass')
         self.assertEqual(G.decision(state(70), 'AXISBANK', 'BUY', at('09:55:02'))['status'], 'block')
@@ -122,6 +133,27 @@ class SectorTests(unittest.TestCase):
             R.flush(st, at('09:55:05'), dry_run=True)
         self.assertEqual(next(iter(st['outbox'].values()))['status'], 'sector_rejected')
         self.assertFalse(st['events'][0]['live'])
+
+    def test_decision_reports_the_score_slope_and_board_breadth(self):
+        st = dict(sector_gate_required=True, sector_snapshots=[
+            dict(close=at(t).isoformat(), observed=at(t).isoformat(),
+                 sectors={'BANK': dict(persist_bull=v, persist_bear=10),
+                          'A': dict(persist_bull=90, persist_bear=95),
+                          'B': dict(persist_bull=80, persist_bear=85)})
+            for t, v in (('09:30', 60.), ('09:35', 70.), ('09:40', 80.), ('09:45', 88.), ('09:50', 92.))])
+        d = G.decision(st, 'AXISBANK', 'BUY', at('09:54:59'))
+        self.assertEqual(d['status'], 'pass')
+        self.assertEqual(d['slope15'], 22.0)          # 92 (09:50) - 70 (09:35)
+        self.assertEqual(d['boards_above70'], 3)
+        self.assertEqual(d['known_rank'], 1)
+
+    def test_stale_board_still_reports_the_last_known_context(self):
+        st = state()
+        d = G.decision(st, 'AXISBANK', 'BUY', at('10:05:00'))
+        self.assertEqual(d['status'], 'unknown')
+        self.assertEqual(d['sector'], 'BANK')
+        self.assertEqual(d['score'], 71.0)
+        self.assertGreater(d['board_age_seconds'], 300)
 
     def test_old_backfill_is_never_queued_for_sector_retry(self):
         st, key = armed()
