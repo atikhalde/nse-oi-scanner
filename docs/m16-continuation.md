@@ -121,8 +121,17 @@ the standalone `tradingcharts.co`, at Tv.dhan.co, or at TradingView:
   (or the older `{symbol}`) is replaced and the rest is used verbatim. Tests
   assert the default stays on `charts.dhan.co` and never leaks to
   `tradingcharts.co`, `tv.dhan.co` or TradingView.
-- Plain-text (TXT/PDF, `markup=False`) output is unchanged, and no alert
-  content, gating or delivery logic changed.
+- **Second link for the phone:** every alert ends with
+  `📱 <a href="…dhan.go.link…">open in Dhan app</a>`. Android opens a
+  `charts.dhan.co` link in the browser (the Dhan app registers no App Link for
+  that host), so this reuses Dhan's own Adjust entry point — the one behind the
+  "Use App" button on dhan.co — which hands `dhan://Login` to the installed app
+  and falls back to the same stock's web chart when it is not installed. Dhan
+  publishes no per-symbol in-app deep link, so the app opens at its home and the
+  symbol still has the exact chart link. `M16_APP_LINK=0` removes the line,
+  `M16_APP_URL_TEMPLATE` replaces the link (placeholders `{fallback}`/`{chart}`).
+- Plain text (TXT/PDF, `markup=False`) carries the same app URL as a bare line,
+  so the review documents show it too; nothing else in the alert changed.
 - `_heal_html()` (the one-shot retry after a 400 parse reject) preserves
   `<a href="…">`/`</a>` next to `<b>`/`</b>`, folding the double-escaped
   `&amp;amp;` inside an href back to a single `&amp;` so the retried link still

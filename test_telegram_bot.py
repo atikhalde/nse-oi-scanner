@@ -81,6 +81,12 @@ def main():
            '<b><a href="https://charts.dhan.co/?symbol=NSEE2031:M%26M">M&amp;M</a></b>')
         ok("chart link falls back to the NSE ticker without an id",
            tg.chart_url("ATHERENERGY") == "https://charts.dhan.co/?symbol=NSE:ATHERENERGY")
+        app = tg.app_url("AXISBANK", 5900)
+        ok("app link is Dhan's own Adjust entry point",
+           app.startswith("https://dhan.go.link/?adj_t=") and "adj_deeplink=dhan%3A%2F%2FLogin" in app)
+        ok("app link falls back to the same stock's web chart",
+           "adj_fallback=https%3A%2F%2Fcharts.dhan.co%2F%3Fsymbol%3DNSEE5900%3AAXISBANK" in app)
+        ok("app link respects M16_APP_LINK=0", tg.app_link_enabled())
     finally:
         tg.requests.post = old_post
         for k, v in saved.items():
