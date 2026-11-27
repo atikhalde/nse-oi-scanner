@@ -523,6 +523,24 @@ run decides which case HEG, GSPL, GUJGASLTD, JBCHEPHARM, ATHERENERGY and
 ICICIPRULI are in — no egress from CI to Dhan is available to check locally. `fetch_text()` exposes the download so the
 master is fetched once and parsed twice (map, then diagnostics).
 
+**Strict rows, named disagreements, second master (2026-11-27 18:47Z review).**
+The export from the 18:47Z run resolved the same 400/406 but reported
+`agreed=208/209` (was 209/209): a MOTHERSON row with a blank
+`SEM_INSTRUMENT_NAME` (id 25510) appeared ahead of the real equity row (4204) and
+the relaxed blank-field rule let it win. Blank/unexpected instrument and segment
+values are rejected for the **map** again (they are still recorded for
+`unresolved_detail`), which restores exact parity with `fno_universe.csv`. Three
+more guards came out of that:
+* `DHAN IDS disagreements={'MOTHERSON': '4204->25510'}` is printed whenever the
+  master contradicts a trusted id — an opaque `208/209` must never be the only
+  evidence again.
+* the saved map is repaired against `fno_universe.csv` before writing (an F&O id
+  can never be overwritten by a master quirk; `SID` already preferred it).
+* names the detailed master lacks are retried against Dhan's **compact** master
+  (`dhan_ids.resolve_from_masters`) before being reported unresolved, and the
+  workflow's summary `grep` now reads the `DHAN IDS ok=` line so the detail line
+  is not echoed twice.
+
 **`DHAN_TOKEN` guard.** On 27-Nov every step's env block read `DHAN_TOKEN:`
 (empty): the repo secret is not set, so the Dhan candle fallback and the Dhan
 feed were dead and the run was silently Yahoo-only. `2_bootstrap.yml` now starts
