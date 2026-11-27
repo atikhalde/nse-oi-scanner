@@ -44,12 +44,19 @@ jobs:
       M16_CHAT_ID_2: ${{ secrets.M16_CHAT_ID_2 }}
       M16_POLL_SECONDS: "1"
       M16_YAHOO_COORDINATE: "1"
-      # 10 requests/s instead of 25/s: a 210-symbol 09:20 pass still finishes in
-      # ~21s (inside the 30s close budget, and late arrivals now become DELAYED
-      # alerts), while the opening burst no longer trips Yahoo's 429 cooldown.
-      M16_YAHOO_REQUEST_INTERVAL: "0.10"
+      # 5 starts/s. With discovery sliced in three (below) a bucket is ~70
+      # symbols + ~62 basket members + 32 index series (~165 requests, ~33s),
+      # inside the close budget and far below the 10/s burst that still tripped
+      # Yahoo's 429 cooldown on 26-Nov (1201 of 2667 requests).
+      M16_YAHOO_REQUEST_INTERVAL: "0.20"
       M16_ENGINE_WORKERS: "4"
       M16_SECTOR_WORKERS: "2"
+      # Universe discovery rotates over three slices (every symbol revisited
+      # every 15 min, inside the delayed-alert window) and a bucket's wave
+      # stays queued while the sector board refresh is in flight (25s cap), so
+      # the board always gets the provider budget first.
+      M16_DISCOVERY_SLICES: "3"
+      M16_SECTOR_RUNWAY_SECONDS: "25"
       # Delayed re-entry policy: a close-confirmed BOS found up to 15 min late
       # still alerts (priced at discovery, labelled DELAYED) while price is
       # within 0.75% of the frozen BOS and the sector board passes.

@@ -28,6 +28,9 @@ import m16_sector
 ROOT = Path(__file__).resolve().parent
 STATE = ROOT / "state16.json"
 MAX_LAG = 30
+# Discovery rotation: the universe is fetched in this many rotating slices so a
+# single bucket no longer fires one full-universe wave at the provider.
+DEFAULT_DISCOVERY_SLICES = 3
 
 
 def credentials():
@@ -551,7 +554,13 @@ def record_feed_success(st, symbol, now, metadata):
         **metadata, at=now.isoformat(), last_success=now.isoformat(), ok=True)
 
 
-def notify_health(st, now, dry_run=False):
+def notify_health(st, now, dry_run=False, due=None):
+    """Report real gaps, not the rotation's own schedule.
+
+    `due` is the universe slice this bucket is scheduled to fetch. Symbols
+    outside it are legitimately up to one rotation window old and must not be
+    reported as feed outages; symbols inside it keep the strict freshness rule.
+    """
     if m16_calendar.session_status(now)[0] == "closed":
         return
     # No completed 5m candle is due before 09:20. Allow the normal
@@ -560,6 +569,10 @@ def notify_health(st, now, dry_run=False):
         return
     health = st.get("feed_health", {})
     dormant = set(st.get("inactive_symbols", []))
+    # A symbol is revisited every `slices` buckets, so one full rotation is the
+    # legitimate age of bars outside the current slice (not slices-1 buckets).
+    rotation = pd.Timedelta(minutes=5 * max(
+        1, int(os.getenv("M16_DISCOVERY_SLICES", str(DEFAULT_DISCOVERY_SLICES)))))
     bad, details, watched_symbols = [], {}, []
     for sym in shared.L.SYMS:
         if sym in dormant:
@@ -573,18 +586,28 @@ def notify_health(st, now, dry_run=False):
             watched_symbols.append(sym)
         expected = m16_feed.required_closed_bar(now)
         latest = rec.get("latest")
-        stale = (model.stamp(latest) < expected) if latest else (
-            not rec.get("at") or (model.stamp(now)-model.stamp(rec["at"])).total_seconds() > 90)
+        pending = bool(due is not None and sym not in due)
+        lag = rotation if pending else pd.Timedelta(0)
+        stale = (model.stamp(latest) + lag < expected) if latest else (
+            (not rec.get("at") and not pending) or bool(rec.get("at") and
+            (model.stamp(now)-model.stamp(rec["at"])).total_seconds() > 90 + lag.total_seconds()))
         history_bad = st.get("history_health", {}).get(sym) is False
         cursor = st.get("cursors", {}).get(sym)
         analysis_bad = (sym in st.get("history_health", {}) and
                         expected.strftime("%H:%M") >= "09:15" and
-                        (not cursor or model.stamp(cursor) < expected))
-        if watched and (not rec.get("ok") or stale or history_bad or analysis_bad or
+                        ((not cursor and not pending) or
+                         (bool(cursor) and model.stamp(cursor) + lag < expected)))
+        # A symbol outside this bucket's slice is not "failing" merely because
+        # its last attempt predates its turn; only an explicit failure older
+        # than one rotation is reported while it waits.
+        failed = rec.get("ok") is False
+        if failed and pending and rec.get("at"):
+            failed = (model.stamp(now)-model.stamp(rec["at"])).total_seconds() > rotation.total_seconds()
+        if watched and (failed or stale or history_bad or analysis_bad or
                         (not model.before(now, "11:00:00") and discovery_missing)):
             bad.append(sym)
             reasons = []
-            if not rec.get("ok"): reasons.append(rec.get("reason", "no usable response"))
+            if failed: reasons.append(rec.get("reason", "no usable response"))
             elif stale: reasons.append("stale candle coverage")
             if history_bad: reasons.append("indicator history unavailable")
             if analysis_bad: reasons.append("analysis cursor behind expected close")
@@ -720,11 +743,52 @@ def needs_audit_refresh(cached, target, now):
     return True
 
 
-def discovery_retries(symbols, latest, now):
+def discovery_retries(symbols, latest, now, due=None, attempted=None):
+    """Re-fetch gaps inside the freshness budget, not the whole universe.
+
+    With a rotating slice, a symbol holding usable bars that are one rotation
+    old is on schedule and must wait for its slice; retrying it every bucket
+    would rebuild the full-universe wave the rotation removes. Three cases are
+    still retried at once: symbols in the current slice, symbols that were
+    attempted but never produced data, and any symbol with locally cached but
+    not-yet-final bars. `due=None` keeps the historical whole-universe behaviour.
+    """
     if model.before(now, "09:20:00") or not model.before(now, "11:00:00"):
         return set()
     target = (model.stamp(now)-pd.Timedelta(seconds=1)).floor("5min")-pd.Timedelta(minutes=5)
-    return {sym for sym in symbols if needs_discovery_refresh(latest.get(sym), target)}
+    attempted = attempted or set()
+    due = set(symbols) if due is None else set(due)
+    return {sym for sym in symbols
+            if (sym in due or (sym not in latest and sym in attempted))
+            and needs_discovery_refresh(latest.get(sym), target)}
+
+
+def discovery_slice(symbols, bucket, slices=DEFAULT_DISCOVERY_SLICES):
+    """Deterministic 1-in-N discovery rotation: full coverage every N buckets."""
+    ordered = sorted(symbols)
+    slices = max(1, int(slices))
+    # Nothing to spread when the universe is no larger than the slice count.
+    if slices == 1 or len(ordered) <= slices:
+        return set(ordered)
+    clock = model.stamp(bucket)
+    step = (int(clock.hour) * 60 + int(clock.minute)) // 5
+    return {sym for i, sym in enumerate(ordered) if i % slices == step % slices}
+
+
+def discovery_hold(now, bucket_age, has_close_board, gate_required=True, refresh_pending=False):
+    """Bound how long a fresh bucket's board may hold back the discovery wave.
+
+    The board and the discovery wave share one provider budget and one 429
+    cooldown. While the board's own refresh is still in flight the wave stays
+    queued behind it; the wait is capped so a hung refresh cannot stall
+    discovery. With the sector gate disabled there is nothing to protect.
+    """
+    if not gate_required or has_close_board or not refresh_pending:
+        return False
+    if not model.before(now, "12:35:00"):
+        return False
+    runway = max(0., float(os.getenv("M16_SECTOR_RUNWAY_SECONDS", "25")))
+    return bucket_age < runway
 
 
 def running_snapshot_usable(bars, started, observed):
@@ -774,6 +838,7 @@ def live_session(st, cache, max_minutes, dry_run=False):
     # 14 automatic restarts, first usable discovery at 09:46 and no sector
     # board until 11:25.
     provider_pause_until, provider_pause_since, provider_pause_streak = 0.0, None, 0
+    discovery_slices = max(1, int(os.getenv("M16_DISCOVERY_SLICES", str(DEFAULT_DISCOVERY_SLICES))))
     provider_pause_base = max(1., float(os.getenv("M16_PROVIDER_PAUSE_SECONDS", "10")))
     provider_pause_cap = max(provider_pause_base, float(os.getenv("M16_PROVIDER_MAX_PAUSE_SECONDS", "120")))
     provider_max_wait = max(60., float(os.getenv("M16_PROVIDER_MAX_WAIT_SECONDS", "1500")))
@@ -891,14 +956,25 @@ def live_session(st, cache, max_minutes, dry_run=False):
             active = {s["symbol"] for s in st["setups"].values() if s["phase"] not in model.TERMINAL}
             fast = {s["symbol"] for s in st["setups"].values() if s["phase"] in {"armed", "intrabar"}}
             bucket = (model.stamp(now)-pd.Timedelta(seconds=1)).floor("5min")
-            scan = first_close_ready and last_discovery != bucket and model.before(now, "11:00:00")
-            symbols = set(universe_syms) if scan else set()
+            # Key discovery off the candle that has actually closed, not the
+            # wall-clock bucket: otherwise 09:20:00 and 09:20:01 count as two
+            # scans and the whole wave (or two rotation slices) fires twice at
+            # the open, exactly when the sector board needs the budget.
+            scan_key = (model.stamp(now)-pd.Timedelta(minutes=5)).floor("5min")
+            scan = first_close_ready and last_discovery != scan_key and model.before(now, "11:00:00")
+            if scan and discovery_hold(now, close_age, has_close_board,
+                                       bool(st.get("sector_gate_required")),
+                                       sector_future is not None and not sector_future.done()):
+                scan = False
+            slice_now = discovery_slice(universe_syms, scan_key, discovery_slices)
+            symbols = set(slice_now) if scan else set()
             if scan:
-                last_discovery = bucket
+                last_discovery = scan_key
             # Re-fetch missing/late discovery bars during the freshness budget.
             # A batch arriving with yesterday's/previous candle's data must not
             # silently lose a morning signal until the next full discovery.
-            symbols.update(discovery_retries(universe_syms, latest, now))
+            symbols.update(discovery_retries(universe_syms, latest, now, due=slice_now,
+                                             attempted=set(st.get("feed_health", {}))))
             # Terminal/expired seeds stay under slower observation for the
             # full-day research audit, without creating new entries.
             audit_symbols = {s["symbol"] for s in st["setups"].values() if s["symbol"] not in dormant}
@@ -1009,7 +1085,8 @@ def live_session(st, cache, max_minutes, dry_run=False):
                 if in_flight and (clock - started < startup_grace or (open_wave_started is not None and wave_age < startup_grace)):
                     next_health = clock + 2
                 else:
-                    notify_health(st, now, dry_run)
+                    due = slice_now if model.before(now, "11:00:00") else None
+                    notify_health(st, now, dry_run, due=due)
                     monitored = st.get("monitoring_health", {})
                     watched = monitored.get("watched", [])
                     bad = monitored.get("affected", [])

@@ -890,6 +890,137 @@ class MirrorTests(unittest.TestCase):
         ref.assert_called_once()
         self.assertEqual(st.get('feed_outages', {}), {})
 
+    def test_discovery_rotation_covers_the_universe_every_three_buckets(self):
+        syms = [f"S{i}" for i in range(9)]
+        picked = [R.discovery_slice(syms, at(t), 3) for t in ('09:20', '09:25', '09:30')]
+        self.assertEqual([len(p) for p in picked], [3, 3, 3])
+        self.assertEqual(set().union(*picked), set(syms))
+        self.assertEqual(sum(len(p) for p in picked), len(syms))
+        self.assertEqual(R.discovery_slice(syms, at('09:35'), 3), picked[0])
+        self.assertEqual(R.discovery_slice(syms, at('09:20'), 1), set(syms))
+        self.assertEqual(R.discovery_slice(['A', 'B'], at('09:20'), 3), {'A', 'B'})
+
+    def test_symbols_outside_the_slice_wait_for_their_turn(self):
+        now = at('09:30:30')
+        latest = {'A': (R.normalize(pd.DataFrame([bar('09:20')]), DAY), at('09:20:05'))}
+        # No rotation (historical behaviour): everything stale is retried.
+        self.assertEqual(R.discovery_retries(['A', 'B'], latest, now), {'A', 'B'})
+        # Rotating: the due slice is retried, never-seen symbols wait their turn,
+        # but a symbol that failed after being attempted is recovered at once.
+        self.assertEqual(R.discovery_retries(['A', 'B'], latest, now, due={'A'}), {'A'})
+        self.assertEqual(R.discovery_retries(['A', 'B'], latest, now, due=set()), set())
+        self.assertEqual(R.discovery_retries(['A', 'B'], latest, now, due=set(),
+                                             attempted={'B'}), {'B'})
+        self.assertEqual(R.discovery_retries(['A', 'B'], latest, now, due={'C'},
+                                             attempted={'B'}), {'B'})
+        # A symbol holding usable-but-older bars waits for its slice: its closed
+        # candles are analysed then, so nothing is lost and nothing floods.
+        preclose = {'A': (R.normalize(pd.DataFrame([bar('09:45')]), DAY), at('09:54:59'))}
+        self.assertEqual(R.discovery_retries(['A'], preclose, at('09:55:30'), due=set(),
+                                             attempted={'A'}), set())
+        self.assertEqual(R.discovery_retries(['A'], preclose, at('09:55:30'), due={'A'},
+                                             attempted={'A'}), {'A'})
+
+    def test_discovery_is_held_only_while_a_board_refresh_is_pending(self):
+        with patch.dict(os.environ, {'M16_SECTOR_RUNWAY_SECONDS': '20'}):
+            self.assertTrue(R.discovery_hold(at('09:25:05'), 5, False, True, True))
+            self.assertFalse(R.discovery_hold(at('09:25:05'), 5, True, True, True))
+            self.assertFalse(R.discovery_hold(at('09:25:05'), 5, False, False, True))
+            self.assertFalse(R.discovery_hold(at('09:25:05'), 5, False, True, False))
+            self.assertFalse(R.discovery_hold(at('09:25:25'), 25, False, True, True))
+            self.assertFalse(R.discovery_hold(at('12:40:05'), 5, False, True, True))
+
+    def test_rotation_is_not_reported_as_a_feed_outage(self):
+        syms = ['A', 'B', 'C', 'D', 'E', 'F']
+        now = at('09:55:30')
+        due = {'A', 'B'}
+
+        def build(current, trail):
+            st = M.fresh_state(DAY)
+            st['feed_health'] = {sym: dict(ok=True, at=at('09:55:00').isoformat(),
+                                           latest=at(current if sym in due else trail).isoformat())
+                                 for sym in syms}
+            st['history_health'] = {sym: True for sym in syms}
+            st['cursors'] = {sym: at(current if sym in due else trail).isoformat()
+                             for sym in syms}
+            return st
+
+        st = build('09:55', '09:45')          # due symbols current, others one rotation behind
+        with patch.object(R.shared.L, 'SYMS', syms), patch.dict(
+                os.environ, {'M16_DISCOVERY_SLICES': '3'}):
+            R.notify_health(st, now, True, due=due)
+        self.assertEqual(st['health_notice']['status'], 'healthy',
+                         dict(st['monitoring_health']['details']))
+
+        st = build('09:30', '09:45')          # a due symbol falls behind
+        with patch.object(R.shared.L, 'SYMS', syms), patch.dict(
+                os.environ, {'M16_DISCOVERY_SLICES': '3'}):
+            R.notify_health(st, now, True, due=due)
+        self.assertEqual(st['health_notice']['status'], 'degraded')
+        self.assertEqual(st['monitoring_health']['affected'], ['A', 'B'])
+
+    def test_symbols_waiting_for_their_slice_are_not_flagged(self):
+        syms = ['A', 'B', 'C', 'D', 'E', 'F']
+        st = M.fresh_state(DAY)
+        st['feed_health'] = {'A': dict(ok=True, at=at('09:25:00').isoformat(),
+                                       latest=at('09:20').isoformat())}
+        st['history_health'] = {'A': True}
+        st['cursors'] = {'A': at('09:20').isoformat()}
+        with patch.object(R.shared.L, 'SYMS', syms), patch.dict(
+                os.environ, {'M16_DISCOVERY_SLICES': '3'}):
+            R.notify_health(st, at('09:25:30'), True, due={'A'})
+        # B..F have never been fetched yet and are simply not their turn.
+        self.assertEqual(st['health_notice']['status'], 'healthy',
+                         dict(st['monitoring_health']['details']))
+        self.assertEqual(st['monitoring_health']['affected'], [])
+
+    def test_first_bucket_discovers_one_rotation_slice(self):
+        from concurrent.futures import Future
+
+        class ImmediateExecutor:
+            def __init__(self, **kw): pass
+            def __enter__(self): return self
+            def __exit__(self, *args): pass
+            def submit(self, fn, *args):
+                f = Future()
+                try:
+                    f.set_result(fn(*args))
+                except Exception as exc:
+                    f.set_exception(exc)
+                return f
+
+        syms = [f"S{i}" for i in range(9)]
+        st = M.fresh_state(DAY)
+        clock, elapsed = [at('09:20:00')], [0.]
+        fetched = []
+        frame = R.normalize(pd.DataFrame([bar('09:20')]), DAY)
+
+        def fake_fetch(sym):
+            fetched.append((sym, clock[0].strftime('%H:%M:%S')))
+            return frame, clock[0]
+
+        def sleep(_):
+            clock[0] = clock[0] + pd.Timedelta(seconds=1)
+            elapsed[0] += 1.
+
+        with patch.dict(os.environ, {'M16_DISCOVERY_SLICES': '3'}), patch.object(
+                R.m16_sector, 'warm', return_value=(3, 19)), patch.object(
+                R.m16_sector, 'refresh', side_effect=ValueError('offline test')), patch.object(
+                R, 'ThreadPoolExecutor', ImmediateExecutor), patch.object(
+                R, 'ProcessPoolExecutor', ImmediateExecutor), patch.object(
+                R.shared, 'now_ist', side_effect=lambda: clock[0]), patch.object(
+                R.shared.L, 'SYMS', syms), patch.object(
+                R, 'timed_fetch', side_effect=fake_fetch), patch.object(
+                R, 'analyze', return_value=('S0', [])), patch.object(
+                R.time, 'sleep', side_effect=sleep), patch.object(
+                R.time, 'monotonic', side_effect=lambda: elapsed[0]), patch.object(R, 'save'):
+            R.live_session(st, {s: {'ok': True} for s in syms}, 1, dry_run=True)
+
+        first_bucket = {s for s, t in fetched if t < '09:25:00'}
+        self.assertEqual(len(first_bucket), 3, sorted(first_bucket))
+        self.assertTrue(first_bucket.issubset(set(syms)))
+        self.assertEqual(len(first_bucket | R.discovery_slice(syms, at('09:25'), 3)), 6)
+
     def test_readiness_check_verifies_next_session_without_mutating_state(self):
         import tempfile
         from pathlib import Path
