@@ -316,6 +316,36 @@ class TestAlertSelfTest(unittest.TestCase):
             self.assertFalse(R.test_alert())
 
 
+class AppLinkProbeTests(unittest.TestCase):
+    """--probe-app-links must offer the plausible in-app chart routes to test."""
+
+    def test_candidates_cover_the_plausible_shapes(self):
+        urls = [u for _, u in R.tg.app_link_candidates("AXISBANK", 5900)]
+        self.assertTrue(all(u.startswith("dhan://") for u in urls))
+        self.assertEqual(len(urls), len(set(urls)))                    # no duplicates
+        self.assertIn("dhan://Chart?symbol=AXISBANK", urls)
+        self.assertIn("dhan://Chart?securityId=5900&amp;exchangeSegment=NSE_EQ".replace("&amp;", "&"), urls)
+        self.assertTrue(any("NSEE5900%3AAXISBANK" in u for u in urls))
+
+    def test_the_probe_message_lists_every_link_numbered(self):
+        captured = {}
+        with patch("builtins.print", side_effect=lambda *a, **k: captured.setdefault("out", a[0])):
+            self.assertTrue(R.probe_app_links("AXISBANK", dry_run=True))
+        text = captured["out"]
+        self.assertIn("Dhan app deep-link probe", text)
+        self.assertIn('<a href="dhan://Chart?symbol=AXISBANK">', text)
+        self.assertIn("&amp;exchangeSegment=NSE_EQ", text)             # escaped attribute
+        for i in range(1, 13):
+            self.assertIn(f"\n{i}. ", text)
+
+    def test_probe_delivers_and_reports_destination_failures(self):
+        with patch.object(R, "telegram_targets", return_value=[("t", "c")]), patch.object(
+                R.tg, "send_message_to", return_value=True) as send:
+            self.assertTrue(R.probe_app_links("AXISBANK"))
+            self.assertEqual(send.call_count, 1)
+            self.assertIn("dhan://", send.call_args[0][2])
+
+
 class BootstrapTests(unittest.TestCase):
     """The 08:45 history refresh must cover every symbol the models can name."""
 
