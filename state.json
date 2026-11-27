@@ -1,10 +1,954 @@
 {
  "date": "2026-11-27",
- "signals": {},
- "trades": {},
- "alerts": [],
- "gate": {},
- "gate_rank": {},
+ "signals": {
+  "360ONE": {
+   "nbars": 74
+  },
+  "ABB": {
+   "nbars": 74
+  },
+  "ABCAPITAL": {
+   "nbars": 74
+  },
+  "ADANIENSOL": {
+   "nbars": 73
+  },
+  "ADANIENT": {
+   "nbars": 74
+  },
+  "ADANIGREEN": {
+   "nbars": 74
+  },
+  "ADANIPORTS": {
+   "nbars": 74
+  },
+  "ADANIPOWER": {
+   "nbars": 74
+  },
+  "ALKEM": {
+   "nbars": 73
+  },
+  "AMBER": {
+   "nbars": 74
+  },
+  "AMBUJACEM": {
+   "nbars": 74
+  },
+  "ANGELONE": {
+   "nbars": 74
+  },
+  "APLAPOLLO": {
+   "nbars": 74
+  },
+  "APOLLOHOSP": {
+   "nbars": 74
+  },
+  "ASHOKLEY": {
+   "nbars": 74
+  },
+  "ASIANPAINT": {
+   "nbars": 74
+  },
+  "ASTRAL": {
+   "nbars": 74
+  },
+  "AUBANK": {
+   "nbars": 74
+  },
+  "AUROPHARMA": {
+   "nbars": 74
+  },
+  "AXISBANK": {
+   "nbars": 74
+  },
+  "BAJAJ-AUTO": {
+   "nbars": 74
+  },
+  "BAJAJFINSV": {
+   "nbars": 74
+  },
+  "BAJAJHLDNG": {
+   "nbars": 75
+  },
+  "BAJFINANCE": {
+   "nbars": 74
+  },
+  "BANDHANBNK": {
+   "nbars": 74
+  },
+  "BANKBARODA": {
+   "nbars": 74
+  },
+  "BANKINDIA": {
+   "nbars": 74
+  },
+  "BDL": {
+   "nbars": 74
+  },
+  "BEL": {
+   "nbars": 74
+  },
+  "BHARATFORG": {
+   "nbars": 73
+  },
+  "BHARTIARTL": {
+   "nbars": 73
+  },
+  "BHEL": {
+   "nbars": 74
+  },
+  "BIOCON": {
+   "nbars": 74
+  },
+  "BLUESTARCO": {
+   "nbars": 73
+  },
+  "BOSCHLTD": {
+   "nbars": 73
+  },
+  "BPCL": {
+   "nbars": 74
+  },
+  "BRITANNIA": {
+   "nbars": 73
+  },
+  "BSE": {
+   "nbars": 74
+  },
+  "CAMS": {
+   "nbars": 74
+  },
+  "CANBK": {
+   "nbars": 74
+  },
+  "CDSL": {
+   "nbars": 24
+  }
+ },
+ "trades": {
+  "360ONE": {
+   "symbol": "360ONE",
+   "side": "BUY",
+   "time": "09:55",
+   "signal": "BUY-EX",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 1226.7,
+   "sl": 1211.61,
+   "sl_anchor": "pivot",
+   "risk_pts": 15.09,
+   "risk_pct": 1.23,
+   "risk_rs": 604.0,
+   "qty": 40,
+   "qty_full": 40,
+   "qty_capped": false,
+   "capital": 49068.0,
+   "tp1": 2720.84,
+   "tp2": 2720.84,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "SL 11:15",
+     40,
+     1211.6076055908204,
+     "11:15"
+    ]
+   ],
+   "exit_text": "100% SL 11:15",
+   "leg2_time": "11:15",
+   "pnl": -604.0,
+   "r_total": -1.0,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "09:55",
+     "price": 1226.699951171875
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "11:15",
+     "price": 1211.6076055908204
+    }
+   ],
+   "gate_rank": 5
+  },
+  "ALKEM": {
+   "symbol": "ALKEM",
+   "side": "SELL",
+   "time": "09:35",
+   "signal": "SELL-EX3",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 5080.5,
+   "sl": 5123.52,
+   "sl_anchor": "session-extreme*",
+   "risk_pts": 43.02,
+   "risk_pct": 0.847,
+   "risk_rs": 387.0,
+   "qty": 9,
+   "qty_full": 9,
+   "qty_capped": false,
+   "capital": 45724.0,
+   "tp1": 821.07,
+   "tp2": 821.07,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "SL 12:05",
+     9,
+     5123.5244999999995,
+     "12:05"
+    ]
+   ],
+   "exit_text": "100% SL 12:05",
+   "leg2_time": "12:05",
+   "pnl": -387.0,
+   "r_total": -1.0,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "09:35",
+     "price": 5080.5
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "12:05",
+     "price": 5123.5244999999995
+    }
+   ],
+   "gate_rank": 19
+  },
+  "BAJAJ-AUTO": {
+   "symbol": "BAJAJ-AUTO",
+   "side": "SELL",
+   "time": "10:15",
+   "signal": "SELL-EX1",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 10768.0,
+   "sl": 10823.16,
+   "sl_anchor": "pivot",
+   "risk_pts": 55.16,
+   "risk_pct": 0.512,
+   "risk_rs": 221.0,
+   "qty": 4,
+   "qty_full": 4,
+   "qty_capped": false,
+   "capital": 43072.0,
+   "tp1": 5306.74,
+   "tp2": 5306.74,
+   "trail_armed": true,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "trail 14:30",
+     4,
+     10545.1086,
+     "14:30"
+    ]
+   ],
+   "exit_text": "100% trail 14:30",
+   "leg2_time": "14:30",
+   "pnl": 892.0,
+   "r_total": 4.04,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "10:15",
+     "price": 10768.0
+    },
+    {
+     "key": "TRAIL_ON",
+     "time": "10:55",
+     "price": 10710.0
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "14:30",
+     "price": 10545.1086
+    }
+   ],
+   "gate_rank": 20
+  },
+  "BANDHANBNK": {
+   "symbol": "BANDHANBNK",
+   "side": "SELL",
+   "time": "11:15",
+   "signal": "SELL-EX2",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 168.28,
+   "sl": 171.68,
+   "sl_anchor": "session-extreme*",
+   "risk_pts": 3.4,
+   "risk_pct": 2.023,
+   "risk_rs": 899.0,
+   "qty": 264,
+   "qty_full": 297,
+   "qty_capped": true,
+   "capital": 44426.0,
+   "tp1": -168.75,
+   "tp2": -168.75,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "OPEN 15:25",
+     264,
+     166.66000366210938,
+     "15:25"
+    ]
+   ],
+   "exit_text": "OPEN",
+   "leg2_time": "15:25",
+   "pnl": 428.0,
+   "r_total": 0.48,
+   "closed": false,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "11:15",
+     "price": 168.27999877929688
+    }
+   ],
+   "gate_rank": 28
+  },
+  "CDSL": {
+   "symbol": "CDSL",
+   "side": "SELL",
+   "time": "11:15",
+   "signal": "SELL-EX5",
+   "setup": "BREAKOUT",
+   "sl_mode": "structure",
+   "entry": 1442.2,
+   "sl": 1454.09,
+   "sl_anchor": "pivot",
+   "risk_pts": 11.89,
+   "risk_pct": 0.824,
+   "risk_rs": 404.0,
+   "qty": 34,
+   "qty_full": 34,
+   "qty_capped": false,
+   "capital": 49035.0,
+   "tp1": 265.01,
+   "tp2": 265.01,
+   "trail_armed": false,
+   "trail_style": "structure swings",
+   "legs": [
+    [
+     "SL 12:00",
+     34,
+     1454.0908088378906,
+     "12:00"
+    ]
+   ],
+   "exit_text": "100% SL 12:00",
+   "leg2_time": "12:00",
+   "pnl": -404.0,
+   "r_total": -1.0,
+   "closed": true,
+   "events": [
+    {
+     "key": "ENTRY",
+     "time": "11:15",
+     "price": 1442.199951171875
+    },
+    {
+     "key": "EXIT_SL",
+     "time": "12:00",
+     "price": 1454.0908088378906
+    }
+   ],
+   "gate_rank": 6
+  }
+ },
+ "alerts": [
+  "360ONE:ENTRY",
+  "ALKEM:ENTRY",
+  "BAJAJ-AUTO:ENTRY",
+  "BANDHANBNK:ENTRY",
+  "CDSL:ENTRY"
+ ],
+ "gate": {
+  "status": "OK",
+  "source": "https://www.nseindia.com/api/live-analysis-oi-spurts-underlyings (curl-cffi)",
+  "count": 203
+ },
+ "gate_rank": {
+  "SHRIRAMFIN": 1,
+  "HYUNDAI": 2,
+  "MPHASIS": 3,
+  "SBICARD": 4,
+  "360ONE": 5,
+  "CDSL": 6,
+  "HAL": 7,
+  "ASHOKLEY": 8,
+  "MAZDOCK": 9,
+  "BANKINDIA": 10,
+  "ZYDUSLIFE": 11,
+  "ANGELONE": 12,
+  "HDFCAMC": 13,
+  "COCHINSHIP": 14,
+  "LODHA": 15,
+  "TITAN": 16,
+  "SOLARINDS": 17,
+  "GVT&D": 18,
+  "ALKEM": 19,
+  "BAJAJ-AUTO": 20,
+  "LTF": 21,
+  "VOLTAS": 22,
+  "HAVELLS": 23,
+  "TATAELXSI": 24,
+  "BDL": 25,
+  "POLICYBZR": 26,
+  "MOTILALOFS": 27,
+  "BANDHANBNK": 28,
+  "MUTHOOTFIN": 29,
+  "SBILIFE": 30,
+  "LICI": 31,
+  "UPL": 32,
+  "KALYANKJIL": 33,
+  "SBIN": 34,
+  "LTM": 35,
+  "MANKIND": 36,
+  "DELHIVERY": 37,
+  "BHARATFORG": 38,
+  "GLENMARK": 39,
+  "SRF": 40,
+  "ABCAPITAL": 41,
+  "BRITANNIA": 42,
+  "AUBANK": 43,
+  "ULTRACEMCO": 44,
+  "TORNTPHARM": 45,
+  "CONCOR": 46,
+  "OFSS": 47,
+  "OBEROIRLTY": 48,
+  "JUBLFOOD": 49,
+  "ADANIPORTS": 50,
+  "GODREJPROP": 51,
+  "TATAPOWER": 52,
+  "UNOMINDA": 53,
+  "LUPIN": 54,
+  "HINDALCO": 55,
+  "INDIANB": 56,
+  "BSE": 57,
+  "MOTHERSON": 58,
+  "BEL": 59,
+  "HDFCBANK": 60,
+  "POWERGRID": 61,
+  "ADANIGREEN": 62,
+  "NESTLEIND": 63,
+  "PNB": 64,
+  "BHARTIARTL": 65,
+  "HINDUNILVR": 66,
+  "M&M": 67,
+  "OIL": 68,
+  "ADANIENSOL": 69,
+  "BOSCHLTD": 70,
+  "CHOLAFIN": 71,
+  "JSWSTEEL": 72,
+  "IDFCFIRSTB": 73,
+  "MCX": 74,
+  "LT": 75,
+  "ICICIBANK": 76,
+  "MAXHEALTH": 77,
+  "NAM-INDIA": 78,
+  "INDIGO": 79,
+  "CAMS": 80,
+  "GMRAIRPORT": 81,
+  "AXISBANK": 82,
+  "UNIONBANK": 83,
+  "ETERNAL": 84,
+  "BLUESTARCO": 85,
+  "PHOENIXLTD": 86,
+  "ONGC": 87,
+  "AUROPHARMA": 88,
+  "TCS": 89,
+  "IRFC": 90,
+  "TRENT": 91,
+  "INDHOTEL": 92,
+  "SAIL": 93,
+  "FORCEMOT": 94,
+  "RELIANCE": 95,
+  "YESBANK": 96,
+  "NTPC": 97,
+  "DRREDDY": 98,
+  "KFINTECH": 99,
+  "SUZLON": 100,
+  "FEDERALBNK": 101,
+  "NYKAA": 102,
+  "MARUTI": 103,
+  "KPITTECH": 104,
+  "COALINDIA": 105,
+  "DMART": 106,
+  "HINDPETRO": 107,
+  "SHREECEM": 108,
+  "TIINDIA": 109,
+  "DIVISLAB": 110,
+  "ADANIENT": 111,
+  "VEDL": 112,
+  "HINDZINC": 113,
+  "TATACONSUM": 114,
+  "ASIANPAINT": 115,
+  "PATANJALI": 116,
+  "PNBHOUSING": 117,
+  "TMPV": 118,
+  "PIDILITIND": 119,
+  "PRESTIGE": 120,
+  "GODREJCP": 121,
+  "CROMPTON": 122,
+  "GRASIM": 123,
+  "RBLBANK": 124,
+  "NHPC": 125,
+  "HEROMOTOCO": 126,
+  "APOLLOHOSP": 127,
+  "JIOFIN": 128,
+  "ADANIPOWER": 129,
+  "HCLTECH": 130,
+  "KOTAKBANK": 131,
+  "WIPRO": 132,
+  "CGPOWER": 133,
+  "RECLTD": 134,
+  "PAGEIND": 135,
+  "IDEA": 136,
+  "GAIL": 137,
+  "HDFCLIFE": 138,
+  "SWIGGY": 139,
+  "SIEMENS": 140,
+  "BHEL": 141,
+  "AMBER": 142,
+  "NATIONALUM": 143,
+  "BIOCON": 144,
+  "TVSMOTOR": 145,
+  "UNITDSPR": 146,
+  "PETRONET": 147,
+  "POWERINDIA": 148,
+  "ASTRAL": 149,
+  "LICHSGFIN": 150,
+  "LAURUSLABS": 151,
+  "BAJAJFINSV": 152,
+  "TATASTEEL": 153,
+  "PERSISTENT": 154,
+  "PGEL": 155,
+  "VMM": 156,
+  "CANBK": 157,
+  "IOC": 158,
+  "AMBUJACEM": 159,
+  "ICICIGI": 160,
+  "WAAREEENER": 161,
+  "NBCC": 162,
+  "ABB": 163,
+  "INDUSINDBK": 164,
+  "SONACOMS": 165,
+  "NAUKRI": 166,
+  "ITC": 167,
+  "BANKBARODA": 168,
+  "INDUSTOWER": 169,
+  "INFY": 170,
+  "BAJFINANCE": 171,
+  "NMDC": 172,
+  "VBL": 173,
+  "CIPLA": 174,
+  "SUPREMEIND": 175,
+  "GODFRYPHLP": 176,
+  "DLF": 177,
+  "COLPAL": 178,
+  "EICHERMOT": 179,
+  "INOXWIND": 180,
+  "CUMMINSIND": 181,
+  "FORTIS": 182,
+  "DABUR": 183,
+  "TECHM": 184,
+  "RADICO": 185,
+  "MFSL": 186,
+  "JSWENERGY": 187,
+  "POLYCAB": 188,
+  "JINDALSTEL": 189,
+  "BPCL": 190,
+  "PFC": 191,
+  "PIIND": 192,
+  "RVNL": 193,
+  "SUNPHARMA": 194,
+  "MANAPPURAM": 195,
+  "PAYTM": 196,
+  "PREMIERENE": 197,
+  "KEI": 198,
+  "KAYNES": 199,
+  "MARICO": 200,
+  "APLAPOLLO": 201,
+  "COFORGE": 202,
+  "DIXON": 203
+ },
  "eod_done": false,
- "cycles": 0
+ "cycles": 0,
+ "skipped": [
+  {
+   "symbol": "ADANIPORTS",
+   "side": "SELL",
+   "signal": "SELL-EX1",
+   "time": "09:35",
+   "entry": 1909.1,
+   "rank": 50,
+   "why": "EX1/EX2 before 09:45 blocked \u2014 razor-edge class (B2)"
+  },
+  {
+   "symbol": "ALKEM",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 5092.5,
+   "rank": 19,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "ANGELONE",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 366.15,
+   "rank": 12,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "ANGELONE",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 369.1,
+   "rank": 12,
+   "why": "EX1/EX2 before 09:45 blocked \u2014 razor-edge class (B2)"
+  },
+  {
+   "symbol": "APLAPOLLO",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "09:30",
+   "entry": 1535.8,
+   "rank": 201,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 quality filter"
+  },
+  {
+   "symbol": "ASIANPAINT",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 2512.0,
+   "rank": 115,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "ASTRAL",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "09:45",
+   "entry": 1272.5,
+   "rank": 149,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 quality filter"
+  },
+  {
+   "symbol": "AUBANK",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "09:40",
+   "entry": 992.05,
+   "rank": 43,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 quality filter"
+  },
+  {
+   "symbol": "AUROPHARMA",
+   "side": "BUY",
+   "signal": "BUY-EX9",
+   "time": "09:40",
+   "entry": 1821.0,
+   "rank": 88,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 quality filter"
+  },
+  {
+   "symbol": "AXISBANK",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 1400.6,
+   "rank": 82,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "BAJAJHLDNG",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 11772.0,
+   "rank": null,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "BANDHANBNK",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "09:45",
+   "entry": 171.15,
+   "rank": 28,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 quality filter"
+  },
+  {
+   "symbol": "BANKBARODA",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "09:30",
+   "entry": 277.08,
+   "rank": 168,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 quality filter"
+  },
+  {
+   "symbol": "BANKINDIA",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 163.64,
+   "rank": 10,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "BANKINDIA",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 165.79,
+   "rank": 10,
+   "why": "EX1/EX2 before 09:45 blocked \u2014 razor-edge class (B2)"
+  },
+  {
+   "symbol": "BDL",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 1048.4,
+   "rank": 25,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "BDL",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 1067.0,
+   "rank": 25,
+   "why": "EX1/EX2 before 09:45 blocked \u2014 razor-edge class (B2)"
+  },
+  {
+   "symbol": "BEL",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 407.0,
+   "rank": 59,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "BHARATFORG",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "09:35",
+   "entry": 1770.0,
+   "rank": 38,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 quality filter"
+  },
+  {
+   "symbol": "BHEL",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "09:35",
+   "entry": 423.6,
+   "rank": 141,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 quality filter"
+  },
+  {
+   "symbol": "BOSCHLTD",
+   "side": "SELL",
+   "signal": "SELL-EX15",
+   "time": "11:15",
+   "entry": 48710.0,
+   "rank": 70,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 quality filter"
+  },
+  {
+   "symbol": "BPCL",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:20",
+   "entry": 305.35,
+   "rank": 190,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "BRITANNIA",
+   "side": "SELL",
+   "signal": "ENTRY SELL",
+   "time": "09:25",
+   "entry": 5123.0,
+   "rank": 42,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "BSE",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:25",
+   "entry": 4033.7,
+   "rank": 57,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "BSE",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 4063.5,
+   "rank": 57,
+   "why": "EX1/EX2 before 09:45 blocked \u2014 razor-edge class (B2)"
+  },
+  {
+   "symbol": "CAMS",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 753.2,
+   "rank": 80,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "CANBK",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "time": "09:30",
+   "entry": 132.86,
+   "rank": 157,
+   "why": "weak EX variant (EX9+) blocked \u2014 B2 quality filter"
+  },
+  {
+   "symbol": "CDSL",
+   "side": "BUY",
+   "signal": "ENTRY BUY",
+   "time": "09:20",
+   "entry": 1452.0,
+   "rank": 6,
+   "why": "scanner-table preview signal (90/290) \u2014 no TradingView chart label, blocked"
+  },
+  {
+   "symbol": "CDSL",
+   "side": "BUY",
+   "signal": "BUY-EX",
+   "time": "09:30",
+   "entry": 1458.9,
+   "rank": 6,
+   "why": "EX1/EX2 before 09:45 blocked \u2014 razor-edge class (B2)"
+  }
+ ],
+ "ghosts": [
+  {
+   "symbol": "APLAPOLLO",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "code": 102,
+   "time": "09:30",
+   "entry": 1535.8,
+   "rank": 201,
+   "grp": "R"
+  },
+  {
+   "symbol": "ASTRAL",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "code": 102,
+   "time": "09:45",
+   "entry": 1272.5,
+   "rank": 149,
+   "grp": "R"
+  },
+  {
+   "symbol": "AUBANK",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "code": 102,
+   "time": "09:40",
+   "entry": 992.05,
+   "rank": 43,
+   "grp": "R"
+  },
+  {
+   "symbol": "AUROPHARMA",
+   "side": "BUY",
+   "signal": "BUY-EX9",
+   "code": 108,
+   "time": "09:40",
+   "entry": 1821.0,
+   "rank": 88,
+   "grp": "EX9"
+  },
+  {
+   "symbol": "BANDHANBNK",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "code": 102,
+   "time": "09:45",
+   "entry": 171.15,
+   "rank": 28,
+   "grp": "R"
+  },
+  {
+   "symbol": "BANKBARODA",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "code": 102,
+   "time": "09:30",
+   "entry": 277.08,
+   "rank": 168,
+   "grp": "R"
+  },
+  {
+   "symbol": "BHARATFORG",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "code": 102,
+   "time": "09:35",
+   "entry": 1770.0,
+   "rank": 38,
+   "grp": "R"
+  },
+  {
+   "symbol": "BHEL",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "code": 102,
+   "time": "09:35",
+   "entry": 423.6,
+   "rank": 141,
+   "grp": "R"
+  },
+  {
+   "symbol": "BOSCHLTD",
+   "side": "SELL",
+   "signal": "SELL-EX15",
+   "code": 216,
+   "time": "11:15",
+   "entry": 48710.0,
+   "rank": 70,
+   "grp": "R"
+  },
+  {
+   "symbol": "CANBK",
+   "side": "BUY",
+   "signal": "BUY-EX17",
+   "code": 102,
+   "time": "09:30",
+   "entry": 132.86,
+   "rank": 157,
+   "grp": "R"
+  }
+ ]
 }
