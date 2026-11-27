@@ -354,7 +354,7 @@ def observe_running(st, symbol, bars, now):
 
 
 def alert_text(e, markup=False):
-    """One alert message. `markup=True` bolds the symbol for Telegram HTML.
+    """One alert message. `markup=True` bolds the symbol and links it to its chart.
 
     Everything else is escaped, so symbols such as M&M or GVT&D cannot break
     Telegram's HTML parser.
@@ -403,7 +403,9 @@ def alert_text(e, markup=False):
         return text
     escaped = tg.esc(text)
     symbol = tg.esc(str(e["symbol"]))
-    return escaped.replace(f"{symbol} · {e['side']} @", f"<b>{symbol}</b> · {e['side']} @", 1)
+    # The bold symbol is a chart deep link: one tap opens the stock's chart.
+    return escaped.replace(f"{symbol} · {e['side']} @",
+                           f"{tg.chart_link(e['symbol'])} · {e['side']} @", 1)
 
 
 def sector_context_lines(gate):

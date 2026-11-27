@@ -162,15 +162,18 @@ class AdvisoryAndDuplicateTests(unittest.TestCase):
         self.assertIn('Entry +1.09% beyond BOS', text)
         self.assertIn('tier B', text)
         markup = R.alert_text(event, markup=True)
-        self.assertIn('<b>AXISBANK</b> · BUY @ 111.20', markup)
-        self.assertNotIn('&lt;b&gt;', markup)
+        self.assertIn('<b><a href="https://tv.dhan.co/?symbol=NSE%3AAXISBANK">AXISBANK</a></b>'
+                      ' · BUY @ 111.20', markup)
+        self.assertNotIn('&lt;', markup)
 
     def test_symbol_with_an_ampersand_is_escaped_inside_the_bold_tag(self):
         st = self.emitted()
         event = dict(st['events'][0])
         event['symbol'] = 'M&M'
         markup = R.alert_text(event, markup=True)
-        self.assertIn('<b>M&amp;M</b> · BUY @', markup)
+        self.assertIn('<b><a href="https://tv.dhan.co/?symbol=NSE%3AM%26M">M&amp;M</a></b>'
+                      ' · BUY @', markup)
+        self.assertNotIn('&lt;', markup)
 
     def test_extended_entry_and_tier_a_are_labelled(self):
         st = self.emitted(kind='CLOSE_CONFIRMED', price=112.0, now='09:55:02')
@@ -187,6 +190,55 @@ class AdvisoryAndDuplicateTests(unittest.TestCase):
         event = dict(st['events'][0])
         event['ema_undercut'] = 0.19
         self.assertIn('undercut EMA9/10 by 0.19%', R.alert_text(event))
+
+
+class ChartLinkTests(unittest.TestCase):
+    """Tapping the stock name in an alert opens that stock's chart."""
+
+    def event(self, symbol="AXISBANK"):
+        return dict(symbol=symbol, side="BUY", price=111.2, bos=110.0, pullback="none",
+                    signal="CLOSE_CONFIRMED",
+                    seed=pd.Timestamp("2026-11-20 09:30", tz="Asia/Kolkata"),
+                    bar=pd.Timestamp("2026-11-20 09:45", tz="Asia/Kolkata"),
+                    observed=pd.Timestamp("2026-11-20 09:45:20", tz="Asia/Kolkata"),
+                    kind="CLOSE_CONFIRMED", sector_gate={"status": "disabled"})
+
+    def test_symbol_is_a_chart_link_and_a_bold_name(self):
+        markup = R.alert_text(self.event(), markup=True)
+        self.assertEqual(markup.count("<a href="), 1)
+        self.assertIn('<b><a href="https://tv.dhan.co/?symbol=NSE%3AAXISBANK">AXISBANK</a></b>',
+                      markup)
+        self.assertIn("</a></b> · BUY @ 111.20", markup)
+
+    def test_plain_text_alerts_stay_plain(self):
+        text = R.alert_text(self.event(), markup=False)
+        self.assertNotIn("<a", text)
+        self.assertIn("AXISBANK · BUY @ 111.20", text)
+
+    def test_the_template_is_configurable_and_ampersands_are_escaped(self):
+        with patch.dict(os.environ, {"M16_CHART_URL_TEMPLATE":
+                                     "https://example.test/c?symbol=NSE%3A{symbol}&tf=5"}):
+            markup = R.alert_text(self.event(), markup=True)
+        self.assertIn('href="https://example.test/c?symbol=NSE%3AAXISBANK&amp;tf=5"', markup)
+        self.assertNotIn("&tf=5", markup)          # unescaped & would break the parser
+
+    def test_hyphenated_and_ampersand_symbols_are_url_quoted(self):
+        self.assertEqual(R.tg.chart_url("BAJAJ-AUTO"), "https://tv.dhan.co/?symbol=NSE%3ABAJAJ-AUTO")
+        self.assertEqual(R.tg.chart_url("M&M"), "https://tv.dhan.co/?symbol=NSE%3AM%26M")
+
+    def test_the_parse_reject_retry_keeps_the_link(self):
+        markup = R.alert_text(self.event("M&M"), markup=True)
+        healed = R.tg._heal_html(markup)
+        self.assertIn('<a href="https://tv.dhan.co/?symbol=NSE%3AM%26M">', healed)
+        self.assertIn("</a></b>", healed)
+        self.assertNotIn("&lt;a", healed)
+
+    def test_the_alert_body_is_otherwise_unchanged(self):
+        markup = R.alert_text(self.event(), markup=True)
+        plain = R.alert_text(self.event(), markup=False)
+        body = markup.splitlines()[1]
+        self.assertEqual(re.sub(r"<[^>]+>", "", body).replace("&amp;", "&"),
+                         plain.splitlines()[1])
 
 
 class BootstrapTests(unittest.TestCase):

@@ -95,6 +95,30 @@ Three rules make this safe:
 - If the trigger candle is missing, record `CLOSE_UNAVAILABLE`; do not confirm using a different candle.
 - Historical reconstruction records events but suppresses stale alerts. Default close/send freshness budget is 30 seconds. Failed sends retry within that budget with a short backoff. An outbox left `sending` after a crash is uncertain and is not blindly duplicated.
 
+### Stock name opens the chart
+
+In every M16 Telegram alert the bold stock name is also the chart link, so a tap
+opens that stock's chart:
+
+```
+<b><a href="https://tv.dhan.co/?symbol=NSE%3AAXISBANK">AXISBANK</a></b> · BUY @ 111.20
+```
+
+- Built by `telegram_bot.chart_link()`; the symbol is URL-quoted (`M&M` →
+  `NSE%3AM%26M`) and the whole `href` is HTML-escaped, so no symbol can break
+  Telegram's parser.
+- The template is one constant (`telegram_bot.CHART_URL_TEMPLATE`) and can be
+  changed without a code edit through `M16_CHART_URL_TEMPLATE`, e.g.
+  `https://www.tradingview.com/chart/?symbol=NSE%3A{symbol}` or
+  `https://tv.dhan.co/chart/?symbol={symbol}.NS`. `{symbol}` is replaced; the
+  rest of the template is used verbatim.
+- Plain-text (TXT/PDF, `markup=False`) output is unchanged, and no alert
+  content, gating or delivery logic changed.
+- `_heal_html()` (the one-shot retry after a 400 parse reject) now preserves
+  `<a href="…">`/`</a>` next to `<b>`/`</b>`, folding the double-escaped
+  `&amp;amp;` inside an href back to a single `&amp;` so the retried link still
+  opens the right page.
+
 ## Original indicator label on the BOS candle
 
 If the **first/original final label itself appears on an already qualifying BOS candle**, M16 sends `DIRECT_BOS_CONFIRMED` immediately on its fresh completed-candle observation. It does **not** require a previous indicator label or wait for another pullback.
