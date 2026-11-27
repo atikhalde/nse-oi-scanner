@@ -324,18 +324,29 @@ class AppLinkProbeTests(unittest.TestCase):
         self.assertTrue(all(u.startswith("dhan://") for u in urls))
         self.assertEqual(len(urls), len(set(urls)))                    # no duplicates
         self.assertIn("dhan://Chart?symbol=AXISBANK", urls)
-        self.assertIn("dhan://Chart?securityId=5900&amp;exchangeSegment=NSE_EQ".replace("&amp;", "&"), urls)
-        self.assertTrue(any("NSEE5900%3AAXISBANK" in u for u in urls))
+        self.assertIn("dhan://Chart?securityId=5900&exchangeSegment=NSE_EQ", urls)
+        self.assertIn("dhan://Chart?symbol=NSEE5900:AXISBANK", urls)   # raw, quoted once later
+
+    def test_each_candidate_is_reachable_from_telegram_as_an_https_link(self):
+        # Telegram only follows http(s); a raw dhan:// anchor never opens anything.
+        for _, route in R.tg.app_link_candidates("AXISBANK", 5900):
+            url = R.tg.app_url("AXISBANK", 5900, route)
+            self.assertTrue(url.startswith("https://dhan.go.link/"), url)
+            self.assertNotIn("%25", url)                                # no double-encoding
+            self.assertIn("adj_deeplink=dhan%3A%2F%2F", url)
 
     def test_the_probe_message_lists_every_link_numbered(self):
         captured = {}
         with patch("builtins.print", side_effect=lambda *a, **k: captured.setdefault("out", a[0])):
             self.assertTrue(R.probe_app_links("AXISBANK", dry_run=True))
         text = captured["out"]
-        self.assertIn("Dhan app deep-link probe", text)
-        self.assertIn('<a href="dhan://Chart?symbol=AXISBANK">', text)
-        self.assertIn("&amp;exchangeSegment=NSE_EQ", text)             # escaped attribute
-        for i in range(1, 13):
+        self.assertIn("Dhan app chart-link probe (v2)", text)
+        self.assertIn("0. Login (control", text)
+        self.assertIn('href="https://dhan.go.link/?adj_t=tunb1sj&amp;adj_deeplink=dhan%3A%2F%2FChart'
+                      '%3Fsymbol%3DAXISBANK', text)
+        self.assertIn("&amp;adj_fallback=", text)                      # escaped attribute
+        self.assertNotIn('href="dhan://', text)                        # never a dead raw scheme
+        for i in range(0, 13):
             self.assertIn(f"\n{i}. ", text)
 
     def test_probe_delivers_and_reports_destination_failures(self):
@@ -343,7 +354,7 @@ class AppLinkProbeTests(unittest.TestCase):
                 R.tg, "send_message_to", return_value=True) as send:
             self.assertTrue(R.probe_app_links("AXISBANK"))
             self.assertEqual(send.call_count, 1)
-            self.assertIn("dhan://", send.call_args[0][2])
+            self.assertIn("https://dhan.go.link/", send.call_args[0][2])
 
 
 class BootstrapTests(unittest.TestCase):

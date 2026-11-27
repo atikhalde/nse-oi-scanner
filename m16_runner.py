@@ -168,16 +168,24 @@ def sample_alert_text():
 
 
 def probe_app_links(symbol="AXISBANK", dry_run=False):
-    """Send one message of candidate Dhan app deep links so the working one can be picked."""
+    """Send candidate Dhan app chart routes, each wrapped in Dhan's https app link.
+
+    Telegram only follows http(s) links, so a raw `dhan://…` anchor is dead on
+    the phone; every candidate therefore travels as dhan.go.link?adj_deeplink=…
+    """
     sid = security_id(symbol)
     candidates = tg.app_link_candidates(symbol, sid)
-    lines = ["🔎 Dhan app deep-link probe — tap ONE link at a time.",
-             f"Reply with the number that opens the {symbol} chart in the app.",
-             "Tap the link text (the 'dhan://…' string) itself.\n"]
-    for i, (label, url) in enumerate(candidates, 1):
-        lines.append(f'{i}. {label}\n   <a href="{_html_escape_url(url)}">{esc_attr_display(url)}</a>')
-    lines.append("\nWeb fallbacks still here: the symbol link is the chart, "
-                 "and the last alert line opens the app home.")
+    control = tg.app_url(symbol, sid, deeplink="dhan://Login")
+    lines = ["🔎 Dhan app chart-link probe (v2)",
+             f"Each link opens the Dhan app for {symbol} via Dhan's own https entry link.",
+             "Tap them one at a time; reply with the number that shows the chart\n"
+             "(or the number that errors, if any).\n",
+             f'0. Login (control — known to open the app) · <a href="{_html_escape_url(control)}">open 0</a>\n']
+    for i, (label, route) in enumerate(candidates, 1):
+        url = tg.app_url(symbol, sid, deeplink=route)
+        lines.append(f'{i}. {label} · <a href="{_html_escape_url(url)}">open {i}</a>')
+    lines.append("\nIf every number only opens the app home, reply 'none' — "
+                 "the app does not accept chart routes from links yet.")
     text = "\n".join(lines)
     if dry_run:
         print("[DRY] app-link probe\n" + text)

@@ -54,12 +54,14 @@ def chart_link(symbol, security_id=None):
 
 
 # Dhan publishes one Android app entry point: its own Adjust link, which hands
-# `dhan://Login` to the app and falls back to the web when the app is absent
-# (this is the "Use App" button on dhan.co). There is no per-stock deep link,
-# so this opens the Dhan app itself; the symbol keeps the exact chart link.
-# `{fallback}` is URL-quoted for you. M16_APP_URL_TEMPLATE overrides the whole
-# template, and M16_APP_LINK=0 removes the line.
-DHAN_APP_URL_TEMPLATE = ("https://dhan.go.link/?adj_t=tunb1sj&adj_deeplink=dhan%3A%2F%2FLogin"
+# a `dhan://…` route to the app and falls back to the web when the app is absent
+# (this is the "Use App" button on dhan.co). Telegram will not open a raw
+# `dhan://` anchor — it only follows http(s) — so the route always travels as
+# the https Adjust link. There is no published per-stock route, so the default
+# is `dhan://Login`; the symbol keeps the exact chart link.
+# `{deeplink}` and `{fallback}` are URL-quoted for you. M16_APP_URL_TEMPLATE
+# overrides the whole template, and M16_APP_LINK=0 removes the line.
+DHAN_APP_URL_TEMPLATE = ("https://dhan.go.link/?adj_t=tunb1sj&adj_deeplink={deeplink}"
                          "&adj_fallback={fallback}&adj_campaign=m16-alert")
 
 
@@ -67,24 +69,26 @@ def app_link_enabled():
     return os.environ.get("M16_APP_LINK", "1").strip().lower() not in {"0", "false", "no"}
 
 
-def app_url(symbol=None, security_id=None):
-    """Link that opens the Dhan Android app (web chart as the no-app fallback)."""
+def app_url(symbol=None, security_id=None, deeplink="dhan://Login"):
+    """https link that hands `deeplink` to the Dhan Android app (web chart as fallback)."""
     tmpl = os.environ.get("M16_APP_URL_TEMPLATE") or DHAN_APP_URL_TEMPLATE
     fallback = chart_url(symbol, security_id) if symbol else "https://web.dhan.co/"
-    return tmpl.replace("{fallback}", quote(fallback, safe="")).replace(
-        "{chart}", quote(chart_url(symbol, security_id), safe="") if symbol else "")
+    return (tmpl.replace("{deeplink}", quote(str(deeplink), safe=""))
+                .replace("{fallback}", quote(fallback, safe="")))
 
 
 # Candidate in-app routes for opening a stock chart. Dhan publishes only
 # `dhan://Login`; these are the plausible shapes, probed on the phone through
 # `m16_runner.py --probe-app-links` so the real one can be adopted.
 def app_link_candidates(symbol="AXISBANK", security_id=5900):
-    sym = quote(str(symbol), safe="")
-    inst = quote(chart_instrument(symbol, security_id), safe="")
+    # Raw (un-quoted) routes: they are quoted exactly once when the https app
+    # link is built, so `NSE:AXISBANK` reaches the app as `NSE%3A`.
+    sym = str(symbol)
+    inst = chart_instrument(symbol, security_id)
     path = [
         ("Chart?symbol=SYM", f"dhan://Chart?symbol={sym}"),
         ("chart?symbol=SYM", f"dhan://chart?symbol={sym}"),
-        ("Chart?symbol=NSE:SYM", f"dhan://Chart?symbol=NSE%3A{sym}"),
+        ("Chart?symbol=NSE:SYM", f"dhan://Chart?symbol=NSE:{sym}"),
         ("Chart?symbol=NSEE<id>:SYM", f"dhan://Chart?symbol={inst}"),
         ("Chart?securityId=<id>", f"dhan://Chart?securityId={quote(str(security_id), safe='')}"),
         ("Chart?securityId&exchangeSegment", f"dhan://Chart?securityId={quote(str(security_id), safe='')}"
