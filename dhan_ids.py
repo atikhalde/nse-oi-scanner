@@ -81,9 +81,13 @@ def parse_master(text, watch=()):
             seen[sym] = "/".join([exch or "?", seg or "?", inst or "?"])
         if exch_col and exch != "NSE":
             continue
-        if inst_col and inst and inst != "EQUITY":
+        # A blank or unexpected instrument/segment is not an equity row. Keep the
+        # filter strict here: the 2026-11-27 18:47Z run showed a blank-instrument
+        # MOTHERSON row shadowing the real one (id 25510 instead of 4204), which
+        # dropped the master's agreement with fno_universe.csv to 208/209.
+        if inst_col and inst != "EQUITY":
             continue
-        if seg_col and seg and seg not in _SEG_PRIORITY:
+        if seg_col and seg not in _SEG_PRIORITY:
             continue
         sid = (row.get(id_col) or "").strip()
         if not sid.isdigit():
@@ -102,6 +106,15 @@ def validate(parsed, reference):
     checked = len(common)
     ok = checked >= _MIN_AGREED and agreed / checked >= _MIN_AGREEMENT
     return ok, agreed, checked
+
+
+def disagreements(parsed, reference):
+    """{symbol: "reference=X master=Y"} where the master and a trusted map differ."""
+    out = {}
+    for sym in sorted(set(parsed) & set(reference)):
+        if int(parsed[sym]) != int(reference[sym]):
+            out[sym] = f"{int(reference[sym])}->{int(parsed[sym])}"
+    return out
 
 
 def fetch_text(urls=MASTER_URLS, timeout=90):
@@ -134,6 +147,38 @@ def fetch_master(urls=MASTER_URLS, timeout=90, watch=()):
         except Exception as e:                     # network/SSL/timeout
             last = f"{type(e).__name__}: {e} ({url})"
     raise RuntimeError(last or "no master URL configured")
+
+
+def resolve_from_masters(symbols, urls=MASTER_URLS, timeout=90):
+    """Second chance for `symbols` the first master did not carry.
+
+    Dhan publishes a detailed master and a compact one; a name can be missing
+    from the detailed file (the 2026-11-27 run left ATHERENERGY, GSPL,
+    GUJGASLTD, JBCHEPHARM, HEG and ICICIPRULI unresolved) while the compact file
+    still lists it. Every URL is tried, in order, for the symbols still missing.
+
+    Returns (ids, seen, tried) where `seen` is the same "EXCH/SEG/INST" map for
+    whatever stayed missing and `tried` lists the URLs actually fetched.
+    """
+    ids, seen, tried = {}, {}, []
+    pending = [str(s).strip().upper() for s in symbols]
+    for url in urls:
+        if not pending:
+            break
+        try:
+            text, got = fetch_text([url], timeout=timeout)
+        except Exception:
+            tried.append(url)
+            continue
+        tried.append(got)
+        got_ids, got_seen = parse_master(text, watch=pending)
+        for sym in pending:
+            if sym in got_ids:
+                ids[sym] = got_ids[sym]
+        for sym, where in got_seen.items():
+            seen.setdefault(sym, where)
+        pending = [s for s in pending if s not in ids]
+    return ids, seen, tried
 
 
 def save(parsed, symbols, path=MAP_FILE):

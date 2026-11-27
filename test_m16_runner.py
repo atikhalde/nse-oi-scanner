@@ -395,6 +395,16 @@ NSE,E,1236,"M&M","M&M",EQUITY
 SHIFTED_MASTER = """EXCH_ID,SEGMENT,SECURITY_ID,SYMBOL,INSTRUMENT
 NSE,E,999,AXISBANK,EQUITY
 """
+# The 2026-11-27 18:47Z master listed MOTHERSON twice: a blank-instrument row
+# (25510) ahead of the real equity row (4204). Accepting the blank row shadowed
+# the trusted id and took the agreement down to 208/209.
+SECOND_MASTER = """EXCH_ID,SEGMENT,SECURITY_ID,SYMBOL,INSTRUMENT
+NSE,E,5324,GSPL,EQUITY
+"""
+SHADOW_MASTER = """SEM_EXM_EXCH_ID,SEM_SEGMENT,SEM_SMST_SECURITY_ID,SEM_TRADING_SYMBOL,SEM_CUSTOM_SYMBOL,SEM_INSTRUMENT_NAME
+NSE,E,25510,MOTHERSON,MOTHERSON,
+NSE,E,4204,MOTHERSON,MOTHERSON,EQUITY
+"""
 
 
 class DhanIdTests(unittest.TestCase):
@@ -439,6 +449,44 @@ class DhanIdTests(unittest.TestCase):
             with self.assertRaises(RuntimeError):
                 dhan_ids.fetch_text(["https://x/404"])
 
+    def test_a_blank_instrument_row_cannot_shadow_the_equity_row(self):
+        self.assertEqual(dhan_ids.parse_master(SHADOW_MASTER), {"MOTHERSON": 4204})
+
+    def test_watch_still_reports_a_name_that_only_has_a_blank_instrument_row(self):
+        parsed, seen = dhan_ids.parse_master(SHADOW_MASTER, watch=["MOTHERSON"])
+        self.assertEqual(parsed, {"MOTHERSON": 4204})
+        self.assertEqual(seen["MOTHERSON"], "NSE/E/?")   # the unqualified row
+
+    def test_a_name_missing_from_one_master_is_found_in_the_next(self):
+        def fake(urls, timeout=90):
+            if "detailed" in urls[0]:
+                return MIXED_MASTER, urls[0]
+            if "compact" in urls[0]:
+                return SECOND_MASTER, urls[0]
+            raise RuntimeError("HTTP 404")
+
+        with patch.object(dhan_ids, "fetch_text", side_effect=fake):
+            ids, seen, tried = dhan_ids.resolve_from_masters(
+                ["AXISBANK", "GSPL", "ZZZZ"],
+                ["https://x/detailed.csv", "https://x/compact.csv", "https://x/dead.csv"])
+        self.assertEqual(ids.get("AXISBANK"), 5900)
+        self.assertEqual(ids.get("GSPL"), 5324)      # from the compact file
+        self.assertNotIn("ZZZZ", ids)
+        self.assertEqual(tried, ["https://x/detailed.csv", "https://x/compact.csv",
+                                 "https://x/dead.csv"])
+
+    def test_resolve_from_masters_never_raises_when_every_source_fails(self):
+        with patch.object(dhan_ids, "fetch_text", side_effect=RuntimeError("offline")):
+            ids, seen, tried = dhan_ids.resolve_from_masters(["HEG"], ["https://x/a"])
+        self.assertEqual((ids, seen, tried), ({}, {}, ["https://x/a"]))
+
+    def test_disagreements_names_the_symbol_and_both_ids(self):
+        self.assertEqual(
+            dhan_ids.disagreements({"MOTHERSON": 25510, "TCS": 11536},
+                                   {"MOTHERSON": 4204, "TCS": 11536}),
+            {"MOTHERSON": "4204->25510"})
+        self.assertEqual(dhan_ids.disagreements({"TCS": 11536}, {"TCS": 11536}), {})
+
     def test_validation_accepts_a_matching_map(self):
         with patch.object(dhan_ids, "_MIN_AGREED", 1):
             ok, agreed, checked = dhan_ids.validate({"TCS": 11536, "X": 1}, {"TCS": 11536})
@@ -480,6 +528,43 @@ class DhanIdTests(unittest.TestCase):
             loaded = dhan_ids.load(Path(tmp) / "ids.csv")
             self.assertEqual(loaded.get("AXISBANK"), 5900)
             self.assertNotIn("NOT_IN_UNIVERSE", loaded)
+
+    def test_refresh_names_every_id_that_disagrees_with_the_trusted_map(self):
+        with tempfile.TemporaryDirectory() as tmp, patch.object(
+                dhan_ids, "MAP_FILE", Path(tmp) / "ids.csv"), patch.object(
+                dhan_ids, "_MIN_AGREED", 1), patch.object(
+                dhan_ids, "_MIN_AGREEMENT", 0.0), patch.object(
+                dhan_ids, "fetch_text", return_value=(SHIFTED_MASTER, "test://master")), \
+                patch.object(R.shared.L, "FNO_SID", {"AXISBANK": 5900}), \
+                patch.object(R.shared.L, "bootstrap_symbols", return_value=["AXISBANK"]):
+            buf = io.StringIO()
+            with contextlib.redirect_stdout(buf):
+                self.assertTrue(R.shared.L.mode_refresh_dhan_ids())
+            self.assertIn("disagreements={'AXISBANK': '5900->999'}", buf.getvalue())
+            # …and the map keeps the trusted id, never the master's.
+            self.assertEqual(dhan_ids.load(Path(tmp) / "ids.csv"), {"AXISBANK": 5900})
+
+    def test_refresh_uses_the_second_master_for_a_name_the_first_one_lacks(self):
+        def fake(urls=dhan_ids.MASTER_URLS, timeout=90):
+            if "detailed" in urls[0]:
+                return MIXED_MASTER, urls[0]
+            return SECOND_MASTER, urls[0]
+
+        with tempfile.TemporaryDirectory() as tmp, patch.object(
+                dhan_ids, "MAP_FILE", Path(tmp) / "ids.csv"), patch.object(
+                dhan_ids, "_MIN_AGREED", 1), patch.object(
+                dhan_ids, "_MIN_AGREEMENT", 0.0), patch.object(
+                dhan_ids, "MASTER_URLS", ("https://x/detailed.csv", "https://x/compact.csv")), \
+                patch.object(dhan_ids, "fetch_text", side_effect=fake), \
+                patch.object(R.shared.L, "bootstrap_symbols",
+                             return_value=["AXISBANK", "GSPL"]):
+            buf = io.StringIO()
+            with contextlib.redirect_stdout(buf):
+                self.assertTrue(R.shared.L.mode_refresh_dhan_ids())
+            out = buf.getvalue()
+            self.assertIn("DHAN IDS fallback=['GSPL']", out)
+            self.assertIn("unresolved=[]", out)
+            self.assertEqual(dhan_ids.load(Path(tmp) / "ids.csv").get("GSPL"), 5324)
 
     def test_refresh_logs_why_a_name_stayed_unresolved(self):
         with tempfile.TemporaryDirectory() as tmp, patch.object(

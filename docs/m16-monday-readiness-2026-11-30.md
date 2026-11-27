@@ -189,3 +189,49 @@ universe / 400 active, dormant `[ICICIPRULI]`, `missing_history: []`,
 `stale_prior_day: []`, `extra_missing_history: [ATHERENERGY, GSPL, GUJGASLTD,
 JBCHEPHARM]` (Yahoo gaps, dormant), 30 sectors / 63 basket members,
 `workflow.issues: []`.
+
+---
+
+## Fourth pass — the two 18:36Z runs (2026-11-27) reviewed
+
+**`16. LIVE M16` (run started 18:36:19Z):** correct no-op. The calendar gate said
+`closed: No regular weekend session (special sessions unsupported)` (00:06 IST on
+Saturday), so `should_run=false` and every later step — regressions, session,
+upload, state commit, handoff — was skipped; job finished in 29 s. Env showed
+`M16_YAHOO_REQUEST_INTERVAL: 0.20`, `M16_SECTOR_MODE: advisory`,
+`M16_EXTRA_UNIVERSE: 1`, `M16_MAX_SESSION_STARTS: 16` (current main). Nothing to fix.
+
+**`2. Bootstrap` (run started 18:36:34Z):** green again —
+`BOOTSTRAP RESULT ok=402 total=406 missing_fno=[]`, extras
+`ATHERENERGY/GUJGASLTD/GSPL/JBCHEPHARM` (Yahoo 404/empty, both hosts, two
+attempts), `prev-day OI base: 218 underlyings (2026-11-27)`, commit
+`[main 52ec1c06] 404 files`, push attempt 1/6, verify `F&O fresh 209/210
+(dormant 1)`, extra gaps 5 (adds HEG — its Yahoo series stops before 27-Nov) as a
+warning only.
+
+Three defects in that log, all fixed here:
+
+1. **`agreed=208/209` — a real id regression introduced by #76.** A blank
+   `SEM_INSTRUMENT_NAME` MOTHERSON row (25510) preceded the equity row (4204);
+   accepting blank instrument/segment fields let it win. Both are rejected for
+   the map again (still recorded for diagnostics) → parity restored to 209/209,
+   provably: the branch's committed map and the run's map differ **only** in that
+   row.
+2. **`unresolved_detail` was printed twice** — the step's `grep -h "DHAN IDS" |
+   tail -1` picked the new detail line instead of the summary. The workflow now
+   greps `DHAN IDS ok=` (and the disagreements line) explicitly.
+3. **All six unresolved names report `NOT LISTED`** in the detailed master
+   (ATHERENERGY, GSPL, GUJGASLTD, JBCHEPHARM, HEG, ICICIPRULI). Reachability is
+   now attempted against Dhan's **compact** master as a second source
+   (`resolve_from_masters`), and the saved map is repaired against
+   `fno_universe.csv`, so a master quirk can never leave a wrong F&O id in
+   `dhan_security_ids.csv`. The six are also the names Yahoo cannot serve, so
+   nothing is lost at runtime (dormant, unpolled, `NSE:<SYMBOL>` chart link).
+
+**`DHAN_TOKEN`:** the new guard fires correctly —
+`##[warning]Repo secret DHAN_TOKEN is not set (Dhan candle fallback + Dhan feed
+disabled, Yahoo only)`. Still needs the operator to add the secret.
+
+**Tests:** `test_m16_runner` **158 OK** (21 `DhanIdTests`); CI suite re-run;
+`test_telegram_bot`, `test_fast_feed`, `test_m15_*`, `test_master_scanner`,
+`test_m6_runner` re-run as before.

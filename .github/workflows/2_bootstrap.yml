@@ -52,7 +52,10 @@ jobs:
           # ids and writes nothing when the master disagrees, so this step can
           # never poison the universe.
           python -u live_runner.py --refresh-dhan-ids 2>&1 | tee dhan_ids.log || true
-          grep -h "DHAN IDS" dhan_ids.log | tail -1 || true
+          # tail of the *summary* line: the detail line below it is already printed
+          # above and must not be echoed twice.
+          grep -h "DHAN IDS ok=" dhan_ids.log | tail -1 || true
+          grep -h "DHAN IDS disagreements=" dhan_ids.log | tail -1 || true
       - name: download history for the whole scan universe
         run: |
           set -o pipefail

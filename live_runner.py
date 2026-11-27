@@ -346,20 +346,41 @@ def mode_refresh_dhan_ids():
     except Exception as e:
         print(f"DHAN IDS FAILED: {e}")
         return False
+    # Names the detailed master does not carry get one more chance in Dhan's
+    # other master files before we call them unresolved.
+    still = [s for s in bootstrap_symbols() if s not in parsed]
+    fallback_seen, tried = {}, []
+    if still:
+        extra, fallback_seen, tried = ids.resolve_from_masters(
+            still, [u for u in ids.MASTER_URLS if u != url])
+        if extra:
+            parsed.update(extra)
+            print(f"DHAN IDS fallback={sorted(extra)} source={tried}")
     ok, agreed, checked = ids.validate(parsed, FNO_SID)
     if not ok:
         print(f"DHAN IDS REJECTED: parsed {len(parsed)} NSE equities but agreed "
               f"{agreed}/{checked} with fno_universe.csv — map not written ({url})")
         return False
+    diff = ids.disagreements(parsed, FNO_SID)
+    # The map file must never carry an id that contradicts fno_universe.csv: an
+    # F&O name's trusted id wins here too (SID already prefers it at runtime), so
+    # a master quirk cannot leave a wrong id lying in the committed map.
+    parsed.update({s: FNO_SID[s] for s in parsed if s in FNO_SID})
     written = ids.save(parsed, bootstrap_symbols(), ROOT / ids.MAP_FILE)
     missing = [s for s in bootstrap_symbols() if s not in parsed]
     print(f"DHAN IDS ok={written} agreed={agreed}/{checked} source={url} "
           f"unresolved={missing}")
+    if diff:
+        # Name the symbol: "agreed=208/209" on its own hid a bad MOTHERSON id.
+        print(f"DHAN IDS disagreements={diff} (fno_universe.csv ids stay authoritative)")
     if missing:
         # Tell "listed under another exchange/series" apart from "not in the master
         # at all" — the first is fixable in parse_master, the second needs the ticker
         # dropped from the universe.
         detail = ids.parse_master(text, watch=missing)[1]
+        for sym, where in fallback_seen.items():
+            if sym in missing:
+                detail.setdefault(sym, where)
         shown = {s: detail.get(s, "NOT LISTED") for s in missing[:25]}
         extra = f" (+{len(missing) - 25} more)" if len(missing) > 25 else ""
         print(f"DHAN IDS unresolved_detail={shown}{extra}")
