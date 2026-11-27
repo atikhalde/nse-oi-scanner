@@ -293,6 +293,29 @@ class ChartLinkTests(unittest.TestCase):
                          plain.splitlines()[1])
 
 
+class TestAlertSelfTest(unittest.TestCase):
+    """--test-alert must prove the links, not just connectivity."""
+
+    def test_self_test_sends_a_labelled_sample_with_both_links(self):
+        sent = []
+        with patch.object(R, "telegram_targets", return_value=[("tok", "chat")]), patch.object(
+                R.tg, "send_message_to", side_effect=lambda t, c, text: sent.append(text) or True):
+            self.assertTrue(R.test_alert())
+        self.assertEqual(len(sent), 2)
+        self.assertIn("M16 bot connected", sent[0])
+        sample = sent[1]
+        self.assertTrue(sample.startswith("🧪 M16 SAMPLE ALERT"))
+        self.assertIn('<b><a href="https://charts.dhan.co/?symbol=', sample)
+        self.assertIn("dhan.go.link", sample)
+        self.assertIn(">open in Dhan app</a>", sample)
+        self.assertNotIn('&adj_', sample)          # attributes stay escaped
+
+    def test_a_failed_sample_send_fails_the_self_test(self):
+        with patch.object(R, "telegram_targets", return_value=[("tok", "chat")]), patch.object(
+                R.tg, "send_message_to", side_effect=[True, False]):
+            self.assertFalse(R.test_alert())
+
+
 class BootstrapTests(unittest.TestCase):
     """The 08:45 history refresh must cover every symbol the models can name."""
 
@@ -1208,9 +1231,13 @@ class MirrorTests(unittest.TestCase):
         self.assertEqual(ledger[R.target_id('mirror-secret', 'mirror-chat')], 'expired_unsent')
 
     def test_self_test_checks_both_and_reports_any_failure(self):
-        with patch.object(R.tg, 'send_message_to', side_effect=[False, True]) as send:
+        # Each destination gets a ping + a sample, so any failed send fails the run.
+        with patch.object(R.tg, 'send_message_to', side_effect=[True, True, True, False]) as send:
             self.assertFalse(R.test_alert())
-            self.assertEqual(send.call_count, 2)
+            self.assertEqual(send.call_count, 4)
+        with patch.object(R.tg, 'send_message_to', return_value=True) as send:
+            self.assertTrue(R.test_alert())
+            self.assertEqual(send.call_count, 4)
         with patch.object(R.tg, 'send_message_to') as send:
             self.assertTrue(R.test_alert(dry_run=True))
             send.assert_not_called()
