@@ -48,22 +48,29 @@ F&O-only universe, and removing a line narrows it further.
 
 Three rules make this safe:
 
-1. **Scan-only, and no score moves.** Extras add no member to `MEMBERS` (the 13
-   synthetic baskets), so no synthetic sector score changes. Their sector label is
-   used for context: labels naming an official index sector (`AUTO`, `IT`, `DEF`,
-   `BANK`, ...) print that published index's line, labels naming a synthetic basket
-   print the basket line, and the four with neither (`TEXTILE`, `MEDIA`, `SUGAR`,
-   `SHIPPING`) print `sector unverified` instead of a score.
+1. **Grouped, never weighted.** All 196 names are also listed with their sector
+   in `fno_sector_map.csv`, the grouping every model reads (`SECTOR_OF`,
+   `SEC_STOCKS`, reports, learning log), so each name is reported under the right
+   sector instead of being unmapped. They are **not** weighted into any basket:
+   `MEMBERS` keeps only F&O constituents (`FNO_CONSTITUENTS`), so the 13 synthetic
+   baskets and their scores are byte-identical to before (64 members), a grouped
+   name cannot move a sector score, and one lagging Yahoo feed cannot blank a
+   basket for a candle.
 
-   One name is deliberately different: **BEML is listed as `DEF` in
-   `fno_sector_map.csv` as well** (27-Nov-2026, user request). That file is the
-   sector grouping every model reads (`SECTOR_OF` / `SEC_STOCKS`), so BEML now
-   appears in the DEF group in reports and filters. It does **not** change the DEF
-   score: `DEF` is an official index sector (`NIFTY_IND_DEFENCE.NS`), so its score
-   comes from the index, not from members. BEML stays in this file because scanning
-   follows `m16_extra_universe.csv`, not the sector map. M6 ignores it as an entry
-   candidate — `entry_candidates()` keeps only names with a loaded prior-day cache,
-   so BEML never spends a provider request in a DEF cycle it cannot trade.
+   Seventeen sectors are official NSE indices (`AUTO`, `FIN`, `IT`, `MET`, `DEF`,
+   `ENE`, `FMCG`, `OIL`, `PHA`, `PSE`, `PSUBK`, `BANK`, `REALTY`, `CDUR`, `MEDIA`,
+   `INFRA`, `CONSUMPTION`) and their score is the published index, so the five new
+   MEDIA names (SUNTV, PVRINOX, ZEEL, NAZARA, SAREGAMA) get a real board. Thirteen
+   are synthetic baskets (`CAPGOODS`, `CAPMKTS`, `CEMENT`, `CHEMICALS`, `GREEN`,
+   `HOSPITALS`, `INSURANCE`, `LOGISTICS`, `NEWAGE`, `RAILWAYS`, `TELECOM`,
+   `TRAVEL`, `BUILDMAT`) and print their (unchanged) basket line. `TEXTILE`,
+   `SUGAR` and `SHIPPING` have neither, so those alerts print
+   `Sector context unavailable (TEXTILE is grouped but has no board) — sector
+   unverified` rather than inventing a score.
+
+   M6 ignores grouped names as entry candidates — `entry_candidates()` keeps only
+   names with a loaded prior-day cache — so a non-F&O name never spends a provider
+   request in a cycle it cannot trade, and never inflates `stats["candidates"]`.
 2. **History-gated.** A name produces no seeds until `data/history/<SYMBOL>.csv`
    exists (`analyze()` needs a valid prior-day cache), and it is **not polled**
    while it is missing — so a bad ticker costs nothing. Workflow 2. Bootstrap

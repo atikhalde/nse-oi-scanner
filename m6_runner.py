@@ -79,12 +79,18 @@ ROOT = L.ROOT
 STATE6 = ROOT / "state6.json"
 SECTOR_OF = dict(pd.read_csv(ROOT / "fno_sector_map.csv").values)
 OFFICIAL = set(FM.OFFICIAL_TICKERS)
+# A synthetic basket is weighted by F&O constituents only. Scan-only names
+# (BEML, THERMAX, IRCTC, KPRMILL, ...) are grouped with their sector for
+# reporting, context and the learning log, but they never weight a basket: adding
+# one cannot move a sector score, and one lagging Yahoo feed cannot make a whole
+# basket unavailable for that candle.
+FNO_CONSTITUENTS = set(pd.read_csv(ROOT / "fno_universe.csv")["symbol"])
 
 MEMBERS: dict[str, list[str]] = {}
 SEC_STOCKS: dict[str, list[str]] = {}
 for _sym, _sec in SECTOR_OF.items():
     SEC_STOCKS.setdefault(_sec, []).append(_sym)
-    if _sec not in OFFICIAL:
+    if _sec not in OFFICIAL and _sym in FNO_CONSTITUENTS:
         MEMBERS.setdefault(_sec, []).append(_sym)
 for _sec in SEC_STOCKS:
     SEC_STOCKS[_sec].sort()
