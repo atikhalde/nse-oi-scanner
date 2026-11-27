@@ -97,27 +97,33 @@ Three rules make this safe:
 
 ### Stock name opens the chart
 
-In every M16 Telegram alert the bold stock name is also the chart link, so a tap
-opens that stock's chart:
+In every M16 Telegram alert the bold stock name is also the chart link. It opens
+Dhan's own charting platform, **TradingCharts** (`tradingcharts.co`) — not
+TradingView — so a tap lands on the same charts the Dhan app shows:
 
 ```
-<b><a href="https://tv.dhan.co/?symbol=NSE%3AAXISBANK">AXISBANK</a></b> · BUY @ 111.20
+<b><a href="https://tradingcharts.co/terminal?symbol=NSEE5900:AXISBANK">AXISBANK</a></b> · BUY @ 111.20
+<b><a href="https://tradingcharts.co/terminal?symbol=NSE:ATHERENERGY">ATHERENERGY</a></b> · BUY @ 96.40
 ```
 
-- Built by `telegram_bot.chart_link()`; the symbol is URL-quoted (`M&M` →
-  `NSE%3AM%26M`) and the whole `href` is HTML-escaped, so no symbol can break
-  Telegram's parser.
-- The template is one constant (`telegram_bot.CHART_URL_TEMPLATE`) and can be
-  changed without a code edit through `M16_CHART_URL_TEMPLATE`, e.g.
-  `https://www.tradingview.com/chart/?symbol=NSE%3A{symbol}` or
-  `https://tv.dhan.co/chart/?symbol={symbol}.NS`. `{symbol}` is replaced; the
-  rest of the template is used verbatim.
+- Instrument key: `NSEE<security-id>:<SYMBOL>` — exactly the form Dhan's own
+  "Launch This Stock" link uses (`tradingcharts.co/terminal?symbol=NSEE11536:TCS`
+  for TCS, whose id in `fno_universe.csv` is 11536). The id comes from
+  `fno_universe.csv` via `live_runner.SID`, i.e. the 210 F&O names.
+- A name with no security id (the 196 scan-only extras) uses TradingCharts'
+  published instrument string `NSE:<SYMBOL>` instead of dropping the link.
+- Built by `telegram_bot.chart_link()` / `chart_instrument()`; the instrument is
+  URL-quoted (`M&M` → `NSEE2031:M%26M`) and the entire `href` is HTML-escaped,
+  so no symbol can break Telegram's parser.
+- Template is one constant (`telegram_bot.CHART_URL_TEMPLATE`) and can be
+  changed without a code edit through `M16_CHART_URL_TEMPLATE`; `{instrument}`
+  (or the older `{symbol}`) is replaced and the rest is used verbatim.
 - Plain-text (TXT/PDF, `markup=False`) output is unchanged, and no alert
   content, gating or delivery logic changed.
-- `_heal_html()` (the one-shot retry after a 400 parse reject) now preserves
+- `_heal_html()` (the one-shot retry after a 400 parse reject) preserves
   `<a href="…">`/`</a>` next to `<b>`/`</b>`, folding the double-escaped
   `&amp;amp;` inside an href back to a single `&amp;` so the retried link still
-  opens the right page.
+  opens the right chart.
 
 ## Original indicator label on the BOS candle
 

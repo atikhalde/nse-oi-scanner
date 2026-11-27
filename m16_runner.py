@@ -403,9 +403,23 @@ def alert_text(e, markup=False):
         return text
     escaped = tg.esc(text)
     symbol = tg.esc(str(e["symbol"]))
-    # The bold symbol is a chart deep link: one tap opens the stock's chart.
+    # The bold symbol is a chart deep link: one tap opens the stock's chart on
+    # Dhan's TradingCharts. F&O names carry their Dhan security id; the extras
+    # only have their NSE ticker, which is TradingCharts' published instrument.
     return escaped.replace(f"{symbol} · {e['side']} @",
-                           f"{tg.chart_link(e['symbol'])} · {e['side']} @", 1)
+                           f"{tg.chart_link(e['symbol'], security_id(e['symbol']))} · {e['side']} @", 1)
+
+
+def security_id(symbol):
+    """Dhan security id for `symbol`, or None when the universe file has none."""
+    try:
+        sid = shared.L.SID.get(symbol)
+    except Exception:
+        return None
+    if sid is None:
+        return None
+    sid = str(sid).strip()
+    return int(float(sid)) if sid not in {"", "nan", "None"} else None
 
 
 def sector_context_lines(gate):
